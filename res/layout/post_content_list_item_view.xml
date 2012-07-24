@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:scrollbars="vertical"
+    android:background="@color/postcontent_background">
+    <TableRow  
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent" > 
+    <TextView android:text="replyID" 
+    android:id="@+id/replyID" 
+    android:layout_width="wrap_content" 
+    android:layout_height="wrap_content"
+    android:textColor="@color/reply_ID"
+    android:textSize="14dip"/> 
+    <TextView 
+    android:text="reply_time" 
+    android:id="@+id/reply_time" 
+    android:layout_width="wrap_content" 
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="70dip"
+    android:textColor="@color/reply_time"/> 
+    
+    </TableRow>
+    <TableRow  android:layout_height="wrap_content"
+        android:layout_width="match_parent"> 
+    <ImageButton 
+    android:id="@+id/user_image" 
+    android:layout_width="wrap_content" 
+    android:layout_height="wrap_content"
+    android:minWidth="50dip"
+    android:maxWidth="50dip"/> 
+    
+    <TextView 
+    android:text="reply_content" 
+    android:id="@+id/reply_content" 
+    android:layout_width="wrap_content" 
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="10dip"
+    android:textColor="@color/reply_content"/>
+     
+    </TableRow>
+</LinearLayout>

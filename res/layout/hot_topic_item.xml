@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/hot_topic_clickable"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/listview_selector"
+    android:orientation="vertical"
+    android:padding="4dp" >
+
+    <!-- 帖子标题 -->
+
+    <TextView
+        android:id="@+id/hot_topic_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingBottom="4dp"
+        android:paddingTop="4dp"
+        android:text="【MSTC】微软技术俱乐部2011年秋季纳新面试名单及安排公布"
+        android:textColor="@color/post_list_title"
+        android:textSize="14sp" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingBottom="2dp"
+        android:paddingTop="2dp" >
+
+        <!-- 所属版面名字 -->
+
+        <TextView
+            android:id="@+id/hot_topic_board_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="MSTC Microsoft Technology Club"
+            android:layout_gravity="left"
+            android:textColor="@color/post_info"
+            android:textSize="11sp" />
+        <!-- 作者 -->
+ <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="right"
+         >
+        <TextView
+            android:id="@+id/hot_topic_author"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_marginRight="10dp"
+            android:text="作者: MSTC"
+            android:textColor="@color/post_info"
+            android:textSize="11sp" />
+        <!-- 时间 -->
+
+        <TextView
+            android:id="@+id/hot_topic_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:maxLines="1"
+            android:text="16 小时 0 分 之前"
+            android:textColor="@color/post_info"
+            android:textSize="11sp" />
+          </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

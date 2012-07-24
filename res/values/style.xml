@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>  
+    <style name="personal_board_list_footer_button">
+         <item name="android:gravity">center_horizontal</item>
+         <item name="android:background">@drawable/simple_button_selector</item>
+         <item name="android:padding">4dp</item>
+         <item name="android:clickable">true</item>
+         <item name="android:layout_height">wrap_content</item>
+    </style>
+    <!--  simple button -->
+    <style name="simple_button">
+        <item name="android:background">@drawable/simple_button_selector</item>
+        <item name="android:textColor">@color/simiple_button_color</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_marginTop">5dp</item>
+        <item name="android:layout_marginBottom">5dp</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingTop">5dip</item>
+        <item name="android:paddingBottom">5dip</item>
+        <item name="android:paddingLeft">7dip</item>
+        <item name="android:paddingRight">7dip</item>
+    </style>
+        <style name="blue_button">
+        <item name="android:textColor">@color/simiple_button_color</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    	<style name="normalText" parent="@android:style/TextAppearance">
+        <item name="android:textColor">#444</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+    
+    <style name="normalText.Big">
+        <item name="android:textSize">18sp</item>
+    </style>
+    
+    <style name="normalText.span">
+        <item name="android:textColor">#888</item>
+    </style>
+    <style name="listview">
+        <item name="android:cacheColorHint">@color/transparent</item>
+        <item name="android:divider">@drawable/divider_horizontal_timeline</item>
+        <item name="android:dividerHeight">0.4dp</item>
+        <item name="android:listSelector">@color/transparent</item>
+        <item name="android:fastScrollEnabled">true</item>
+        <item name="android:scrollingCache">true</item>
+    </style>
+    <style name="button">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">36dp</item>
+        <item name="android:background">@drawable/simple_button_selector</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">#fff</item>
+        <item name="android:textSize">10sp</item>
+    </style>
+    
+    
+</resources>

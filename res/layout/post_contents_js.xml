@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <tk.djcrazy.MyCC98.view.HeaderView
+        android:id="@+id/main_header"
+        android:layout_width="fill_parent"
+        android:layout_height="42dp" />
+
+    <ScrollView
+        android:id="@+id/post_content_scroll_view"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:background="@color/post_list_background" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/post_content_show_all_imgs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/listview_selector"
+                android:gravity="center"
+                android:paddingBottom="15dip"
+                android:paddingTop="15dip"
+                android:text="显示所有图片"
+                android:textColor="#AAA"
+                android:textSize="20sp"
+                android:typeface="monospace" />
+
+            <WebView
+                android:id="@+id/post_contents"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/but_post_return"
+            style="@style/button"
+            android:layout_weight="1"
+            android:text="返回版面" />
+
+        <TextView
+            android:id="@+id/but_post_jump"
+            style="@style/button"
+            android:layout_weight="1"
+            android:text="跳转" />
+
+        <TextView
+            android:id="@+id/but_post_re"
+            style="@style/button"
+            android:layout_weight="1"
+            android:text="回复" />
+
+        <TextView
+            android:id="@+id/but_post_prev"
+            style="@style/button"
+            android:layout_weight="1"
+            android:text="上一页" />
+
+        <TextView
+            android:id="@+id/but_post_next"
+            style="@style/button"
+            android:layout_weight="1"
+            android:text="下一页" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/search_bar"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone" >
+
+        <LinearLayout
+            android:id="@+id/search_btns"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/search_done"
+                style="@style/button"
+                android:layout_weight="1"
+                android:text="完成" />
+
+            <TextView
+                android:id="@+id/find_prev"
+                style="@style/button"
+                android:layout_weight="1"
+                android:text="上一个" />
+
+            <TextView
+                android:id="@+id/find_next"
+                style="@style/button"
+                android:layout_weight="1"
+                android:text="下一个" />
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/search_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/search_btns"
+            android:background="@drawable/input"
+            android:hint="关键词" />
+    </RelativeLayout>
+
+</LinearLayout>

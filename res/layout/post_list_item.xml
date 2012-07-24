@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/board_info_background"
+    android:clickable="false"
+    android:orientation="vertical"
+    android:padding="2dp" >
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:layout_marginTop="6dp"
+        android:orientation="horizontal" >
+
+        <ImageView
+            android:id="@+id/post_type"
+            android:layout_width="15dp"
+            android:layout_height="27dp"
+						android:paddingTop="12dp"
+            android:clickable="false" 
+            android:src="@drawable/folder"
+            android:visibility="visible" />
+
+        <TextView
+            android:id="@+id/post_title"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/post_type"
+            android:layout_marginLeft="2dp"
+            android:layout_toRightOf="@id/post_type"
+            android:background="@drawable/listview_selector"
+            android:clickable="true"
+            android:text="Test post topic, 要长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长"
+            android:textColor="@color/post_list_title"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            android:textSize="14sp" />
+
+        <LinearLayout
+            android:id="@+id/post_last_reply_clickable"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/post_title"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/reply_bg_selector"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="4dp"
+                android:paddingTop="4dp"
+                android:text="最后回复: "
+                android:textColor="@color/post_list_last_reply_text_color"
+                android:textSize="11sp" />
+
+            <TextView
+                android:id="@+id/post_last_reply_author"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="4dp"
+                android:paddingTop="4dp"
+                android:text="黑一"
+                android:textColor="@color/post_list_last_reply_text_color"
+                android:textSize="11sp" />
+
+            <TextView
+                android:id="@+id/post_last_reply_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:paddingBottom="4dp"
+                android:paddingTop="4dp"
+                android:text="2010-01-21"
+                android:textColor="@color/post_list_last_reply_text_color"
+                android:textSize="11sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/post_last_reply_clickable"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="19dp"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="By: "
+                android:textColor="@color/post_list_title"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/post_author"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLength="10"
+                android:text="DJ"
+                android:textColor="@color/post_list_title"
+                android:textSize="12sp" />
+        </LinearLayout>
+    </RelativeLayout>
+
+</LinearLayout>

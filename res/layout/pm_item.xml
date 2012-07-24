@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:id="@+id/pm_item_view"
+    android:padding="8dp" 
+    android:background="@drawable/listview_selector">
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:id="@+id/pm_sender_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:lines="1"
+            android:text="Test Sender"
+            android:textColor="#000"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/pm_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignBottom="@id/pm_sender_name"
+            android:lines="1"
+            android:text="2012-02-15 13:45:00"
+            android:textColor="@color/post_list_title"
+            android:textSize="11sp" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/pm_topic"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="A tooopic"
+        android:lines="1"
+        android:textColor="#000"
+        android:textSize="16sp" />
+
+</LinearLayout>

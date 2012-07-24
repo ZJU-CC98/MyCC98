@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+    <CheckBoxPreference
+        android:key="settings_tail"
+        android:title="显示 MyCC98 签名"
+        android:defaultValue="true" />
+<CheckBoxPreference
+        android:key="settings_dark"
+        android:title="使用暗色登录界面"
+        android:defaultValue="false" />
+</PreferenceScreen>

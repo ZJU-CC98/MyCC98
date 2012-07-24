@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/carbon_bg_blur"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="20dip"
+        android:layout_marginRight="20dip"
+        android:orientation="vertical"
+        android:padding="10dip" >
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/ZJU_WLAN"
+            android:textColor="@color/carbon_text"
+            android:visibility="invisible" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dip"
+            android:text="@string/user_name"
+            android:textColor="@color/carbon_text"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/username"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/input"
+            android:padding="3dip"
+            android:scrollHorizontally="true"
+            android:text="" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dip"
+            android:layout_marginTop="10dip"
+            android:text="@string/pw"
+            android:textColor="@color/carbon_text"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/password"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/input"
+            android:padding="3dip"
+            android:password="true"
+            android:scrollHorizontally="true"
+            android:text="" />
+
+        <TableLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:stretchColumns="0" >
+
+            <TableRow >
+
+                <CheckBox
+                    android:id="@+id/remember_password"
+                    android:layout_width="match_parent"
+                    android:button="@drawable/btn_selector"
+                    android:text="@string/rem_pw"
+                    android:paddingLeft="20pt"
+                    android:textColor="@color/carbon_text" />
+
+                <CheckBox
+                    android:id="@+id/auto_login"
+                    android:layout_width="wrap_content"
+                    android:button="@drawable/btn_selector"
+                    android:text="@string/auto_login"
+                    android:paddingLeft="20pt"
+                    android:textColor="@color/carbon_text" />
+            </TableRow>
+        </TableLayout>
+
+        <TableLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal"
+            android:stretchColumns="*" >
+
+            <TableRow >
+
+                <Button
+                    android:id="@+id/proxy_setting"
+                    android:height="32dp"
+                    android:background="@drawable/simple_button_selector"
+                    android:text="代理"
+                    android:layout_marginRight="15dp"
+                    android:textColor="@color/carbon_text" />
+
+                <Button
+                    android:id="@+id/login"
+                    android:height="32dp"
+                    android:background="@drawable/simple_button_selector"
+                    android:text="@string/login_confirm"
+                    android:layout_marginLeft="15dp"
+                    android:textColor="@color/carbon_text" />
+            </TableRow>
+        </TableLayout>
+    </LinearLayout>
+
+</LinearLayout>

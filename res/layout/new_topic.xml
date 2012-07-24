@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:orientation="vertical"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent">
+
+  <tk.djcrazy.MyCC98.view.PullToRefreshListView 
+  	android:id="@+id/new_topic_list"
+  	android:layout_width="fill_parent"
+  	android:layout_height="fill_parent"
+  	android:divider="@drawable/divider_horizontal_timeline"
+  	android:dividerHeight="2dp"
+  	style="@style/listview"/>  
+  </LinearLayout>

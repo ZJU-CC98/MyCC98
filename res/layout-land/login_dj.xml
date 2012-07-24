@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/white"
+    android:orientation="horizontal" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="20dip"
+        android:layout_marginRight="20dip"
+        android:orientation="vertical"
+        android:padding="10dip" > 
+ 
+	        <TextView
+            android:id="@+id/title"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/ZJU_WLAN"
+            android:textColor="@color/carbon_text"
+            android:visibility="invisible" />
+
+        <!-- <EditText -->
+        <!-- android:id="@+id/username" -->
+        <!-- android:layout_width="fill_parent" -->
+        <!-- android:layout_height="wrap_content" -->
+        <!-- android:background="@drawable/input" -->
+        <!-- android:padding="3dip" -->
+        <!-- android:scrollHorizontally="true" -->
+        <!-- android:text="" /> -->
+
+
+        <!-- <EditText -->
+        <!-- android:id="@+id/password" -->
+        <!-- android:layout_width="fill_parent" -->
+        <!-- android:layout_height="wrap_content" -->
+        <!-- android:background="@drawable/input" -->
+        <!-- android:padding="3dip" -->
+        <!-- android:password="true" -->
+        <!-- android:scrollHorizontally="true" -->
+        <!-- android:text="" /> -->
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="96.0dip"
+             android:layout_marginTop="31.0dip"
+            android:background="@color/qt_border" 
+            android:orientation="vertical"
+            android:padding="1.0dip" >
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.0"
+                android:background="@color/white"
+                android:orientation="horizontal" >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="47.0dip" 
+                    android:src="@drawable/userid_signin_icon" />
+
+                <EditText 
+                    android:id="@+id/username"
+                    android:layout_width="fill_parent"
+                    android:layout_height="47.0dip"
+                    android:background="@color/white"
+                    android:hint="用户名"
+                    android:singleLine="true"
+                    android:textColor="@color/login_text_color"
+                    android:textSize="20sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="1.0dip"
+                android:background="@color/qt_border" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.0"
+                android:background="@color/white"
+                android:orientation="horizontal" >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="47.0dip"
+                    android:src="@drawable/password_signin_icon" />
+
+                <EditText
+                    android:id="@+id/password"
+                    android:layout_width="fill_parent"
+                    android:layout_height="47.0dip"
+                    android:background="@color/white"
+                    android:hint="密码"
+                    android:password="true"
+                    android:singleLine="true"
+                    android:textColor="@color/login_text_color"
+                    android:textSize="20sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <TableLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:stretchColumns="0" >
+
+            <TableRow >
+
+                <CheckBox
+                    android:id="@+id/remember_password"
+                    android:layout_width="match_parent"
+                    android:button="@drawable/btn_selector"
+                    android:paddingLeft="20pt"
+                    android:text="@string/rem_pw"
+                    android:textColor="@color/login_text_color" />
+
+                <CheckBox
+                    android:id="@+id/auto_login"
+                    android:layout_width="wrap_content"
+                    android:button="@drawable/btn_selector"
+                    android:paddingLeft="20pt"
+                    android:text="@string/auto_login" 
+                    android:textColor="@color/login_text_color" />
+            </TableRow>
+        </TableLayout>
+
+        <TableLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal"
+            android:stretchColumns="*" >
+
+            <TableRow >
+
+                <Button
+                    android:id="@+id/proxy_setting"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/login_button_selector"
+                    android:height="32dp"
+                    android:text="代理"
+                    android:textColor="@color/white" />
+
+                <Button
+                    android:id="@+id/login"
+                    android:layout_marginLeft="15dp"
+                    android:background="@drawable/login_button_selector"
+                    android:height="32dp"
+                    android:text="@string/login_confirm"
+                    android:textColor="@color/white" />
+            </TableRow>
+        </TableLayout>
+    </LinearLayout>
+
+</LinearLayout>

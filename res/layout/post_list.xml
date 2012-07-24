@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:scrollbars="vertical" >
+
+    <tk.djcrazy.MyCC98.view.HeaderView
+        android:id="@+id/main_header"
+        android:layout_width="fill_parent"
+        android:layout_height="42dp" />
+
+    <tk.djcrazy.MyCC98.view.PullToRefreshListView
+        android:id="@+id/postlistView"
+        style="@style/listview"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:background="@color/board_info_background"
+        android:divider="@drawable/divider_horizontal_timeline"
+        android:dividerHeight="2dp"
+        android:fastScrollEnabled="false"
+        android:focusableInTouchMode="false"
+        android:scrollingCache="true" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="32dp" >
+
+        <TextView
+            android:id="@+id/post_return_to_personal_board"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:background="@drawable/simple_button_selector"
+            android:gravity="center"
+            android:text="返回定制区"
+            android:textSize="10sp" />
+
+        <TextView
+            android:id="@+id/post_pre_page"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:background="@drawable/simple_button_selector"
+            android:gravity="center"
+            android:text="上一页"
+            android:textSize="10sp" />
+
+        <TextView
+            android:id="@+id/post_next_page"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:background="@drawable/simple_button_selector"
+            android:gravity="center"
+            android:text="下一页"
+            android:textSize="10sp" />
+
+        <TextView
+            android:id="@+id/post_newpost"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:background="@drawable/simple_button_selector"
+            android:gravity="center"
+            android:text="发帖"
+            android:textSize="10sp" />
+    </LinearLayout>
+
+</LinearLayout>

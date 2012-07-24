@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/body_color"
+    android:orientation="vertical"
+    android:scrollbars="vertical" >
+
+<!--     <LinearLayout -->
+<!--         xmlns:android="http://schemas.android.com/apk/res/android" -->
+<!--         android:layout_width="fill_parent" -->
+<!--         android:layout_height="47dp" -->
+<!--         android:orientation="vertical" > -->
+
+<!--         顶部条 -->
+
+<!--         <RelativeLayout -->
+<!--             android:id="@+id/friend_list_LinearLayout01" -->
+<!--             android:layout_width="fill_parent" -->
+<!--             android:layout_height="45dp" -->
+<!--             android:layout_alignParentTop="true" -->
+<!--             android:background="@drawable/bg_personal_board_list_titlebar" -->
+<!--             android:gravity="center_vertical" > -->
+
+<!--             热门话题按钮 -->
+
+<!--             <FrameLayout -->
+<!--                 android:id="@+id/friend_list_head_portrait_frame" -->
+<!--                 android:layout_width="42dip" -->
+<!--                 android:layout_height="42dip" -->
+<!--                 android:layout_marginBottom="2dip" -->
+<!--                 android:layout_marginLeft="2dip" -->
+<!--                 android:layout_marginTop="2dip" > -->
+
+<!--                 用户头像 -->
+
+<!--                 <ImageButton -->
+<!--                     android:layout_width="fill_parent" -->
+<!--                     android:layout_height="fill_parent" -->
+<!--                     android:background="@null" -->
+<!--                     android:scaleType="fitXY" /> -->
+<!--                 image corner -->
+
+<!--                 <ImageView -->
+<!--                     android:layout_width="fill_parent" -->
+<!--                     android:layout_height="fill_parent" -->
+<!--                     android:background="@drawable/images_border_radius" /> -->
+<!--             </FrameLayout> -->
+
+<!--             <LinearLayout -->
+<!--                 android:layout_width="wrap_content" -->
+<!--                 android:layout_height="fill_parent" -->
+<!--                 android:layout_toRightOf="@id/friend_list_head_portrait_frame" -->
+<!--                 android:gravity="center_vertical" -->
+<!--                 android:orientation="horizontal" -->
+<!--                 android:paddingLeft="5dip" > -->
+
+<!--                 欢迎信息 -->
+
+<!--                 <TextView -->
+<!--                     android:layout_width="wrap_content" -->
+<!--                     android:layout_height="wrap_content" -->
+<!--                     android:layout_marginTop="5dip" -->
+<!--                     android:text="@string/welcome_info" -->
+<!--                     android:textColor="#fff" -->
+<!--                     android:textSize="10dip" /> -->
+<!--                 用户id -->
+
+<!--                 <TextView -->
+<!--                     android:layout_width="wrap_content" -->
+<!--                     android:layout_height="wrap_content" -->
+<!--                     android:paddingLeft="10dip" -->
+<!--                     android:text="DJ" -->
+<!--                     android:textColor="#fff" -->
+<!--                     android:textSize="20dip" /> -->
+<!--             </LinearLayout> -->
+
+<!--             查看新贴按钮 -->
+<!--         </RelativeLayout> -->
+
+<!--         渐变条 -->
+
+<!--         <View -->
+<!--             android:layout_width="fill_parent" -->
+<!--             android:layout_height="3dip" -->
+<!--             android:layout_below="@id/friend_list_LinearLayout01" -->
+<!--             android:background="@drawable/shape" /> -->
+<!--     </LinearLayout> -->
+
+    <ListView
+        android:id="@+id/friend_list_view"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="@color/board_info_background"
+        android:cacheColorHint="@color/board_info_background"
+        android:divider="@drawable/divider_horizontal_timeline"
+        android:dividerHeight="2dp" >
+    </ListView>
+
+</LinearLayout>

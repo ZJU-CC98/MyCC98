@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="jquery.mobile-1.0b2.min.css" />
+<script src="jquery-1.6.2.min.js"></script>
+<script src="jquery.mobile-1.0b2.min.js"></script>
+</head>
+<body>
+	<div data-role="page">
+		<div data-role="header" data-theme="d" data-position="inline">
+			<h1>Jump to</h1>
+		</div>
+		<div data-role="fieldcontain">
+			<label for="num">Page Number:</label> <input type="text" name="num"
+				id="num" value="" autofocus="on" pattern="[0-9]*" />
+		</div>
+		<a data-role="button" data-inline="true" data-icon="check"
+			onClick="
+	var n=parseInt(document.getElementById('num').value); document.writeln(n);if(!isNaN(n)){PmActivity.jumpTo_js(n);}">Jump</a>
+		<a data-role="button" data-inline="true" data-icon="delete" onClick="PmActivity.jumpTo_js(PmActivity.getCurrentPageNum());"
+		>Cancel</a>
+	</div>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:scrollbars="vertical">
+	<LinearLayout 
+		xmlns:android="http://schemas.android.com/apk/res/android"
+		android:orientation="vertical" 
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent" 
+		android:scrollbars="vertical">
+		<TextView 
+			android:text="@string/user_name"
+			android:layout_width="wrap_content" 
+			android:layout_height="wrap_content" />
+		<EditText 
+			android:id="@+id/auth_username"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content" />
+		<TextView 
+			android:text="@string/pw"
+			android:layout_width="wrap_content" 
+			android:layout_height="wrap_content" />
+		<EditText 
+			android:id="@+id/auth_password"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:password="true" />
+ 	<CheckBox 
+ 	android:id="@+id/auth_remember_pwd"
+ 	android:text="记住用户名密码"
+ 	android:layout_width="wrap_content"
+ 	android:layout_height="wrap_content"/>
+
+	<TableRow 
+		android:layout_height="wrap_content"
+		android:layout_width="wrap_content" >
+		<Button 
+			android:id="@+id/cancelbutton"
+			android:text="取消" 
+			android:layout_width="wrap_content"
+      android:layout_height="wrap_content" 
+      android:width="150dip" />
+      <Button 
+        android:id="@+id/okButton" 
+      	android:text="确认" 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" 
+        android:width="240dip"/>	
+    </TableRow>
+
+	</LinearLayout>
+</ScrollView>
