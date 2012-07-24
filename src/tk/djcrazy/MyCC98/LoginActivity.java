@@ -106,7 +106,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 	private CheckBox cbUseProxy;
 	private String sProxyIP;
 	private int iProxyPort;
-	private boolean useProxy;
+	private boolean useProxy; 
 
 	private Dialog dialog;
 
