@@ -77,6 +77,7 @@ public class AuthDialog extends Dialog implements OnClickListener {
 			break;
 		case R.id.cancelbutton:
 			listener.onCancelClick();
+			dismiss();
 		default:
 			break;
 		}

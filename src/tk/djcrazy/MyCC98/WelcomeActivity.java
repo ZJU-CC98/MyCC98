@@ -216,18 +216,17 @@ public class WelcomeActivity extends Activity {
 		}
 	};
 
-	
-	 @Override
-	 public void onStart() {
-	 super.onStart();
-	 FlurryAgent.onStartSession(this, "5EXV7SIGMTTDKYNXTKR4");
-	 }
-	
-	 @Override
-	 public void onStop() {
-	 super.onStop();
-	 FlurryAgent.onEndSession(this);
-	 }
+	@Override
+	public void onStart() {
+		super.onStart();
+		FlurryAgent.onStartSession(this, "5EXV7SIGMTTDKYNXTKR4");
+	}
+
+	@Override
+	public void onStop() {
+		super.onStop();
+		FlurryAgent.onEndSession(this);
+	}
 
 	private void readSettings() {
 		// settings manager, get settings
@@ -330,21 +329,19 @@ public class WelcomeActivity extends Activity {
 				progressDialog.dismiss();
 				Toast.makeText(WelcomeActivity.this, "lifetoy认证失败",
 						Toast.LENGTH_SHORT).show();
+				finish();
 				break;
 			case LIFETOY_AUTHORIZE_SUCCESS:
 				progressDialog.dismiss();
 				Toast.makeText(WelcomeActivity.this, "成功通过lifetoy认证",
 						Toast.LENGTH_SHORT).show();
 				saveAuthInfo();
-				startActivity(intent);
-				overridePendingTransition(R.anim.alpha_change,
-						R.anim.alpha_change2);
-				finish();
-				break;
+ 				break;
 			case LIFETOY_AUTHORIZE_FAILED_WITH_EXCEPTION:
 				progressDialog.dismiss();
 				Toast.makeText(WelcomeActivity.this, "网络错误", Toast.LENGTH_SHORT)
 						.show();
+				finish();
 				break;
 			case 4:
 				checkUpateThread.start();
@@ -455,46 +452,7 @@ public class WelcomeActivity extends Activity {
 		return verName;
 	}
 
-	private void doNewVersionUpdate(final String downLink) {
-		int verCode = getVerCode(this);
-		String verName = getVerName(this);
-		StringBuffer sb = new StringBuffer();
-		sb.append("当前版本:");
-		sb.append(verName);
-		sb.append(" Code:");
-		sb.append(verCode);
-		sb.append(", 发现新版本:");
-		sb.append("aaa");
-		sb.append(" Code:");
-		sb.append("aa");
-		sb.append(", 是否更新?");
-		Dialog dialog = new AlertDialog.Builder(WelcomeActivity.this)
-				.setTitle("软件更新")
-				.setMessage(sb.toString())
-				// 设置内容
-				.setPositiveButton("更新",// 设置确定按钮
-						new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog,
-									int which) {
-								pBar = new ProgressDialog(WelcomeActivity.this);
-								pBar.setTitle("正在下载");
-								pBar.setMessage("请稍候...");
-								pBar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-								downFile(downLink);
-							}
-						})
-				.setNegativeButton("暂不更新",
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog,
-									int whichButton) {
-
-							}
-						}).create();// 创建
-		// 显示对话框
-		dialog.show();
-	}
-
+ 
 	void downFile(final String url) {
 
 		pBar.show();
@@ -506,8 +464,7 @@ public class WelcomeActivity extends Activity {
 				try {
 					response = client.execute(get);
 					HttpEntity entity = response.getEntity();
-					long length = entity.getContentLength();
-					InputStream is = entity.getContent();
+ 					InputStream is = entity.getContent();
 					FileOutputStream fileOutputStream = null;
 					if (is != null) {
 						File file = new File(
@@ -517,25 +474,21 @@ public class WelcomeActivity extends Activity {
 
 						byte[] buf = new byte[1024];
 						int ch = -1;
-						int count = 0;
-						while ((ch = is.read(buf)) != -1) {
+ 						while ((ch = is.read(buf)) != -1) {
 							fileOutputStream.write(buf, 0, ch);
-							count += ch;
-							if (length > 0) {
-							}
-						}
+ 						}
 					}
 					fileOutputStream.flush();
 					if (fileOutputStream != null) {
 						fileOutputStream.close();
 					}
 
-					aHandler.sendEmptyMessage(DOWNLOAD_SUCCESS);
+					downloadNewVersionHandler.sendEmptyMessage(DOWNLOAD_SUCCESS);
 				} catch (ClientProtocolException e) {
-					aHandler.sendEmptyMessage(DOWNLOAD_FAILURE);
+					downloadNewVersionHandler.sendEmptyMessage(DOWNLOAD_FAILURE);
 					e.printStackTrace();
 				} catch (IOException e) {
-					aHandler.sendEmptyMessage(DOWNLOAD_FAILURE);
+					downloadNewVersionHandler.sendEmptyMessage(DOWNLOAD_FAILURE);
 					e.printStackTrace();
 				}
 			}
@@ -566,7 +519,7 @@ public class WelcomeActivity extends Activity {
 					Bundle bundle = new Bundle();
 					bundle.putInt(FILE_SIZE, fileSize);
 					msg.setData(bundle);
-					aHandler.sendMessage(msg);
+					downloadNewVersionHandler.sendMessage(msg);
 					DataInputStream fileStream = new DataInputStream(
 							new BufferedInputStream(connection.getInputStream()));
 					byte[] fileByte;
@@ -587,23 +540,23 @@ public class WelcomeActivity extends Activity {
 						Message tmpmsg = new Message();
 						tmpmsg.what = UPDATE_PROGRESS;
 						tmpmsg.setData(bundle);
-						aHandler.sendMessage(tmpmsg);
+						downloadNewVersionHandler.sendMessage(tmpmsg);
 						Log.d(TAG, downedSize + "");
 					}
 					saveFile.close();
-					aHandler.sendEmptyMessage(DOWNLOAD_SUCCESS);
+					downloadNewVersionHandler.sendEmptyMessage(DOWNLOAD_SUCCESS);
 				} catch (ClientProtocolException e) {
-					aHandler.sendEmptyMessage(DOWNLOAD_FAILURE);
+					downloadNewVersionHandler.sendEmptyMessage(DOWNLOAD_FAILURE);
 					e.printStackTrace();
 				} catch (IOException e) {
-					aHandler.sendEmptyMessage(DOWNLOAD_FAILURE);
+					downloadNewVersionHandler.sendEmptyMessage(DOWNLOAD_FAILURE);
 					e.printStackTrace();
 				}
 			}
 		}.start();
 	}
 
-	Handler aHandler = new Handler() {
+	Handler downloadNewVersionHandler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
