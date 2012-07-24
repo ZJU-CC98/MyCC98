@@ -56,7 +56,7 @@ import tk.djcrazy.libCC98.exception.NoUserFoundException;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
-
+ 
 /**
  * 
  * This class take care of the connection with CC98, keep the cookies and the
