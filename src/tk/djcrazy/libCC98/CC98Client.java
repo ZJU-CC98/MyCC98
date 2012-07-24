@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -53,8 +52,6 @@ import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 
-import com.sun.mail.iap.Response;
-
 import tk.djcrazy.libCC98.exception.NoUserFoundException;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -75,15 +72,14 @@ public class CC98Client {
 	 */
 	private static String CC98 = "http://www.cc98.org/";
 
-	public static final String HOT_TOPIC_LINK = CC98 + "hottopic.asp";
-	public static final String USER_PROFILE = CC98 + "dispuser.asp?name=";
-	public static final String NEW_POST_LINK = CC98 + "queryresult.asp?stype=3";
-	public static final String USER_CONTROL_LINK = CC98 + "usermanager.asp";
-	public static final String ADD_FRIEND_LINK = CC98
-			+ "usersms.asp?action=friend";
-	public static final String ADD_FRIEND_REFERRER = CC98
+	public static String HOT_TOPIC_LINK = CC98 + "hottopic.asp";
+	public static String USER_PROFILE = CC98 + "dispuser.asp?name=";
+	public static String NEW_POST_LINK = CC98 + "queryresult.asp?stype=3";
+	public static String USER_CONTROL_LINK = CC98 + "usermanager.asp";
+	public static String ADD_FRIEND_LINK = CC98 + "usersms.asp?action=friend";
+	public static String ADD_FRIEND_REFERRER = CC98
 			+ "usersms.asp?action=friend&todo=addF";
-	public static final String LOGIN_LINK = CC98 + "login.asp?action=chk";
+	public static String LOGIN_LINK = CC98 + "login.asp?action=chk";
 	private static Bitmap userImg;
 	/**
 	 * Store the id
@@ -238,11 +234,11 @@ public class CC98Client {
 	 * Edit post
 	 * 
 	 * @author zsy
-	 * @throws IOException 
-	 * @throws ClientProtocolException 
+	 * @throws IOException
+	 * @throws ClientProtocolException
 	 */
-	static public boolean editPost(List<NameValuePair> nvpsList,
-			String link) throws ClientProtocolException, IOException {
+	static public boolean editPost(List<NameValuePair> nvpsList, String link)
+			throws ClientProtocolException, IOException {
 		HttpEntity entity;
 		HttpPost httpPost = new HttpPost(link);
 		httpPost.setEntity(new UrlEncodedFormEntity(nvpsList, HTTP.UTF_8));
@@ -601,6 +597,13 @@ public class CC98Client {
 
 	public static void setCC98Domain(String cC98) {
 		CC98 = cC98;
+ 		HOT_TOPIC_LINK = CC98 + "hottopic.asp";
+		USER_PROFILE = CC98 + "dispuser.asp?name=";
+		NEW_POST_LINK = CC98 + "queryresult.asp?stype=3";
+		USER_CONTROL_LINK = CC98 + "usermanager.asp";
+		ADD_FRIEND_LINK = CC98 + "usersms.asp?action=friend";
+		ADD_FRIEND_REFERRER = CC98 + "usersms.asp?action=friend&todo=addF";
+		LOGIN_LINK = CC98 + "login.asp?action=chk";
 	}
 
 	/**

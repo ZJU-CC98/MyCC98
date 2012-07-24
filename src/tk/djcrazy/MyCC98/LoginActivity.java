@@ -134,12 +134,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		// Settings with full screen
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
-
-		if(SettingsActivity.useDark) {
-			setContentView(R.layout.login);
-		} else {
-			setContentView(R.layout.login_dj);
-		}
+		setContentView(R.layout.login);
 		findViews();
 		SharedPreferences setting = getSharedPreferences(USERINFO, 0);
 		if (setting.getBoolean(REMEMBERPWD, false)) {
@@ -151,7 +146,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 			rememberPassword.setChecked(true);
 			if (setting.getBoolean(AUTOLOGIN, false)) {
 				autoLoginBox.setChecked(true);
-				doLogin();
+				doLogin(); 
 			}
 		}
 
@@ -234,7 +229,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 	private void doLogin() {
 		mUsername = mUsernameEdit.getText().toString();
 		mPassword = mPasswordEdit.getText().toString();
-		if(useProxy) {
+		if (useProxy) {
 			CC98Client.setProxy(sProxyIP, iProxyPort);
 		} else {
 			CC98Client.rmProxy();
@@ -256,7 +251,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 				} catch (IllegalAccessException e) {
 					if (e.getMessage() == CC98Client.ID_PASSWD_ERROR_MSG) {
 						handler.sendEmptyMessage(LOGIN_FAILED_WITH_WRONG_USERNAME_OR_PASSWORD);
-					} else if(e.getMessage() == CC98Client.SERVER_ERROR){
+					} else if (e.getMessage() == CC98Client.SERVER_ERROR) {
 						handler.sendEmptyMessage(LOGIN_FAILED_WITH_SERVER_ERROR);
 					}
 					e.printStackTrace();

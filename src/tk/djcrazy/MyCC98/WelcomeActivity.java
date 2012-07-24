@@ -58,13 +58,13 @@ import com.flurry.android.FlurryAgent;
  * 
  */
 public class WelcomeActivity extends Activity {
-	
-	public static final String UPDATE_LINK_LIFETOY= "http://10.110.19.123:80/update/lifetoy.html";
-	public static final String UPDATE_LINK_NORMAL= "http://10.110.19.123:80/update/index.html";
- 	/**
+
+	public static final String UPDATE_LINK_LIFETOY = "http://10.110.19.123:80/update/lifetoy.html";
+	public static final String UPDATE_LINK_NORMAL = "http://10.110.19.123:80/update/index.html";
+	/**
 	 * configure version
 	 */
-	public static final boolean IS_LIFETOY_VERSION =false;
+	public static final boolean IS_LIFETOY_VERSION = true;
 	private Intent intent = new Intent();
 	private String authUserName = "";
 	private String authPassword = "";
@@ -98,12 +98,11 @@ public class WelcomeActivity extends Activity {
 	private static final int DOWNLOAD_SUCCESS = 1;
 	private static final int INIT_FILESIZE = 2;
 	private static final int UPDATE_PROGRESS = 3;
-	
-	private static final int LIFETOY_AUTHORIZE_FAILED=0;
-	private static final int LIFETOY_AUTHORIZE_SUCCESS=1;
-	private static final int LIFETOY_AUTHORIZE_FAILED_WITH_EXCEPTION=2;
-	
-	
+
+	private static final int LIFETOY_AUTHORIZE_FAILED = 0;
+	private static final int LIFETOY_AUTHORIZE_SUCCESS = 1;
+	private static final int LIFETOY_AUTHORIZE_FAILED_WITH_EXCEPTION = 2;
+
 	private AlertDialog.Builder authBuilder;
 
 	MyAuthDialogListener listener = new MyAuthDialogListener() {
@@ -118,7 +117,8 @@ public class WelcomeActivity extends Activity {
 			Log.d("auth", password);
 			Log.d("auth", rememberPwd + "");
 			authThread.start();
-			progressDialog = ProgressDialog.show(WelcomeActivity.this, "", "正在进行认证...");
+			progressDialog = ProgressDialog.show(WelcomeActivity.this, "",
+					"正在进行认证...");
 		}
 
 		@Override
@@ -139,16 +139,19 @@ public class WelcomeActivity extends Activity {
 					authHandler.sendEmptyMessage(LIFETOY_AUTHORIZE_SUCCESS);
 				} else {
 					authHandler.sendEmptyMessage(LIFETOY_AUTHORIZE_FAILED);
-				} 
+				}
 
 			} catch (ClientProtocolException e) {
-				authHandler.sendEmptyMessage(LIFETOY_AUTHORIZE_FAILED_WITH_EXCEPTION);
+				authHandler
+						.sendEmptyMessage(LIFETOY_AUTHORIZE_FAILED_WITH_EXCEPTION);
 				e.printStackTrace();
 			} catch (IOException e) {
-				authHandler.sendEmptyMessage(LIFETOY_AUTHORIZE_FAILED_WITH_EXCEPTION);
+				authHandler
+						.sendEmptyMessage(LIFETOY_AUTHORIZE_FAILED_WITH_EXCEPTION);
 				e.printStackTrace();
- 			} catch (URISyntaxException e) {
-				authHandler.sendEmptyMessage(LIFETOY_AUTHORIZE_FAILED_WITH_EXCEPTION);
+			} catch (URISyntaxException e) {
+				authHandler
+						.sendEmptyMessage(LIFETOY_AUTHORIZE_FAILED_WITH_EXCEPTION);
 				e.printStackTrace();
 			}
 		}
@@ -174,7 +177,9 @@ public class WelcomeActivity extends Activity {
 			String content = "";
 			try {
 				DefaultHttpClient client = new DefaultHttpClient();
-				HttpGet get = new HttpGet((IS_LIFETOY_VERSION?UPDATE_LINK_LIFETOY:UPDATE_LINK_NORMAL));
+				HttpGet get = new HttpGet(
+						(IS_LIFETOY_VERSION ? UPDATE_LINK_LIFETOY
+								: UPDATE_LINK_NORMAL));
 				client.getParams().setParameter(
 						CoreConnectionPNames.CONNECTION_TIMEOUT, 1000);
 				client.getParams().setParameter(
@@ -205,33 +210,35 @@ public class WelcomeActivity extends Activity {
 				e.printStackTrace();
 			} catch (Exception e) {
 				checkUpdateHandler
-				.sendEmptyMessage(UPDATE_SERVER_IS_UNREACHABLE);
+						.sendEmptyMessage(UPDATE_SERVER_IS_UNREACHABLE);
 				e.printStackTrace();
 			}
 		}
 	};
-//
-//	@Override
-//	public void onStart() {
-//		super.onStart();
-//		FlurryAgent.onStartSession(this, "5EXV7SIGMTTDKYNXTKR4");
-//	}
-//
-//	@Override
-//	public void onStop() {
-//		super.onStop();
-//		FlurryAgent.onEndSession(this);
-//	}
+
+	
+	 @Override
+	 public void onStart() {
+	 super.onStart();
+	 FlurryAgent.onStartSession(this, "5EXV7SIGMTTDKYNXTKR4");
+	 }
+	
+	 @Override
+	 public void onStop() {
+	 super.onStop();
+	 FlurryAgent.onEndSession(this);
+	 }
 
 	private void readSettings() {
 		// settings manager, get settings
-		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+		SharedPreferences sharedPreferences = PreferenceManager
+				.getDefaultSharedPreferences(this);
 		SettingsActivity.addTail = sharedPreferences.getBoolean(
 				SettingsActivity.SETTING_USE_TAIL, true);
 		SettingsActivity.useDark = sharedPreferences.getBoolean(
 				SettingsActivity.SETTING_USE_DARK, false);
 	}
-	
+
 	/**
 	 * Called when the activity is first created.
 	 **/
@@ -247,18 +254,12 @@ public class WelcomeActivity extends Activity {
 
 		intent.setClass(this, LoginActivity.class);
 
-		
 		checkNetworkInfo();
 		readSettings();
-		
-		if(SettingsActivity.useDark) {
-			setContentView(R.layout.welcome);
-		} else {
-			setContentView(R.layout.welcome_dj);
-		}
-		
+		setContentView(R.layout.welcome);
+
 		findviews();
-		initMessage.setText("正在检查更新...");  
+		initMessage.setText("正在检查更新...");
 		SharedPreferences setting = getSharedPreferences(VERSION, 0);
 
 		prefVersion = setting.getInt(BOARDDBVERSION, 0);
@@ -285,7 +286,7 @@ public class WelcomeActivity extends Activity {
 						CC98Client.setCC98Domain("http://hz.cc98.lifetoy.org/");
 
 						authDialog.show();
-					} 
+					}
 				});
 		authBuilder.setNegativeButton("取消",
 				new DialogInterface.OnClickListener() {
@@ -294,7 +295,8 @@ public class WelcomeActivity extends Activity {
 					public void onClick(DialogInterface arg0, int arg1) {
 						CC98Client.setCC98Domain("http://www.cc98.org/");
 						startActivity(intent);
-						overridePendingTransition(R.anim.alpha_change, R.anim.alpha_change2);
+						overridePendingTransition(R.anim.alpha_change,
+								R.anim.alpha_change2);
 
 						finish();
 					}
@@ -335,15 +337,16 @@ public class WelcomeActivity extends Activity {
 						Toast.LENGTH_SHORT).show();
 				saveAuthInfo();
 				startActivity(intent);
-				overridePendingTransition(R.anim.alpha_change, R.anim.alpha_change2);
+				overridePendingTransition(R.anim.alpha_change,
+						R.anim.alpha_change2);
 				finish();
 				break;
 			case LIFETOY_AUTHORIZE_FAILED_WITH_EXCEPTION:
 				progressDialog.dismiss();
-				Toast.makeText(WelcomeActivity.this, "网络错误",
-						Toast.LENGTH_SHORT).show();
+				Toast.makeText(WelcomeActivity.this, "网络错误", Toast.LENGTH_SHORT)
+						.show();
 				break;
- 			case 4:
+			case 4:
 				checkUpateThread.start();
 				break;
 			default:
@@ -379,17 +382,17 @@ public class WelcomeActivity extends Activity {
 			case UPDATE_SERVER_IS_UNREACHABLE:
 				Log.d(TAG, "aaa");
 				if (IS_LIFETOY_VERSION) {
-					authBuilder.create().show(); 
-				}
-				else {
+					authBuilder.create().show();
+				} else {
 					try {
 						Thread.sleep(1000);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
 					startActivity(intent);
-					overridePendingTransition(R.anim.alpha_change, R.anim.alpha_change2);
-					finish();	
+					overridePendingTransition(R.anim.alpha_change,
+							R.anim.alpha_change2);
+					finish();
 				}
 				break;
 			case AVAIABLE_UPDATE:
@@ -416,7 +419,8 @@ public class WelcomeActivity extends Activity {
 							@Override
 							public void onClick(DialogInterface arg0, int arg1) {
 								startActivity(intent);
-								overridePendingTransition(R.anim.alpha_change, R.anim.alpha_change2);
+								overridePendingTransition(R.anim.alpha_change,
+										R.anim.alpha_change2);
 								finish();
 
 							}
@@ -484,7 +488,7 @@ public class WelcomeActivity extends Activity {
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog,
 									int whichButton) {
-								
+
 							}
 						}).create();// 创建
 		// 显示对话框
