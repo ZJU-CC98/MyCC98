@@ -336,7 +336,7 @@ public class WelcomeActivity extends Activity {
 				Toast.makeText(WelcomeActivity.this, "成功通过lifetoy认证",
 						Toast.LENGTH_SHORT).show();
 				saveAuthInfo();
- 				break;
+				break;
 			case LIFETOY_AUTHORIZE_FAILED_WITH_EXCEPTION:
 				progressDialog.dismiss();
 				Toast.makeText(WelcomeActivity.this, "网络错误", Toast.LENGTH_SHORT)
@@ -452,7 +452,6 @@ public class WelcomeActivity extends Activity {
 		return verName;
 	}
 
- 
 	void downFile(final String url) {
 
 		pBar.show();
@@ -464,7 +463,7 @@ public class WelcomeActivity extends Activity {
 				try {
 					response = client.execute(get);
 					HttpEntity entity = response.getEntity();
- 					InputStream is = entity.getContent();
+					InputStream is = entity.getContent();
 					FileOutputStream fileOutputStream = null;
 					if (is != null) {
 						File file = new File(
@@ -474,21 +473,24 @@ public class WelcomeActivity extends Activity {
 
 						byte[] buf = new byte[1024];
 						int ch = -1;
- 						while ((ch = is.read(buf)) != -1) {
+						while ((ch = is.read(buf)) != -1) {
 							fileOutputStream.write(buf, 0, ch);
- 						}
+						}
 					}
 					fileOutputStream.flush();
 					if (fileOutputStream != null) {
 						fileOutputStream.close();
 					}
 
-					downloadNewVersionHandler.sendEmptyMessage(DOWNLOAD_SUCCESS);
+					downloadNewVersionHandler
+							.sendEmptyMessage(DOWNLOAD_SUCCESS);
 				} catch (ClientProtocolException e) {
-					downloadNewVersionHandler.sendEmptyMessage(DOWNLOAD_FAILURE);
+					downloadNewVersionHandler
+							.sendEmptyMessage(DOWNLOAD_FAILURE);
 					e.printStackTrace();
 				} catch (IOException e) {
-					downloadNewVersionHandler.sendEmptyMessage(DOWNLOAD_FAILURE);
+					downloadNewVersionHandler
+							.sendEmptyMessage(DOWNLOAD_FAILURE);
 					e.printStackTrace();
 				}
 			}
@@ -544,12 +546,15 @@ public class WelcomeActivity extends Activity {
 						Log.d(TAG, downedSize + "");
 					}
 					saveFile.close();
-					downloadNewVersionHandler.sendEmptyMessage(DOWNLOAD_SUCCESS);
+					downloadNewVersionHandler
+							.sendEmptyMessage(DOWNLOAD_SUCCESS);
 				} catch (ClientProtocolException e) {
-					downloadNewVersionHandler.sendEmptyMessage(DOWNLOAD_FAILURE);
+					downloadNewVersionHandler
+							.sendEmptyMessage(DOWNLOAD_FAILURE);
 					e.printStackTrace();
 				} catch (IOException e) {
-					downloadNewVersionHandler.sendEmptyMessage(DOWNLOAD_FAILURE);
+					downloadNewVersionHandler
+							.sendEmptyMessage(DOWNLOAD_FAILURE);
 					e.printStackTrace();
 				}
 			}

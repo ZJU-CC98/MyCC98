@@ -411,21 +411,7 @@ public class HomeActivity extends Activity implements ParentView {
 	}
 
 	private void showAboutInfo() {
-
-//		AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
-//		builder.setTitle("关于本软件");
-//		builder.setMessage(R.string.about_info);
-//		builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-//
-//			@Override
-//			public void onClick(DialogInterface dialog, int which) {
-//
-//			}
-//		});
-//		builder.create().show();
-		
 		new AboutDialog(this).show();
-
 	}
 
 	public int getVerCode(Context context) {
