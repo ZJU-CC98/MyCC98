@@ -12,7 +12,8 @@
         android:layout_marginBottom="5dp"
         android:layout_marginTop="5dp"
         android:scaleType="fitXY"
-        android:src="@drawable/icon" />
+        android:src="@drawable/icon"
+        android:layout_centerVertical="true" />
 
     <TextView
         android:id="@+id/friend_list_item_user_name"

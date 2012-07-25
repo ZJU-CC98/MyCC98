@@ -27,7 +27,7 @@ import android.widget.Toast;
  * @author zsy
  * 
  */
-public class SketchActivity extends Activity {
+public class SketchActivity extends BaseActivity {
 	public static final String FILE_PATH = "file_path";
 
 	private RadioGroup butGroup;
@@ -98,26 +98,7 @@ public class SketchActivity extends Activity {
 						}).setNegativeButton("Cancel", null).show();
 	}
 
-	// private void open() {
-	// Intent intent = new Intent();
-	// intent.setType("image/*");
-	// intent.setAction(Intent.ACTION_GET_CONTENT);
-	// startActivityForResult(Intent.createChooser(intent, "Select Picture"),
-	// SELECT_IMG);
-	// }
-
-	// @Override
-	// protected void onActivityResult(int requestCode, int resultCode, Intent
-	// data) {
-	// if (requestCode == SELECT_IMG) {
-	// if (resultCode == RESULT_OK) {
-	// Uri uri = data.getData();
-	// ContentResolver cr = this.getContentResolver();
-	// drawView.open(uri, cr);
-	// }
-	// }
-	// };
-
+ 
 	private boolean save(String name) {
 		filePath = Environment.getExternalStorageDirectory() + SKTECH_PATH;
 		File dir = new File(filePath);

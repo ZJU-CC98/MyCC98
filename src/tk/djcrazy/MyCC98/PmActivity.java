@@ -24,6 +24,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.InputType;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,7 +34,7 @@ import android.widget.Toast;
 
 import com.flurry.android.FlurryAgent;
 
-public class PmActivity extends Activity implements OnRefreshListener {
+public class PmActivity extends BaseActivity implements OnRefreshListener {
 
 	private static String TAG = "PmActivity";
 	// Switch to Inbox
@@ -41,7 +42,7 @@ public class PmActivity extends Activity implements OnRefreshListener {
 	// // Switch to Outbox
 	// private View butSendbox;
 	// Write new PM
-	// To next page 
+	// To next page
 	private View butNext;
 	// To prev page
 	private View butPrev;
@@ -100,7 +101,7 @@ public class PmActivity extends Activity implements OnRefreshListener {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
 			case LOAD_SUCC:
-				
+
 				// load list complete
 				String mod;
 				InboxInfo currInfo = null;
@@ -118,7 +119,7 @@ public class PmActivity extends Activity implements OnRefreshListener {
 				listViewAdapter = new PmListViewAdapter(PmActivity.this,
 						currPage);
 				listView.setAdapter(listViewAdapter);
-				
+
 				preFetch();
 				onLoadDone();
 				break;
@@ -127,18 +128,6 @@ public class PmActivity extends Activity implements OnRefreshListener {
 			}
 		}
 	};
-
-	@Override
-	public void onStart() {
-		super.onStart();
-		FlurryAgent.onStartSession(this, "5EXV7SIGMTTDKYNXTKR4");
-	}
-
-	@Override
-	public void onStop() {
-		super.onStop();
-		FlurryAgent.onEndSession(this);
-	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -241,12 +230,12 @@ public class PmActivity extends Activity implements OnRefreshListener {
 						// hit! backward one step
 						nextPage = currPage;
 						currPage = prevPage;
-						Log.d( TAG, "hit");
+						Log.d(TAG, "hit");
 					} else if (page_num == currentPageNum + 1
 							&& nextPage != null) { // hit! forward one step
 						prevPage = currPage;
 						currPage = nextPage;
-						Log.d( TAG, "hit");
+						Log.d(TAG, "hit");
 					} else {
 						try {
 							currPage = fetchList(page_num, mod);
@@ -257,7 +246,7 @@ public class PmActivity extends Activity implements OnRefreshListener {
 						} catch (IOException e) {
 							e.printStackTrace();
 						}
-						Log.d( TAG, "miss");
+						Log.d(TAG, "miss");
 					}
 				} else {
 
@@ -270,7 +259,7 @@ public class PmActivity extends Activity implements OnRefreshListener {
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
-					Log.d( TAG, "miss");
+					Log.d(TAG, "miss");
 
 				}
 				prevPageNum = currentPageNum;
@@ -345,7 +334,7 @@ public class PmActivity extends Activity implements OnRefreshListener {
 	public void nextPage() {
 		jumpTo(currentPageNum + 1);
 	}
- 
+
 	public void prevPage() {
 		jumpTo(currentPageNum - 1);
 	}
@@ -360,6 +349,8 @@ public class PmActivity extends Activity implements OnRefreshListener {
 		Intent intent = new Intent(this, PmViewActivity.class);
 		intent.putExtra("PmId", -1);
 		startActivity(intent);
+		overridePendingTransition(R.anim.forward_activity_move_in,
+				R.anim.forward_activity_move_out);
 	}
 
 	public void jumpDialog() {

@@ -21,6 +21,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.webkit.CookieManager;
@@ -36,7 +37,7 @@ import com.flurry.android.FlurryAgent;
  * @author zsy
  *
  */
-public class PmViewActivity extends Activity {
+public class PmViewActivity extends BaseActivity {
 	private static String TAG = "PmReply";
 	private WebView webView;
 
@@ -52,19 +53,7 @@ public class PmViewActivity extends Activity {
 	private Cookie pmCookie;
 	private HeaderView headerView;
 
-	@Override
-	public void onStart() {
-		super.onStart();
-		FlurryAgent.onStartSession(this, "5EXV7SIGMTTDKYNXTKR4");
-	}
-
-	@Override
-	public void onStop() {
-		super.onStop();
-		FlurryAgent.onEndSession(this);
-	}
-
-	@Override
+ 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
@@ -276,5 +265,4 @@ public class PmViewActivity extends Activity {
 		intent.putExtra(PostContentsJSActivity.POST, bundle);
 		this.startActivity(intent);
 	}
-	
-}
+ }

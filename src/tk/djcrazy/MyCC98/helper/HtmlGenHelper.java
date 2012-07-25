@@ -13,8 +13,7 @@ public class HtmlGenHelper {
                                                                                                  // min-width-768px
                                                                                                  // min-width-1024px\"><head><meta name=\"viewport\" content=\"width=device-width, minium-scale=1,maxium-scale=1\" />"
             + "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">"
-            + "<link rel=\"stylesheet\" href=\"file:///android_asset/jquery.mobile-1.0b3.css\" />"
-            + "<link rel=\"stylesheet\" href=\"file:///android_asset/custom.css\" />"
+             + "<link rel=\"stylesheet\" href=\"file:///android_asset/custom.css\" />"
             // +
             // "<script src=\"file:///android_asset/jquery-1.6.2.min.js\"></script>"
             // +
@@ -25,9 +24,9 @@ public class HtmlGenHelper {
             // "<script type=\"text/javascript\" src=\"file:///android_asset/mootools.more.js\"></script>"
             + "<script type=\"text/javascript\" src=\"file:///android_asset/clientubb.js\"></script>"
             + "<meta name=\"viewport\" content=\"width=device-width, user-scalable=no\" />"
-            + "</head><body >"
-            + "<div class=\"type-interior ui-page ui-body-c ui-page-active\">"
-            + "<div class=\"ui-content ui-body-c\">";
+            + "</head><body>"
+            + "<div >"
+            + "<div  class=\"wrapper\">";
     public static final String PAGE_CLOSE = "</div></div></body></html>";
 
     private static final String TAG = "HtmlGenHelper";

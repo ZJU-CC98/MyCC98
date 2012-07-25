@@ -97,8 +97,7 @@ public class BoardInfoDbAdapter {
 
 		private void copyDataBase() throws IOException {
 
-			Log.d(TAG, "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-			InputStream myInput = myContext.getAssets()
+ 			InputStream myInput = myContext.getAssets()
 					.open("board_info_db.db");
 			String outFileName = DB_PATH + DB_NAME;
 

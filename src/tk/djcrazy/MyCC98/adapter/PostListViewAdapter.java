@@ -4,10 +4,10 @@ import java.util.List;
 
 import tk.djcrazy.MyCC98.PostContentsJSActivity;
 import tk.djcrazy.MyCC98.R;
-import tk.djcrazy.MyCC98.data.PostType;
 import tk.djcrazy.libCC98.CC98Client;
 import tk.djcrazy.libCC98.data.PostEntity;
-import android.content.Context;
+import tk.djcrazy.libCC98.data.PostType;
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -21,7 +21,7 @@ import android.widget.TextView;
 
 public class PostListViewAdapter extends BaseAdapter {
 
-	private Context context;
+	private Activity context;
 
 	private Bundle bundle = new Bundle();
 
@@ -55,7 +55,7 @@ public class PostListViewAdapter extends BaseAdapter {
 
 	}
 
-	public PostListViewAdapter(Context context, List<PostEntity> postList) {
+	public PostListViewAdapter(Activity context, List<PostEntity> postList) {
 		this.context = context;
 		listInflater = LayoutInflater.from(context);
 		this.listItem = postList;
@@ -158,6 +158,7 @@ public class PostListViewAdapter extends BaseAdapter {
 				bundle.putParcelable(PostContentsJSActivity.USER_IMAGE, userImage);
 				intent.putExtra(PostContentsJSActivity.POST, bundle);
 				context.startActivity(intent);
+				context.overridePendingTransition(R.anim.forward_activity_move_in, R.anim.forward_activity_move_out);
 			}
 		});
 
@@ -180,6 +181,8 @@ public class PostListViewAdapter extends BaseAdapter {
 						bundle.putParcelable(PostContentsJSActivity.USER_IMAGE, userImage);
 						intent.putExtra(PostContentsJSActivity.POST, bundle);
 						context.startActivity(intent);
+						context.overridePendingTransition(R.anim.forward_activity_move_in, R.anim.forward_activity_move_out);
+
 					}
 				});
 	}

@@ -11,6 +11,7 @@ import tk.djcrazy.MyCC98.adapter.FriendListViewAdapter;
 import tk.djcrazy.MyCC98.view.PullToRefreshListView.OnRefreshListener;
 import tk.djcrazy.libCC98.CC98Parser;
 import tk.djcrazy.libCC98.data.UserStatueEntity;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -82,7 +83,7 @@ public class FriendListView extends LinearLayout implements ChildView, OnRefresh
 			public void run() {
 				try {
 					friendList = CC98Parser.getUserFriendList();
-					friendListViewAdapter = new FriendListViewAdapter(getContext(), friendList);
+					friendListViewAdapter = new FriendListViewAdapter((Activity) getContext(), friendList);
 					friendListViewAdapter.setUserImage(userImage);
 					handler.sendEmptyMessage(GET_LIST_SUCCESS);
 				} catch (ClientProtocolException e) {

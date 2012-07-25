@@ -1,16 +1,24 @@
 @CHARSET "UTF-8";
 
+body {
+	background-color: #E6E6F2;
+}
+
+.wrapper {
+	padding-left: 20px;
+	padding-right: 20px;
+}
+
 .topic {
 	margin: 0 0 -5px 0;
 	font-size: 10pt;
-	font-weight:bold;
+	font-weight: bold;
 }
 
-.name {
-/* 	float: left; */
+.name { /* 	float: left; */
 	float: left;
 	clear: right;
-	font-weight:bold;
+	font-weight: bold;
 	color: royalblue;
 }
 
@@ -21,18 +29,37 @@
 	/*-webkit-box-shadow: 0  0 6px #000; */
 }
 
-.floor-num{
+.floor-num {
 	float: right;
 }
-
 
 .img-gender {
 	margin: 0px 0 0px 0;
 }
 
+.btn {
+	border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+	display: inline-block;
+	padding: 4px 10px 4px;
+	margin-bottom: 0;
+	font-size: 13px;
+	line-height: 18px;
+	text-align: center;
+	text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75);
+	vertical-align: middle;
+	cursor: pointer;
+	background-color: #E6E6E6;
+	background-repeat: repeat-x;
+	border: 1px solid #CCC;
+	width: 100%;
+}
+.btn_wrapper {
+	padding-left: 20px;
+	padding-right: 20px;
+}
+ 
 
-.time {
-/* 	float: left; */
+.time { /* 	float: left; */
 	margin: 2px 0 0 0;
 	clear: right;
 	color: grey;
@@ -49,13 +76,15 @@
 }
 
 .post {
-	outline-style: dashed;
-	outline-color: #ffffff;
+	-webkit-border-radius: 4px;
+	background-color: white;
 	margin: 0 -10px 12px -10px;
 	padding: 8px 8px 50px 8px;
+	background-color: white;
 }
 
 .pm-reply {
+	
 }
 
 .tablebody2 {
@@ -93,5 +122,5 @@
 }
 
 .dialog-but {
-    float: right;
+	float: right;
 }

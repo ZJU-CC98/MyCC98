@@ -3,7 +3,6 @@
  */
 package tk.djcrazy.libCC98.data;
 
-import tk.djcrazy.MyCC98.NewTopicActivity;
 import android.graphics.Bitmap;
 
 /**

@@ -8,6 +8,7 @@ import java.util.Map;
 
 import tk.djcrazy.MyCC98.PostContentsJSActivity;
 import tk.djcrazy.MyCC98.R;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.DataSetObserver;
@@ -27,7 +28,7 @@ import android.widget.TextView;
  */
 public class NewTopicListAdapter extends BaseAdapter {
     private static final String TAG = "NewTopicListAdapter";
-	private Context context ;
+	private Activity context ;
     private Intent intent = new Intent();
      
     private final List<Map<String, Object>> listItem;
@@ -49,7 +50,7 @@ public class NewTopicListAdapter extends BaseAdapter {
         public ImageView postType;
     }
 
-    public NewTopicListAdapter(Context context, List<Map<String, Object>> listItem) {
+    public NewTopicListAdapter(Activity context, List<Map<String, Object>> listItem) {
         this.context = context;
         listInflater = LayoutInflater.from(context);
         this.listItem = listItem;
@@ -123,6 +124,8 @@ public class NewTopicListAdapter extends BaseAdapter {
                 jumpbBundle.putParcelable(PostContentsJSActivity.USER_IMAGE, userImage);
                 intent.putExtra(PostContentsJSActivity.POST, jumpbBundle);
                 context.startActivity(intent);
+        		context.overridePendingTransition(R.anim.forward_activity_move_in, R.anim.forward_activity_move_out);
+
             }
         });
 

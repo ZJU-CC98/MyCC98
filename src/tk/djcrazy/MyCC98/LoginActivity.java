@@ -65,7 +65,7 @@ import android.widget.Toast;
 
 import com.flurry.android.FlurryAgent;
 
-public class LoginActivity extends Activity implements OnClickListener {
+public class LoginActivity extends BaseActivity implements OnClickListener {
 	// Please always use the strings here, for it is easier to modify in the
 	// future
 	private static final String TAG = "MyCC98";
@@ -301,11 +301,10 @@ public class LoginActivity extends Activity implements OnClickListener {
 						new DialogInterface.OnClickListener() {
 							@Override
 							public void onClick(DialogInterface arg0, int arg1) {
-								startActivity(intent);
-								overridePendingTransition(R.anim.alpha_change,
-										R.anim.alpha_change2);
-								finish();
+								forwardToNextActivity();
+								
 							}
+
 						});
 				updateBuilder.create().show();
 				break;
@@ -314,6 +313,15 @@ public class LoginActivity extends Activity implements OnClickListener {
 			}
 		}
 	};
+	/**
+	 * 
+	 */
+	private void forwardToNextActivity() {
+		startActivity(intent);
+		overridePendingTransition(R.anim.forward_activity_move_in,
+				R.anim.forward_activity_move_out);
+		finish();
+	}
 
 	private void downFileAnother(final String url) {
 
@@ -399,8 +407,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 				break;
 			case DOWNLOAD_FAILURE:
 				pBar.cancel();
-				startActivity(intent);
-				finish();
+				forwardToNextActivity();
 				break;
 			case INIT_FILESIZE:
 				pBar.setMax(msg.getData().getInt(FILE_SIZE));
@@ -420,8 +427,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 		intent.setDataAndType(Uri.fromFile(new File(Environment
 				.getExternalStorageDirectory(), "MyCC98_latest.apk")),
 				"application/vnd.android.package-archive");
-		startActivity(intent);
-		finish();
+		forwardToNextActivity();
 	}
 
 	// handle the message
@@ -504,19 +510,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 		}
 	};
 
-	@Override
-	public void onStart() {
-		super.onStart();
-		FlurryAgent.onStartSession(this, "5EXV7SIGMTTDKYNXTKR4");
-	}
-
-	@Override
-	public void onStop() {
-		super.onStop();
-		FlurryAgent.onEndSession(this);
-	}
-
-	/**
+ 	/**
 	 * Called when the activity is first created.
 	 **/
 	@Override
@@ -770,8 +764,8 @@ public class LoginActivity extends Activity implements OnClickListener {
 				.hideSoftInputFromWindow(LoginActivity.this.getCurrentFocus()
 						.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 		Toast.makeText(this, R.string.msg_login_ok, Toast.LENGTH_SHORT).show();
-		startActivity(intent);
-		finish();
+		forwardToNextActivity();
+		
 	}
 
 	private void onLoginFailure(String reason) {

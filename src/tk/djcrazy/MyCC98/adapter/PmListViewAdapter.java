@@ -7,7 +7,7 @@ import org.apache.commons.lang3.StringEscapeUtils;
 import tk.djcrazy.MyCC98.PmViewActivity;
 import tk.djcrazy.MyCC98.R;
 import tk.djcrazy.libCC98.data.PmInfo;
-import android.content.Context;
+import android.app.Activity;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +18,7 @@ import android.widget.TextView;
 
 public class PmListViewAdapter extends BaseAdapter implements ListAdapter {
 
-	private Context context;
+	private Activity context;
 	private List<PmInfo> listItem;
 	private LayoutInflater listInflater;
 
@@ -29,7 +29,7 @@ public class PmListViewAdapter extends BaseAdapter implements ListAdapter {
 		public TextView time;
 	}
 
-	public PmListViewAdapter(Context context, List<PmInfo> listItem) {
+	public PmListViewAdapter(Activity context, List<PmInfo> listItem) {
 		this.context = context;
 		listInflater = LayoutInflater.from(context);
 		this.listItem = listItem;
@@ -96,6 +96,8 @@ public class PmListViewAdapter extends BaseAdapter implements ListAdapter {
 		intent.putExtra("SendTime", sendTime);
 		intent.putExtra("Topic", topic);
 		context.startActivity(intent);
+		context.overridePendingTransition(R.anim.forward_activity_move_in, R.anim.forward_activity_move_out);
+
 	}
 
 	/**

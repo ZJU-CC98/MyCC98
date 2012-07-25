@@ -11,6 +11,7 @@ import tk.djcrazy.MyCC98.adapter.HotTopicListAdapter;
 import tk.djcrazy.MyCC98.view.PullToRefreshListView.OnRefreshListener;
 import tk.djcrazy.libCC98.CC98Parser;
 import tk.djcrazy.libCC98.data.HotTopicEntity;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -23,14 +24,16 @@ import android.widget.Toast;
 public class HotTopicView extends LinearLayout implements ChildView, OnRefreshListener{
 	private static final int GET_HOT_TOPIC_LIST_SUCCESS = 1;
 	private static final int GET_HOT_TOPIC_LIST_FAILED = 0;
+	private Activity context;
 	private List<HotTopicEntity> topicList;
 	private HotTopicListAdapter hotTopicListAdapter ;
 	private PullToRefreshListView listView;
 	private ParentView pv;
 	private Bitmap userImage;
 	private ProgressDialog dialog;
-	public HotTopicView(Context context) {
+	public HotTopicView(Activity context) {
 		super(context);
+		this.context = context;
 		LayoutInflater.from(context).inflate(R.layout.hot_topic, this,
 				true);
         dialog = ProgressDialog.show(getContext(), "", "Loading...", true);
@@ -72,7 +75,7 @@ public class HotTopicView extends LinearLayout implements ChildView, OnRefreshLi
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
 			case GET_HOT_TOPIC_LIST_SUCCESS:
-				hotTopicListAdapter = new HotTopicListAdapter(getContext(), topicList);
+				hotTopicListAdapter = new HotTopicListAdapter(context, topicList);
 				hotTopicListAdapter.setUserImage(userImage);
  				listView.setAdapter(hotTopicListAdapter); 
  				listView.onRefreshComplete();

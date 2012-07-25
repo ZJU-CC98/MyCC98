@@ -15,6 +15,7 @@ import android.net.ParseException;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
@@ -23,7 +24,7 @@ import android.widget.Toast;
 
 import com.flurry.android.FlurryAgent;
 
-public class ProfileActivity extends Activity {
+public class ProfileActivity extends BaseActivity {
 
 	private static final int LOAD_PROFILE_SUCCESS = 1;
 	private static final int LOAD_PROFILE_FAILED = 0;
@@ -97,25 +98,7 @@ public class ProfileActivity extends Activity {
 		}
 
 	};
-
-	@Override
-	public void onStart()
-	{
-	   super.onStart();
-	   FlurryAgent.onStartSession(this, "5EXV7SIGMTTDKYNXTKR4");
-	}
-	
-	@Override
-	public void onStop()
-	{
-	   super.onStop();
-	   FlurryAgent.onEndSession(this);
-	}
-
-	/**
-	 * Called when the activity is first created.
-	 **/
-	@Override
+ 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -181,6 +164,7 @@ public class ProfileActivity extends Activity {
 				intent.putExtra(EditActivity.BUNDLE, bundle);
 				intent.putExtra(EditActivity.BUNDLE, bundle);
 				startActivity(intent);
+				overridePendingTransition(R.anim.forward_activity_move_in, R.anim.forward_activity_move_out);
 			}
 		});
 	}
@@ -260,5 +244,4 @@ public class ProfileActivity extends Activity {
 		userPage.setText(profileEntity.getUserPage());
 		loginStatues.setText(profileEntity.getOnlineTime());
 	}
-
 }

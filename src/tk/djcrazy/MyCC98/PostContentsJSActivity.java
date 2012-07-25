@@ -9,12 +9,12 @@ import java.util.regex.Pattern;
 import org.apache.http.ParseException;
 import org.apache.http.client.ClientProtocolException;
 
-import tk.djcrazy.MyCC98.data.PostContentsListPage;
 import tk.djcrazy.MyCC98.helper.HtmlGenHelper;
 import tk.djcrazy.MyCC98.view.HeaderView;
 import tk.djcrazy.libCC98.CC98Client;
 import tk.djcrazy.libCC98.CC98Parser;
 import tk.djcrazy.libCC98.data.PostContentEntity;
+import tk.djcrazy.libCC98.data.PostContentsListPage;
 import tk.djcrazy.libCC98.exception.NoUserFoundException;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -50,14 +50,12 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
-import com.flurry.android.FlurryAgent;
-
 /**
  * 
  * @author zsy
  * 
  */
-public class PostContentsJSActivity extends Activity {
+public class PostContentsJSActivity extends BaseActivity {
 
 	public static final int FETCH_CONTENT_SUCCESS = 1;
 	public static final int FETCH_CONTENT_FAILED = 0;
@@ -112,19 +110,7 @@ public class PostContentsJSActivity extends Activity {
 	private boolean threadCancel = false;
 	private boolean searchMode = false;
 
-	@Override
-	public void onStart() {
-		super.onStart();
-		FlurryAgent.onStartSession(this, "5EXV7SIGMTTDKYNXTKR4");
-	}
-
-	@Override
-	public void onStop() {
-		super.onStop();
-		FlurryAgent.onEndSession(this);
-	}
-
-	@Override
+ 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
@@ -304,6 +290,8 @@ public class PostContentsJSActivity extends Activity {
 				Intent i = new Intent(Intent.ACTION_VIEW);
 				i.setData(Uri.parse(url));
 				startActivity(i);
+				overridePendingTransition(R.anim.forward_activity_move_in,
+						R.anim.forward_activity_move_out);
 				return true;
 			}
 		});
@@ -511,10 +499,22 @@ public class PostContentsJSActivity extends Activity {
 					.append("</span><script>searchubb('ubbcode")
 					.append(i)
 					.append("',1,'tablebody2');</script></div>")
-					.append("<img src=\"file:///android_asset/images/draw-icon.png\" onclick=\"")
+					.append("<div class=\"btn_wrapper\"><a class=\"btn pos0\" onclick=\"")
 					.append(JS_INTERFACE).append(".showContentDialog(")
 					.append(i)
-					.append(");\" width=48 height=48 class=\"dialog-but\" />")
+					.append(");\">吐槽1</a>")
+					.append("<a class=\"btn pos1\" onclick=\"")
+					.append(JS_INTERFACE).append(".showContentDialog(")
+					.append(i)
+					.append(");\">吐槽2</a>")
+					.append("<a class=\"btn pos2\" onclick=\"")
+					.append(JS_INTERFACE).append(".showContentDialog(")
+					.append(i)
+					.append(");\">吐槽3</a>")
+					.append("<a class=\"btn pos3\" onclick=\"")
+					.append(JS_INTERFACE).append(".showContentDialog(")
+					.append(i)
+					.append(");\">吐槽4</a></div>")
 					.append(ITEM_CLOSE);
 			builder.append(mBuilder.toString());
 		}
@@ -523,6 +523,7 @@ public class PostContentsJSActivity extends Activity {
 			return "";
 		}
 		builder.append(HtmlGenHelper.PAGE_CLOSE);
+		Log.d("PostContentLog", builder.toString());
 		return builder.toString();
 	}
 
@@ -632,6 +633,8 @@ public class PostContentsJSActivity extends Activity {
 		bundle.putParcelable(EditActivity.USER_IMAGE, userImage);
 		intent.putExtra(EditActivity.BUNDLE, bundle);
 		startActivityForResult(intent, 1);
+		overridePendingTransition(R.anim.forward_activity_move_in,
+				R.anim.forward_activity_move_out);
 	}
 
 	// option menu
@@ -737,7 +740,8 @@ public class PostContentsJSActivity extends Activity {
 							viewUserInfo(item.getUserName());
 							break;
 						case 4:
-							if (item.getUserName().equals(CC98Client.getUserName())) {
+							if (item.getUserName().equals(
+									CC98Client.getUserName())) {
 								String tmp = item.getPostContent().replaceAll(
 										"(<br>|<BR>)", "\n");
 								String topic = item.getPostTitle();
@@ -755,14 +759,16 @@ public class PostContentsJSActivity extends Activity {
 
 	private void editPost(String link, String content, String topic) {
 		Bundle bundle = new Bundle();
-		bundle.putString(EditActivity.EDIT_CONTENT, content.replaceAll(
-				"<.*?>|searchubb.*?;", ""));
+		bundle.putString(EditActivity.EDIT_CONTENT,
+				content.replaceAll("<.*?>|searchubb.*?;", ""));
 		bundle.putString(EditActivity.EDIT_TOPIC, topic);
 		bundle.putString(EditActivity.EDIT_LINK, link);
 		bundle.putInt(EditActivity.MOD, EditActivity.MOD_EDIT);
 		Intent intent = new Intent(this, EditActivity.class);
 		intent.putExtra(EditActivity.BUNDLE, bundle);
 		startActivity(intent);
+		overridePendingTransition(R.anim.forward_activity_move_in,
+				R.anim.forward_activity_move_out);
 	}
 
 	private void add_friend(final String userName) {
@@ -793,6 +799,9 @@ public class PostContentsJSActivity extends Activity {
 		intent.putExtra("userName", username);
 		intent.putExtra(ProfileActivity.USER_IMAGE, userImage);
 		PostContentsJSActivity.this.startActivity(intent);
+		PostContentsJSActivity.this.overridePendingTransition(R.anim.forward_activity_move_in,
+				R.anim.forward_activity_move_out);
+
 	}
 
 	private void send_pm(String target) {
@@ -803,6 +812,8 @@ public class PostContentsJSActivity extends Activity {
 		intent.putExtra(EditActivity.BUNDLE, bundle);
 		intent.putExtra(EditActivity.BUNDLE, bundle);
 		startActivity(intent);
+		overridePendingTransition(R.anim.forward_activity_move_in,
+				R.anim.forward_activity_move_out);
 	}
 
 	private void dismissSearchDialog() {
@@ -826,6 +837,8 @@ public class PostContentsJSActivity extends Activity {
 		bundle.putInt(EditActivity.MOD, EditActivity.MOD_REPLY);
 		intent.putExtra(EditActivity.BUNDLE, bundle);
 		startActivityForResult(intent, 1);
+		overridePendingTransition(R.anim.forward_activity_move_in,
+				R.anim.forward_activity_move_out);
 	}
 
 	@Override
@@ -850,13 +863,13 @@ public class PostContentsJSActivity extends Activity {
 				dismissSearchDialog();
 			} else {
 				finish();
+				overridePendingTransition(R.anim.backward_activity_move_in,
+						R.anim.backward_activity_move_out);
 			}
 		} else {
 			super.onKeyDown(keyCode, event);
 		}
-
 		return false;
-
 	}
 
 	public void open(String pageLink, int pageNum) {
@@ -868,6 +881,7 @@ public class PostContentsJSActivity extends Activity {
 		Intent intent = new Intent(this, PostContentsJSActivity.class);
 		intent.putExtra(POST, bundle);
 		this.startActivity(intent);
+		overridePendingTransition(R.anim.forward_activity_move_in,
+				R.anim.forward_activity_move_out);
 	}
-
 }

@@ -58,7 +58,8 @@
             android:id="@+id/but_post_return"
             style="@style/button"
             android:layout_weight="1"
-            android:text="返回版面" />
+            android:text="返回版面" 
+            android:visibility="gone"/>
 
         <TextView
             android:id="@+id/but_post_jump"

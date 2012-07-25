@@ -9,10 +9,13 @@ import tk.djcrazy.MyCC98.ProfileActivity;
 import tk.djcrazy.MyCC98.R;
 import tk.djcrazy.libCC98.data.UserStatue;
 import tk.djcrazy.libCC98.data.UserStatueEntity;
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.DataSetObserver;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,7 +27,7 @@ import android.widget.Toast;
 
 public class FriendListViewAdapter extends BaseAdapter {
 
-	private Context context;
+	private Activity context;
 	private final List<UserStatueEntity> listItem;
 
 	private LayoutInflater listInflater;
@@ -42,7 +45,7 @@ public class FriendListViewAdapter extends BaseAdapter {
 		public TextView userState;
 	}
 
-	public FriendListViewAdapter(Context context,
+	public FriendListViewAdapter(Activity context,
 			List<UserStatueEntity> boardList) {
 		this.context = context;
 		listInflater = LayoutInflater.from(context);
@@ -70,7 +73,7 @@ public class FriendListViewAdapter extends BaseAdapter {
 		return 0;
 	}
 
-	@Override
+ 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		final int clickPosition = position;
 		ListItemView listItemView = null;
@@ -100,14 +103,14 @@ public class FriendListViewAdapter extends BaseAdapter {
 			if (listItem.get(position).getStatue() == UserStatue.ON_LINE) {
 				listItemView.userState.setText("在线");
 				listItemView.userState
-						.setTextColor(R.color.friend_list_item_user_on_line);
+						.setTextColor(Color.RED);
 			} else {
 				listItemView.userState.setText("离线");
 				listItemView.userState
-						.setTextColor(R.color.friend_list_item_user_off_line);
+						.setTextColor(Color.GRAY);
 			}
 		} catch (ParseException e) {
-			Toast.makeText(context, "加载失败", Toast.LENGTH_SHORT);
+			Toast.makeText(context, "加载失败", Toast.LENGTH_SHORT).show();
 			e.printStackTrace();
 		}
 
@@ -119,6 +122,7 @@ public class FriendListViewAdapter extends BaseAdapter {
 						.getUserName());
 				intent.putExtra(ProfileActivity.USER_IMAGE, userImage);
 				context.startActivity(intent);
+				context.overridePendingTransition(R.anim.forward_activity_move_in, R.anim.forward_activity_move_out);
 			}
 		});
 		
@@ -139,5 +143,7 @@ public class FriendListViewAdapter extends BaseAdapter {
 		intent.putExtra(EditActivity.BUNDLE, bundle);
 		intent.putExtra(EditActivity.BUNDLE, bundle);
 		context.startActivity(intent);
+		context.overridePendingTransition(R.anim.forward_activity_move_in, R.anim.forward_activity_move_out);
+
 	}
 }

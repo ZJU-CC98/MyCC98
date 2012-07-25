@@ -10,6 +10,7 @@ import org.apache.http.NameValuePair;
 import tk.djcrazy.MyCC98.PostListActivity;
 import tk.djcrazy.MyCC98.R;
 import tk.djcrazy.libCC98.CC98Client;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -27,7 +28,7 @@ import android.widget.TextView;
 public class SearchResultListAdapter extends BaseAdapter {
 
 	final List<NameValuePair> mBoardList;
-	Context context;
+	Activity context;
 
 	LayoutInflater listInflater;
 	View view;
@@ -37,7 +38,7 @@ public class SearchResultListAdapter extends BaseAdapter {
 		public TextView boardName;
 	}
 
-	public SearchResultListAdapter(Context context,
+	public SearchResultListAdapter(Activity context,
 			List<NameValuePair> boardList) {
 		this.context = context;
 		listInflater = LayoutInflater.from(context);
@@ -95,6 +96,8 @@ public class SearchResultListAdapter extends BaseAdapter {
 						PostListActivity.BOARD_ENTITY, bundle).setClass(
 						context, PostListActivity.class);
 				context.startActivity(intent);
+				context.overridePendingTransition(R.anim.forward_activity_move_in, R.anim.forward_activity_move_out);
+
 			}
 		});
 

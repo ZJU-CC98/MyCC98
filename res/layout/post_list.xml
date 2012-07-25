@@ -35,7 +35,8 @@
             android:background="@drawable/simple_button_selector"
             android:gravity="center"
             android:text="返回定制区"
-            android:textSize="10sp" />
+            android:textSize="10sp"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/post_pre_page"

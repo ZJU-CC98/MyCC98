@@ -43,6 +43,7 @@ import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.ContextThemeWrapper;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -61,7 +62,7 @@ import com.flurry.android.FlurryAgent;
  * @author DJ
  * 
  */
-public class PushNewPostActivity extends Activity {
+public class PushNewPostActivity extends BaseActivity {
 
 	private static final int TITLE_MAX_LENGTH = 100;
 
@@ -296,31 +297,13 @@ public class PushNewPostActivity extends Activity {
 	private FaceExpressionChooseListener faceListener;
 
 	@Override
-	public void onStart() {
-		super.onStart();
-		FlurryAgent.onStartSession(this, "5EXV7SIGMTTDKYNXTKR4");
-	}
-
-	@Override
-	public void onStop() {
-		super.onStop();
-		FlurryAgent.onEndSession(this);
-	}
-
-	public void onCreate(Bundle savedInstanceState) {
+ 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		// Settings with no title
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		setContentView(R.layout.push_new_post);
+ 		setContentView(R.layout.push_new_post);
 		Bundle bundle = getIntent().getBundleExtra("pushNewPost");
 		boardID = bundle.getInt("boardID");
 		boardName = bundle.getString("boardName");
-
-		System.err.println("boardID:" + boardID);
-		System.out.println("boardName:" + boardName);
-		setTitle("发新帖<<" + boardName);
-		findViews();
-
+ 		findViews();
 		setupListeners();
 	}
 
@@ -464,7 +447,7 @@ public class PushNewPostActivity extends Activity {
 
 				if (s.toString().getBytes().length > TITLE_MAX_LENGTH) {
 					Toast.makeText(PushNewPostActivity.this,
-							R.string.title_length_overflow, Toast.LENGTH_SHORT);
+							R.string.title_length_overflow, Toast.LENGTH_SHORT).show();
 				}
 
 			}
@@ -825,4 +808,16 @@ public class PushNewPostActivity extends Activity {
 		}
 
 	}
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+			finish();
+			overridePendingTransition(R.anim.backward_activity_move_in,
+					R.anim.backward_activity_move_out);
+			return true;
+		}
+		return false;
+	}
+
 }

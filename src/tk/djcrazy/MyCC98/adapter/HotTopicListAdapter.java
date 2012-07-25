@@ -9,6 +9,7 @@ import tk.djcrazy.MyCC98.PostContentsJSActivity;
 import tk.djcrazy.MyCC98.R;
 import tk.djcrazy.libCC98.CC98Client;
 import tk.djcrazy.libCC98.data.HotTopicEntity;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.DataSetObserver;
@@ -26,7 +27,7 @@ import android.widget.TextView;
  */
 public class HotTopicListAdapter extends BaseAdapter {
     
-	Context context ;
+	Activity context ;
     Bundle bundle = new Bundle();
     Intent intent = new Intent();
      
@@ -48,7 +49,7 @@ public class HotTopicListAdapter extends BaseAdapter {
         public View postClickable;
     }
 
-    public HotTopicListAdapter(Context context, List<HotTopicEntity> topicList) {
+    public HotTopicListAdapter(Activity context, List<HotTopicEntity> topicList) {
         this.context = context;
         listInflater = LayoutInflater.from(context);
         this.listItem = topicList;
@@ -121,6 +122,8 @@ public class HotTopicListAdapter extends BaseAdapter {
                 jumpbBundle.putParcelable(PostContentsJSActivity.USER_IMAGE, userImage);
                 intent.putExtra(PostContentsJSActivity.POST, jumpbBundle);
                 context.startActivity(intent);
+        		context.overridePendingTransition(R.anim.forward_activity_move_in, R.anim.forward_activity_move_out);
+
             }
         });
 

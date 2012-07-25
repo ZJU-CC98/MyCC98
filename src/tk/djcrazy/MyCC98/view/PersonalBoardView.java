@@ -11,6 +11,7 @@ import tk.djcrazy.MyCC98.adapter.PersonalboardListViewAdapter;
 import tk.djcrazy.MyCC98.view.PullToRefreshListView.OnRefreshListener;
 import tk.djcrazy.libCC98.CC98Parser;
 import tk.djcrazy.libCC98.data.BoardEntity;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -94,7 +95,7 @@ public class PersonalBoardView extends LinearLayout implements ChildView, OnRefr
 			public void run() {
 				try {
 					boardList = CC98Parser.getPersonalBoardList();
-					boardListViewAdapter = new PersonalboardListViewAdapter(getContext(), boardList);
+					boardListViewAdapter = new PersonalboardListViewAdapter((Activity) getContext(), boardList);
 					boardListViewAdapter.setUserImage(userImage);
 					handler.sendEmptyMessage(GET_LIST_SUCCESS);
 				} catch (ClientProtocolException e) {

@@ -12,6 +12,7 @@ import org.apache.http.client.ClientProtocolException;
 import tk.djcrazy.MyCC98.R;
 import tk.djcrazy.MyCC98.adapter.NewTopicListAdapter;
 import tk.djcrazy.MyCC98.view.PullToRefreshListView.OnRefreshListener;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -26,12 +27,14 @@ public class NewTopicView extends LinearLayout implements ChildView, OnRefreshLi
 	private NewTopicListAdapter newTopicListAdapter;
 	private PullToRefreshListView listView;
 	private ProgressDialog dialog;
+	private Activity context;
 	private ParentView pv;
 	private Bitmap userImage;
 	private static final int GET_NEW_TOPIC_LIST_SUCCESS = 1;
 	private static final int GET_NEW_TOPIC_LIST_FAILED = 0;
-	public NewTopicView(Context context) {
+	public NewTopicView(Activity context) {
 		super(context);
+		this.context = context;
 		LayoutInflater.from(context).inflate(R.layout.new_topic, this,
 				true);
 		
@@ -81,7 +84,7 @@ public class NewTopicView extends LinearLayout implements ChildView, OnRefreshLi
 			case GET_NEW_TOPIC_LIST_SUCCESS:
 				topicList.remove(0);
 				newTopicListAdapter = new NewTopicListAdapter(
-						getContext(), topicList);
+						context, topicList);
 				newTopicListAdapter.setUserImage(userImage);
 				listView.setAdapter(newTopicListAdapter);
 				listView.onRefreshComplete();

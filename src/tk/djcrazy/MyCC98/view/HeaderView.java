@@ -4,6 +4,7 @@ import tk.djcrazy.MyCC98.HomeActivity;
 import tk.djcrazy.MyCC98.PostSearchActivity;
 import tk.djcrazy.MyCC98.R;
 import android.R.integer;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -94,6 +95,9 @@ public class HeaderView extends LinearLayout implements ChildView {
 						(new Intent().setClass(getContext(),
 								PostSearchActivity.class).putExtra(
 								PostSearchActivity.USER_IMAGE, userImage)));
+				((Activity) getContext()).overridePendingTransition(
+						R.anim.forward_activity_move_in,
+						R.anim.forward_activity_move_out);
 			}
 		});
 	}

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import tk.djcrazy.MyCC98.R;
+import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class contentListViewAdapter extends BaseAdapter {
-    Context context;
+    Activity context;
     List<Map<String, Object>> listItem;
     LayoutInflater listInflater;
 
@@ -24,7 +25,7 @@ public class contentListViewAdapter extends BaseAdapter {
         public TextView reply_content;               
     }
 
-    public contentListViewAdapter(Context context,
+    public contentListViewAdapter(Activity context,
             List<Map<String, Object>> listItem) {
         this.context = context;
         listInflater = LayoutInflater.from(context);

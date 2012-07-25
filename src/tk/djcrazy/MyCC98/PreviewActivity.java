@@ -7,31 +7,19 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.webkit.WebSettings.LayoutAlgorithm;
 import android.webkit.WebView;
 
 import com.flurry.android.FlurryAgent;
 
-public class PreviewActivity extends Activity {
+public class PreviewActivity extends BaseActivity {
 	
 	public static final String CONTENT = "content";
 	WebView webView;
 	String content = "";
 	String tagedContent = "";
-	@Override
-	public void onStart()
-	{
-	   super.onStart();
-	   FlurryAgent.onStartSession(this, "5EXV7SIGMTTDKYNXTKR4");
-	}
-	
-	@Override
-	public void onStop()
-	{
-	   super.onStop();
-	   FlurryAgent.onEndSession(this);
-	}
-
+ 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 
@@ -94,4 +82,5 @@ public class PreviewActivity extends Activity {
 		webView.getSettings().setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
 		webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
 	}
-}
+	
+ }

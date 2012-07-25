@@ -7,6 +7,7 @@ import tk.djcrazy.MyCC98.PostListActivity;
 import tk.djcrazy.MyCC98.R;
 import tk.djcrazy.libCC98.CC98Client;
 import tk.djcrazy.libCC98.data.BoardEntity;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.DataSetObserver;
@@ -20,7 +21,7 @@ import android.widget.TextView;
 
 public class PersonalboardListViewAdapter extends BaseAdapter {
 
-	private Context context;
+	private Activity context;
 	private Bundle bundle = new Bundle();
 	private Intent intent = new Intent();
 
@@ -63,7 +64,7 @@ public class PersonalboardListViewAdapter extends BaseAdapter {
 		public View lastReplyTimeClickable;
 	}
 
-	public PersonalboardListViewAdapter(Context context, List<BoardEntity> list) {
+	public PersonalboardListViewAdapter(Activity context, List<BoardEntity> list) {
 		this.context = context;
 		listInflater = LayoutInflater.from(context);
 		this.listItem = list;
@@ -167,6 +168,8 @@ public class PersonalboardListViewAdapter extends BaseAdapter {
 						bundle.putParcelable(PostListActivity.USER_IMAGE, userImage);
  						intent.putExtra(PostListActivity.BOARD_LIST, bundle);
 						context.startActivity(intent);
+						context.overridePendingTransition(R.anim.forward_activity_move_in, R.anim.forward_activity_move_out);
+
 					}
 				});
 
@@ -189,7 +192,8 @@ public class PersonalboardListViewAdapter extends BaseAdapter {
 						bundle.putParcelable(PostContentsJSActivity.USER_IMAGE, userImage);
 						intent.putExtra(PostContentsJSActivity.POST, bundle);
 						context.startActivity(intent);
-					}
+						context.overridePendingTransition(R.anim.forward_activity_move_in, R.anim.forward_activity_move_out);
+ 					}
 				});
 
 		listItemView.lastReplyTimeClickable
@@ -211,6 +215,7 @@ public class PersonalboardListViewAdapter extends BaseAdapter {
 						bundle.putParcelable(PostContentsJSActivity.USER_IMAGE, userImage);
 						intent.putExtra(PostContentsJSActivity.POST, bundle);
 						context.startActivity(intent);
+						context.overridePendingTransition(R.anim.forward_activity_move_in, R.anim.forward_activity_move_out);
 					}
 				});
 	}

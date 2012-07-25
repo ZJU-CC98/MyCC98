@@ -25,6 +25,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -32,7 +33,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 
-public class PostListActivity extends Activity implements OnRefreshListener {
+public class PostListActivity extends BaseActivity implements OnRefreshListener {
 	public static final String BOARD_ENTITY = "boardList";
 	public static final String BOARD_LIST = "boardList";
 	public static final String BOARD_LINK = "boardLink";
@@ -154,6 +155,8 @@ public class PostListActivity extends Activity implements OnRefreshListener {
 				intent.putExtra(PostSearchActivity.BOARDID, boardid);
 				intent.putExtra(PostSearchActivity.BOARDNAME, boardName);
 				startActivity(intent);
+				overridePendingTransition(R.anim.forward_activity_move_in,
+						R.anim.forward_activity_move_out);
 			}
 		});
 		vNewpost.setOnClickListener(new OnClickListener() {
@@ -209,48 +212,16 @@ public class PostListActivity extends Activity implements OnRefreshListener {
 				} else {
 					vPrev.setVisibility(View.VISIBLE);
 				}
-				headerView
-						.setTitle(boardName + "\n" + "第" + pageNumber + "页");
+				headerView.setTitle(boardName + "\n" + "第" + pageNumber + "页");
 				listView.onRefreshComplete();
 				dialog.dismiss();
-				break; 
+				break;
 			default:
-				break; 
+				break;
 			}
 		}
 	};
-
-	/**
-	 * override menu
-	 */
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.post_list_menu, menu);
-		return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle item selection
-		switch (item.getItemId()) {
-		case R.id.post_list_menu_exit:
-			finish();
-			return true;
-		case R.id.post_list_menu_log_out:
-			Intent intent = new Intent();
-			intent.setClass(PostListActivity.this, LoginActivity.class);
-			startActivity(intent);
-			finish();
-			return true;
-		case R.id.post_list_menu_new_post:
-			sendNewPost();
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
-		}
-	}
-
+  
 	/**
 	 * 
 	 */
@@ -264,6 +235,8 @@ public class PostListActivity extends Activity implements OnRefreshListener {
 		intent2.putExtra(EditActivity.BUNDLE, bundle);
 		intent2.setClass(PostListActivity.this, EditActivity.class);
 		startActivityForResult(intent2, 0);
+		overridePendingTransition(R.anim.forward_activity_move_in,
+				R.anim.forward_activity_move_out);
 	}
 
 	@Override
@@ -281,4 +254,5 @@ public class PostListActivity extends Activity implements OnRefreshListener {
 	public void onRefresh() {
 		fetchContent();
 	}
-}
+
+ }

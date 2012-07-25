@@ -19,13 +19,13 @@ import tk.djcrazy.MyCC98.dialog.AboutDialog;
 import tk.djcrazy.MyCC98.view.FooterView;
 import tk.djcrazy.MyCC98.view.FriendListView;
 import tk.djcrazy.MyCC98.view.HeaderView;
-import tk.djcrazy.MyCC98.view.HotTopicView; 
+import tk.djcrazy.MyCC98.view.HotTopicView;
 import tk.djcrazy.MyCC98.view.NewTopicView;
 import tk.djcrazy.MyCC98.view.ParentView;
 import tk.djcrazy.MyCC98.view.PersonalBoardView;
 import tk.djcrazy.MyCC98.view.SearchBoardView;
 import tk.djcrazy.libCC98.CC98Client;
-import android.app.Activity;
+import android.R.bool;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -50,10 +50,12 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.Toast;
-import static tk.djcrazy.MyCC98.WelcomeActivity.*;
-import com.flurry.android.FlurryAgent;
 
-public class HomeActivity extends Activity implements ParentView {
+public class HomeActivity extends BaseActivity implements ParentView {
+	
+	private boolean IS_LIFETOY_VERSION = true;
+	private static final String UPDATE_LINK_LIFETOY = "http://10.110.19.123/update/lifetoy.html";
+	private static final String UPDATE_LINK_NORMAL = "http://10.110.19.123/update/index.html";
 	private static final String TAG = "HomeActivity";
 	public static final int V_PERSONAL_BOARD = 0;
 	public static final int V_BOARD_SEARCH = 1;
@@ -140,21 +142,9 @@ public class HomeActivity extends Activity implements ParentView {
 	public void setTitle(String s) {
 		headerView.setTitle(s);
 	}
-
+ 
 	@Override
-	public void onStart() {
-		super.onStart();
-		FlurryAgent.onStartSession(this, "5EXV7SIGMTTDKYNXTKR4");
-	}
-
-	@Override
-	public void onStop() {
-		super.onStop();
-		FlurryAgent.onEndSession(this);
-	}
-
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.main_frame);
@@ -259,6 +249,7 @@ public class HomeActivity extends Activity implements ParentView {
 				public void onClick(View v) {
 					startActivity(new Intent().setClass(
 							getApplicationContext(), PmActivity.class));
+					overridePendingTransition(R.anim.forward_activity_move_in, R.anim.forward_activity_move_out);
 				}
 			});
 			if (friendListView == null) {
@@ -345,15 +336,13 @@ public class HomeActivity extends Activity implements ParentView {
 		return true;
 	}
 
-	
-	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle item selection
 		switch (item.getItemId()) {
-//		case R.id.exit:
-//			finish();
-//			return true;
+		// case R.id.exit:
+		// finish();
+		// return true;
 		case R.id.settings:
 			goto_settings();
 			return true;
@@ -366,6 +355,7 @@ public class HomeActivity extends Activity implements ParentView {
 			profiIntent.putExtra("userName", CC98Client.getUserName());
 			profiIntent.putExtra(ProfileActivity.USER_IMAGE, bmUserImg);
 			startActivity(profiIntent);
+			overridePendingTransition(R.anim.forward_activity_move_in, R.anim.forward_activity_move_out);
 			return true;
 		case R.id.about:
 			showAboutInfo();
@@ -384,8 +374,9 @@ public class HomeActivity extends Activity implements ParentView {
 	private void goto_settings() {
 		Intent intent = new Intent(this, SettingsActivity.class);
 		startActivity(intent);
+		overridePendingTransition(R.anim.forward_activity_move_in, R.anim.forward_activity_move_out);
 	}
- 
+
 	/**
 	 * 
 	 */
@@ -394,10 +385,11 @@ public class HomeActivity extends Activity implements ParentView {
 		bundle.putInt(EditActivity.MOD, EditActivity.MOD_PM);
 		bundle.putString(EditActivity.TO_USER, "MyCC.98");
 		bundle.putString(EditActivity.PM_TITLE, "MyCC98软件反馈");
-		startActivity(new Intent().setClass(
-				getApplicationContext(), EditActivity.class)
-				.putExtra(EditActivity.BUNDLE, bundle));
+		startActivity(new Intent().setClass(getApplicationContext(),
+				EditActivity.class).putExtra(EditActivity.BUNDLE, bundle));
+		overridePendingTransition(R.anim.forward_activity_move_in, R.anim.forward_activity_move_out);
 	}
+
 	/**
 	 * 
 	 */
@@ -407,6 +399,7 @@ public class HomeActivity extends Activity implements ParentView {
 		Intent intent = new Intent();
 		intent.setClass(HomeActivity.this, LoginActivity.class);
 		startActivity(intent);
+		overridePendingTransition(R.anim.forward_activity_move_in, R.anim.forward_activity_move_out);
 		finish();
 	}
 
@@ -431,7 +424,9 @@ public class HomeActivity extends Activity implements ParentView {
 			String content = "";
 			try {
 				DefaultHttpClient client = new DefaultHttpClient();
-				HttpGet get = new HttpGet(IS_LIFETOY_VERSION?UPDATE_LINK_LIFETOY:UPDATE_LINK_NORMAL);
+				HttpGet get = new HttpGet(
+						IS_LIFETOY_VERSION ? UPDATE_LINK_LIFETOY
+								: UPDATE_LINK_NORMAL);
 				client.getParams().setParameter(
 						CoreConnectionPNames.CONNECTION_TIMEOUT, 1000);
 				client.getParams().setParameter(
@@ -439,7 +434,7 @@ public class HomeActivity extends Activity implements ParentView {
 				HttpResponse response = client.execute(get);
 				content = EntityUtils.toString(response.getEntity());
 				int newVersion = Integer.parseInt(content.split(" ")[0]);
-				String downLink = content.split(" ")[1]; 
+				String downLink = content.split(" ")[1];
 				downLink = downLink.replaceAll("(?=.apk).*?", "");
 				if (newVersion == getVerCode(HomeActivity.this)) {
 					checkUpdateHandler.sendEmptyMessage(NO_UPDATE);
@@ -577,7 +572,7 @@ public class HomeActivity extends Activity implements ParentView {
 				.getExternalStorageDirectory(), "MyCC98_latest.apk")),
 				"application/vnd.android.package-archive");
 		startActivity(intent);
+		overridePendingTransition(R.anim.forward_activity_move_in, R.anim.forward_activity_move_out);
 		finish();
 	}
-
-}
+ }

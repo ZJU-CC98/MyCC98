@@ -1,7 +1,7 @@
 /**
  * 
  */
-package tk.djcrazy.MyCC98.data;
+package tk.djcrazy.libCC98.data;
 
 
 /**

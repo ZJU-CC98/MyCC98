@@ -49,6 +49,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -61,7 +62,7 @@ import android.widget.Toast;
 
 import com.flurry.android.FlurryAgent;
 
-public class EditActivity extends Activity {
+public class EditActivity extends BaseActivity {
 
 	public static final int MOD_REPLY = 0;
 	public static final int MOD_NEW_POST = 1;
@@ -350,23 +351,11 @@ public class EditActivity extends Activity {
 	};
 
 	private FaceExpressionChooseListener faceListener;
-
-	@Override
-	public void onStart() {
-		super.onStart();
-		FlurryAgent.onStartSession(this, "5EXV7SIGMTTDKYNXTKR4");
-	}
-
-	@Override
-	public void onStop() {
-		super.onStop();
-		FlurryAgent.onEndSession(this);
-	}
-
+ 
+	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		setContentView(R.layout.reply);
+ 		setContentView(R.layout.reply);
 		Bundle bundle = getIntent().getBundleExtra(BUNDLE);
 		mod = bundle.getInt(MOD, MOD_REPLY);
 		findViews();
@@ -589,6 +578,7 @@ public class EditActivity extends Activity {
 						PreviewActivity.class).putExtra(
 						PreviewActivity.CONTENT,
 						replyContent.getText().toString()));
+				overridePendingTransition(R.anim.forward_activity_move_in, R.anim.forward_activity_move_out);
 			}
 		});
 
@@ -1100,6 +1090,7 @@ public class EditActivity extends Activity {
 	private void uploadSketch() {
 		startActivityForResult(new Intent(this, SketchActivity.class),
 				GET_SKETCH);
+		overridePendingTransition(R.anim.forward_activity_move_in, R.anim.forward_activity_move_out);
 	}
 
 	/**
@@ -1114,6 +1105,7 @@ public class EditActivity extends Activity {
 			mCurrentPhotoFile.createNewFile();
 			final Intent intent = getTakePickIntent();
 			startActivityForResult(intent, CAMERA_WITH_DATA);
+			overridePendingTransition(R.anim.forward_activity_move_in, R.anim.forward_activity_move_out);
 		} catch (ActivityNotFoundException e) {
 			Toast.makeText(this, "未找到目标！", Toast.LENGTH_LONG).show();
 		} catch (IOException e) {
@@ -1147,6 +1139,7 @@ public class EditActivity extends Activity {
 			// Launch picker to choose photo for selected contact
 			final Intent intent = getPhotoPickIntent();
 			startActivityForResult(intent, PHOTO_PICKED_WITH_DATA);
+			overridePendingTransition(R.anim.forward_activity_move_in, R.anim.forward_activity_move_out);
 		} catch (ActivityNotFoundException e) {
 			Toast.makeText(this, " ", Toast.LENGTH_LONG).show();
 		}
@@ -1414,4 +1407,5 @@ public class EditActivity extends Activity {
 			Toast.makeText(this, "发送短信息失败", Toast.LENGTH_SHORT).show();
 		}
 	}
+
 }

@@ -1,31 +1,13 @@
-/**
- * 
- */
 package tk.djcrazy.MyCC98;
 
 import com.flurry.android.FlurryAgent;
 
+import android.app.Activity;
 import android.os.Bundle;
-import android.preference.PreferenceActivity;
 import android.view.KeyEvent;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
+import android.view.Window;
 
-/**
- * @author zsy
- *
- */
-public class SettingsActivity extends PreferenceActivity {
-	public static final String SETTINGS = "settings";
-	public static final String SETTING_USE_TAIL = "settings_tail";
-	public static final String SETTING_USE_DARK = "settings_dark";
-	
- 	private Spinner spinner;
-	
-	private ArrayAdapter<CharSequence> ids;
-	
-	public static boolean addTail = true;
-	public static boolean useDark = false;
+public class BaseActivity extends Activity {
 	
 	@Override
 	public void onStart() {
@@ -38,14 +20,12 @@ public class SettingsActivity extends PreferenceActivity {
 		super.onStop();
 		FlurryAgent.onEndSession(this);
 	}
-
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
- 		addPreferencesFromResource(R.xml.settings);
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
 	}
 	
- 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
@@ -56,6 +36,5 @@ public class SettingsActivity extends PreferenceActivity {
 		}
 		return false;
 	}
-
 
 }

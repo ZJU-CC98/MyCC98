@@ -13,6 +13,7 @@ import tk.djcrazy.MyCC98.R;
 import tk.djcrazy.MyCC98.adapter.SearchResultListAdapter;
 import tk.djcrazy.libCC98.CC98Client;
 import tk.djcrazy.libCC98.CC98Parser;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -175,7 +176,7 @@ public class SearchBoardView extends LinearLayout implements ChildView {
 			currentResult = tmplist;
 		}
 		lastquerylen = string.length();
-		listAdapter = new SearchResultListAdapter(getContext(), currentResult);
+		listAdapter = new SearchResultListAdapter((Activity) getContext(), currentResult);
 		lvResultList.setAdapter(listAdapter);
 		lvResultList.invalidate();
 	}

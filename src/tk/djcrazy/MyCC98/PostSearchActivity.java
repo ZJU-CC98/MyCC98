@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.KeyEvent;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
@@ -120,18 +121,6 @@ public class PostSearchActivity extends Activity {
 	}
 
 	@Override
-	public void onStart() {
-		super.onStart();
-		FlurryAgent.onStartSession(this, "5EXV7SIGMTTDKYNXTKR4");
-	}
-
-	@Override
-	public void onStop() {
-		super.onStop();
-		FlurryAgent.onEndSession(this);
-	}
-
-	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -169,6 +158,7 @@ public class PostSearchActivity extends Activity {
 				fetchContent();
 			}
 		});
+		mHeaderView.setUserImg(CC98Client.getLoginUserImg());
 		vNext.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -201,4 +191,5 @@ public class PostSearchActivity extends Activity {
 		vPrev = findViewById(R.id.tv_postsearch_prev);
 		mHeaderView = (HeaderView) findViewById(R.id.main_header);
 	}
+
 }
