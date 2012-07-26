@@ -53,13 +53,8 @@ public class HtmlGenHelper {
     }
 
     public static String addSenderAvatar(String senderAvatarUrl, int index) {
-        String onclickString = "";
-        if (index != -1) {
-            onclickString = "onclick=\"PostContents.showContentDialog(" + index
-                    + ");\"";
-        }
-        return "<img class=\"img-avatar\" src=\"" + senderAvatarUrl
-                + "\" height=64 " + onclickString + " />";
+         return "<img class=\"img-avatar\" src=\"" + senderAvatarUrl
+                + "\" height=64/>";
     }
 
     public static String addTopic(String readTopic) {

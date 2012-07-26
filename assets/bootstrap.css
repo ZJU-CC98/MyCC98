@@ -9,70 +9,20 @@
    vertical-align: middle;
   cursor: pointer;
   background-color: #f5f5f5;
-  *background-color: #e6e6e6;
    border: 1px solid #cccccc;
-  *border: 0;
   border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
   border-color: #e6e6e6 #e6e6e6 #bfbfbf;
   border-bottom-color: #b3b3b3;
   -webkit-border-radius: 4px;
-           border-radius: 4px;
+
 }
-
-.btn:hover,
-.btn:active,
-.btn.active,
-.btn.disabled,
-
-.btn:active,
-.btn.active {
-  background-color: #cccccc \9;
-}
-
-.btn:first-child {
-  *margin-left: 0;
-}
-
-.btn:hover {
+/*   在这里改变点击是的颜色 */
+ .btn:hover {
   text-decoration: none;
   background-color: #e6e6e6;
-  *background-color: #d9d9d9;
-  /* Buttons in IE7 don't get borders, so darken on hover */
-
-  background-position: 0 -15px;
-  -webkit-transition: background-position 0.1s linear;
-       -o-transition: background-position 0.1s linear;
-          transition: background-position 0.1s linear;
-}
-
-.btn:focus {
-  outline: thin dotted #333;
-  outline: 5px auto -webkit-focus-ring-color;
-  outline-offset: -2px;
-}
-
-.btn.active,
-.btn:active {
-  background-color: #e6e6e6;
-  background-color: #d9d9d9 \9;
-  background-image: none;
-  outline: 0;
  }
 
- .btn {
-  border-color: #ccc;
-  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
-}
- 
- 
-
-.btn-group {
-  position: relative;
-  *margin-left: .3em;
-  *zoom: 1;
-}
-
-.btn-group:before,
+ .btn-group:before,
 .btn-group:after {
   display: table;
   content: "";
@@ -82,27 +32,7 @@
   clear: both;
 }
 
-.btn-group:first-child {
-  *margin-left: 0;
-}
-
-.btn-group + .btn-group {
-  margin-left: 5px;
-}
-
-.btn-toolbar {
-  margin-top: 9px;
-  margin-bottom: 9px;
-}
-
-.btn-toolbar .btn-group {
-  display: inline-block;
-  *display: inline;
-  /* IE7 inline-block hack */
-
-  *zoom: 1;
-}
-
+ 
 .btn-group > .btn {
   position: relative;
   float: left;

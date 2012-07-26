@@ -102,14 +102,7 @@ public class PostContentsJSActivity extends BaseActivity {
 	private static final String JS_INTERFACE = "PostContents";
 
 	private static final String ITEM_OPEN = "<div class=\"post\"><div class=\"post-content-wrapper\">";
-	private static final String ITEM_CLOSE = "</div>"+
-			"<div class=\"btn-group\">"+
-			"<a class=\"btn\">吐槽</a>"+
-			"<a class=\"btn\">查看</a>"+ 
-			"<a class=\"btn\">站短</a>" +
-			"<a class=\"btn\">加好友</a>"+
-			"</div>"+
-			 "</div>" ;
+	private static final String ITEM_CLOSE =  "</div>" ;
 	private static final String TAG = "PostContentsJS";
 	private static final int MNU_REFRESH = Menu.FIRST;
 	private static final int MNU_FIRST = Menu.FIRST + 1;
@@ -505,6 +498,13 @@ public class PostContentsJSActivity extends BaseActivity {
 					.append(content)
 					.append("</span><script>searchubb('ubbcode").append(i)
 					.append("',1,'tablebody2');</script></div>")
+					.append("</div>")
+					.append("<div class=\"btn-group\">")
+					.append("<a class=\"btn\" onclick=\"PostContents.showContentDialog("+i +","+0+ ");\">吐槽</a>")
+					.append("<a class=\"btn\" onclick=\"PostContents.showContentDialog("+i +","+1+ ");\">站短</a>")
+					.append("<a class=\"btn\" onclick=\"PostContents.showContentDialog("+i +","+3+ ");\">查看</a>")
+					.append("<a class=\"btn\" onclick=\"PostContents.showContentDialog("+i +","+2+ ");\">加好友</a>")
+					.append("</div>")
 					.append(ITEM_CLOSE);
 			builder.append(mBuilder.toString());
 		}
@@ -513,40 +513,9 @@ public class PostContentsJSActivity extends BaseActivity {
 			return "";
 		}
 		builder.append(HtmlGenHelper.PAGE_CLOSE);
-		Log.d("PostContentLog", builder.toString());
-		writeFileToSD(builder.toString());
-		return builder.toString();
+ 		return builder.toString();
 	}
-
-	private void writeFileToSD(String s) {
-		String sdStatus = Environment.getExternalStorageState();
-		if (!sdStatus.equals(Environment.MEDIA_MOUNTED)) {
-			Log.d("TestFile", "SD card is not avaiable/writeable right now.");
-			return;
-		}
-		try {
-			String pathName = "/sdcard/MyCC98/";
-			String fileName = "file.html";
-			File path = new File(pathName);
-			File file = new File(pathName + fileName);
-			if (!path.exists()) {
-				Log.d("TestFile", "Create the path:" + pathName);
-				path.mkdir();
-			}
-			if (!file.exists()) {
-				Log.d("TestFile", "Create the file:" + fileName);
-				file.createNewFile();
-			}
-			FileOutputStream stream = new FileOutputStream(file);
- 			byte[] buf = s.getBytes();
-			stream.write(buf);
-			stream.close();
-		} catch (Exception e) {
-			Log.e("TestFile", "Error on writeFilToSD.");
-			e.printStackTrace();
-		}
-	}
-
+ 
 	private void prefetch() {
 		if (threadCancel) {
 			threadCancel = false;
@@ -712,70 +681,43 @@ public class PostContentsJSActivity extends BaseActivity {
 		}
 	}
 
-	public void showContentDialog(final int index) {
+	public void showContentDialog(final int index,int which) {
 		final PostContentEntity item = currPage.getList().get(index);
-		Log.d("MyCC98", "" + index);
-
-		// Wrap our context to inflate list items using correct theme
-		final Context dialogContext = new ContextThemeWrapper(this,
-				android.R.style.Theme_Light);
-		String[] choices = new String[6];
-		choices[0] = this.getString(R.string.quote_and_reply); // quote & reply
-		choices[1] = this.getString(R.string.send_pm); // send pm
-		choices[2] = this.getString(R.string.add_to_friend_list); // add friend
-		choices[3] = this.getString(R.string.view_user_info); // view user info
-		choices[4] = this.getString(R.string.edit_post);
-		choices[5] = this.getString(R.string.cancel); // cancel
-		final ListAdapter adapter = new ArrayAdapter<String>(dialogContext,
-				android.R.layout.simple_list_item_1, choices);
-
-		final AlertDialog.Builder builder = new AlertDialog.Builder(
-				dialogContext);
-		// builder.setTitle(R.string.attachToContact);
-		builder.setSingleChoiceItems(adapter, -1,
-				new DialogInterface.OnClickListener() {
-
-					public void onClick(DialogInterface dialog, int which) {
-						// dismiss dialog
-						dialog.dismiss();
-						switch (which) {
-						case 0: {
-							// quote & reply
-							String tmp = item.getPostContent().replaceAll(
-									"(<br>|<BR>)", "\n");
-							quoteReply(postLink, item.getPostTitle(),
-									item.getUserName(), item.getPostTime(),
-									tmp, index, currPageNum);
-						}
-							break;
-						case 1:
-							// send pm
-							send_pm(item.getUserName());
-							break;
-						case 2:
-							add_friend(item.getUserName());
-							break;
-						case 3:
-							// view user info
-							viewUserInfo(item.getUserName());
-							break;
-						case 4:
-							if (item.getUserName().equals(
-									CC98Client.getUserName())) {
-								String tmp = item.getPostContent().replaceAll(
-										"(<br>|<BR>)", "\n");
-								String topic = item.getPostTitle();
-								editPost(item.getEditPostLink(), tmp, topic);
-							}
-							break;
-						case 5:
-							// cancel
-							break;
-						}
-					}
-				});
-		builder.create().show();
-	}
+		switch (which) {
+		case 0: {
+			// quote & reply
+			String tmp = item.getPostContent().replaceAll(
+					"(<br>|<BR>)", "\n");
+			quoteReply(postLink, item.getPostTitle(),
+					item.getUserName(), item.getPostTime(),
+					tmp, index, currPageNum);
+		}
+			break;
+		case 1:
+			// send pm
+			send_pm(item.getUserName());
+			break;
+		case 2:
+			add_friend(item.getUserName());
+			break;
+		case 3:
+			// view user info
+			viewUserInfo(item.getUserName());
+			break;
+		case 4:
+			if (item.getUserName().equals(
+					CC98Client.getUserName())) {
+				String tmp = item.getPostContent().replaceAll(
+						"(<br>|<BR>)", "\n");
+				String topic = item.getPostTitle();
+				editPost(item.getEditPostLink(), tmp, topic);
+			}
+			break;
+		case 5:
+			// cancel
+			break;
+		}
+ 	}
 
 	private void editPost(String link, String content, String topic) {
 		Bundle bundle = new Bundle();

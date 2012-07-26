@@ -5,13 +5,13 @@ div {
 }
 
 body {
- 	background-color: #999;
+ 	background-color: #ececec;
 }
 
 .bg-wrapper {
 	padding-left: 3px;
 	padding-right: 3px;
-	background-color: #999;
+	background-color: #ececec;
 }
 
 .btn {
@@ -36,7 +36,7 @@ body {
 .img-avatar {
 	float: left;
 	margin: 0px 10px 0 0;
-	-webkit-border-radius: 6px 6px;
+/* 	-webkit-border-radius: 6px 6px; */
 	/*-webkit-box-shadow: 0  0 6px #000; */
 }
 
@@ -71,7 +71,7 @@ body {
  }
 
 .post-content-wrapper{
-	margin: 5px 80px 20px 80px;
+	margin: 5px 80px 10px 80px;
 	padding: 10px 10px 10px 10px;
  }
 .pm-reply {

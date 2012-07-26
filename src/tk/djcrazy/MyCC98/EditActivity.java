@@ -366,9 +366,10 @@ public class EditActivity extends BaseActivity {
 			Log.d(TAG, postLink);
 			postName = bundle.getString(POST_NAME);
 			replyUserName = bundle.getString(REPLY_USER_NAME);
-			mHeaderView.setTitle("回复: " + postName);
+			mHeaderView.setTitle("发表回帖");
 			mHeaderView.setTitleTextSize(12f);
 			if (replyUserName != null) {
+				mHeaderView.setTitle("回复->" + replyUserName);
 				mIsQuoteUser = true;
 				replyUserPostTime = bundle.getString(REPLY_USER_POST_TIME);
 				replyUserPostContent = bundle.getString(REPLY_CONTENT);
