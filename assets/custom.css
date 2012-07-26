@@ -1,12 +1,23 @@
 @CHARSET "UTF-8";
 
-body {
-	background-color: #E6E6F2;
+div {
+	display: block;
 }
 
-.wrapper {
-	padding-left: 20px;
-	padding-right: 20px;
+body {
+ 	background-color: #999;
+}
+
+.bg-wrapper {
+	padding-left: 3px;
+	padding-right: 3px;
+	background-color: #999;
+}
+
+.btn {
+	color : #08C;
+	width: 25%;
+	font-size: 8px;
 }
 
 .topic {
@@ -37,28 +48,6 @@ body {
 	margin: 0px 0 0px 0;
 }
 
-.btn {
-	border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
-	display: inline-block;
-	padding: 4px 10px 4px;
-	margin-bottom: 0;
-	font-size: 13px;
-	line-height: 18px;
-	text-align: center;
-	text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75);
-	vertical-align: middle;
-	cursor: pointer;
-	background-color: #E6E6E6;
-	background-repeat: repeat-x;
-	border: 1px solid #CCC;
-	width: 100%;
-}
-.btn_wrapper {
-	padding-left: 20px;
-	padding-right: 20px;
-}
- 
-
 .time { /* 	float: left; */
 	margin: 2px 0 0 0;
 	clear: right;
@@ -71,18 +60,20 @@ body {
 }
 
 .post-content {
-	margin: 10px 0 0 0;
+	margin: 7px 0 0 0;
 	font-size: 10pt;
 }
 
 .post {
 	-webkit-border-radius: 4px;
 	background-color: white;
-	margin: 0 -10px 12px -10px;
-	padding: 8px 8px 50px 8px;
-	background-color: white;
-}
+	margin-bottom: 0px;
+ }
 
+.post-content-wrapper{
+	margin: 5px 80px 20px 80px;
+	padding: 10px 10px 10px 10px;
+ }
 .pm-reply {
 	
 }
@@ -120,7 +111,7 @@ body {
 	border-bottom-style: solid;
 	border-left-style: solid;
 }
-
+ 
 .dialog-but {
 	float: right;
 }

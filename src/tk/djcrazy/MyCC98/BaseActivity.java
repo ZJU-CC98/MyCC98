@@ -12,13 +12,13 @@ public class BaseActivity extends Activity {
 	@Override
 	public void onStart() {
 		super.onStart();
-		FlurryAgent.onStartSession(this, "5EXV7SIGMTTDKYNXTKR4");
+//		FlurryAgent.onStartSession(this, "5EXV7SIGMTTDKYNXTKR4");
 	}
 
 	@Override
 	public void onStop() {
 		super.onStop();
-		FlurryAgent.onEndSession(this);
+//		FlurryAgent.onEndSession(this);
 	}
 	
 	public void onCreate(Bundle savedInstanceState) {

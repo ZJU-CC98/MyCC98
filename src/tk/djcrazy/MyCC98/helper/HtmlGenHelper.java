@@ -10,10 +10,9 @@ public class HtmlGenHelper {
 
     public static final String PAGE_OPEN = "<!DOCTYPE html><html class=\"ui-mobile\">" // min-width-320px
                                                                                                  // min-width-480px
-                                                                                                 // min-width-768px
-                                                                                                 // min-width-1024px\"><head><meta name=\"viewport\" content=\"width=device-width, minium-scale=1,maxium-scale=1\" />"
             + "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">"
-             + "<link rel=\"stylesheet\" href=\"file:///android_asset/custom.css\" />"
+            + "<link rel=\"stylesheet\" href=\"file:///android_asset/custom.css\" />"
+            + "<link rel=\"stylesheet\" href=\"file:///android_asset/bootstrap.css\" />"
             // +
             // "<script src=\"file:///android_asset/jquery-1.6.2.min.js\"></script>"
             // +
@@ -25,9 +24,8 @@ public class HtmlGenHelper {
             + "<script type=\"text/javascript\" src=\"file:///android_asset/clientubb.js\"></script>"
             + "<meta name=\"viewport\" content=\"width=device-width, user-scalable=no\" />"
             + "</head><body>"
-            + "<div >"
-            + "<div  class=\"wrapper\">";
-    public static final String PAGE_CLOSE = "</div></div></body></html>";
+             + "<div  class=\"bg-wrapper\">";
+    public static final String PAGE_CLOSE = "</div> </body></html>";
 
     private static final String TAG = "HtmlGenHelper";
     

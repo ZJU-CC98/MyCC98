@@ -1,5 +1,7 @@
 package tk.djcrazy.MyCC98;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.List;
@@ -27,6 +29,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Editable;
@@ -98,8 +101,15 @@ public class PostContentsJSActivity extends BaseActivity {
 	private static PostContentsListPage prevPage = new PostContentsListPage();
 	private static final String JS_INTERFACE = "PostContents";
 
-	private static final String ITEM_OPEN = "<div class=\"post\">";
-	private static final String ITEM_CLOSE = "</div>";
+	private static final String ITEM_OPEN = "<div class=\"post\"><div class=\"post-content-wrapper\">";
+	private static final String ITEM_CLOSE = "</div>"+
+			"<div class=\"btn-group\">"+
+			"<a class=\"btn\">吐槽</a>"+
+			"<a class=\"btn\">查看</a>"+ 
+			"<a class=\"btn\">站短</a>" +
+			"<a class=\"btn\">加好友</a>"+
+			"</div>"+
+			 "</div>" ;
 	private static final String TAG = "PostContentsJS";
 	private static final int MNU_REFRESH = Menu.FIRST;
 	private static final int MNU_FIRST = Menu.FIRST + 1;
@@ -110,7 +120,7 @@ public class PostContentsJSActivity extends BaseActivity {
 	private boolean threadCancel = false;
 	private boolean searchMode = false;
 
- 	@Override
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
@@ -489,32 +499,12 @@ public class PostContentsJSActivity extends BaseActivity {
 					.append(HtmlGenHelper.addPostInfo(postTitle, avatarUrl,
 							author, gender, floorNum, postTime, i))
 					.append("<img class=\"post-face\" src=\"file:///android_asset/pic/")
-					.append(postFace)
-					.append("\" /><br />")
+					.append(postFace).append("\" /><br />")
 					.append("<div class=\"post-content\">")
-					.append("<span id=\"ubbcode")
-					.append(i)
-					.append("\">")
+					.append("<span id=\"ubbcode").append(i).append("\">")
 					.append(content)
-					.append("</span><script>searchubb('ubbcode")
-					.append(i)
+					.append("</span><script>searchubb('ubbcode").append(i)
 					.append("',1,'tablebody2');</script></div>")
-					.append("<div class=\"btn_wrapper\"><a class=\"btn pos0\" onclick=\"")
-					.append(JS_INTERFACE).append(".showContentDialog(")
-					.append(i)
-					.append(");\">吐槽1</a>")
-					.append("<a class=\"btn pos1\" onclick=\"")
-					.append(JS_INTERFACE).append(".showContentDialog(")
-					.append(i)
-					.append(");\">吐槽2</a>")
-					.append("<a class=\"btn pos2\" onclick=\"")
-					.append(JS_INTERFACE).append(".showContentDialog(")
-					.append(i)
-					.append(");\">吐槽3</a>")
-					.append("<a class=\"btn pos3\" onclick=\"")
-					.append(JS_INTERFACE).append(".showContentDialog(")
-					.append(i)
-					.append(");\">吐槽4</a></div>")
 					.append(ITEM_CLOSE);
 			builder.append(mBuilder.toString());
 		}
@@ -524,7 +514,37 @@ public class PostContentsJSActivity extends BaseActivity {
 		}
 		builder.append(HtmlGenHelper.PAGE_CLOSE);
 		Log.d("PostContentLog", builder.toString());
+		writeFileToSD(builder.toString());
 		return builder.toString();
+	}
+
+	private void writeFileToSD(String s) {
+		String sdStatus = Environment.getExternalStorageState();
+		if (!sdStatus.equals(Environment.MEDIA_MOUNTED)) {
+			Log.d("TestFile", "SD card is not avaiable/writeable right now.");
+			return;
+		}
+		try {
+			String pathName = "/sdcard/MyCC98/";
+			String fileName = "file.html";
+			File path = new File(pathName);
+			File file = new File(pathName + fileName);
+			if (!path.exists()) {
+				Log.d("TestFile", "Create the path:" + pathName);
+				path.mkdir();
+			}
+			if (!file.exists()) {
+				Log.d("TestFile", "Create the file:" + fileName);
+				file.createNewFile();
+			}
+			FileOutputStream stream = new FileOutputStream(file);
+ 			byte[] buf = s.getBytes();
+			stream.write(buf);
+			stream.close();
+		} catch (Exception e) {
+			Log.e("TestFile", "Error on writeFilToSD.");
+			e.printStackTrace();
+		}
 	}
 
 	private void prefetch() {
@@ -799,7 +819,8 @@ public class PostContentsJSActivity extends BaseActivity {
 		intent.putExtra("userName", username);
 		intent.putExtra(ProfileActivity.USER_IMAGE, userImage);
 		PostContentsJSActivity.this.startActivity(intent);
-		PostContentsJSActivity.this.overridePendingTransition(R.anim.forward_activity_move_in,
+		PostContentsJSActivity.this.overridePendingTransition(
+				R.anim.forward_activity_move_in,
 				R.anim.forward_activity_move_out);
 
 	}
