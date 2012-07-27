@@ -22,28 +22,15 @@
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
-		<activity android:name=".WelcomeActivity"
-			android:configChanges="orientation|keyboardHidden" android:label="@string/app_name">
-		</activity>
-		<activity android:name=".PersonalBoardListActivity"
+ 		<activity android:name=".PostListActivity"
 			android:configChanges="orientation|keyboardHidden">
 		</activity>
-		<activity android:name=".PostContentListActivity"
-			android:configChanges="orientation|keyboardHidden" />
-		<activity android:name=".PostListActivity"
-			android:configChanges="orientation|keyboardHidden">
-		</activity>
-		<activity android:name=".PostListFlingActivity"
-			android:configChanges="orientation|keyboardHidden">
-		</activity>
-		<activity android:name=".EditActivity" android:configChanges="orientation|keyboardHidden"
+ 		<activity android:name=".EditActivity" android:configChanges="orientation|keyboardHidden"
 			android:windowSoftInputMode="stateHidden|adjustPan">
 		</activity>
 		<activity android:name=".PmActivity" android:configChanges="orientation|keyboardHidden">
 		</activity>
-		<activity android:name=".PmActivity2" android:configChanges="orientation|keyboardHidden">
-		</activity>
-		<activity android:name=".PmViewActivity"
+ 		<activity android:name=".PmViewActivity"
 			android:configChanges="orientation|keyboardHidden">
 		</activity>
 		<activity android:name=".PostContentsJSActivity"
@@ -59,26 +46,14 @@
 			android:configChanges="orientation|keyboardHidden"
 			android:windowSoftInputMode="stateVisible|adjustPan">
 		</activity>
-		<activity android:name=".SearchBoardActivity"
-			android:configChanges="orientation|keyboardHidden"
-			android:windowSoftInputMode="stateVisible|adjustPan">
-		</activity>
-		<activity android:name=".FriendListActivity"
-			android:configChanges="orientation|keyboardHidden"
-			android:windowSoftInputMode="stateVisible|adjustPan">
-		</activity>
-		<activity android:name=".HomeActivity" android:configChanges="orientation|keyboardHidden"
-			android:windowSoftInputMode="stateVisible|adjustPan">
+ 		<activity android:name=".HomeActivity" android:configChanges="orientation|keyboardHidden"
+			android:windowSoftInputMode="stateHidden|adjustPan">
 		</activity>
 		<activity android:name=".SketchActivity"
 			android:configChanges="orientation|keyboardHidden"
 			android:screenOrientation="portrait" android:windowSoftInputMode="stateHidden">
 		</activity>
-		<activity android:name=".PostSearchActivity"
-			android:configChanges="orientation|keyboardHidden"
-			android:windowSoftInputMode="stateVisible|adjustPan">
-		</activity>
-		<activity android:name=".SettingsActivity"
+ 		<activity android:name=".SettingsActivity"
 			android:configChanges="orientation|keyboardHidden"
 			android:windowSoftInputMode="stateHidden|adjustPan">
 		</activity>

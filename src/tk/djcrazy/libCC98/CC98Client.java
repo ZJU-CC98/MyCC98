@@ -99,6 +99,9 @@ public class CC98Client {
 	public static Bitmap getLoginUserImg() {
 		return userImg;
 	}
+	public static void setLoginUserImg(Bitmap bitmap) {
+		  userImg = bitmap;
+	}
 
 	public static DefaultHttpClient getHttpClient() {
 		if (client == null) {

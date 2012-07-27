@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>  
+<resources>
+
     <style name="personal_board_list_footer_button">
-         <item name="android:gravity">center_horizontal</item>
-         <item name="android:background">@drawable/simple_button_selector</item>
-         <item name="android:padding">4dp</item>
-         <item name="android:clickable">true</item>
-         <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:background">@drawable/simple_button_selector</item>
+        <item name="android:padding">4dp</item>
+        <item name="android:clickable">true</item>
+        <item name="android:layout_height">wrap_content</item>
     </style>
-    <!--  simple button -->
+    <!-- simple button -->
     <style name="simple_button">
         <item name="android:background">@drawable/simple_button_selector</item>
         <item name="android:textColor">@color/simiple_button_color</item>
@@ -21,22 +22,25 @@
         <item name="android:paddingLeft">7dip</item>
         <item name="android:paddingRight">7dip</item>
     </style>
-        <style name="blue_button">
+
+    <style name="blue_button">
         <item name="android:textColor">@color/simiple_button_color</item>
         <item name="android:textStyle">bold</item>
     </style>
-    	<style name="normalText" parent="@android:style/TextAppearance">
+
+    <style name="normalText" parent="@android:style/TextAppearance">
         <item name="android:textColor">#444</item>
         <item name="android:textSize">14sp</item>
     </style>
-    
+
     <style name="normalText.Big">
         <item name="android:textSize">18sp</item>
     </style>
-    
+
     <style name="normalText.span">
         <item name="android:textColor">#888</item>
     </style>
+
     <style name="listview">
         <item name="android:cacheColorHint">@color/transparent</item>
         <item name="android:divider">@drawable/divider_horizontal_timeline</item>
@@ -45,6 +49,7 @@
         <item name="android:fastScrollEnabled">true</item>
         <item name="android:scrollingCache">true</item>
     </style>
+
     <style name="button">
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">36dp</item>
@@ -53,6 +58,12 @@
         <item name="android:textColor">#fff</item>
         <item name="android:textSize">10sp</item>
     </style>
-    
-    
+
+    <style name="Spinner">
+        <item name="android:indeterminate">true</item>
+        <item name="android:indeterminateDrawable">@drawable/spinner</item>
+        <item name="android:indeterminateDuration">2000</item>
+        <item name="android:indeterminateOnly">true</item>
+    </style>
+
 </resources>

@@ -42,5 +42,13 @@
     <color name="qt_border">#ffcccccc</color>
     <color name="login_text_color">#555</color>
     <color name="qt_text_green">#ff69b901</color>
-
+    <color name="pager_title_background_top_start">#1A4D6B</color>
+    <color name="pager_title_background_top_end">#1A5373</color>
+    <color name="pager_title_background_bottom">#155A7F</color>
+    <color name="pager_title_background_end">#22688F</color>
+    <color name="pager_title_background_start">#1F5D82</color>
+    <color name="pager_title_text">#E0E6EA</color>
+    <color name="pager_title_selected_text">#FFFFFF</color>
+    <color name="pager_footer">#FFFFFF</color>
+    
 </resources>

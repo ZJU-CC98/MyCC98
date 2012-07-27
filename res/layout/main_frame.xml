@@ -1,27 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res/tk.djcrazy.MyCC98"
+    android:id="@+id/home_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:id="@+id/home_root"
->
+    android:background="#ececec" >
 
     <tk.djcrazy.MyCC98.view.HeaderView
         android:id="@+id/main_header"
         android:layout_width="fill_parent"
         android:layout_height="42dp" />
+
+    <ProgressBar
+        android:id="@+id/pb_loading"
+        style="@style/Spinner"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:visibility="gone" />
     
+    <com.viewpagerindicator.TitlePageIndicator
+        android:id="@+id/main_titles"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/pager_title_background"
+        android:textColor="@color/pager_title_text"
+        app:clipPadding="10dp"
+        app:footerColor="@color/pager_footer"
+        app:footerIndicatorHeight="5dp"
+        app:footerIndicatorStyle="triangle"
+        app:footerLineHeight="0dp"
+        app:selectedBold="true"
+        app:selectedColor="@color/pager_title_selected_text"
+        app:titlePadding="10dp" />
 
-    <LinearLayout
-        android:id="@+id/main_dynamic"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_weight="1"
-        android:background="@color/board_info_background"  />
-
-    <tk.djcrazy.MyCC98.view.FooterView
-        android:id="@+id/main_footer"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
+    <android.support.v4.view.ViewPager
+        android:id="@+id/main_pages"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#ececec" />
 
 </LinearLayout>

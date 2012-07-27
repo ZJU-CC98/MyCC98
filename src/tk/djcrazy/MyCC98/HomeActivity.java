@@ -15,8 +15,10 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.util.EntityUtils;
 
+import com.viewpagerindicator.TitlePageIndicator;
+
+import tk.djcrazy.MyCC98.adapter.HomeFragmentPagerAdapter;
 import tk.djcrazy.MyCC98.dialog.AboutDialog;
-import tk.djcrazy.MyCC98.view.FooterView;
 import tk.djcrazy.MyCC98.view.FriendListView;
 import tk.djcrazy.MyCC98.view.HeaderView;
 import tk.djcrazy.MyCC98.view.HotTopicView;
@@ -25,7 +27,6 @@ import tk.djcrazy.MyCC98.view.ParentView;
 import tk.djcrazy.MyCC98.view.PersonalBoardView;
 import tk.djcrazy.MyCC98.view.SearchBoardView;
 import tk.djcrazy.libCC98.CC98Client;
-import android.R.bool;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -39,19 +40,19 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
-public class HomeActivity extends BaseActivity implements ParentView {
+public class HomeActivity extends FragmentActivity {
 	
 	private boolean IS_LIFETOY_VERSION = true;
 	private static final String UPDATE_LINK_LIFETOY = "http://10.110.19.123/update/lifetoy.html";
@@ -62,11 +63,7 @@ public class HomeActivity extends BaseActivity implements ParentView {
 	public static final int V_HOT = 2;
 	public static final int V_NEW = 3;
 	public static final int V_FRIEND = 4;
-	public static final String EMAIL_HOST_NAME = "zjuem.zju.edu.cn";
-	public static final String EMAIL_HOST_USER_NAME = "crazydj";
-	public static final String EMAIL_HOST_PASSWORD = "66957860";
-	public static final String EMAIL_SEND_DESTINATION = "djq2272@gmail.com";
-	public static final String USERINFO = "USERINFO";
+ 	public static final String USERINFO = "USERINFO";
 	public static final String AUTOLOGIN = "AUTOLOGIN";
 	private static final String DOWNLOAD_LINK = "downloadLink";
 	private static final String FILE_SIZE = "fileSize";
@@ -84,9 +81,8 @@ public class HomeActivity extends BaseActivity implements ParentView {
 	private static final int INIT_FILESIZE = 32;
 	private static final int UPDATE_PROGRESS = 33;
 
-	private FooterView footerView;
-	private HeaderView headerView;
-	private LinearLayout container;
+ 	private HeaderView headerView;
+	private ViewPager viewPager;
 	private PersonalBoardView personalBoardView;
 	private SearchBoardView searchBoardView;
 	private NewTopicView newTopicView;
@@ -94,9 +90,7 @@ public class HomeActivity extends BaseActivity implements ParentView {
 	private FriendListView friendListView;
 	private ProgressDialog pBar;
 
-	private View vState;
-
-	private Bitmap bmUserImg;
+ 	private Bitmap bmUserImg;
 
 	private Handler handler = new Handler() {
 		@Override
@@ -108,8 +102,7 @@ public class HomeActivity extends BaseActivity implements ParentView {
 				break;
 			case MSG_USERIMG_SUCC:
 				headerView.setUserImg(bmUserImg);
-				personalBoardView.setUserImage(bmUserImg);
-				break;
+ 				break;
 			case SEND_FEEDBACK_FAILED:
 				Toast.makeText(getApplicationContext(), "无法连接到服务器，请稍候再试",
 						Toast.LENGTH_SHORT).show();
@@ -151,11 +144,7 @@ public class HomeActivity extends BaseActivity implements ParentView {
 		findViews();
 		setListeners();
 		getUserImg();
-		getWindow().setSoftInputMode(
-				WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-
-		switchToView(V_PERSONAL_BOARD);
-	}
+ 	}
 
 	private void getUserImg() {
 		new Thread() {
@@ -173,160 +162,29 @@ public class HomeActivity extends BaseActivity implements ParentView {
 	}
 
 	public void refresh() {
-		container.invalidate();
+		viewPager.invalidate();
 	}
 
 	private void setListeners() {
-		footerView.setListeners(this);
-		headerView.setListeners(this);
-
+ 		headerView.setListeners(this);
 		headerView.setTitleOnclickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				Log.d(TAG, "title click");
-				if (personalBoardView != null) {
-					personalBoardView.scrollListTo(0, 0);
-				}
-				if (friendListView != null) {
-					friendListView.scrollListTo(0, 0);
-				}
-				if (searchBoardView != null) {
-					searchBoardView.scrollListTo(0, 0);
-				}
-				if (hotTopicView != null) {
-					hotTopicView.scrollListTo(0, 0);
-				}
-				if (newTopicView != null) {
-					newTopicView.scrollListTo(0, 0);
-				}
+ 
 			}
 		});
 	}
 
 	private void findViews() {
-		footerView = (FooterView) findViewById(R.id.main_footer);
-		footerView.setParentView(this);
-		headerView = (HeaderView) findViewById(R.id.main_header);
-		container = (LinearLayout) findViewById(R.id.main_dynamic);
-		vState = findViewById(R.id.v_stat);
-		WindowManager manage = getWindowManager();
-		Display display = manage.getDefaultDisplay();
-		Log.d(TAG, display.getWidth() + "");
-		LayoutParams params = vState.getLayoutParams();
-		params.width = display.getWidth() / 5;
+ 		headerView = (HeaderView) findViewById(R.id.main_header);
+		viewPager = (ViewPager) findViewById(R.id.main_pages);
+		TitlePageIndicator indicator = (TitlePageIndicator) findViewById(R.id.main_titles);
+		viewPager.setAdapter(new HomeFragmentPagerAdapter(getSupportFragmentManager()));
+		indicator.setViewPager(viewPager,0);
 	}
-
-	@Override
-	public void switchToView(int index) {
-		container.removeAllViews();
-		switch (index) {
-		case V_PERSONAL_BOARD:
-			headerView.resetButton();
-			if (personalBoardView == null) {
-				personalBoardView = new PersonalBoardView(this);
-				personalBoardView.setParentView(this);
-			}
-			personalBoardView.onSwitch();
-			// personalBoardView.startAnimation(AnimationUtils.loadAnimation(this,R.anim.alpha_change));
-			container.addView(personalBoardView);
-			break;
-		case V_BOARD_SEARCH:
-			headerView.resetButton();
-			if (searchBoardView == null) {
-				searchBoardView = new SearchBoardView(this);
-				searchBoardView.setParentView(this);
-				searchBoardView.setUserImage(bmUserImg);
-			}
-			searchBoardView.onSwitch();
-			// searchBoardView.startAnimation(AnimationUtils.loadAnimation(this,R.anim.alpha_change));
-			container.addView(searchBoardView);
-			break;
-		case V_FRIEND:
-			headerView.setButtonImageResource(R.drawable.message_icon);
-			headerView.setButtonOnclickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					startActivity(new Intent().setClass(
-							getApplicationContext(), PmActivity.class));
-					overridePendingTransition(R.anim.forward_activity_move_in, R.anim.forward_activity_move_out);
-				}
-			});
-			if (friendListView == null) {
-				friendListView = new FriendListView(this);
-				friendListView.setParentView(this);
-				friendListView.setUserImage(bmUserImg);
-			}
-			friendListView.onSwitch();
-			// friendListView.startAnimation(AnimationUtils.loadAnimation(this,R.anim.alpha_change));
-			container.addView(friendListView);
-			break;
-
-		case V_HOT:
-			headerView.resetButton();
-			if (hotTopicView == null) {
-				hotTopicView = new HotTopicView(this);
-				hotTopicView.setParentView(this);
-				hotTopicView.setUserImage(bmUserImg);
-			}
-			hotTopicView.onSwitch();
-			// hotTopicView.startAnimation(AnimationUtils.loadAnimation(this,R.anim.alpha_change));
-			container.addView(hotTopicView);
-			break;
-		case V_NEW:
-			headerView.resetButton();
-			if (newTopicView == null) {
-				newTopicView = new NewTopicView(this);
-				newTopicView.setParentView(this);
-				newTopicView.setUserImage(bmUserImg);
-			}
-			newTopicView.onSwitch();
-			// newTopicView.startAnimation(AnimationUtils.loadAnimation(this,R.anim.alpha_change));
-			container.addView(newTopicView);
-
-			break;
-		default:
-			break;
-		}
-		refresh();
-	}
-
-	//
-	// @Override
-	// public void onBackPressed() {
-	// Log.d("persoanl Board", "back pressed");
-	// new AlertDialog.Builder(this).setTitle("确定退出？")
-	// .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-	//
-	// @Override
-	// public void onClick(DialogInterface dialog, int which) {
-	//
-	// finish();
-	// }
-	// })
-	// .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-	//
-	// @Override
-	// public void onClick(DialogInterface dialog, int which) {
-	//
-	// dialog.dismiss();
-	// }
-	// }).create().show();
-	// }
-	//
-	@Override
-	public void onConfigurationChanged(Configuration newConfig) {
-
-		super.onConfigurationChanged(newConfig);
-		WindowManager manage = getWindowManager();
-		Display display = manage.getDefaultDisplay();
-		Log.d(TAG, display.getWidth() + "");
-		LayoutParams params = vState.getLayoutParams();
-		params.width = display.getWidth() / 5;
-		footerView.resetFooterState(display.getWidth());
-	}
-
-	/**
+ 
+ 	/**
 	 * override menu
 	 */
 	@Override
@@ -344,7 +202,7 @@ public class HomeActivity extends BaseActivity implements ParentView {
 		// finish();
 		// return true;
 		case R.id.settings:
-			goto_settings();
+			goSettings();
 			return true;
 		case R.id.log_out:
 			logOut();
@@ -371,7 +229,7 @@ public class HomeActivity extends BaseActivity implements ParentView {
 		}
 	}
 
-	private void goto_settings() {
+	private void goSettings() {
 		Intent intent = new Intent(this, SettingsActivity.class);
 		startActivity(intent);
 		overridePendingTransition(R.anim.forward_activity_move_in, R.anim.forward_activity_move_out);
@@ -575,4 +433,5 @@ public class HomeActivity extends BaseActivity implements ParentView {
 		overridePendingTransition(R.anim.forward_activity_move_in, R.anim.forward_activity_move_out);
 		finish();
 	}
- }
+
+  }
