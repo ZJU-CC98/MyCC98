@@ -17,8 +17,12 @@ import org.apache.http.util.EntityUtils;
 
 import com.viewpagerindicator.TitlePageIndicator;
 
+import roboguice.activity.RoboFragmentActivity;
+import roboguice.inject.ContentView;
+import roboguice.inject.InjectView;
 import tk.djcrazy.MyCC98.adapter.HomeFragmentPagerAdapter;
 import tk.djcrazy.MyCC98.dialog.AboutDialog;
+import tk.djcrazy.MyCC98.listener.LoadingListener;
 import tk.djcrazy.MyCC98.view.FriendListView;
 import tk.djcrazy.MyCC98.view.HeaderView;
 import tk.djcrazy.MyCC98.view.HotTopicView;
@@ -27,6 +31,7 @@ import tk.djcrazy.MyCC98.view.ParentView;
 import tk.djcrazy.MyCC98.view.PersonalBoardView;
 import tk.djcrazy.MyCC98.view.SearchBoardView;
 import tk.djcrazy.libCC98.CC98Client;
+import android.R.integer;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -52,7 +57,8 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-public class HomeActivity extends FragmentActivity {
+@ContentView(R.layout.main_frame)
+public class HomeActivity extends RoboFragmentActivity implements LoadingListener{
 	
 	private boolean IS_LIFETOY_VERSION = true;
 	private static final String UPDATE_LINK_LIFETOY = "http://10.110.19.123/update/lifetoy.html";
@@ -81,14 +87,14 @@ public class HomeActivity extends FragmentActivity {
 	private static final int INIT_FILESIZE = 32;
 	private static final int UPDATE_PROGRESS = 33;
 
+	@InjectView(R.id.main_header)
  	private HeaderView headerView;
+	@InjectView(R.id.main_pages)
 	private ViewPager viewPager;
-	private PersonalBoardView personalBoardView;
-	private SearchBoardView searchBoardView;
-	private NewTopicView newTopicView;
-	private HotTopicView hotTopicView;
-	private FriendListView friendListView;
-	private ProgressDialog pBar;
+	@InjectView(R.id.main_titles)
+	private TitlePageIndicator indicator;
+	
+ 	private ProgressDialog pBar;
 
  	private Bitmap bmUserImg;
 
@@ -132,16 +138,13 @@ public class HomeActivity extends FragmentActivity {
 		}
 	};
 
-	public void setTitle(String s) {
-		headerView.setTitle(s);
-	}
- 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		setContentView(R.layout.main_frame);
-		findViews();
+		HomeFragmentPagerAdapter adapter = new HomeFragmentPagerAdapter(getSupportFragmentManager());
+		adapter.setLoadingListener(this);
+  		viewPager.setAdapter(adapter);
+		indicator.setViewPager(viewPager,0);
 		setListeners();
 		getUserImg();
  	}
@@ -168,22 +171,13 @@ public class HomeActivity extends FragmentActivity {
 	private void setListeners() {
  		headerView.setListeners(this);
 		headerView.setTitleOnclickListener(new View.OnClickListener() {
-
 			@Override
 			public void onClick(View v) {
  
 			}
 		});
 	}
-
-	private void findViews() {
- 		headerView = (HeaderView) findViewById(R.id.main_header);
-		viewPager = (ViewPager) findViewById(R.id.main_pages);
-		TitlePageIndicator indicator = (TitlePageIndicator) findViewById(R.id.main_titles);
-		viewPager.setAdapter(new HomeFragmentPagerAdapter(getSupportFragmentManager()));
-		indicator.setViewPager(viewPager,0);
-	}
- 
+  
  	/**
 	 * override menu
 	 */
@@ -276,7 +270,7 @@ public class HomeActivity extends FragmentActivity {
 		return verCode;
 	}
 
-	Thread checkUpateThread = new Thread() {
+	private Thread checkUpateThread = new Thread() {
 		@Override
 		public void run() {
 			String content = "";
@@ -432,6 +426,16 @@ public class HomeActivity extends FragmentActivity {
 		startActivity(intent);
 		overridePendingTransition(R.anim.forward_activity_move_in, R.anim.forward_activity_move_out);
 		finish();
+	}
+
+	@Override
+	public void onLoadComplete(int postion) {
+		
+	}
+
+	@Override
+	public void onLoadFailure(int position) {
+		
 	}
 
   }

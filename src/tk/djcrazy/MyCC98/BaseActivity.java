@@ -1,13 +1,11 @@
 package tk.djcrazy.MyCC98;
 
-import com.flurry.android.FlurryAgent;
-
-import android.app.Activity;
+import roboguice.activity.RoboActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.Window;
 
-public class BaseActivity extends Activity {
+public class BaseActivity extends RoboActivity {
 	
 	@Override
 	public void onStart() {
@@ -23,8 +21,7 @@ public class BaseActivity extends Activity {
 	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
-	}
+ 	}
 	
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {

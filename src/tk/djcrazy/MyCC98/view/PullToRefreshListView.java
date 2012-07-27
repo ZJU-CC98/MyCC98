@@ -425,7 +425,6 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
                 onRefresh();
             }
         }
-
     }
 
     /**

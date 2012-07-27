@@ -4,21 +4,14 @@
     android:id="@+id/home_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="#ececec" >
+    android:background="#ececec"
+    android:orientation="vertical" >
 
     <tk.djcrazy.MyCC98.view.HeaderView
         android:id="@+id/main_header"
         android:layout_width="fill_parent"
         android:layout_height="42dp" />
 
-    <ProgressBar
-        android:id="@+id/pb_loading"
-        style="@style/Spinner"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
-        android:visibility="gone" />
-    
     <com.viewpagerindicator.TitlePageIndicator
         android:id="@+id/main_titles"
         android:layout_width="match_parent"
@@ -33,11 +26,22 @@
         app:selectedBold="true"
         app:selectedColor="@color/pager_title_selected_text"
         app:titlePadding="10dp" />
+		<LinearLayout
+		    android:layout_height="match_parent"
+		    android:layout_width="match_parent"
+		    android:gravity="center"
+		    android:orientation="vertical">
+    <ProgressBar
+        android:id="@+id/pb_loading"
+        style="@style/Spinner"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:visibility="gone" />
 
     <android.support.v4.view.ViewPager
         android:id="@+id/main_pages"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#ececec" />
-
+        android:background="#ececec"  />
+</LinearLayout>
 </LinearLayout>

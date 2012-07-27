@@ -11,6 +11,7 @@ import org.apache.http.client.ClientProtocolException;
 import tk.djcrazy.MyCC98.PostListActivity;
 import tk.djcrazy.MyCC98.R;
 import tk.djcrazy.MyCC98.adapter.SearchResultListAdapter;
+import tk.djcrazy.MyCC98.listener.LoadingListener;
 import tk.djcrazy.MyCC98.view.ParentView;
 import tk.djcrazy.libCC98.CC98Client;
 import tk.djcrazy.libCC98.CC98Parser;
@@ -31,32 +32,45 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 public class SearchBoardFragment extends Fragment {
-	private static final String TAG= "SearchBoardFragment";
+	private int position = 0;
+	private static final String TAG = "SearchBoardFragment";
 	private List<NameValuePair> currentResult;
 	private List<NameValuePair> boardList;
 	private EditText searchContent;
 	private ListView lvResultList;
- 	private SearchResultListAdapter listAdapter;
-  	private static final int FETCH_SUCC = 0;
+	private SearchResultListAdapter listAdapter;
+	private static final int FETCH_SUCC = 0;
+	private static final int FETCH_FAIL = 1;
+
 	private int lastquerylen;
+	private LoadingListener loadingListener;
 
 	private Handler handler = new Handler() {
 		@Override
 		public void handleMessage(android.os.Message msg) {
+			if (loadingListener == null) {
+				throw new IllegalStateException(
+						"You must set the LoadingListener first.");
+			}
 			switch (msg.what) {
 			case FETCH_SUCC:
- 				searchContent.setText("");
+				searchContent.setText("");
+				loadingListener.onLoadComplete(position);
+				break;
+			case FETCH_FAIL:
+				loadingListener.onLoadFailure(position);
 				break;
 			default:
 				break;
 			}
 		}
 	};
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        fetchBoardlist();
-     }
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		fetchBoardlist();
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -65,38 +79,42 @@ public class SearchBoardFragment extends Fragment {
 		View view = LayoutInflater.from(getActivity()).inflate(
 				R.layout.search_board, null);
 		findViews(view);
- 		fetchBoardlist();
+		fetchBoardlist();
 		setListeners();
 		return view;
 	}
 
 	private void fetchBoardlist() {
- 		new Thread() {
+		new Thread() {
 			@Override
 			public void run() {
 				try {
 					boardList = CC98Parser.getTodayBoardList();
+					handler.sendEmptyMessage(FETCH_SUCC);
 				} catch (ClientProtocolException e) {
+					handler.sendEmptyMessage(FETCH_FAIL);
 					e.printStackTrace();
 				} catch (ParseException e) {
+					handler.sendEmptyMessage(FETCH_FAIL);
 					e.printStackTrace();
 				} catch (IOException e) {
+					handler.sendEmptyMessage(FETCH_FAIL);
 					e.printStackTrace();
 				}
-				handler.sendEmptyMessage(FETCH_SUCC);
 			}
 		}.start();
 	}
 
 	private void findViews(View view) {
 		searchContent = (EditText) view.findViewById(R.id.search_board_bar);
-		lvResultList = (ListView) view.findViewById(R.id.search_board_result_list);
+		lvResultList = (ListView) view
+				.findViewById(R.id.search_board_result_list);
 	}
 
 	public void scrollListTo(int x, int y) {
 		lvResultList.scrollTo(x, y);
 	}
- 
+
 	private void setListeners() {
 		searchContent.addTextChangedListener(new TextWatcher() {
 
@@ -130,7 +148,7 @@ public class SearchBoardFragment extends Fragment {
 				bundle.putString(PostListActivity.BOARD_NAME, currentResult
 						.get(arg2).getName());
 				bundle.putInt(PostListActivity.PAGE_NUMBER, 1);
- 
+
 				Intent intent = new Intent().putExtra(
 						PostListActivity.BOARD_ENTITY, bundle).setClass(
 						getActivity(), PostListActivity.class);
@@ -160,9 +178,31 @@ public class SearchBoardFragment extends Fragment {
 			currentResult = tmplist;
 		}
 		lastquerylen = string.length();
-		listAdapter = new SearchResultListAdapter(getActivity(),
-				currentResult);
+		listAdapter = new SearchResultListAdapter(getActivity(), currentResult);
 		lvResultList.setAdapter(listAdapter);
 		lvResultList.invalidate();
 	}
+
+	/**
+	 * @param loadingListener
+	 *            the loadingListener to set
+	 */
+	public void setLoadingListener(LoadingListener loadingListener) {
+		this.loadingListener = loadingListener;
+	}
+
+	/**
+	 * @return the position
+	 */
+	public int getPosition() {
+		return position;
+	}
+
+	/**
+	 * @param position the position to set
+	 */
+	public void setPosition(int position) {
+		this.position = position;
+	}
+
 }
