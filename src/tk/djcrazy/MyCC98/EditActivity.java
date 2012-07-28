@@ -209,8 +209,11 @@ public class EditActivity extends BaseActivity {
 			case R.id.quick_insert_em10:
 				emotChooseString = "[em10]";
 				break;
-			case R.id.quick_insert_em12:
+			case R.id.quick_insert_em11:
 				emotChooseString = "[em11]";
+				break;
+			case R.id.quick_insert_em12:
+				emotChooseString = "[em12]";
 				break;
 			case R.id.quick_insert_em72:
 				emotChooseString = "[em12]";
@@ -351,11 +354,10 @@ public class EditActivity extends BaseActivity {
 	};
 
 	private FaceExpressionChooseListener faceListener;
- 
-	
+
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
- 		setContentView(R.layout.reply);
+		setContentView(R.layout.reply);
 		Bundle bundle = getIntent().getBundleExtra(BUNDLE);
 		mod = bundle.getInt(MOD, MOD_REPLY);
 		findViews();
@@ -377,8 +379,8 @@ public class EditActivity extends BaseActivity {
 				mQuotePageNumber = bundle.getInt(PAGE_NUMBER);
 				replyUserPostContent = replyUserPostContent.replaceAll(
 						"<.*?>|searchubb.*?;", "");
-				replyContent.setText("[quote][b]以下是引用[i]" + replyUserName
-						+ "在" + replyUserPostTime + "[/i]的发言：[/b]\n"
+				replyContent.setText("[quote][b]以下是引用[i]" + replyUserName + "在"
+						+ replyUserPostTime + "[/i]的发言：[/b]\n"
 						+ replyUserPostContent.replaceAll("<BR>|<br>", "\r\n")
 						+ "[/quote]\n");
 			}
@@ -579,7 +581,8 @@ public class EditActivity extends BaseActivity {
 						PreviewActivity.class).putExtra(
 						PreviewActivity.CONTENT,
 						replyContent.getText().toString()));
-				overridePendingTransition(R.anim.forward_activity_move_in, R.anim.forward_activity_move_out);
+				overridePendingTransition(R.anim.forward_activity_move_in,
+						R.anim.forward_activity_move_out);
 			}
 		});
 
@@ -929,7 +932,8 @@ public class EditActivity extends BaseActivity {
 			public void afterTextChanged(Editable s) {
 				if (s.toString().getBytes().length > TITLE_MAX_LENGTH) {
 					Toast.makeText(EditActivity.this,
-							R.string.title_length_overflow, Toast.LENGTH_SHORT);
+							R.string.title_length_overflow, Toast.LENGTH_SHORT)
+							.show();
 				}
 
 			}
@@ -1025,6 +1029,8 @@ public class EditActivity extends BaseActivity {
 		Toast.makeText(EditActivity.this, "回复成功！", Toast.LENGTH_SHORT).show();
 		setResult(Activity.RESULT_OK);
 		this.finish();
+		overridePendingTransition(R.anim.backward_activity_move_in,
+				R.anim.backward_activity_move_out);
 	}
 
 	private void doPickPhotoAction() {
@@ -1091,7 +1097,8 @@ public class EditActivity extends BaseActivity {
 	private void uploadSketch() {
 		startActivityForResult(new Intent(this, SketchActivity.class),
 				GET_SKETCH);
-		overridePendingTransition(R.anim.forward_activity_move_in, R.anim.forward_activity_move_out);
+		overridePendingTransition(R.anim.forward_activity_move_in,
+				R.anim.forward_activity_move_out);
 	}
 
 	/**
@@ -1106,7 +1113,8 @@ public class EditActivity extends BaseActivity {
 			mCurrentPhotoFile.createNewFile();
 			final Intent intent = getTakePickIntent();
 			startActivityForResult(intent, CAMERA_WITH_DATA);
-			overridePendingTransition(R.anim.forward_activity_move_in, R.anim.forward_activity_move_out);
+			overridePendingTransition(R.anim.forward_activity_move_in,
+					R.anim.forward_activity_move_out);
 		} catch (ActivityNotFoundException e) {
 			Toast.makeText(this, "未找到目标！", Toast.LENGTH_LONG).show();
 		} catch (IOException e) {
@@ -1140,7 +1148,8 @@ public class EditActivity extends BaseActivity {
 			// Launch picker to choose photo for selected contact
 			final Intent intent = getPhotoPickIntent();
 			startActivityForResult(intent, PHOTO_PICKED_WITH_DATA);
-			overridePendingTransition(R.anim.forward_activity_move_in, R.anim.forward_activity_move_out);
+			overridePendingTransition(R.anim.forward_activity_move_in,
+					R.anim.forward_activity_move_out);
 		} catch (ActivityNotFoundException e) {
 			Toast.makeText(this, " ", Toast.LENGTH_LONG).show();
 		}
@@ -1150,12 +1159,6 @@ public class EditActivity extends BaseActivity {
 	public static Intent getPhotoPickIntent() {
 		Intent intent = new Intent(Intent.ACTION_GET_CONTENT, null);
 		intent.setType("image/*");
-		// intent.putExtra("crop", "true");
-		// intent.putExtra("aspectX", 1);
-		// intent.putExtra("aspectY", 1);
-		// intent.putExtra("outputX", 80);
-		// intent.putExtra("outputY", 80);
-		// intent.putExtra("return-data", true);
 		return intent;
 	}
 
@@ -1167,7 +1170,6 @@ public class EditActivity extends BaseActivity {
 		}
 		switch (requestCode) {
 		case PHOTO_PICKED_WITH_DATA: {// 调用Gallery返回的
-			final Bitmap photo = data.getParcelableExtra("data");
 			Uri uri = data.getData();
 
 			ContentResolver cr = this.getContentResolver();

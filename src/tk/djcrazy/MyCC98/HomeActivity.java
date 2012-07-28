@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -15,51 +17,41 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.util.EntityUtils;
 
-import com.viewpagerindicator.TitlePageIndicator;
-
 import roboguice.activity.RoboFragmentActivity;
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectView;
 import tk.djcrazy.MyCC98.adapter.HomeFragmentPagerAdapter;
 import tk.djcrazy.MyCC98.dialog.AboutDialog;
 import tk.djcrazy.MyCC98.listener.LoadingListener;
-import tk.djcrazy.MyCC98.view.FriendListView;
 import tk.djcrazy.MyCC98.view.HeaderView;
-import tk.djcrazy.MyCC98.view.HotTopicView;
-import tk.djcrazy.MyCC98.view.NewTopicView;
-import tk.djcrazy.MyCC98.view.ParentView;
-import tk.djcrazy.MyCC98.view.PersonalBoardView;
-import tk.djcrazy.MyCC98.view.SearchBoardView;
 import tk.djcrazy.libCC98.CC98Client;
-import android.R.integer;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.Display;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.viewpagerindicator.TitlePageIndicator;
+
 @ContentView(R.layout.main_frame)
-public class HomeActivity extends RoboFragmentActivity implements LoadingListener{
-	
+public class HomeActivity extends RoboFragmentActivity implements
+		LoadingListener {
+
 	private boolean IS_LIFETOY_VERSION = true;
 	private static final String UPDATE_LINK_LIFETOY = "http://10.110.19.123/update/lifetoy.html";
 	private static final String UPDATE_LINK_NORMAL = "http://10.110.19.123/update/index.html";
@@ -69,7 +61,7 @@ public class HomeActivity extends RoboFragmentActivity implements LoadingListene
 	public static final int V_HOT = 2;
 	public static final int V_NEW = 3;
 	public static final int V_FRIEND = 4;
- 	public static final String USERINFO = "USERINFO";
+	public static final String USERINFO = "USERINFO";
 	public static final String AUTOLOGIN = "AUTOLOGIN";
 	private static final String DOWNLOAD_LINK = "downloadLink";
 	private static final String FILE_SIZE = "fileSize";
@@ -88,15 +80,15 @@ public class HomeActivity extends RoboFragmentActivity implements LoadingListene
 	private static final int UPDATE_PROGRESS = 33;
 
 	@InjectView(R.id.main_header)
- 	private HeaderView headerView;
+	private HeaderView headerView;
 	@InjectView(R.id.main_pages)
 	private ViewPager viewPager;
 	@InjectView(R.id.main_titles)
 	private TitlePageIndicator indicator;
-	
- 	private ProgressDialog pBar;
 
- 	private Bitmap bmUserImg;
+	private ProgressDialog pBar;
+
+	private Bitmap bmUserImg;
 
 	private Handler handler = new Handler() {
 		@Override
@@ -108,7 +100,7 @@ public class HomeActivity extends RoboFragmentActivity implements LoadingListene
 				break;
 			case MSG_USERIMG_SUCC:
 				headerView.setUserImg(bmUserImg);
- 				break;
+				break;
 			case SEND_FEEDBACK_FAILED:
 				Toast.makeText(getApplicationContext(), "无法连接到服务器，请稍候再试",
 						Toast.LENGTH_SHORT).show();
@@ -141,13 +133,14 @@ public class HomeActivity extends RoboFragmentActivity implements LoadingListene
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		HomeFragmentPagerAdapter adapter = new HomeFragmentPagerAdapter(getSupportFragmentManager());
+		HomeFragmentPagerAdapter adapter = new HomeFragmentPagerAdapter(
+				getSupportFragmentManager());
 		adapter.setLoadingListener(this);
-  		viewPager.setAdapter(adapter);
-		indicator.setViewPager(viewPager,0);
+		viewPager.setAdapter(adapter);
+		indicator.setViewPager(viewPager, 0);
 		setListeners();
 		getUserImg();
- 	}
+	}
 
 	private void getUserImg() {
 		new Thread() {
@@ -169,16 +162,16 @@ public class HomeActivity extends RoboFragmentActivity implements LoadingListene
 	}
 
 	private void setListeners() {
- 		headerView.setListeners(this);
+		headerView.setListeners(this);
 		headerView.setTitleOnclickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
- 
+
 			}
 		});
 	}
-  
- 	/**
+
+	/**
 	 * override menu
 	 */
 	@Override
@@ -207,7 +200,8 @@ public class HomeActivity extends RoboFragmentActivity implements LoadingListene
 			profiIntent.putExtra("userName", CC98Client.getUserName());
 			profiIntent.putExtra(ProfileActivity.USER_IMAGE, bmUserImg);
 			startActivity(profiIntent);
-			overridePendingTransition(R.anim.forward_activity_move_in, R.anim.forward_activity_move_out);
+			overridePendingTransition(R.anim.forward_activity_move_in,
+					R.anim.forward_activity_move_out);
 			return true;
 		case R.id.about:
 			showAboutInfo();
@@ -226,7 +220,8 @@ public class HomeActivity extends RoboFragmentActivity implements LoadingListene
 	private void goSettings() {
 		Intent intent = new Intent(this, SettingsActivity.class);
 		startActivity(intent);
-		overridePendingTransition(R.anim.forward_activity_move_in, R.anim.forward_activity_move_out);
+		overridePendingTransition(R.anim.forward_activity_move_in,
+				R.anim.forward_activity_move_out);
 	}
 
 	/**
@@ -239,7 +234,8 @@ public class HomeActivity extends RoboFragmentActivity implements LoadingListene
 		bundle.putString(EditActivity.PM_TITLE, "MyCC98软件反馈");
 		startActivity(new Intent().setClass(getApplicationContext(),
 				EditActivity.class).putExtra(EditActivity.BUNDLE, bundle));
-		overridePendingTransition(R.anim.forward_activity_move_in, R.anim.forward_activity_move_out);
+		overridePendingTransition(R.anim.forward_activity_move_in,
+				R.anim.forward_activity_move_out);
 	}
 
 	/**
@@ -251,7 +247,8 @@ public class HomeActivity extends RoboFragmentActivity implements LoadingListene
 		Intent intent = new Intent();
 		intent.setClass(HomeActivity.this, LoginActivity.class);
 		startActivity(intent);
-		overridePendingTransition(R.anim.forward_activity_move_in, R.anim.forward_activity_move_out);
+		overridePendingTransition(R.anim.forward_activity_move_in,
+				R.anim.forward_activity_move_out);
 		finish();
 	}
 
@@ -424,18 +421,49 @@ public class HomeActivity extends RoboFragmentActivity implements LoadingListene
 				.getExternalStorageDirectory(), "MyCC98_latest.apk")),
 				"application/vnd.android.package-archive");
 		startActivity(intent);
-		overridePendingTransition(R.anim.forward_activity_move_in, R.anim.forward_activity_move_out);
+		overridePendingTransition(R.anim.forward_activity_move_in,
+				R.anim.forward_activity_move_out);
 		finish();
 	}
 
 	@Override
 	public void onLoadComplete(int postion) {
-		
+		if (viewPager.getCurrentItem()==postion) {
+			
+		}
 	}
 
 	@Override
 	public void onLoadFailure(int position) {
-		
+
 	}
 
-  }
+	private static Boolean isExit = false;
+	private static Boolean hasTask = false;
+	Timer tExit = new Timer();
+	TimerTask task = new TimerTask() {
+
+		@Override
+		public void run() {
+			isExit = false;
+			hasTask = true;
+		}
+	};
+
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			if (isExit == false) {
+				isExit = true;
+				Toast.makeText(this,"再按一次退出程序", Toast.LENGTH_SHORT)
+						.show();
+				if (!hasTask) {
+					tExit.schedule(task, 2000);
+				}
+			} else {
+				finish();
+				System.exit(0);
+			}
+		}
+		return false;
+	}
+}

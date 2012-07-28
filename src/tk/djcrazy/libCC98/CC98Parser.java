@@ -39,8 +39,7 @@ public class CC98Parser {
 	 * Get a List of Maps of posts info.
 	 * 
 	 * @author DJ
-	 * @param boardLink
-	 *            , url String
+	 * @param boardLink, url String
 	 * @return A List that contains each post's basic information,
 	 * @throws IOException
 	 * @throws ParseException
@@ -98,7 +97,7 @@ public class CC98Parser {
 	 */
 	static public List<PostContentEntity> getPostContentList(String postLink)
 			throws ClientProtocolException, ParseException, IOException {
-		System.err.println("Post Link:" + postLink);
+		//System.err.println("Post Link:" + postLink);
 		return parsePostContentList(getPage(postLink));
 	}
 
@@ -116,7 +115,7 @@ public class CC98Parser {
 		if (userName == null) {
 			throw new IllegalArgumentException("Null pointer!");
 		}
-		System.err.println("Id: " + userName);
+		//System.err.println("Id: " + userName);
 		return parseUserProfile(getUserProfileHtml(userName));
 	}
 
@@ -340,7 +339,7 @@ public class CC98Parser {
 			Matcher matcher = postTypePattern.matcher(postInfo);
 			if (matcher.find()) {
 				entity.setPostType(matcher.group());
-				System.err.println("PostType:" + entity.getPostType());
+//				System.err.println("PostType:" + entity.getPostType());
 			}
 			matcher = postNamePattern.matcher(postInfo);
 			if (matcher.find()) {
@@ -350,7 +349,7 @@ public class CC98Parser {
 				string = string.replaceAll("&lt;", "<");
 				string = string.replaceAll("&gt;", ">");
 				entity.setPostName(string);
-				System.err.println("PostName:" + entity.getPostName());
+//				System.err.println("PostName:" + entity.getPostName());
 			}
 			matcher = postLinkPattern.matcher(postInfo);
 			if (matcher.find()) {
@@ -358,42 +357,42 @@ public class CC98Parser {
 				int idx = tmp.indexOf("&page=");
 				idx = idx == -1 ? tmp.length() : idx;
 				entity.setPostLink(tmp.substring(0, idx));
-				System.err.println("PostLink:" + entity.getPostLink());
+//				System.err.println("PostLink:" + entity.getPostLink());
 			}
 			matcher = postPageNumberPattern.matcher(postInfo);
 			if (matcher.find()) {
 				entity.setPostPageNumber(Integer.parseInt(matcher.group()));
-				System.err.println("PostPageNumber:"
-						+ entity.getPostPageNumber());
+				//System.err.println("PostPageNumber:"
+				//		+ entity.getPostPageNumber());
 			}
 			matcher = postAuthorNamePattern.matcher(postInfo);
 			if (matcher.find()) {
 				entity.setPostAuthorName(matcher.group());
-				System.err.println("PostAuthorName:"
-						+ entity.getPostAuthorName());
+				//System.err.println("PostAuthorName:"
+				//		+ entity.getPostAuthorName());
 			}
 			matcher = replyNumberPattern.matcher(postInfo);
 			if (matcher.find()) {
 				entity.setReplyNumber(matcher.group());
-				System.err.println("ReplyNumber:" + entity.getReplyNumber());
+				//System.err.println("ReplyNumber:" + entity.getReplyNumber());
 			}
 			matcher = lastReplyTimePattern.matcher(postInfo);
 			if (matcher.find()) {
 				entity.setLastReplyTime(matcher.group());
-				System.err
-						.println("LastReplyTime:" + entity.getLastReplyTime());
+				//System.err
+				//		.println("LastReplyTime:" + entity.getLastReplyTime());
 			}
 			matcher = lastReplyLinkPattern.matcher(postInfo);
 			if (matcher.find()) {
 				entity.setLastReplyLink(matcher.group());
-				System.err
-						.println("LastReplyLink:" + entity.getLastReplyLink());
+				//System.err
+				//		.println("LastReplyLink:" + entity.getLastReplyLink());
 			}
 			matcher = lastReplyAuthorPattern.matcher(postInfo);
 			if (matcher.find()) {
 				entity.setLastReplyAuthor(matcher.group());
-				System.err.println("LastReplyAuthor:"
-						+ entity.getLastReplyAuthor());
+				//System.err.println("LastReplyAuthor:"
+				//		+ entity.getLastReplyAuthor());
 			}
 			list.add(entity);
 		}
@@ -556,17 +555,17 @@ public class CC98Parser {
 			entity.setDeletedPosts(details[8]);
 			entity.setDeletedRatio(details[9]);
 			entity.setLastLoginTime(details[10]);
-			System.err.println("userNickName" + details[0]);
-			System.err.println("userLevel" + details[1]);
-			System.err.println("userGroup" + details[2]);
-			System.err.println("goodPosts" + details[3]);
-			System.err.println("totalPosts" + details[4]);
-			System.err.println("userPrestige" + details[5]);
-			System.err.println("registerTime" + details[6]);
-			System.err.println("loginTimes" + details[7]);
-			System.err.println("deletedPosts" + details[8]);
-			System.err.println("deletedRatio" + details[9]);
-			System.err.println("lastLoginTime" + details[10]);
+//			System.err.println("userNickName" + details[0]);
+//			System.err.println("userLevel" + details[1]);
+//			System.err.println("userGroup" + details[2]);
+//			System.err.println("goodPosts" + details[3]);
+//			System.err.println("totalPosts" + details[4]);
+//			System.err.println("userPrestige" + details[5]);
+//			System.err.println("registerTime" + details[6]);
+//			System.err.println("loginTimes" + details[7]);
+//			System.err.println("deletedPosts" + details[8]);
+//			System.err.println("deletedRatio" + details[9]);
+//			System.err.println("lastLoginTime" + details[10]);
 		}
 
 		matcher = personalProfilePattern.matcher(html);
@@ -594,13 +593,13 @@ public class CC98Parser {
 			entity.setUserQQ(details[4]);
 			entity.setUserMSN(details[5]);
 			entity.setUserPage(details[6]);
-			System.err.println("userGender" + details[0]);
-			System.err.println("userBirthday" + details[1]);
-			System.err.println("userConstellation" + details[2]);
-			System.err.println("userEmail" + details[3]);
-			System.err.println("userQQ" + details[4]);
-			System.err.println("userMSN" + details[5]);
-			System.err.println("userPage" + details[6]);
+//			System.err.println("userGender" + details[0]);
+//			System.err.println("userBirthday" + details[1]);
+//			System.err.println("userConstellation" + details[2]);
+//			System.err.println("userEmail" + details[3]);
+//			System.err.println("userQQ" + details[4]);
+//			System.err.println("userMSN" + details[5]);
+//			System.err.println("userPage" + details[6]);
 		}
 		matcher = bbsMasterInfoPattern.matcher(html);
 		if (matcher.find()) {
@@ -660,44 +659,44 @@ public class CC98Parser {
 				string = string.replaceAll("\n", "").replaceAll("&nbsp;", " ")
 						.replaceAll("&lt;", "<").replaceAll("&gt;", ">");
 				entity.setTopicName(string);
-				System.err.println("topicName" + string);
+//				System.err.println("topicName" + string);
 			}
 			matcher = postLinkPattern.matcher(postInfo);
 			if (matcher.find()) {
 				String string = matcher.group();
 				entity.setPostLink(string);
-				System.err.println("postLink" + string);
+//				System.err.println("postLink" + string);
 			}
 			matcher = boardNameWithAuthorPattern.matcher(postInfo);
 			if (matcher.find()) {
 				String string = matcher.group();
 				entity.setBoardName(string);
-				System.err.println("boardName" + string);
+//				System.err.println("boardName" + string);
 			}
 			if (matcher.find()) {
 				String string = matcher.group();
 				entity.setPostAuthor(string);
-				System.err.println("postAuthor" + string);
+//				System.err.println("postAuthor" + string);
 			}
 			matcher = postTimePattern.matcher(postInfo);
 			if (matcher.find()) {
 				String string = matcher.group();
 				entity.setPostTime(string);
-				System.err.println("postTime:" + string);
+//				System.err.println("postTime:" + string);
 			}
 			matcher = focusWithRplyWitClieckhNumberPattern.matcher(postInfo);
 			if (matcher.find()) {
 				entity.setFocusNumber(Integer.parseInt(matcher.group()));
-				System.err
-						.println("focusNumber" + entity.getFocusNumber() + "");
+//				System.err
+//						.println("focusNumber" + entity.getFocusNumber() + "");
 			}
 			if (matcher.find()) {
 				entity.setReplyNumber(Integer.parseInt(matcher.group()));
-				System.err.println("replyNumber" + entity.getReplyNumber());
+//				System.err.println("replyNumber" + entity.getReplyNumber());
 			}
 			if (matcher.find()) {
 				entity.setClickNumber(Integer.parseInt(matcher.group()));
-				System.err.println("clickNumber:" + entity.getClickNumber());
+//				System.err.println("clickNumber:" + entity.getClickNumber());
 			}
 			list.add(entity);
 		}
@@ -843,7 +842,7 @@ public class CC98Parser {
 				.append(sType).append("&pSearch=1&nSearch=&keyword=")
 				.append(keyword).append("&SearchDate=1000&boardid=")
 				.append(boardid).append("&sertype=1");
-		System.err.println(sBuilder.toString());
+//		System.err.println(sBuilder.toString());
 		return parseQueryResult(getPage(sBuilder.toString()));
 	}
 
@@ -911,7 +910,7 @@ public class CC98Parser {
 				string = string.replaceAll("&lt;", "<");
 				string = string.replaceAll("&gt;", ">");
 
-				System.err.println("postTitle:" + string);
+//				System.err.println("postTitle:" + string);
 				map.put("postTitle", string);
 			} else {
 				map.put("postTitle", "");
@@ -920,7 +919,7 @@ public class CC98Parser {
 			sMatcher = authorPattern.matcher(sPost);
 			if (sMatcher.find()) {
 				String string = sMatcher.group();
-				// System.err.println("author:" + string);
+//				 System.err.println("author:" + string);
 				map.put("author", string);
 			} else {
 				map.put("author", "");
@@ -984,13 +983,11 @@ public class CC98Parser {
 			Matcher mMatcher = userNamePattern.matcher(mString);
 			if (mMatcher.find()) {
 				mEntity.setUserName(mMatcher.group());
-				Log.d("parseUserFriendList", mEntity.getUserName());
-			}
+ 			}
 			mMatcher = userStatuePattern.matcher(mString);
 			if (mMatcher.find()) {
 				String string = mMatcher.group().replaceAll("<.*?>", "");
-				Log.d("parseUserFriendList", string);
-				if (string.contains("离线")) {
+ 				if (string.contains("离线")) {
 					mEntity.setStatue(UserStatue.OFF_LINE);
 				} else {
 					mEntity.setStatue(UserStatue.ON_LINE);
@@ -1022,7 +1019,7 @@ public class CC98Parser {
 			String mString = matcher.group();
 			int idx = mString.indexOf("\">");
 			if (idx == -1 || idx + 2 >= mString.length()) {
-				System.err.println("Error result: " + mString);
+//				System.err.println("Error result: " + mString);
 				return null;
 			}
 			String boardLink = mString.substring(0, idx);

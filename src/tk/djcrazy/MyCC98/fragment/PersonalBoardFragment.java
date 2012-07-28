@@ -6,37 +6,40 @@ import java.util.List;
 import org.apache.http.ParseException;
 import org.apache.http.client.ClientProtocolException;
 
+import roboguice.fragment.RoboFragment;
 import roboguice.inject.InjectView;
 import tk.djcrazy.MyCC98.R;
 import tk.djcrazy.MyCC98.adapter.PersonalboardListViewAdapter;
 import tk.djcrazy.MyCC98.listener.LoadingListener;
-import tk.djcrazy.MyCC98.view.ParentView;
+import tk.djcrazy.MyCC98.util.ViewUtils;
 import tk.djcrazy.MyCC98.view.PullToRefreshListView;
 import tk.djcrazy.MyCC98.view.PullToRefreshListView.OnRefreshListener;
 import tk.djcrazy.libCC98.CC98Parser;
 import tk.djcrazy.libCC98.data.BoardEntity;
-import android.app.Activity;
-import android.app.ProgressDialog;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+import android.view.animation.AnimationUtils;
+import android.widget.ProgressBar;
 
-public class PersonalBoardFragment extends Fragment implements
+public class PersonalBoardFragment extends RoboFragment implements
 		OnRefreshListener {
+	private static final int GET_LIST_SUCCESS = 1;
+	private static final int GET_LIST_FAILED = 0;
 	private int position=0;
 	private static final String TAG = "PersonalBoardFragment";
 	private List<BoardEntity> boardList;
 	private PersonalboardListViewAdapter boardListViewAdapter;
+	
+	@InjectView(R.id.personal_board_list)
  	private PullToRefreshListView listView;
-	private static final int GET_LIST_SUCCESS = 1;
-	private static final int GET_LIST_FAILED = 0;
+	
+	@InjectView(R.id.personal_board_loading_bar)
+	private ProgressBar progressBar; 
+	
 	private LoadingListener loadingListener;
 	private Handler handler = new Handler() {
 		@Override
@@ -46,10 +49,15 @@ public class PersonalBoardFragment extends Fragment implements
 				listView.setAdapter(boardListViewAdapter);
 				boardListViewAdapter.notifyDataSetChanged();
 				listView.onRefreshComplete();
-				listView.invalidate();
-				loadingListener.onLoadComplete(position);
+ 				loadingListener.onLoadComplete(position);
+				ViewUtils.setGone(progressBar, true);
+				ViewUtils.setGone(listView, false);
+				listView.startAnimation(AnimationUtils.loadAnimation(getActivity(),
+                        android.R.anim.fade_in));
 				break;
 			case GET_LIST_FAILED:
+				ViewUtils.setGone(progressBar, true);
+				ViewUtils.setGone(listView, true);
 				loadingListener.onLoadFailure(position);
 				break;
 			default:
@@ -58,23 +66,26 @@ public class PersonalBoardFragment extends Fragment implements
 		}
 	};
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		onRefresh();
+ 	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+ 		return LayoutInflater.from(getActivity()).inflate(
+				R.layout.personal_board, null);
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		View view = LayoutInflater.from(getActivity()).inflate(
-				R.layout.personal_board, null);
-		listView = (PullToRefreshListView) view.findViewById(R.id.personal_board_list);
+	public void onViewCreated(View view, Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
 		listView.setOnRefreshListener(this);
 		if (boardListViewAdapter != null) {
+			ViewUtils.setGone(progressBar, true);
+			ViewUtils.setGone(listView, false);
 			listView.setAdapter(boardListViewAdapter);
+		} else {
+			ViewUtils.setGone(progressBar, false);
+			ViewUtils.setGone(listView, true);
+			onRefresh();
 		}
-		return view;
 	}
 
 	public void fetchContent() {

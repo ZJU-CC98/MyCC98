@@ -43,11 +43,10 @@
 
     <style name="listview">
         <item name="android:cacheColorHint">@color/transparent</item>
-        <item name="android:divider">@drawable/divider_horizontal_timeline</item>
-        <item name="android:dividerHeight">0.4dp</item>
+        <item name="android:divider">@drawable/list_divider</item>
+        <item name="android:dividerHeight">2dp</item>
         <item name="android:listSelector">@color/transparent</item>
-        <item name="android:fastScrollEnabled">true</item>
-        <item name="android:scrollingCache">true</item>
+         <item name="android:scrollingCache">true</item>
     </style>
 
     <style name="button">
@@ -64,6 +63,12 @@
         <item name="android:indeterminateDrawable">@drawable/spinner</item>
         <item name="android:indeterminateDuration">2000</item>
         <item name="android:indeterminateOnly">true</item>
+    </style>
+
+    <style name="Separator">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">2dp</item>
+        <item name="android:background">@drawable/list_divider</item>
     </style>
 
 </resources>

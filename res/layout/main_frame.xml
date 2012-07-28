@@ -4,7 +4,7 @@
     android:id="@+id/home_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ececec"
+    android:background="#e3e3e3"
     android:orientation="vertical" >
 
     <tk.djcrazy.MyCC98.view.HeaderView
@@ -18,30 +18,20 @@
         android:layout_height="wrap_content"
         android:background="@drawable/pager_title_background"
         android:textColor="@color/pager_title_text"
-        app:clipPadding="10dp"
+        android:textSize="10sp"
+        app:clipPadding="5dp"
         app:footerColor="@color/pager_footer"
         app:footerIndicatorHeight="5dp"
-        app:footerIndicatorStyle="triangle"
+        app:footerIndicatorStyle="underline"
         app:footerLineHeight="0dp"
         app:selectedBold="true"
         app:selectedColor="@color/pager_title_selected_text"
-        app:titlePadding="10dp" />
-		<LinearLayout
-		    android:layout_height="match_parent"
-		    android:layout_width="match_parent"
-		    android:gravity="center"
-		    android:orientation="vertical">
-    <ProgressBar
-        android:id="@+id/pb_loading"
-        style="@style/Spinner"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
-        android:visibility="gone" />
+        app:titlePadding="5dp" />
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/main_pages"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#ececec"  />
-</LinearLayout>
+         <android.support.v4.view.ViewPager
+            android:id="@+id/main_pages"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#e3e3e3" />
+ 
 </LinearLayout>

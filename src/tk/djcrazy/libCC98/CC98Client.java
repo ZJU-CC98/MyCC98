@@ -161,9 +161,9 @@ public class CC98Client {
 		if (response.getStatusLine().getStatusCode() != 200) {
 			throw new IllegalAccessException(SERVER_ERROR);
 		}
-		System.err.println("Login form get: " + response.getStatusLine());
+//		System.err.println("Login form get: " + response.getStatusLine());
 		String sysMsg = EntityUtils.toString(response.getEntity());
-		System.err.println("Login form get: " + sysMsg);
+//		System.err.println("Login form get: " + sysMsg);
 		if (sysMsg.contains("密码错误") || sysMsg.contains("论坛错误信息")) {
 			throw new IllegalAccessException(ID_PASSWD_ERROR_MSG);
 		}
@@ -218,7 +218,7 @@ public class CC98Client {
 				+ boardID);
 		nvpsList.add(new BasicNameValuePair("username", username));
 		nvpsList.add(new BasicNameValuePair("passwd", passwd));
-		System.err.println("User Info:" + username + " " + passwd);
+//		System.err.println("User Info:" + username + " " + passwd);
 		httpPost.setEntity(new UrlEncodedFormEntity(nvpsList, HTTP.UTF_8));
 		response = getHttpClient().execute(httpPost);
 		entity = response.getEntity();
@@ -226,7 +226,7 @@ public class CC98Client {
 			html = EntityUtils.toString(entity);
 			// System.err.println("Reply Html:" + html.toLowerCase());
 			if (html.contains("状态：发表帖子成功")) {
-				System.err.println("new post OK!");
+//				System.err.println("new post OK!");
 				return true;
 			}
 		}
@@ -249,7 +249,7 @@ public class CC98Client {
 		entity = response.getEntity();
 		if (entity != null) {
 			String html = EntityUtils.toString(entity);
-			System.err.println("Reply Html:" + link + html.toLowerCase());
+//			System.err.println("Reply Html:" + link + html.toLowerCase());
 
 			if (html.contains("编辑帖子成功")) {
 				return true;
@@ -719,7 +719,7 @@ public class CC98Client {
 		HttpGet request = new HttpGet(uri);
 
 		HttpResponse response = getHttpClient().execute(request);
-		Log.d("auth", EntityUtils.toString(response.getEntity()));
+	//	Log.d("auth", EntityUtils.toString(response.getEntity()));
 
 		if (response.getStatusLine().getStatusCode() == 200) {
 			return true;

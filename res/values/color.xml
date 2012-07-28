@@ -7,7 +7,7 @@
     <color name="last_post_text">#555</color>
     <color name="reply_ID">#00BBFF</color>
     <color name="reply_content">#000000</color>
-    <color name="postcontent_background">#ececec</color>
+    <color name="postcontent_background">#e3e3e3</color>
     <color name="reply_time">#666666</color>
     <color name="test">#666666</color>
     <color name="body_color">#FFF</color>
@@ -19,10 +19,10 @@
     <color name="board_master_color">#999</color>
     <color name="post_number">#FF0000</color>
     <color name="board_master_background">#e4e9ef</color>
-    <color name="board_info_background">#ececec</color>
-    <color name="post_list_background">#ececec</color>
+    <color name="board_info_background">#f9f9f9</color>
+    <color name="post_list_background">#f9f9f9</color>
     <color name="sel_post_list_background">#AA0099CC</color>
-    <color name="hot_topic_list_background">#ececec</color>
+    <color name="hot_topic_list_background">#e3e3e3</color>
     <color name="post_list_title">#333</color>
     <color name="return_to_top_color">#AAA</color>
     <color name="carbon_text">#BBB</color>
@@ -33,12 +33,12 @@
     <color name="dark_transparent">#BB000000</color>
     <color name="sel_btn">#0099CC</color>
     <color name="unsel_btn">#222</color>
-    <color name="login_unsel_btn">#ffeeee</color> 
+    <color name="login_unsel_btn">#ffeeee</color>
     <color name="little_dark_bg">#CCC</color>
     <color name="user_profile_bg">#ececec</color>
     <color name="settings_bg">#ececec</color>
-    <color name="search_radio_bg">#ececec</color>
-    <color name="new_post_list_bg">#ececec</color>
+    <color name="search_radio_bg">#e3e3e3</color>
+    <color name="new_post_list_bg">#f9f9f9</color>
     <color name="qt_border">#ffcccccc</color>
     <color name="login_text_color">#555</color>
     <color name="qt_text_green">#ff69b901</color>
@@ -50,5 +50,7 @@
     <color name="pager_title_text">#E0E6EA</color>
     <color name="pager_title_selected_text">#FFFFFF</color>
     <color name="pager_footer">#FFFFFF</color>
-    
+    <color name="list_divider_top">#E2E2E2</color>
+    <color name="list_divider_bottom">#FFFFFF</color>
+
 </resources>

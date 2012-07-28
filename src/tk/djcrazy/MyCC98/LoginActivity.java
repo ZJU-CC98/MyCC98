@@ -117,7 +117,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 	/**
 	 * configure version
 	 */
-	public static final boolean IS_LIFETOY_VERSION = true;
+	public static final boolean IS_LIFETOY_VERSION = false;
 	private String authUserName = "";
 	private String authPassword = "";
 	private Boolean authRememberPwd = false;

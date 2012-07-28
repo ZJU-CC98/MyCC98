@@ -8,36 +8,43 @@ import org.apache.http.NameValuePair;
 import org.apache.http.ParseException;
 import org.apache.http.client.ClientProtocolException;
 
+import roboguice.fragment.RoboFragment;
+import roboguice.inject.InjectView;
 import tk.djcrazy.MyCC98.PostListActivity;
 import tk.djcrazy.MyCC98.R;
 import tk.djcrazy.MyCC98.adapter.SearchResultListAdapter;
 import tk.djcrazy.MyCC98.listener.LoadingListener;
-import tk.djcrazy.MyCC98.view.ParentView;
+import tk.djcrazy.MyCC98.util.ViewUtils;
 import tk.djcrazy.libCC98.CC98Client;
 import tk.djcrazy.libCC98.CC98Parser;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 
-public class SearchBoardFragment extends Fragment {
+public class SearchBoardFragment extends RoboFragment {
 	private int position = 0;
 	private static final String TAG = "SearchBoardFragment";
 	private List<NameValuePair> currentResult;
 	private List<NameValuePair> boardList;
+	
+	@InjectView(R.id.search_board_bar)
 	private EditText searchContent;
+	@InjectView(R.id.search_board_result_list)
 	private ListView lvResultList;
+	@InjectView(R.id.search_board_loading_bar)
+	private ProgressBar progressBar;
+	
 	private SearchResultListAdapter listAdapter;
 	private static final int FETCH_SUCC = 0;
 	private static final int FETCH_FAIL = 1;
@@ -55,9 +62,15 @@ public class SearchBoardFragment extends Fragment {
 			switch (msg.what) {
 			case FETCH_SUCC:
 				searchContent.setText("");
+				ViewUtils.setGone(progressBar, true);
+				ViewUtils.setGone(lvResultList, false);
+				lvResultList.startAnimation(AnimationUtils.loadAnimation(getActivity(),
+                        android.R.anim.fade_in));
 				loadingListener.onLoadComplete(position);
 				break;
 			case FETCH_FAIL:
+				ViewUtils.setGone(progressBar, true);
+				ViewUtils.setGone(lvResultList, true);
 				loadingListener.onLoadFailure(position);
 				break;
 			default:
@@ -66,22 +79,26 @@ public class SearchBoardFragment extends Fragment {
 		}
 	};
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		fetchBoardlist();
-	}
-
+ 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		Log.d(TAG, "onCreateView");
-		View view = LayoutInflater.from(getActivity()).inflate(
+		return LayoutInflater.from(getActivity()).inflate(
 				R.layout.search_board, null);
-		findViews(view);
-		fetchBoardlist();
-		setListeners();
-		return view;
+	}
+
+	@Override
+	public void onViewCreated(View view, Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+ 		if (boardList != null) {
+			ViewUtils.setGone(progressBar, true);
+			ViewUtils.setGone(lvResultList, false);
+ 		} else {
+			ViewUtils.setGone(progressBar, true);
+			ViewUtils.setGone(lvResultList, false);
+ 			fetchBoardlist();
+ 			setListeners();
+		}
 	}
 
 	private void fetchBoardlist() {
@@ -104,13 +121,7 @@ public class SearchBoardFragment extends Fragment {
 			}
 		}.start();
 	}
-
-	private void findViews(View view) {
-		searchContent = (EditText) view.findViewById(R.id.search_board_bar);
-		lvResultList = (ListView) view
-				.findViewById(R.id.search_board_result_list);
-	}
-
+ 
 	public void scrollListTo(int x, int y) {
 		lvResultList.scrollTo(x, y);
 	}

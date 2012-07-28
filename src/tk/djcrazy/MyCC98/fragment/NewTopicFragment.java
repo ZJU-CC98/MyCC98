@@ -9,43 +9,58 @@ import java.util.Map;
 import org.apache.http.ParseException;
 import org.apache.http.client.ClientProtocolException;
 
+import roboguice.fragment.RoboFragment;
+import roboguice.inject.InjectView;
 import tk.djcrazy.MyCC98.R;
 import tk.djcrazy.MyCC98.adapter.NewTopicListAdapter;
+import tk.djcrazy.MyCC98.util.ViewUtils;
 import tk.djcrazy.MyCC98.view.PullToRefreshListView;
 import tk.djcrazy.MyCC98.view.PullToRefreshListView.OnRefreshListener;
-import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
-public class NewTopicFragment extends Fragment implements OnRefreshListener{
+public class NewTopicFragment extends RoboFragment implements OnRefreshListener{
+	private static final String TAG = "NewTopicFragment";
+
+  	private static final int GET_NEW_TOPIC_LIST_SUCCESS = 1;
+	private static final int GET_NEW_TOPIC_LIST_FAILED = 0;	
+	
 	private List<Map<String, Object>> topicList;
 	private NewTopicListAdapter newTopicListAdapter;
+	
+	@InjectView(R.id.new_topic_list)
 	private PullToRefreshListView listView;
-  	private static final int GET_NEW_TOPIC_LIST_SUCCESS = 1;
-	private static final int GET_NEW_TOPIC_LIST_FAILED = 0;
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        onRefresh();
-     }
- 	
+	
+	@InjectView(R.id.new_topic_loading_bar)
+	private ProgressBar progressBar; 
+
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View view = LayoutInflater.from(getActivity()).inflate(
-				R.layout.new_topic, null);
-		listView = (PullToRefreshListView) view.findViewById(R.id.new_topic_list);
-		if (newTopicListAdapter!=null) {
+ 		return LayoutInflater.from(getActivity()).inflate(
+				R.layout.new_topic, null);	}
+	@Override
+	public void onViewCreated(View view, Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+		listView.setOnRefreshListener(this);
+		if (newTopicListAdapter != null) {
+			ViewUtils.setGone(progressBar, true);
+			ViewUtils.setGone(listView, false);
 			listView.setAdapter(newTopicListAdapter);
+		} else {
+			ViewUtils.setGone(progressBar, false);
+			ViewUtils.setGone(listView, true);
+			onRefresh();
 		}
-		return view;
 	}
 
 	public void scrollListTo(int x, int y) {
@@ -58,7 +73,9 @@ public class NewTopicFragment extends Fragment implements OnRefreshListener{
 			@Override
 			public void run() {
 				try {
+					Log.d(TAG, "get topic");
 					topicList = getNewPostList();
+					topicList.remove(0);
 					getTopicHandler
 							.sendEmptyMessage(GET_NEW_TOPIC_LIST_SUCCESS);
 				} catch (ClientProtocolException e) {
@@ -81,14 +98,19 @@ public class NewTopicFragment extends Fragment implements OnRefreshListener{
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
 			case GET_NEW_TOPIC_LIST_SUCCESS:
-				topicList.remove(0);
 				newTopicListAdapter = new NewTopicListAdapter(getActivity(),
 						topicList);
  				listView.setAdapter(newTopicListAdapter);
 				listView.onRefreshComplete();
+				ViewUtils.setGone(progressBar, true);
+				ViewUtils.setGone(listView, false);
+				listView.startAnimation(AnimationUtils.loadAnimation(getActivity(),
+                        android.R.anim.fade_in));
  				break;
 			case GET_NEW_TOPIC_LIST_FAILED:
- 				Toast.makeText(getActivity(), "网络或解析出错！", Toast.LENGTH_SHORT)
+				ViewUtils.setGone(progressBar, true);
+				ViewUtils.setGone(listView, true);
+				Toast.makeText(getActivity(), "网络或解析出错！", Toast.LENGTH_SHORT)
 						.show();
 				break;
 			default:

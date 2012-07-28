@@ -133,8 +133,7 @@ public class NewTopicListAdapter extends BaseAdapter {
     }
     private int getPostTypeResource(String num) {
     	int i = Integer.parseInt(num);
-    	Log.d(TAG, num);
-    	switch (i) {
+     	switch (i) {
     	case 1:
 			return R.drawable.face1;
     	case 2:
