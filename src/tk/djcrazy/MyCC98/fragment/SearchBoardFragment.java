@@ -37,14 +37,14 @@ public class SearchBoardFragment extends RoboFragment {
 	private static final String TAG = "SearchBoardFragment";
 	private List<NameValuePair> currentResult;
 	private List<NameValuePair> boardList;
-	
+
 	@InjectView(R.id.search_board_bar)
 	private EditText searchContent;
 	@InjectView(R.id.search_board_result_list)
 	private ListView lvResultList;
 	@InjectView(R.id.search_board_loading_bar)
 	private ProgressBar progressBar;
-	
+
 	private SearchResultListAdapter listAdapter;
 	private static final int FETCH_SUCC = 0;
 	private static final int FETCH_FAIL = 1;
@@ -64,8 +64,8 @@ public class SearchBoardFragment extends RoboFragment {
 				searchContent.setText("");
 				ViewUtils.setGone(progressBar, true);
 				ViewUtils.setGone(lvResultList, false);
-				lvResultList.startAnimation(AnimationUtils.loadAnimation(getActivity(),
-                        android.R.anim.fade_in));
+				lvResultList.startAnimation(AnimationUtils.loadAnimation(
+						getActivity(), android.R.anim.fade_in));
 				loadingListener.onLoadComplete(position);
 				break;
 			case FETCH_FAIL:
@@ -79,7 +79,6 @@ public class SearchBoardFragment extends RoboFragment {
 		}
 	};
 
- 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -90,14 +89,14 @@ public class SearchBoardFragment extends RoboFragment {
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
- 		if (boardList != null) {
+		if (boardList != null) {
 			ViewUtils.setGone(progressBar, true);
 			ViewUtils.setGone(lvResultList, false);
- 		} else {
+		} else {
 			ViewUtils.setGone(progressBar, true);
 			ViewUtils.setGone(lvResultList, false);
- 			fetchBoardlist();
- 			setListeners();
+			fetchBoardlist();
+			setListeners();
 		}
 	}
 
@@ -121,7 +120,7 @@ public class SearchBoardFragment extends RoboFragment {
 			}
 		}.start();
 	}
- 
+
 	public void scrollListTo(int x, int y) {
 		lvResultList.scrollTo(x, y);
 	}
@@ -164,6 +163,9 @@ public class SearchBoardFragment extends RoboFragment {
 						PostListActivity.BOARD_ENTITY, bundle).setClass(
 						getActivity(), PostListActivity.class);
 				getActivity().startActivity(intent);
+				getActivity().overridePendingTransition(
+						R.anim.forward_activity_move_in,
+						R.anim.forward_activity_move_out);
 			}
 		});
 	}
@@ -210,7 +212,8 @@ public class SearchBoardFragment extends RoboFragment {
 	}
 
 	/**
-	 * @param position the position to set
+	 * @param position
+	 *            the position to set
 	 */
 	public void setPosition(int position) {
 		this.position = position;

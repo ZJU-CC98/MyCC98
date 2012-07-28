@@ -5,6 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import tk.djcrazy.MyCC98.R;
+import tk.djcrazy.MyCC98.util.ViewUtils;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -322,7 +323,7 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
         if (mCurrentScrollState == SCROLL_STATE_TOUCH_SCROLL
                 && mRefreshState != REFRESHING) {
             if (firstVisibleItem == 0) {
-                mRefreshViewImage.setVisibility(View.VISIBLE);
+            	ViewUtils.setGone(mRefreshViewImage, false);
                 if ((mRefreshView.getBottom() > mRefreshViewHeight + 20
                         || mRefreshView.getTop() >= 0)
                         && mRefreshState != RELEASE_TO_REFRESH) {

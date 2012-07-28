@@ -33,7 +33,10 @@
 		<activity android:name=".PreviewActivity"
 			android:configChanges="orientation|keyboardHidden">
 		</activity>
-		<activity android:name=".ProfileActivity"
+		<activity android:name=".PostSearchActivity"
+			android:configChanges="orientation|keyboardHidden">
+		</activity>
+				<activity android:name=".ProfileActivity"
 			android:configChanges="orientation|keyboardHidden">
 		</activity>
 		<activity android:name=".PushNewPostActivity"

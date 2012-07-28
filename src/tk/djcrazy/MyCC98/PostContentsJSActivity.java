@@ -1,7 +1,5 @@
 package tk.djcrazy.MyCC98;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.List;
@@ -21,7 +19,6 @@ import tk.djcrazy.libCC98.exception.NoUserFoundException;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
@@ -29,14 +26,12 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.ContextThemeWrapper;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -46,9 +41,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebSettings.LayoutAlgorithm;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.ListAdapter;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.Toast;
@@ -698,7 +691,25 @@ public class PostContentsJSActivity extends BaseActivity {
 			send_pm(item.getUserName());
 			break;
 		case 2:
-			add_friend(item.getUserName());
+			AlertDialog.Builder builder = new AlertDialog.Builder(
+					PostContentsJSActivity.this);
+			builder.setTitle("提示");
+			builder.setMessage("确认添加 "+item.getUserName()+" 为好友？");
+			builder.setPositiveButton("确定", new OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					add_friend(item.getUserName());
+				}
+			});
+			builder.setNegativeButton("取消", new OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					
+				}
+			});
+			builder.create().show();
 			break;
 		case 3:
 			// view user info
