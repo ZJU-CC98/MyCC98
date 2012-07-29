@@ -3,6 +3,8 @@
  */
 package tk.djcrazy.libCC98.data;
 
+import java.util.Date;
+
 /**
  * @author DJ
  *
@@ -113,9 +115,9 @@ public class PostContentEntity {
 	/**
 	 * @param postTime the postTime to set
 	 */
-	public void setPostTime(String postTime) {
-		this.postTime = postTime;
-	}
+	public void setPostTime(String postTimeString) {
+		
+ 	}
 	/**
 	 * @return the gender
 	 */
@@ -172,7 +174,7 @@ public class PostContentEntity {
 	private String userAvatarLink="";
 	private String postTitle="";
 	private String postFace="";
-	private String postTime="";
+	private Date postTime=new Date();
 	private String gender="file:///android_asset/pic/male.gif";
 	private String quoteLink="";
 	private String trackUserLink="";

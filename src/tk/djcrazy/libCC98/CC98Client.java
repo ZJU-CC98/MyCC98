@@ -64,45 +64,45 @@ import android.util.Log;
  */
 public class CC98Client {
 
-	public static final int PM_SEND_FAIL = -1;
-	public static final int PM_SEND_SUCC = 0;
+	public  final int PM_SEND_FAIL = -1;
+	public  final int PM_SEND_SUCC = 0;
 	/**
 	 * Store the URL of CC98
 	 */
-	private static String CC98 = "http://www.cc98.org/";
+	private  String CC98 = "http://www.cc98.org/";
 
-	public static String HOT_TOPIC_LINK = CC98 + "hottopic.asp";
-	public static String USER_PROFILE = CC98 + "dispuser.asp?name=";
-	public static String NEW_POST_LINK = CC98 + "queryresult.asp?stype=3";
-	public static String USER_CONTROL_LINK = CC98 + "usermanager.asp";
-	public static String ADD_FRIEND_LINK = CC98 + "usersms.asp?action=friend";
-	public static String ADD_FRIEND_REFERRER = CC98
+	public  String HOT_TOPIC_LINK = CC98 + "hottopic.asp";
+	public  String USER_PROFILE = CC98 + "dispuser.asp?name=";
+	public  String NEW_POST_LINK = CC98 + "queryresult.asp?stype=3";
+	public  String USER_CONTROL_LINK = CC98 + "usermanager.asp";
+	public  String ADD_FRIEND_LINK = CC98 + "usersms.asp?action=friend";
+	public  String ADD_FRIEND_REFERRER = CC98
 			+ "usersms.asp?action=friend&todo=addF";
-	public static String LOGIN_LINK = CC98 + "login.asp?action=chk";
-	private static Bitmap userImg;
+	public  String LOGIN_LINK = CC98 + "login.asp?action=chk";
+	private  Bitmap userImg;
 	/**
 	 * Store the id
 	 */
-	private static String username;
+	private  String username;
 
 	/*
 	 * Store cookies
 	 */
-	private static List<Cookie> cookies;
+	private  List<Cookie> cookies;
 
 	/**
 	 * Don't using this, to avoid null pointer, use getHttpClient instead
 	 */
-	protected static DefaultHttpClient client = getHttpClient();
+	protected  DefaultHttpClient client = getHttpClient();
 
-	public static Bitmap getLoginUserImg() {
+	public  Bitmap getLoginUserImg() {
 		return userImg;
 	}
-	public static void setLoginUserImg(Bitmap bitmap) {
+	public  void setLoginUserImg(Bitmap bitmap) {
 		  userImg = bitmap;
 	}
 
-	public static DefaultHttpClient getHttpClient() {
+	public  DefaultHttpClient getHttpClient() {
 		if (client == null) {
 			System.err.println("Create HttpClient...");
 
@@ -129,9 +129,9 @@ public class CC98Client {
 		return client;
 	}
 
-	private static String passwd;
-	public static final String ID_PASSWD_ERROR_MSG = "用户名/密码错误";
-	public static final String SERVER_ERROR = "CC98服务器异常！";
+	private  String passwd;
+	public  final String ID_PASSWD_ERROR_MSG = "用户名/密码错误";
+	public  final String SERVER_ERROR = "CC98服务器异常！";
 
 	/**
 	 * Login method
@@ -143,7 +143,7 @@ public class CC98Client {
 	 * @throws ClientProtocolException
 	 * @throws IllegalAccessException
 	 */
-	static public void doLogin(String id, String pw)
+	 public void doLogin(String id, String pw)
 			throws ClientProtocolException, IOException, IllegalAccessException {
 
 		HttpResponse response;
@@ -175,7 +175,7 @@ public class CC98Client {
 	 * @param ip
 	 * @param port
 	 */
-	public static void setProxy(String ip, int port) {
+	public  void setProxy(String ip, int port) {
 		System.err.println("Proxy: " + ip + ":" + port);
 		HttpHost proxy = new HttpHost(ip, port);
 		getHttpClient().getParams().setParameter(ConnRouteParams.DEFAULT_PROXY,
@@ -185,12 +185,12 @@ public class CC98Client {
 	/**
 	 * @author zsy
 	 */
-	public static void rmProxy() {
+	public  void rmProxy() {
 		getHttpClient().getParams().removeParameter(
 				ConnRouteParams.DEFAULT_PROXY);
 	}
 
-	public static List<Cookie> getCookies() {
+	public  List<Cookie> getCookies() {
 		return cookies;
 	}
 
@@ -205,7 +205,7 @@ public class CC98Client {
 	 * @throws IOException
 	 * @throws ClientProtocolException
 	 */
-	static public boolean pushNewPost(List<NameValuePair> nvpsList,
+	 public boolean pushNewPost(List<NameValuePair> nvpsList,
 			String boardID) throws ClientProtocolException, IOException {
 		System.out.println("" + boardID);
 		HttpEntity entity;
@@ -239,7 +239,7 @@ public class CC98Client {
 	 * @throws IOException
 	 * @throws ClientProtocolException
 	 */
-	static public boolean editPost(List<NameValuePair> nvpsList, String link)
+	 public boolean editPost(List<NameValuePair> nvpsList, String link)
 			throws ClientProtocolException, IOException {
 		HttpEntity entity;
 		HttpPost httpPost = new HttpPost(link);
@@ -268,7 +268,7 @@ public class CC98Client {
 	 * @throws IOException
 	 * @throws ClientProtocolException
 	 */
-	static public boolean submitReply(List<NameValuePair> nvpsList,
+	 public boolean submitReply(List<NameValuePair> nvpsList,
 			String boardID, String rootID) throws ClientProtocolException,
 			IOException {
 		HttpEntity entity;
@@ -301,8 +301,8 @@ public class CC98Client {
 		return false;
 	}
 
-	public static final String SEARCH_TYPE_TITLE = "2";
-	public static final String SEARCH_TYPE_AUTHOR = "1";
+	public  final String SEARCH_TYPE_TITLE = "2";
+	public  final String SEARCH_TYPE_AUTHOR = "1";
 
 	/**
 	 * @author zsy
@@ -315,7 +315,7 @@ public class CC98Client {
 	 * @throws ParseException
 	 * @throws IOException
 	 */
-	static public String queryPosts(String keyWord, String sType,
+	 public String queryPosts(String keyWord, String sType,
 			String searchDate, int boardArea, int boardID)
 			throws ParseException, IOException {
 		/*
@@ -366,7 +366,7 @@ public class CC98Client {
 	 * @throws ClientProtocolException
 	 * @throws ParseException
 	 */
-	public static String getPage(String link) throws ClientProtocolException,
+	public  String getPage(String link) throws ClientProtocolException,
 			IOException, ParseException {
 		System.err.println("URL:" + link);
 		String content = "";
@@ -403,7 +403,7 @@ public class CC98Client {
 	 * @throws MalformedURLException
 	 * @throws PatternSyntaxException
 	 */
-	public static String uploadPictureToCC98(File picFile)
+	public  String uploadPictureToCC98(File picFile)
 			throws PatternSyntaxException, MalformedURLException, IOException {
 
 		URL url = new URL(getCC98Domain() + "saveannouce_upfile.asp?boardid=10");
@@ -483,7 +483,7 @@ public class CC98Client {
 	 * @throws ParseException
 	 * @throws ClientProtocolException
 	 */
-	public static String getInboxHtml(int page_number)
+	public  String getInboxHtml(int page_number)
 			throws ClientProtocolException, ParseException, IOException {
 		return getPage(getCC98Domain() + "usersms.asp?action=inbox&page="
 				+ page_number);
@@ -501,7 +501,7 @@ public class CC98Client {
 	 * @throws ParseException
 	 * @throws ClientProtocolException
 	 */
-	public static String getOutboxHtml(int page_number)
+	public  String getOutboxHtml(int page_number)
 			throws ClientProtocolException, ParseException, IOException {
 		return getPage(getCC98Domain() + "usersms.asp?action=issend&page="
 				+ page_number);
@@ -518,7 +518,7 @@ public class CC98Client {
 	 * @throws ParseException
 	 * @throws ClientProtocolException
 	 */
-	public static String getUserImgUrl(String username)
+	public  String getUserImgUrl(String username)
 			throws ClientProtocolException, ParseException, IOException {
 
 		String html = getPage(getCC98Domain() + "dispuser.asp?name="
@@ -538,19 +538,19 @@ public class CC98Client {
 		return url;
 	}
 
-	public static String getPasswd() {
+	public  String getPasswd() {
 		return passwd;
 	}
 
-	public static String getUserName() {
+	public  String getUserName() {
 		return username;
 	}
 
-	static public void setPassword(String pwd) {
+	 public void setPassword(String pwd) {
 		passwd = pwd;
 	}
 
-	static public void setUserName(String name) {
+	 public void setUserName(String name) {
 		username = name;
 	}
 
@@ -566,7 +566,7 @@ public class CC98Client {
 	 * @throws IOException
 	 * @throws ClientProtocolException
 	 */
-	static public int sendPm(String touser, String title, String message)
+	 public int sendPm(String touser, String title, String message)
 			throws ClientProtocolException, IOException {
 		String url = getCC98Domain() + "messanger.asp?action=send";
 		HttpPost post = new HttpPost(url);
@@ -593,11 +593,11 @@ public class CC98Client {
 	/**
 	 * @return the cC98
 	 */
-	public static String getCC98Domain() {
+	public  String getCC98Domain() {
 		return CC98;
 	}
 
-	public static void setCC98Domain(String cC98) {
+	public  void setCC98Domain(String cC98) {
 		CC98 = cC98;
  		HOT_TOPIC_LINK = CC98 + "hottopic.asp";
 		USER_PROFILE = CC98 + "dispuser.asp?name=";
@@ -616,7 +616,7 @@ public class CC98Client {
 	 * @throws NoUserFoundException
 	 * @throws IOException
 	 */
-	public static void addFriend(String userId) throws ParseException,
+	public  void addFriend(String userId) throws ParseException,
 			NoUserFoundException, IOException {
 		if (userId == null) {
 			throw new IllegalArgumentException("Null argument!");
@@ -647,7 +647,7 @@ public class CC98Client {
 		}
 	}
 
-	public static String getUserProfileHtml(String userName)
+	public  String getUserProfileHtml(String userName)
 			throws NoUserFoundException, IOException {
 		String mString = getPage(USER_PROFILE + URLEncoder.encode(userName));
 		if (mString.contains("您查询的名字不存在")) {
@@ -666,7 +666,7 @@ public class CC98Client {
 	 * @throws ParseException
 	 * @throws IOException
 	 */
-	public static String getNewPostListHtml() throws ClientProtocolException,
+	public  String getNewPostListHtml() throws ClientProtocolException,
 			ParseException, IOException {
 		return getPage(NEW_POST_LINK);
 	}
@@ -679,7 +679,7 @@ public class CC98Client {
 	 * @throws IOException
 	 */
 
-	public static Bitmap getBitmapFromUrl(String url) throws IOException {
+	public  Bitmap getBitmapFromUrl(String url) throws IOException {
 		if (url == null) {
 			throw new IllegalArgumentException();
 		}
@@ -696,12 +696,12 @@ public class CC98Client {
 
 	}
 
-	public static Bitmap getUserImg(String user_name)
+	public  Bitmap getUserImg(String user_name)
 			throws ClientProtocolException, ParseException, IOException {
 		return getBitmapFromUrl(getUserImgUrl(user_name));
 	}
 
-	public static boolean doHttpBasicAuthorization(String authName,
+	public  boolean doHttpBasicAuthorization(String authName,
 			String authPassword) throws ClientProtocolException, IOException,
 			URISyntaxException {
 		// Set url

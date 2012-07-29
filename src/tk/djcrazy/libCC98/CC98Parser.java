@@ -1,11 +1,6 @@
 package tk.djcrazy.libCC98;
 
-import static tk.djcrazy.libCC98.CC98Client.HOT_TOPIC_LINK;
-import static tk.djcrazy.libCC98.CC98Client.getCC98Domain;
-import static tk.djcrazy.libCC98.CC98Client.getNewPostListHtml;
-import static tk.djcrazy.libCC98.CC98Client.getPage;
-import static tk.djcrazy.libCC98.CC98Client.getUserProfileHtml;
-
+ 
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -35,6 +30,8 @@ import android.util.Log;
 
 public class CC98Parser {
 
+	private CC98Client cc98Client;
+	private CC98UrlManager cc98UrlManager;
 	/**
 	 * Get a List of Maps of posts info.
 	 * 
@@ -47,10 +44,10 @@ public class CC98Parser {
 	 * 
 	 * @see #parsePostList(String)
 	 */
-	static public List<PostEntity> getPostList(String boardLink)
+	 public List<PostEntity> getPostList(int boardId, int pageNum)
 			throws ClientProtocolException, ParseException, IOException {
 
-		return parsePostList(getPage(boardLink));
+		return parsePostList(cc98Client.getPage(cc98UrlManager.getBoardUrl(boardId, pageNum)));
 	}
 
 	/**
@@ -63,9 +60,9 @@ public class CC98Parser {
 	 * @throws ClientProtocolException
 	 * 
 	 */
-	static public List<HotTopicEntity> getHotTopicList()
+	 public List<HotTopicEntity> getHotTopicList()
 			throws ClientProtocolException, ParseException, IOException {
-		return parseHotTopicList(getPage(HOT_TOPIC_LINK));
+		return parseHotTopicList(cc98Client.getPage(cc98UrlManager.getHotTopicUrl()));
 	}
 
 	/**
@@ -79,9 +76,9 @@ public class CC98Parser {
 	 * 
 	 * @see #parsePersonalBoardList(String)
 	 */
-	static public List<BoardEntity> getPersonalBoardList()
+	 public List<BoardEntity> getPersonalBoardList()
 			throws ClientProtocolException, ParseException, IOException {
-		return parsePersonalBoardList(getPage(getCC98Domain()));
+		return parsePersonalBoardList(cc98Client.getPage(cc98UrlManager.getPersonalBoardUrl()));
 	}
 
 	/**
@@ -95,10 +92,9 @@ public class CC98Parser {
 	 * @throws ClientProtocolException
 	 * @see #parsePostContentList(String)
 	 */
-	static public List<PostContentEntity> getPostContentList(String postLink)
+	 public List<PostContentEntity> getPostContentList(int boardId, int postId, int pageNum)
 			throws ClientProtocolException, ParseException, IOException {
-		//System.err.println("Post Link:" + postLink);
-		return parsePostContentList(getPage(postLink));
+		return parsePostContentList(cc98Client.getPage(cc98UrlManager.getPostUrl(boardId, postId, pageNum)));
 	}
 
 	/**
@@ -110,13 +106,9 @@ public class CC98Parser {
 	 * @throws IOException
 	 * @throws NoUserFoundException
 	 */
-	static public UserProfileEntity getUserProfile(String userName)
+	 public UserProfileEntity getUserProfile(String userName)
 			throws NoUserFoundException, IOException {
-		if (userName == null) {
-			throw new IllegalArgumentException("Null pointer!");
-		}
-		//System.err.println("Id: " + userName);
-		return parseUserProfile(getUserProfileHtml(userName));
+ 		return parseUserProfile(cc98Client.getPage(cc98UrlManager.getUserProfileUrl(userName)));
 	}
 
 	/**
@@ -126,9 +118,9 @@ public class CC98Parser {
 	 * @throws ParseException
 	 * @throws ClientProtocolException
 	 */
-	static public List<Map<String, Object>> getNewPostList()
+	 public List<Map<String, Object>> getNewPostList()
 			throws ClientProtocolException, ParseException, IOException {
-		return parseQueryResult(getNewPostListHtml());
+		return parseQueryResult(cc98Client.getPage(cc98UrlManager.getNewPostUrl()));
 	}
 
 	/**
@@ -140,9 +132,9 @@ public class CC98Parser {
 	 * @throws ParseException
 	 * @throws IOException
 	 */
-	public static List<UserStatueEntity> getUserFriendList()
+	public  List<UserStatueEntity> getUserFriendList()
 			throws ClientProtocolException, ParseException, IOException {
-		return parseUserFriendList(getPage(CC98Client.USER_CONTROL_LINK));
+		return parseUserFriendList(cc98Client.getPage(cc98UrlManager.getUserManagerUrl()));
 	}
  	/**
 	 * Parse the HTML, and put posts and their poster id in a list of
@@ -152,15 +144,16 @@ public class CC98Parser {
 	 *            String (must not be null)
 	 * @return A list of the pair of poster id and their posts
 	 */
-	static private List<PostContentEntity> parsePostContentList(String html) {
-		if (html == null)
-			throw new IllegalArgumentException("Null html String!");
-		List<PostContentEntity> list = new ArrayList<PostContentEntity>();
+	 private List<PostContentEntity> parsePostContentList(String html) {
+ 		List<PostContentEntity> list = new ArrayList<PostContentEntity>();
 		Matcher matcher;
 		// get some information of the topic
 		Pattern postInfoPattern = Pattern
 				.compile(
-						"(?<=<title>).*?(?=&raquo;)|(?<=&page=\\d{1,5}>).+?(?=</a>)|(?<=>\\[).{0,10}?(?=\\]</font></span></td>)|(?<=>\\[).{0,10}?(?=\\]</a></span></td>)",
+						"(?<=<title>).*?(?=&raquo;)|" +
+						"(?<=&page=\\d{1,5}>).+?(?=</a>)|" +
+						"(?<=>\\[).{0,10}?(?=\\]</font></span></td>)|" +
+						"(?<=>\\[).{0,10}?(?=\\]</a></span></td>)",
 						Pattern.DOTALL);
 		Matcher postInfoMatcher = postInfoPattern.matcher(html);
 		PostContentEntity postInfoEntity = new PostContentEntity();
@@ -224,7 +217,7 @@ public class CC98Parser {
 			if (matcher.find()) {
 				String string = matcher.group();
 				if (!string.contains("http://")) {
-					string = CC98Client.getCC98Domain() + string;
+					string = cc98UrlManager.getClientUrl() + string;
 				}
 				entity.setUserAvatarLink(string);
 			}
@@ -249,17 +242,17 @@ public class CC98Parser {
 			}
 			matcher = quoteLinkPattern.matcher(postInfo);
 			if (matcher.find()) {
-				entity.setQuoteLink(CC98Client.getCC98Domain()
+				entity.setQuoteLink(cc98UrlManager.getClientUrl()
 						+ matcher.group());
 			}
 			matcher = trackUserLinkPattern.matcher(postInfo);
 			if (matcher.find()) {
-				entity.setTrackUserLink(CC98Client.getCC98Domain()
+				entity.setTrackUserLink(cc98UrlManager.getClientUrl()
 						+ matcher.group());
 			}
 			matcher = editPostLinkPattern.matcher(postInfo);
 			if (matcher.find()) {
-				entity.setEditPostLink(CC98Client.getCC98Domain()
+				entity.setEditPostLink(cc98UrlManager.getClientUrl()
 						+ matcher.group());
 			}
 			list.add(entity);
@@ -273,7 +266,7 @@ public class CC98Parser {
 	 * @param html
 	 * @return A List of the NameValuePair of posts names and their URL
 	 */
-	static private List<PostEntity> parsePostList(String html) {
+	 private List<PostEntity> parsePostList(String html) {
 
 		if (html == null)
 			throw new IllegalArgumentException("Null html String!");
@@ -376,7 +369,7 @@ public class CC98Parser {
 	 * @param html
 	 * @return List of NameValuePair of board links and board names
 	 */
-	static private List<BoardEntity> parsePersonalBoardList(String html) {
+	 private List<BoardEntity> parsePersonalBoardList(String html) {
 		if (html == null)
 			throw new IllegalArgumentException("Null html String!");
 		List<BoardEntity> nList = new ArrayList<BoardEntity>();
@@ -391,8 +384,7 @@ public class CC98Parser {
 		if (ma.find()) {
 			boardinfo = ma.group();
 		} else {
-			Log.d("CC98Parser",CC98Client.getCC98Domain()+"\n"+ html);
-			throw new IllegalStateException("preParse Error!");
+ 			throw new IllegalStateException("preParse Error!");
 		}
 		Pattern namePattern = Pattern.compile(
 				"(?<=<font color=#000066>).*?(?=</font>)", Pattern.DOTALL);
@@ -484,7 +476,7 @@ public class CC98Parser {
 	 * @param html
 	 * @return
 	 */
-	private static UserProfileEntity parseUserProfile(String html) {
+	private  UserProfileEntity parseUserProfile(String html) {
 		if (html == null)
 			throw new IllegalArgumentException("Null html String!");
 		UserProfileEntity entity = new UserProfileEntity();
@@ -505,7 +497,7 @@ public class CC98Parser {
 		if (matcher.find()) {
 			String url = matcher.group();
 			if (!url.startsWith("http") && !url.startsWith("ftp")) {
-				url = CC98Client.getCC98Domain() + url;
+				url = cc98UrlManager.getClientUrl() + url;
 			}
 			entity.setUserAvatarLink(url);
 		}
@@ -597,7 +589,7 @@ public class CC98Parser {
 	 * @param page
 	 * @return
 	 */
-	private static List<HotTopicEntity> parseHotTopicList(String page) {
+	private  List<HotTopicEntity> parseHotTopicList(String page) {
 		if (page == null)
 			throw new IllegalArgumentException("Null html String!");
 
@@ -682,7 +674,7 @@ public class CC98Parser {
 	 *            The html of the inbox page
 	 * @return A list of PmInfo
 	 */
-	protected static List<PmInfo> parsePmList(String html, InboxInfo inboxInfo) {
+	protected  List<PmInfo> parsePmList(String html, InboxInfo inboxInfo) {
 		if (html == null)
 			throw new IllegalArgumentException("Null html String!");
 
@@ -720,10 +712,9 @@ public class CC98Parser {
 	 * @throws ParseException
 	 * @throws ClientProtocolException
 	 */
-	private static String getMsgPageHtml(int pmId)
+	private  String getMsgPageHtml(int pmId)
 			throws ClientProtocolException, ParseException, IOException {
-		return CC98Client.getPage(CC98Client.getCC98Domain()
-				+ "messanger.asp?action=read&id=" + pmId);
+		return cc98Client.getPage(cc98UrlManager.getMessagePageUrl(pmId));
 	}
 
 	/**
@@ -734,7 +725,7 @@ public class CC98Parser {
 	 * @param pmList
 	 * @param m1
 	 */
-	private static void getInboxList(List<PmInfo> pmList, Matcher m1) {
+	private  void getInboxList(List<PmInfo> pmList, Matcher m1) {
 		while (m1.find()) {
 			String isNewString = m1.group();
 			boolean isNew = isNewString.equals("olds")
@@ -766,15 +757,14 @@ public class CC98Parser {
 	 * @throws ParseException
 	 * @throws ClientProtocolException
 	 */
-	public static String getMsgContent(int pmId)
+	public  String getMsgContent(int pmId)
 			throws ClientProtocolException, ParseException, IOException {
 		String html = getMsgPageHtml(pmId);
 		Pattern p = Pattern
 				.compile("(?<=<span id=\"ubbcode1\" >).*?(?=</span>)");
 		Matcher m = p.matcher(html);
 		if (!m.find()) {
-			System.err.println("Can't get pm content, PM id=" + pmId);
-			return "";
+			throw new IllegalStateException("can not get msg content");
 		}
 		return m.group();
 	}
@@ -788,18 +778,18 @@ public class CC98Parser {
 	 * @throws ClientProtocolException
 	 */
 
-	public static List<PmInfo> getPmData(int page_num, InboxInfo inboxInfo,
+	public  List<PmInfo> getPmData(int page_num, InboxInfo inboxInfo,
 			int type) throws ClientProtocolException, ParseException,
 			IOException {
 		if (type == PmActivity.INBOX) {
-			return parsePmList(CC98Client.getInboxHtml(page_num), inboxInfo);
+			return parsePmList(cc98Client.getPage(cc98UrlManager.getInboxUrl(page_num)), inboxInfo);
 		} else if (type == PmActivity.OUTBOX) {
-			return parsePmList(CC98Client.getOutboxHtml(page_num), inboxInfo);
+			return parsePmList(cc98Client.getOutboxHtml(page_num), inboxInfo);
 		}
 		return new ArrayList<PmInfo>();
 	}
 
-	public static List<Map<String, Object>> searchPost(String keyword,
+	public  List<Map<String, Object>> searchPost(String keyword,
 			int boardid, String sType, int page) throws ParseException,
 			IOException {
 		/*
@@ -807,19 +797,13 @@ public class CC98Parser {
 		 * keyword=t&SearchDate=1000&boardid=0&sertype=1
 		 */
 		keyword = URLEncoder.encode(keyword);
-		StringBuilder sBuilder = new StringBuilder(CC98Client.getCC98Domain());
-		sBuilder.append("queryresult.asp?page=").append(page).append("&stype=")
-				.append(sType).append("&pSearch=1&nSearch=&keyword=")
-				.append(keyword).append("&SearchDate=1000&boardid=")
-				.append(boardid).append("&sertype=1");
-//		System.err.println(sBuilder.toString());
-		return parseQueryResult(getPage(sBuilder.toString()));
+ 		return parseQueryResult(cc98Client.getPage(cc98UrlManager.getSearchUrl(keyword, boardid, sType, page)));
 	}
 
-	public static List<Map<String, Object>> query(String keyWord, String sType,
+	public  List<Map<String, Object>> query(String keyWord, String sType,
 			String searchDate, int boardArea, int boardID)
 			throws ParseException, IOException {
-		return parseQueryResult(CC98Client.queryPosts(keyWord, sType,
+		return parseQueryResult(cc98Client.queryPosts(keyWord, sType,
 				searchDate, boardArea, boardID));
 	}
 
@@ -829,11 +813,8 @@ public class CC98Parser {
 	 * @param html
 	 * @return
 	 */
-	public static List<Map<String, Object>> parseQueryResult(String html) {
-		if (html == null)
-			throw new IllegalArgumentException("Null html String!");
-
-		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+	public  List<Map<String, Object>> parseQueryResult(String html) {
+ 		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 		Map<String, Object> mmap = new HashMap<String, Object>();
 
 		Pattern pattern = Pattern
@@ -911,7 +892,7 @@ public class CC98Parser {
 				String string = sMatcher.group();
 				// System.err.println("postLink:" + string);
 
-				map.put("postLink", CC98Client.getCC98Domain() + string);
+				map.put("postLink", cc98UrlManager.getClientUrl() + string);
 			} else {
 				map.put("postLink", "");
 
@@ -934,7 +915,7 @@ public class CC98Parser {
 		return list;
 	}
 
-	private static List<UserStatueEntity> parseUserFriendList(String html)
+	private  List<UserStatueEntity> parseUserFriendList(String html)
 			throws ClientProtocolException, ParseException, IOException {
 		if (html == null) {
 			throw new IllegalArgumentException("Null pointer!");
@@ -964,7 +945,7 @@ public class CC98Parser {
 					mEntity.setOnlineTime(string);
 				}
 			}
-			mEntity.setUserAvartar(CC98Client.getUserImg(mEntity.getUserName()));
+			mEntity.setUserAvartar(cc98Client.getUserImg(mEntity.getUserName()));
 			list.add(mEntity);
 		}
 		return list;
@@ -977,10 +958,9 @@ public class CC98Parser {
 	 * @throws ParseException
 	 * @throws IOException
 	 */
-	public static List<NameValuePair> getTodayBoardList()
+	public  List<NameValuePair> getTodayBoardList()
 			throws ClientProtocolException, ParseException, IOException {
-		String content = CC98Client.getPage(CC98Client.getCC98Domain()
-				+ "boardstat.asp?boardid=0");
+		String content = cc98Client.getPage(cc98UrlManager.getTodayBoardList());
 		List<NameValuePair> list = new ArrayList<NameValuePair>();
 		Pattern linkAndName = Pattern.compile(
 				"(?<=<a href=\")list.*?(?=</a></td><td )", Pattern.DOTALL);
@@ -989,14 +969,41 @@ public class CC98Parser {
 			String mString = matcher.group();
 			int idx = mString.indexOf("\">");
 			if (idx == -1 || idx + 2 >= mString.length()) {
-//				System.err.println("Error result: " + mString);
-				return null;
-			}
+ 				throw new IllegalStateException("parse error.");
+ 			}
 			String boardLink = mString.substring(0, idx);
 			String boardName = mString.substring(idx + 2);
 			list.add(new BasicNameValuePair(boardName, boardLink));
 		}
 		return list;
+	}
+
+	/**
+	 * @return the cc98Client
+	 */
+	public CC98Client getCC98Client() {
+		return cc98Client;
+	}
+
+	/**
+	 * @param cc98Client the cc98Client to set
+	 */
+	public void setCC98Client(CC98Client cc98Client) {
+		this.cc98Client = cc98Client;
+	}
+
+	/**
+	 * @return the cc98UrlManager
+	 */
+	public CC98UrlManager getCC98UrlManager() {
+		return cc98UrlManager;
+	}
+
+	/**
+	 * @param cc98UrlManager the cc98UrlManager to set
+	 */
+	public void setCC98UrlManager(CC98UrlManager cc98UrlManager) {
+		this.cc98UrlManager = cc98UrlManager;
 	}
 
 }
