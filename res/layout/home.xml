@@ -7,11 +7,8 @@
     android:background="#e3e3e3"
     android:orientation="vertical" >
 
-    <tk.djcrazy.MyCC98.view.HeaderView
-        android:id="@+id/main_header"
-        android:layout_width="fill_parent"
-        android:layout_height="42dp" />
-
+		<include layout="@layout/home_header"/>
+    
     <com.viewpagerindicator.TitlePageIndicator
         android:id="@+id/main_titles"
         android:layout_width="match_parent"

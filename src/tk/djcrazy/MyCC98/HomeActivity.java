@@ -44,11 +44,12 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.viewpagerindicator.TitlePageIndicator;
 
-@ContentView(R.layout.main_frame)
+@ContentView(R.layout.home)
 public class HomeActivity extends RoboFragmentActivity implements
 		LoadingListener {
 
@@ -79,13 +80,15 @@ public class HomeActivity extends RoboFragmentActivity implements
 	private static final int INIT_FILESIZE = 32;
 	private static final int UPDATE_PROGRESS = 33;
 
-	@InjectView(R.id.main_header)
-	private HeaderView headerView;
-	@InjectView(R.id.main_pages)
+ 	@InjectView(R.id.main_pages)
 	private ViewPager viewPager;
 	@InjectView(R.id.main_titles)
 	private TitlePageIndicator indicator;
-
+	@InjectView(R.id.home_header_userimg)
+	private ImageView userAvatar;
+	@InjectView(R.id.home_header_user_name)
+	
+	
 	private ProgressDialog pBar;
 
 	private Bitmap bmUserImg;
@@ -99,8 +102,8 @@ public class HomeActivity extends RoboFragmentActivity implements
 						Toast.LENGTH_SHORT).show();
 				break;
 			case MSG_USERIMG_SUCC:
-				headerView.setUserImg(bmUserImg);
-				break;
+				userAvatar.setImageBitmap(bmUserImg);	
+ 				break;
 			case SEND_FEEDBACK_FAILED:
 				Toast.makeText(getApplicationContext(), "无法连接到服务器，请稍候再试",
 						Toast.LENGTH_SHORT).show();
@@ -138,8 +141,7 @@ public class HomeActivity extends RoboFragmentActivity implements
 		adapter.setLoadingListener(this);
 		viewPager.setAdapter(adapter);
 		indicator.setViewPager(viewPager, 0);
-		setListeners();
-		getUserImg();
+ 		getUserImg();
 	}
 
 	private void getUserImg() {
@@ -161,16 +163,7 @@ public class HomeActivity extends RoboFragmentActivity implements
 		viewPager.invalidate();
 	}
 
-	private void setListeners() {
-		headerView.setListeners(this);
-		headerView.setTitleOnclickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-
-			}
-		});
-	}
-
+ 
 	/**
 	 * override menu
 	 */

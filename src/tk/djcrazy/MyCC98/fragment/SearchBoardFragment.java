@@ -180,7 +180,7 @@ public class SearchBoardFragment extends RoboFragment {
 			if (boardList==null) {
 				currentResult = new  ArrayList<NameValuePair>();
 			}
-			currentResult = boardList.subList(0, 100);
+			currentResult = boardList.subList(0, 30);
 		} else if (string.length() < lastquerylen) {
 			List<NameValuePair> tmplist = new ArrayList<NameValuePair>();
 			for (NameValuePair np : boardList) {

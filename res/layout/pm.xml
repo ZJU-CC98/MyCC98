@@ -16,8 +16,6 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_weight="1"
-        android:divider="@drawable/divider_horizontal_timeline"
-        android:dividerHeight="2dp" 
         android:background="@color/body_background"/>
 
     <LinearLayout

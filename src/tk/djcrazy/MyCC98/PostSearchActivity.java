@@ -29,7 +29,7 @@ import android.widget.Toast;
 
 import com.flurry.android.FlurryAgent;
  
-public class PostSearchActivity extends Activity {
+public class PostSearchActivity extends BaseActivity {
 
 	public static final String BOARDID = "boardid";
 	public static final String BOARDNAME = "boardname";
@@ -121,7 +121,7 @@ public class PostSearchActivity extends Activity {
 	}
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		boardid = getIntent().getIntExtra(BOARDID, 0);

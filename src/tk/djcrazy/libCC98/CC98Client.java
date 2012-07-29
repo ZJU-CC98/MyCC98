@@ -66,7 +66,6 @@ public class CC98Client {
 
 	public static final int PM_SEND_FAIL = -1;
 	public static final int PM_SEND_SUCC = 0;
-
 	/**
 	 * Store the URL of CC98
 	 */

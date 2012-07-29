@@ -144,37 +144,7 @@ public class CC98Parser {
 			throws ClientProtocolException, ParseException, IOException {
 		return parseUserFriendList(getPage(CC98Client.USER_CONTROL_LINK));
 	}
-
-	/**
-	 * @author DJ
-	 * @param keyWord
-	 * @param sType
-	 * @param searchDate
-	 * @param boardArea
-	 * @param boardID
-	 * @return List<Map<String, Object>>, A list of Maps of each post's info.
-	 * 
-	 *         Maps in the list contain keys:
-	 * 
-	 *         postTitle => String author => String postTime => String
-	 * @throws IOException
-	 * @throws ParseException
-	 * 
-	 */
-	public static List<Map<String, Object>> queryPosts(String keyWord,
-			String sType, String searchDate, int boardArea, int boardID)
-			throws ParseException, IOException {
-		String html = CC98Client.queryPosts(keyWord, sType, searchDate,
-				boardArea, boardID);
-		if (html != null) {
-			parseQueryResult(html);
-		} else {
-			throw new IllegalArgumentException("Null html String!");
-		}
-		return null;
-	}
-
-	/**
+ 	/**
 	 * Parse the HTML, and put posts and their poster id in a list of
 	 * NameValuePair
 	 * 
