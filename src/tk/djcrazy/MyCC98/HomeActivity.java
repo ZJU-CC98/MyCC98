@@ -461,8 +461,7 @@ public class HomeActivity extends RoboFragmentActivity implements
 				}
 			} else {
 				finish();
-				System.exit(0);
-			}
+ 			}
 		}
 		return false;
 	}

@@ -22,6 +22,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,6 +60,7 @@ public class SearchBoardFragment extends RoboFragment {
 				throw new IllegalStateException(
 						"You must set the LoadingListener first.");
 			}
+			setListeners();
 			switch (msg.what) {
 			case FETCH_SUCC:
 				searchContent.setText("");
@@ -90,13 +92,16 @@ public class SearchBoardFragment extends RoboFragment {
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 		if (boardList != null) {
-			ViewUtils.setGone(progressBar, true);
+ 			ViewUtils.setGone(progressBar, true);
 			ViewUtils.setGone(lvResultList, false);
+			lvResultList.setAdapter(listAdapter);
+			listAdapter.notifyDataSetChanged();
+			lvResultList.invalidate();
 		} else {
 			ViewUtils.setGone(progressBar, true);
 			ViewUtils.setGone(lvResultList, false);
 			fetchBoardlist();
-			setListeners();
+			
 		}
 	}
 
@@ -172,7 +177,10 @@ public class SearchBoardFragment extends RoboFragment {
 
 	protected void doSearch(String string) {
 		if (string.equals("")) {
-			currentResult = boardList;
+			if (boardList==null) {
+				currentResult = new  ArrayList<NameValuePair>();
+			}
+			currentResult = boardList.subList(0, 100);
 		} else if (string.length() < lastquerylen) {
 			List<NameValuePair> tmplist = new ArrayList<NameValuePair>();
 			for (NameValuePair np : boardList) {

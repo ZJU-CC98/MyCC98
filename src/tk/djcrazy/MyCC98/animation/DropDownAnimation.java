@@ -17,7 +17,7 @@ public class DropDownAnimation extends Animation {
 		this.targetHeight = targetHeight;
 		this.initHeight = view.getLayoutParams().height;
 		this.down = down;
-		setDuration(1000);
+		setDuration(400);
 	}
 
 	@Override

@@ -324,14 +324,14 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
                 && mRefreshState != REFRESHING) {
             if (firstVisibleItem == 0) {
             	ViewUtils.setGone(mRefreshViewImage, false);
-                if ((mRefreshView.getBottom() > mRefreshViewHeight + 20
+                if ((mRefreshView.getBottom() > mRefreshViewHeight
                         || mRefreshView.getTop() >= 0)
                         && mRefreshState != RELEASE_TO_REFRESH) {
                     mRefreshViewText.setText("释放刷新");
                     mRefreshViewImage.clearAnimation();
                     mRefreshViewImage.startAnimation(mFlipAnimation);
                     mRefreshState = RELEASE_TO_REFRESH;
-                } else if (mRefreshView.getBottom() < mRefreshViewHeight + 20
+                } else if (mRefreshView.getBottom() < mRefreshViewHeight
                         && mRefreshState != PULL_TO_REFRESH) {
                     mRefreshViewText.setText("下拉刷新");
                     if (mRefreshState != TAP_TO_REFRESH) {

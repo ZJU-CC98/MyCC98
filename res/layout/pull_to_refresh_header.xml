@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (C) 2011 Johan Nilsson <http://markupartist.com>
+<!--
+     Copyright (C) 2011 Johan Nilsson <http://markupartist.com>
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -11,68 +12,60 @@
      distributed under the License is distributed on an "AS IS" BASIS,
      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
      See the License for the specific language governing permissions and
-     limitations under the License.
+     limitations under the License.
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:paddingTop="10dip"
-    android:paddingBottom="15dip"
-    android:gravity="center_vertical|center_horizontal"
-    >
+    android:layout_height="40dp">
+
     <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:gravity="center_vertical|center_horizontal"
-        >
+        android:layout_height="fill_parent" >
+
         <ProgressBar
             android:id="@+id/pull_to_refresh_progress"
-            android:indeterminate="true"
+            style="?android:attr/progressBarStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="30dip"
-            android:layout_marginRight="20dip"
-            android:layout_marginTop="10dip"
-            android:visibility="gone"
+            android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            style="?android:attr/progressBarStyleSmall"
-            />
+            android:layout_marginLeft="30dip"
+            android:indeterminate="true"
+            android:visibility="gone" />
+
         <ImageView
             android:id="@+id/pull_to_refresh_image"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="30dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
             android:layout_marginLeft="30dip"
-            android:layout_marginRight="20dip"
-            android:visibility="gone"
-            android:layout_gravity="center"
-            android:gravity="center"
+            android:scaleType="fitCenter"
             android:src="@drawable/ic_pulltorefresh_arrow"
-            />
+            android:visibility="gone" />
+
         <TextView
             android:id="@+id/pull_to_refresh_text"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+  					android:layout_centerVertical="true"
+  					android:gravity="center"
             android:text="点击刷新"
             android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="#999"
             android:textStyle="bold"
-            android:paddingTop="5dip"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:textColor="#000000"
-           
-            />
+            android:textSize="12sp" />
+
         <TextView
             android:id="@+id/pull_to_refresh_updated_at"
-            android:layout_below="@+id/pull_to_refresh_text"
-            android:visibility="gone"
-            android:textAppearance="?android:attr/textAppearanceSmall"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/pull_to_refresh_text"
             android:layout_gravity="center"
             android:gravity="center"
-             android:textColor="#000000"
-          
-            />
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="#000000"
+            android:visibility="gone" />
     </RelativeLayout>
+
 </LinearLayout>
