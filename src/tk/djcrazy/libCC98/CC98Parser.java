@@ -26,8 +26,9 @@ import tk.djcrazy.libCC98.data.UserProfileEntity;
 import tk.djcrazy.libCC98.data.UserStatue;
 import tk.djcrazy.libCC98.data.UserStatueEntity;
 import tk.djcrazy.libCC98.exception.NoUserFoundException;
+import tk.djcrazy.libCC98.util.StringUtil;
 import android.util.Log;
-
+import static tk.djcrazy.libCC98.util.StringUtil.*;
 public class CC98Parser {
 
 	private CC98Client cc98Client;
@@ -159,11 +160,7 @@ public class CC98Parser {
 		PostContentEntity postInfoEntity = new PostContentEntity();
 		if (postInfoMatcher.find()) {
 			String string = postInfoMatcher.group();
-			string = string.replaceAll("&gt;|&lt;|\n|&nbsp;", "");
-			string = string.replaceAll("&nbsp;", " ");
-			string = string.replaceAll("&lt;", "<");
-			string = string.replaceAll("&gt;", ">");
-			postInfoEntity.setPostTopic(string);
+			postInfoEntity.setPostTopic(filterHtmlDecode(string));
 		}
 		if (postInfoMatcher.find()) {
 			postInfoEntity.setBoardName(postInfoMatcher.group());

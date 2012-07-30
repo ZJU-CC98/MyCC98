@@ -3,11 +3,15 @@
  */
 package tk.djcrazy.libCC98.data;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import tk.djcrazy.libCC98.util.DateFormatUtil;
 
 /**
  * @author DJ
- *
+ * 
  */
 public class PostContentEntity {
 	/**
@@ -16,169 +20,209 @@ public class PostContentEntity {
 	public String getPostTopic() {
 		return postTopic;
 	}
+
 	/**
-	 * @param postTopic the postTopic to set
+	 * @param postTopic
+	 *            the postTopic to set
 	 */
 	public void setPostTopic(String postTopic) {
 		this.postTopic = postTopic;
 	}
+
 	/**
 	 * @return the boardName
 	 */
 	public String getBoardName() {
 		return boardName;
 	}
+
 	/**
-	 * @param boardName the boardName to set
+	 * @param boardName
+	 *            the boardName to set
 	 */
 	public void setBoardName(String boardName) {
 		this.boardName = boardName;
 	}
+
 	/**
 	 * @return the totalPage
 	 */
 	public int getTotalPage() {
 		return totalPage;
 	}
+
 	/**
-	 * @param totalPage the totalPage to set
+	 * @param totalPage
+	 *            the totalPage to set
 	 */
 	public void setTotalPage(int totalPage) {
 		this.totalPage = totalPage;
 	}
+
 	/**
 	 * @return the userName
 	 */
 	public String getUserName() {
 		return userName;
 	}
+
 	/**
-	 * @param userName the userName to set
+	 * @param userName
+	 *            the userName to set
 	 */
 	public void setUserName(String userName) {
 		this.userName = userName;
 	}
+
 	/**
 	 * @return the postContent
 	 */
 	public String getPostContent() {
 		return postContent;
 	}
+
 	/**
-	 * @param postContent the postContent to set
+	 * @param postContent
+	 *            the postContent to set
 	 */
 	public void setPostContent(String postContent) {
 		this.postContent = postContent;
 	}
+
 	/**
 	 * @return the userAvatarLink
 	 */
 	public String getUserAvatarLink() {
 		return userAvatarLink;
 	}
+
 	/**
-	 * @param userAvatarLink the userAvatarLink to set
+	 * @param userAvatarLink
+	 *            the userAvatarLink to set
 	 */
 	public void setUserAvatarLink(String userAvatarLink) {
 		this.userAvatarLink = userAvatarLink;
 	}
+
 	/**
 	 * @return the postTitle
 	 */
 	public String getPostTitle() {
 		return postTitle;
 	}
+
 	/**
-	 * @param postTitle the postTitle to set
+	 * @param postTitle
+	 *            the postTitle to set
 	 */
 	public void setPostTitle(String postTitle) {
 		this.postTitle = postTitle;
 	}
+
 	/**
 	 * @return the postFace
 	 */
 	public String getPostFace() {
 		return postFace;
 	}
+
 	/**
-	 * @param postFace the postFace to set
+	 * @param postFace
+	 *            the postFace to set
 	 */
 	public void setPostFace(String postFace) {
 		this.postFace = postFace;
 	}
+
 	/**
 	 * @return the postTime
 	 */
-	public String getPostTime() {
-		return postTime;
+	public String getPostTimeAsString() {
+		return DateFormatUtil.convertDateToString(postTime, true);
 	}
+
 	/**
-	 * @param postTime the postTime to set
+	 * @param postTime
+	 *            the postTime to set
+	 * @throws ParseException 
 	 */
-	public void setPostTime(String postTimeString) {
-		
- 	}
+	public void setPostTime(String postTimeString) throws ParseException {
+		postTime = DateFormatUtil
+				.convertStringToDateInPostContent(postTimeString);
+	}
+
 	/**
 	 * @return the gender
 	 */
 	public String getGender() {
 		return gender;
 	}
+
 	/**
-	 * @param gender the gender to set
+	 * @param gender
+	 *            the gender to set
 	 */
 	public void setGender(String gender) {
 		this.gender = gender;
 	}
+
 	/**
 	 * @return the quoteLink
 	 */
 	public String getQuoteLink() {
 		return quoteLink;
 	}
+
 	/**
-	 * @param quoteLink the quoteLink to set
+	 * @param quoteLink
+	 *            the quoteLink to set
 	 */
 	public void setQuoteLink(String quoteLink) {
 		this.quoteLink = quoteLink;
 	}
+
 	/**
 	 * @return the trackUserLink
 	 */
 	public String getTrackUserLink() {
 		return trackUserLink;
 	}
+
 	/**
-	 * @param trackUserLink the trackUserLink to set
+	 * @param trackUserLink
+	 *            the trackUserLink to set
 	 */
 	public void setTrackUserLink(String trackUserLink) {
 		this.trackUserLink = trackUserLink;
 	}
+
 	/**
 	 * @return the editPostLink
 	 */
 	public String getEditPostLink() {
 		return editPostLink;
 	}
+
 	/**
-	 * @param editPostLink the editPostLink to set
+	 * @param editPostLink
+	 *            the editPostLink to set
 	 */
 	public void setEditPostLink(String editPostLink) {
 		this.editPostLink = editPostLink;
 	}
-	private String postTopic="";
-	private String boardName="";
-	private int totalPage =0;
-	private String userName="";
-	private String postContent="";
-	private String userAvatarLink="";
-	private String postTitle="";
-	private String postFace="";
-	private Date postTime=new Date();
-	private String gender="file:///android_asset/pic/male.gif";
-	private String quoteLink="";
-	private String trackUserLink="";
-	private String editPostLink="";
-	
-	
+
+	private String postTopic = "";
+	private String boardName = "";
+	private int totalPage = 0;
+	private String userName = "";
+	private String postContent = "";
+	private String userAvatarLink = "";
+	private String postTitle = "";
+	private String postFace = "";
+	private Date postTime = new Date();
+	private String gender = "file:///android_asset/pic/male.gif";
+	private String quoteLink = "";
+	private String trackUserLink = "";
+	private String editPostLink = "";
+
 }
