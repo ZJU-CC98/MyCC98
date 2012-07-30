@@ -1,10 +1,10 @@
 package tk.djcrazy.libCC98;
 
- 
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -17,6 +17,7 @@ import org.apache.http.message.BasicNameValuePair;
 
 import tk.djcrazy.MyCC98.PmActivity;
 import tk.djcrazy.libCC98.data.BoardEntity;
+import tk.djcrazy.libCC98.data.Gender;
 import tk.djcrazy.libCC98.data.HotTopicEntity;
 import tk.djcrazy.libCC98.data.InboxInfo;
 import tk.djcrazy.libCC98.data.PmInfo;
@@ -26,29 +27,37 @@ import tk.djcrazy.libCC98.data.UserProfileEntity;
 import tk.djcrazy.libCC98.data.UserStatue;
 import tk.djcrazy.libCC98.data.UserStatueEntity;
 import tk.djcrazy.libCC98.exception.NoUserFoundException;
-import tk.djcrazy.libCC98.util.StringUtil;
-import android.util.Log;
+import tk.djcrazy.libCC98.exception.ParseContentException;
 import static tk.djcrazy.libCC98.util.StringUtil.*;
+import static tk.djcrazy.libCC98.util.RegexUtil.*;
+import static tk.djcrazy.libCC98.CC98ParseRepository.*;
+import static tk.djcrazy.libCC98.util.DateFormatUtil.*;
+
 public class CC98Parser {
 
 	private CC98Client cc98Client;
 	private CC98UrlManager cc98UrlManager;
+
 	/**
 	 * Get a List of Maps of posts info.
 	 * 
 	 * @author DJ
-	 * @param boardLink, url String
+	 * @param boardLink
+	 *            , url String
 	 * @return A List that contains each post's basic information,
 	 * @throws IOException
 	 * @throws ParseException
 	 * @throws ClientProtocolException
+	 * @throws ParseContentException
 	 * 
 	 * @see #parsePostList(String)
 	 */
-	 public List<PostEntity> getPostList(int boardId, int pageNum)
-			throws ClientProtocolException, ParseException, IOException {
+	public List<PostEntity> getPostList(int boardId, int pageNum)
+			throws ClientProtocolException, ParseException, IOException,
+			ParseContentException {
 
-		return parsePostList(cc98Client.getPage(cc98UrlManager.getBoardUrl(boardId, pageNum)));
+		return parsePostList(cc98Client.getPage(cc98UrlManager.getBoardUrl(
+				boardId, pageNum)));
 	}
 
 	/**
@@ -59,11 +68,13 @@ public class CC98Parser {
 	 * @throws IOException
 	 * @throws ParseException
 	 * @throws ClientProtocolException
+	 * @throws ParseContentException 
 	 * 
 	 */
-	 public List<HotTopicEntity> getHotTopicList()
-			throws ClientProtocolException, ParseException, IOException {
-		return parseHotTopicList(cc98Client.getPage(cc98UrlManager.getHotTopicUrl()));
+	public List<HotTopicEntity> getHotTopicList()
+			throws ClientProtocolException, ParseException, IOException, ParseContentException {
+		return parseHotTopicList(cc98Client.getPage(cc98UrlManager
+				.getHotTopicUrl()));
 	}
 
 	/**
@@ -74,12 +85,14 @@ public class CC98Parser {
 	 * @throws IOException
 	 * @throws ParseException
 	 * @throws ClientProtocolException
+	 * @throws ParseContentException 
 	 * 
 	 * @see #parsePersonalBoardList(String)
 	 */
-	 public List<BoardEntity> getPersonalBoardList()
-			throws ClientProtocolException, ParseException, IOException {
-		return parsePersonalBoardList(cc98Client.getPage(cc98UrlManager.getPersonalBoardUrl()));
+	public List<BoardEntity> getPersonalBoardList()
+			throws ClientProtocolException, ParseException, IOException, ParseContentException {
+		return parsePersonalBoardList(cc98Client.getPage(cc98UrlManager
+				.getPersonalBoardUrl()));
 	}
 
 	/**
@@ -88,14 +101,18 @@ public class CC98Parser {
 	 * @author DJ
 	 * @param postLink
 	 * @return A list of Maps of each reply post's info.
+	 * @throws java.text.ParseException
 	 * @throws IOException
 	 * @throws ParseException
 	 * @throws ClientProtocolException
+	 * @throws ParseContentException
 	 * @see #parsePostContentList(String)
 	 */
-	 public List<PostContentEntity> getPostContentList(int boardId, int postId, int pageNum)
-			throws ClientProtocolException, ParseException, IOException {
-		return parsePostContentList(cc98Client.getPage(cc98UrlManager.getPostUrl(boardId, postId, pageNum)));
+	public List<PostContentEntity> getPostContentList(int boardId, int postId,
+			int pageNum) throws ClientProtocolException, ParseException,
+			ParseContentException, java.text.ParseException, IOException {
+		return parsePostContentList(cc98Client.getPage(cc98UrlManager
+				.getPostUrl(boardId, postId, pageNum)));
 	}
 
 	/**
@@ -106,10 +123,13 @@ public class CC98Parser {
 	 *         //TODO the keys in the map are ...not finished, to be added
 	 * @throws IOException
 	 * @throws NoUserFoundException
+	 * @throws ParseContentException 
+	 * @throws ParseException 
 	 */
-	 public UserProfileEntity getUserProfile(String userName)
-			throws NoUserFoundException, IOException {
- 		return parseUserProfile(cc98Client.getPage(cc98UrlManager.getUserProfileUrl(userName)));
+	public UserProfileEntity getUserProfile(String userName)
+			throws NoUserFoundException, IOException, ParseException, ParseContentException {
+		return parseUserProfile(cc98Client.getPage(cc98UrlManager
+				.getUserProfileUrl(userName)));
 	}
 
 	/**
@@ -119,9 +139,10 @@ public class CC98Parser {
 	 * @throws ParseException
 	 * @throws ClientProtocolException
 	 */
-	 public List<Map<String, Object>> getNewPostList()
+	public List<Map<String, Object>> getNewPostList()
 			throws ClientProtocolException, ParseException, IOException {
-		return parseQueryResult(cc98Client.getPage(cc98UrlManager.getNewPostUrl()));
+		return parseQueryResult(cc98Client.getPage(cc98UrlManager
+				.getNewPostUrl()));
 	}
 
 	/**
@@ -133,124 +154,80 @@ public class CC98Parser {
 	 * @throws ParseException
 	 * @throws IOException
 	 */
-	public  List<UserStatueEntity> getUserFriendList()
+	public List<UserStatueEntity> getUserFriendList()
 			throws ClientProtocolException, ParseException, IOException {
-		return parseUserFriendList(cc98Client.getPage(cc98UrlManager.getUserManagerUrl()));
+		return parseUserFriendList(cc98Client.getPage(cc98UrlManager
+				.getUserManagerUrl()));
 	}
- 	/**
+	/**
+	 * Get the html of the pm using the given pm id.
+	 * 
+	 * @author zsy
+	 * 
+	 * @param pmId
+	 *            The id which CC98 assigned to each pm.
+	 * @return The html of the pm page.
+	 * @throws IOException
+	 * @throws ParseException
+	 * @throws ClientProtocolException
+	 */
+	private String getMsgPageHtml(int pmId) throws ClientProtocolException,
+			ParseException, IOException {
+		return cc98Client.getPage(cc98UrlManager.getMessagePageUrl(pmId));
+	}
+
+
+	/**
 	 * Parse the HTML, and put posts and their poster id in a list of
 	 * NameValuePair
 	 * 
 	 * @param html
 	 *            String (must not be null)
 	 * @return A list of the pair of poster id and their posts
+	 * @throws ParseContentException
+	 * @throws java.text.ParseException
 	 */
-	 private List<PostContentEntity> parsePostContentList(String html) {
- 		List<PostContentEntity> list = new ArrayList<PostContentEntity>();
-		Matcher matcher;
+	private List<PostContentEntity> parsePostContentList(String html)
+			throws ParseContentException, java.text.ParseException {
+		List<PostContentEntity> list = new ArrayList<PostContentEntity>();
 		// get some information of the topic
-		Pattern postInfoPattern = Pattern
-				.compile(
-						"(?<=<title>).*?(?=&raquo;)|" +
-						"(?<=&page=\\d{1,5}>).+?(?=</a>)|" +
-						"(?<=>\\[).{0,10}?(?=\\]</font></span></td>)|" +
-						"(?<=>\\[).{0,10}?(?=\\]</a></span></td>)",
-						Pattern.DOTALL);
-		Matcher postInfoMatcher = postInfoPattern.matcher(html);
+		List<String> postInfoList = getMatchedStringList(
+				POST_CONTENT_INFO_REGEX, html, 3);
 		PostContentEntity postInfoEntity = new PostContentEntity();
-		if (postInfoMatcher.find()) {
-			String string = postInfoMatcher.group();
-			postInfoEntity.setPostTopic(filterHtmlDecode(string));
-		}
-		if (postInfoMatcher.find()) {
-			postInfoEntity.setBoardName(postInfoMatcher.group());
-		}
-		if (postInfoMatcher.find()) {
-			postInfoEntity.setTotalPage(Integer.parseInt(postInfoMatcher
-					.group()));
-		}
+		postInfoEntity.setPostTopic(filterHtmlDecode(postInfoList.get(0)));
+		postInfoEntity.setBoardName(postInfoList.get(1));
+		postInfoEntity.setTotalPage(Integer.parseInt(postInfoList.get(2)));
 		list.add(postInfoEntity);
-
-		Pattern userNamePattern = Pattern.compile(
-				"(?<=<font color=#.{6}(\\s|)><.>).*?(?=</.></font>)",
-				Pattern.DOTALL);
-		Pattern postContentPattern = Pattern.compile(
-				"(?<=</b><br>)<span id=.*?</script>", Pattern.DOTALL);
-		Pattern userAvatarLinkPattern = Pattern
-				.compile(
-						"(?<= ><img src=).*?(?= )|(?<=&nbsp;<img src=\").*?(?=\" border=0 ><br>)",
-						Pattern.DOTALL);
-		Pattern postTitlePattern = Pattern
-				.compile("(?<=alt=\"发贴心情\">&nbsp;<b>).*?(?=</b><br><span id)");
-
-		Pattern postFacePattern = Pattern
-				.compile("(?<=<img src=face/).*?gif(?= border=0)");
-		Pattern postTimePattern = Pattern.compile(
-				"<img align=absmiddle border=0 width=13 height=15.*?(?=</td>)",
-				Pattern.DOTALL);
-		Pattern genderPattern = Pattern.compile(
-				"(?<=<img src=pic/).*?Male.gif", Pattern.DOTALL);
-		Pattern quoteLinkPattern = Pattern.compile(
-				"(?<=<a href=\")reannounce.asp\\?.*?(?=\">)", Pattern.DOTALL);
-		Pattern trackUserLinkPattern = Pattern.compile(
-				"(?<=<a href=\")dispbbslz.asp.*?(?=\"><img)", Pattern.DOTALL);
-		Pattern editPostLinkPattern = Pattern.compile(
-				"(?<=<a href=)editannounce.asp.*?(?=><img)", Pattern.DOTALL);
-		String regexString = "(?<=valign=middle style=).*?(?=align=absmiddle></a>)";
-		Pattern pattern = Pattern.compile(regexString, Pattern.DOTALL);
-		Matcher ma = pattern.matcher(html);
-		while (ma.find()) {
+		// get each reply info
+		List<String> contentHtml = getMatchedStringList(
+				POST_CONTENT_WHOLE_REGEX, html, -1);
+		for (String reply : contentHtml) {
 			PostContentEntity entity = new PostContentEntity();
-			String postInfo = ma.group();
-			matcher = userNamePattern.matcher(postInfo);
-			if (matcher.find()) {
-				entity.setUserName(matcher.group());
-			}
-			matcher = postContentPattern.matcher(postInfo);
-			if (matcher.find()) {
-				entity.setPostContent(matcher.group());
-			}
-			matcher = userAvatarLinkPattern.matcher(postInfo);
-			if (matcher.find()) {
-				String string = matcher.group();
-				if (!string.contains("http://")) {
-					string = cc98UrlManager.getClientUrl() + string;
+			entity.setUserName(getMatchedString(POST_CONTENT_USERNAME_REGEX,
+					reply));
+			entity.setPostContent(getMatchedString(
+					POST_CONTENT_POST_CONTENT_REGEX, reply));
+			entity.setPostTitle(getMatchedString(POST_CONTENT_POST_TITLE_REGEX,
+					reply));
+			entity.setPostFace(Integer.parseInt(getMatchedString(
+					POST_CONTENT_POST_FACE_REGEX, reply)));
+			entity.setPostTime(convertStringToDateInPostContent(getMatchedString(
+					POST_CONTENT_POST_TIME_REGEX, reply)));
+			{
+				String avatarLink = getMatchedString(
+						POST_CONTENT_USER_AVATAR_LINK_REGEX, reply);
+				if (!avatarLink.contains("http://")) {
+					avatarLink = cc98UrlManager.getClientUrl() + avatarLink;
 				}
-				entity.setUserAvatarLink(string);
+				entity.setUserAvatarLink(avatarLink);
 			}
-			matcher = postTitlePattern.matcher(postInfo);
-			if (matcher.find()) {
-				entity.setPostTitle(matcher.group());
-			}
-			matcher = postFacePattern.matcher(postInfo);
-			if (matcher.find()) {
-				entity.setPostFace(matcher.group());
-			}
-			matcher = postTimePattern.matcher(postInfo);
-			if (matcher.find()) {
-				String string = matcher.group();
-				string = string.replaceAll("<.*?>", "");
-				string = string.replaceAll("\n|\t", "");
-				entity.setPostTime(string);
-			}
-			matcher = genderPattern.matcher(postInfo);
-			if (matcher.find()) {
-				entity.setGender("file:///android_asset/pic/" + matcher.group());
-			}
-			matcher = quoteLinkPattern.matcher(postInfo);
-			if (matcher.find()) {
-				entity.setQuoteLink(cc98UrlManager.getClientUrl()
-						+ matcher.group());
-			}
-			matcher = trackUserLinkPattern.matcher(postInfo);
-			if (matcher.find()) {
-				entity.setTrackUserLink(cc98UrlManager.getClientUrl()
-						+ matcher.group());
-			}
-			matcher = editPostLinkPattern.matcher(postInfo);
-			if (matcher.find()) {
-				entity.setEditPostLink(cc98UrlManager.getClientUrl()
-						+ matcher.group());
+			{
+				String sex = getMatchedString(POST_CONTENT_GENDER_REGEX, reply);
+				if ("Male".equals(sex)) {
+					entity.setGender(Gender.MALE);
+				} else if ("FeMale".equals(sex)) {
+					entity.setGender(Gender.FEMALE);
+				}
 			}
 			list.add(entity);
 		}
@@ -261,98 +238,38 @@ public class CC98Parser {
 	 * Parse the HTML to obtain posts names and their URL.
 	 * 
 	 * @param html
-	 * @return A List of the NameValuePair of posts names and their URL
+	 * @return
+	 * @throws ParseContentException
 	 */
-	 private List<PostEntity> parsePostList(String html) {
+	private List<PostEntity> parsePostList(String html)
+			throws ParseContentException {
 
-		if (html == null)
-			throw new IllegalArgumentException("Null html String!");
 		List<PostEntity> list = new ArrayList<PostEntity>();
-
-		Pattern postTypePattern = Pattern.compile("(?<=alt=).*?(?=></TD>)",
-				Pattern.DOTALL);
-		Pattern postNamePattern = Pattern.compile("(?<=最后跟贴：\">).*?(?=</a>)",
-				Pattern.DOTALL);
-		Pattern postLinkPattern = Pattern
-				.compile(
-						"(?<=<a id=\"topic_\\d{1,10}\" href=\")dispbbs\\.asp\\?.*?(?=\" title=\")",
-						Pattern.DOTALL);
-		Pattern postPageNumberPattern = Pattern
-				.compile("(?<=<font color=#FF0000>).{1,6}?(?=</font></a>.?</b>\\])");
-		Pattern postAuthorNamePattern = Pattern.compile(
-				"(?<=target=_blank>).{1,10}(?=</a></a>)", Pattern.DOTALL);
-		Pattern replyNumberPattern = Pattern.compile(
-				"(?<=<td width=\\* nowrap class=tablebody1>).*?(?=</td>)",
-				Pattern.DOTALL);
-		Pattern lastReplyTimePattern = Pattern.compile(
-				"(?<=#bottom\">).*?(?=</a>)", Pattern.DOTALL);
-		Pattern lastReplyLinkPattern = Pattern.compile(
-				"(?<=&nbsp;<a href=).{5,70}?(?=#bottom)", Pattern.DOTALL);
-		Pattern lastReplyAuthorPattern = Pattern.compile(
-				"(?<=usr\":\").*?(?=\")", Pattern.DOTALL);
-		String regexString = "(?<=<tr align=middle><td).*?(?=;</script>)";
-		Pattern pattern = Pattern.compile(regexString, Pattern.DOTALL);
-		Matcher ma = pattern.matcher(html);
-		while (ma.find()) {
+		List<String> contentList = getMatchedStringList(
+				POST_LIST_POST_ENTITY_REGEX, html, -1);
+		for (String post : contentList) {
 			PostEntity entity = new PostEntity();
-			String postInfo = ma.group();
-			Matcher matcher = postTypePattern.matcher(postInfo);
-			if (matcher.find()) {
-				entity.setPostType(matcher.group());
-//				System.err.println("PostType:" + entity.getPostType());
-			}
-			matcher = postNamePattern.matcher(postInfo);
-			if (matcher.find()) {
-				String string = matcher.group();
-				string = string.replaceAll("\n", "");
-				string = string.replaceAll("&nbsp;", " ");
-				string = string.replaceAll("&lt;", "<");
-				string = string.replaceAll("&gt;", ">");
-				entity.setPostName(string);
-//				System.err.println("PostName:" + entity.getPostName());
-			}
-			matcher = postLinkPattern.matcher(postInfo);
-			if (matcher.find()) {
-				String tmp = matcher.group();
-				int idx = tmp.indexOf("&page=");
-				idx = idx == -1 ? tmp.length() : idx;
-				entity.setPostLink(tmp.substring(0, idx));
-//				System.err.println("PostLink:" + entity.getPostLink());
-			}
-			matcher = postPageNumberPattern.matcher(postInfo);
-			if (matcher.find()) {
-				entity.setPostPageNumber(Integer.parseInt(matcher.group()));
-				//System.err.println("PostPageNumber:"
-				//		+ entity.getPostPageNumber());
-			}
-			matcher = postAuthorNamePattern.matcher(postInfo);
-			if (matcher.find()) {
-				entity.setPostAuthorName(matcher.group());
-				//System.err.println("PostAuthorName:"
-				//		+ entity.getPostAuthorName());
-			}
-			matcher = replyNumberPattern.matcher(postInfo);
-			if (matcher.find()) {
-				entity.setReplyNumber(matcher.group());
-				//System.err.println("ReplyNumber:" + entity.getReplyNumber());
-			}
-			matcher = lastReplyTimePattern.matcher(postInfo);
-			if (matcher.find()) {
-				entity.setLastReplyTime(matcher.group());
-				//System.err
-				//		.println("LastReplyTime:" + entity.getLastReplyTime());
-			}
-			matcher = lastReplyLinkPattern.matcher(postInfo);
-			if (matcher.find()) {
-				entity.setLastReplyLink(matcher.group());
-				//System.err
-				//		.println("LastReplyLink:" + entity.getLastReplyLink());
-			}
-			matcher = lastReplyAuthorPattern.matcher(postInfo);
-			if (matcher.find()) {
-				entity.setLastReplyAuthor(matcher.group());
-				//System.err.println("LastReplyAuthor:"
-				//		+ entity.getLastReplyAuthor());
+			entity.setPostName(filterHtmlDecode(getMatchedString(
+					POST_LIST_POST_NAME_REGEX, post)));
+			entity.setPostPageNumber(Integer.parseInt(getMatchedString(
+					POST_LIST_POST_PAGE_NUMBER_REGEX, post)));
+			entity.setPostType(getMatchedString(POST_LIST_POST_TYPE_REGEX, post));
+			entity.setReplyNumber(getMatchedString(POST_LIST_REPLY_NUM_REGEX,
+					post));
+			entity.setPostAuthorName(getMatchedString(
+					POST_LIST_POST_AUTHOR_NAME_REGEX, post));
+			entity.setLastReplyAuthor(getMatchedString(
+					POST_LIST_LAST_REPLY_AUTHOR_REGEX, post));
+			entity.setLastReplyLink(getMatchedString(
+					POST_LIST_LAST_REPLY_LINK_REGEX, post));
+			entity.setLastReplyTime(getMatchedString(
+					POST_LIST_LAST_REPLY_TIME_REGEX, post));
+			{
+				String tempLink = getMatchedString(POST_LIST_POST_LINK_REGEX,
+						post);
+				int idx = tempLink.indexOf("&page=");
+				idx = idx == -1 ? tempLink.length() : idx;
+				entity.setPostLink(tempLink.substring(0, idx));
 			}
 			list.add(entity);
 		}
@@ -360,110 +277,35 @@ public class CC98Parser {
 	}
 
 	/**
-	 * Parse the HTML page to get my board list
 	 * 
-	 * @author DJ
 	 * @param html
-	 * @return List of NameValuePair of board links and board names
+	 * @return
+	 * @throws ParseContentException
 	 */
-	 private List<BoardEntity> parsePersonalBoardList(String html) {
-		if (html == null)
-			throw new IllegalArgumentException("Null html String!");
+	private List<BoardEntity> parsePersonalBoardList(String html)
+			throws ParseContentException {
 		List<BoardEntity> nList = new ArrayList<BoardEntity>();
-
-		String regexString;
-		String boardinfo = null;
-		String singleBoardInfo;
-		regexString = "var customboards_disp = new Array.*?document.write";
-		Pattern pa = Pattern.compile(regexString, Pattern.DOTALL);
-		Matcher ma = pa.matcher(html);
-		Matcher matcher;
-		if (ma.find()) {
-			boardinfo = ma.group();
-		} else {
- 			throw new IllegalStateException("preParse Error!");
-		}
-		Pattern namePattern = Pattern.compile(
-				"(?<=<font color=#000066>).*?(?=</font>)", Pattern.DOTALL);
-		Pattern linkPattern = Pattern.compile(
-				"(?<=<a href=\")list.asp\\?boardid=[0-9]+(?=\">)",
-				Pattern.DOTALL);
-		Pattern introPattern = Pattern
-				.compile(
-						"(?<=<img src=pic/Forum_readme.gif align=middle>).*?(?=</FONT></TD></TR>)",
-						Pattern.DOTALL);
-		Pattern lastReplyTopicLinkPattern = Pattern.compile(
-				"(?<=主题：<a href=\").*?(?=\">)", Pattern.DOTALL);
-		Pattern lastReplyTopicNamePattern = Pattern.compile(
-				"(?<=ID=\\d{0,10}\">).*?(?=</a><BR>作者)", Pattern.DOTALL);
-		Pattern lastReplyAuthorPattern = Pattern.compile(
-				"(?<=blank>).*?(?=</a><BR>)", Pattern.DOTALL);
-		Pattern lastReplyTimePattern = Pattern.compile(
-				"(?<=bottom\">).*?(?=</a>)", Pattern.DOTALL);
-		Pattern lastReplyLinkPattern = Pattern.compile(
-				"(?<=日期：<a href=\").*?(?=#bottom\")", Pattern.DOTALL);
-		Pattern postNumberTodayPattern = Pattern.compile(
-				"(?<=<font color=#FF0000>).*?(?=</font></td>)", Pattern.DOTALL);
-		Pattern boardMasterPattern = Pattern.compile(
-				"版主：.*?(?=</a>&nbsp;</TD>)", Pattern.DOTALL);
-		regexString = "</a>-->.*?(?=</td></tr></table></TD>)";
-		pa = Pattern.compile(regexString, Pattern.DOTALL);
-		ma = pa.matcher(boardinfo);
-
-		while (ma.find()) {
-			BoardEntity mEntity = new BoardEntity();
-			singleBoardInfo = ma.group();
-			matcher = namePattern.matcher(singleBoardInfo);
-			if (matcher.find()) {
-				mEntity.setBoardName(matcher.group());
-			}
-			matcher = linkPattern.matcher(singleBoardInfo);
-			if (matcher.find()) {
-				mEntity.setBoardLink(matcher.group());
-			}
-			matcher = introPattern.matcher(singleBoardInfo);
-			if (matcher.find()) {
-				String string = matcher.group();
-				string = string.replaceAll("<.*?>", "");
-				mEntity.setBoardIntro(string);
-			}
-			matcher = lastReplyTopicLinkPattern.matcher(singleBoardInfo);
-			if (matcher.find()) {
-				mEntity.setLastReplyTopicLink(matcher.group());
-			}
-			matcher = lastReplyTopicNamePattern.matcher(singleBoardInfo);
-			if (matcher.find()) {
-				String string = matcher.group();
-				string = string.replaceAll("\n", "");
-				string = string.replaceAll("&nbsp;", " ");
-				string = string.replaceAll("&lt;", "<");
-				string = string.replaceAll("&gt;", ">");
-				mEntity.setLastReplyTopicName(string);
-			}
-			matcher = lastReplyAuthorPattern.matcher(singleBoardInfo);
-			if (matcher.find()) {
-				mEntity.setLastReplyAuthor(matcher.group());
-			}
-			matcher = lastReplyTimePattern.matcher(singleBoardInfo);
-			if (matcher.find()) {
-				mEntity.setLastReplyTime(matcher.group());
-			}
-			matcher = lastReplyLinkPattern.matcher(singleBoardInfo);
-			if (matcher.find()) {
-				mEntity.setLastReplyTopicLink(matcher.group());
-			}
-			matcher = postNumberTodayPattern.matcher(singleBoardInfo);
-			if (matcher.find()) {
-				mEntity.setPostNumberToday(Integer.parseInt(matcher.group()));
-			}
-			matcher = boardMasterPattern.matcher(singleBoardInfo);
-			if (matcher.find()) {
-				String string = matcher.group();
-				string = string.replaceAll("<.*?>", "");
-				string = string.replaceAll("&nbsp;", " ");
-				mEntity.setBoardMaster(string);
-			}
-			nList.add(mEntity);
+		String boardinfo = getMatchedString(P_BOARD_OUTER_WRAAPER_REGEX, html);
+		List<String> board = getMatchedStringList(
+				P_BOARD_SINGLE_BOARD_WRAPPER_REGEX, boardinfo, 0);
+		for (String string : board) {
+			BoardEntity entity = new BoardEntity();
+			entity.setBoardName(getMatchedString(P_BOARD_NAME_REGEX, string));
+			entity.setBoardIntro(getMatchedString(P_BOARD_INTRO_REGEX, string));
+			entity.setBoardLink(getMatchedString(P_BOARD_LINK_REGEX, string));
+			entity.setBoardMaster(getMatchedString(P_BOARD_BOARD_MASTER_REGEX,
+					string));
+			entity.setLastReplyAuthor(getMatchedString(
+					P_BOARD_LAST_REPLY_AUTHOR_REGEX, string));
+			entity.setLastReplyTime(getMatchedString(
+					P_BOARD_LAST_REPLY_TIME_REGEX, string));
+			entity.setLastReplyTopicLink(getMatchedString(
+					P_BOARD_LAST_REPLY_TOPIC_LINK_REGEX, string));
+			entity.setLastReplyTopicName(filterHtmlDecode(getMatchedString(
+					P_BOARD_LAST_REPLY_TOPIC_NAME_REGEX, string)));
+			entity.setPostNumberToday(Integer.parseInt(getMatchedString(
+					P_BOARD_POST_NUMBER_TODAY, string)));
+			nList.add(entity);
 		}
 		return nList;
 	}
@@ -472,36 +314,23 @@ public class CC98Parser {
 	 * @author DJ
 	 * @param html
 	 * @return
+	 * @throws ParseContentException
 	 */
-	private  UserProfileEntity parseUserProfile(String html) {
-		if (html == null)
-			throw new IllegalArgumentException("Null html String!");
+	private UserProfileEntity parseUserProfile(String html)
+			throws ParseContentException {
 		UserProfileEntity entity = new UserProfileEntity();
-		Pattern userAvatarLinkPattern = Pattern.compile(
-				"(?<=&nbsp;<img src=).*?(?= )", Pattern.DOTALL);
-		Pattern generalProfilePattern = Pattern.compile("用户头衔：.*?最后登录：.*?<br>",
-				Pattern.DOTALL);
-		Pattern personalProfilePattern = Pattern.compile("性 别.*?主 页.*?</font>",
-				Pattern.DOTALL);
-		Pattern bbsMasterInfoPattern = Pattern
-				.compile(
-						"(?<=<font align=left>)论坛职务：</font><br>.*?(?=<td  class=tablebody1)",
-						Pattern.DOTALL);
-		Pattern onLineInfoPattern = Pattern.compile(
-				"(?<=&nbsp;&nbsp;状态：).*?\\]", Pattern.DOTALL);
-
-		Matcher matcher = userAvatarLinkPattern.matcher(html);
-		if (matcher.find()) {
-			String url = matcher.group();
+ 		// avatar link
+		{
+			String url = getMatchedString(USER_PROFILE_AVATAR_REGEX, html);
 			if (!url.startsWith("http") && !url.startsWith("ftp")) {
 				url = cc98UrlManager.getClientUrl() + url;
 			}
 			entity.setUserAvatarLink(url);
 		}
-
-		matcher = generalProfilePattern.matcher(html);
-		if (matcher.find()) {
-			String info = matcher.group();
+		// general profile
+		{
+			String info = getMatchedString(USER_PROFILE_GENERAL_PROFILE_REGEX,
+					html);
 			String[] details = info.split("<br>");
 			entity.setUserNickName(details[0]);
 			entity.setUserLevel(details[1]);
@@ -514,22 +343,11 @@ public class CC98Parser {
 			entity.setDeletedPosts(details[8]);
 			entity.setDeletedRatio(details[9]);
 			entity.setLastLoginTime(details[10]);
-//			System.err.println("userNickName" + details[0]);
-//			System.err.println("userLevel" + details[1]);
-//			System.err.println("userGroup" + details[2]);
-//			System.err.println("goodPosts" + details[3]);
-//			System.err.println("totalPosts" + details[4]);
-//			System.err.println("userPrestige" + details[5]);
-//			System.err.println("registerTime" + details[6]);
-//			System.err.println("loginTimes" + details[7]);
-//			System.err.println("deletedPosts" + details[8]);
-//			System.err.println("deletedRatio" + details[9]);
-//			System.err.println("lastLoginTime" + details[10]);
 		}
-
-		matcher = personalProfilePattern.matcher(html);
-		if (matcher.find()) {
-			String info = matcher.group();
+		// personal profile
+		{
+			String info = getMatchedString(USER_PROFILE_PERSON_PROFILE_REGEX,
+					html);
 			String[] details = info.split("<br>");
 
 			details[1] = details[1].replaceAll("<.*?>", "");
@@ -541,7 +359,7 @@ public class CC98Parser {
 			details[6] = details[6].replaceAll("<.*?>", "");
 
 			Pattern pattern = Pattern.compile("(?<=alt=).*?座", Pattern.DOTALL);
-			matcher = pattern.matcher(details[2]);
+			Matcher matcher = pattern.matcher(details[2]);
 			if (matcher.find()) {
 				details[2] = matcher.group();
 			}
@@ -552,116 +370,45 @@ public class CC98Parser {
 			entity.setUserQQ(details[4]);
 			entity.setUserMSN(details[5]);
 			entity.setUserPage(details[6]);
-//			System.err.println("userGender" + details[0]);
-//			System.err.println("userBirthday" + details[1]);
-//			System.err.println("userConstellation" + details[2]);
-//			System.err.println("userEmail" + details[3]);
-//			System.err.println("userQQ" + details[4]);
-//			System.err.println("userMSN" + details[5]);
-//			System.err.println("userPage" + details[6]);
-		}
-		matcher = bbsMasterInfoPattern.matcher(html);
-		if (matcher.find()) {
-			String string = matcher.group();
-			string = string.replaceAll("\t|\n|\r", "");
-			string = string.replaceAll("<br>", "");
-			string = string.replaceAll("&nbsp;", "");
-			string = string.replaceAll("<.*?>", "");
-			string = string.replaceAll(" ", "");
 
-			entity.setBbsMasterInfo(string);
-			// System.err.println("bbsMasterInfo"+string);
 		}
-		matcher = onLineInfoPattern.matcher(html);
-		if (matcher.find()) {
-			entity.setOnlineTime(matcher.group());
-			// System.err.println("onlineTime"+
+		// bbs master info
+		{
+			String string = getMatchedString(USER_PROFILE_AVATAR_REGEX, html);
+			string = string.replaceAll("\t|\n|\r|<br>|&nbsp;|<.*?>| ", "");
+ 			entity.setBbsMasterInfo(string);
 		}
-
+		//online status
+		entity.setOnlineTime(getMatchedString(USER_PROFILE_ONLINE_INFO_REGEX,
+				html));
 		return entity;
 	}
 
-	/**
-	 * @author DJ
-	 * @param page
-	 * @return
-	 */
-	private  List<HotTopicEntity> parseHotTopicList(String page) {
-		if (page == null)
-			throw new IllegalArgumentException("Null html String!");
-
+ 	private List<HotTopicEntity> parseHotTopicList(String page) throws ParseContentException {
 		List<HotTopicEntity> list = new ArrayList<HotTopicEntity>();
-
-		Pattern topicNamePattern = Pattern.compile(
-				"(?<=<font color=#000066>).*?(?=</font>)", Pattern.DOTALL);
-		Pattern postLinkPattern = Pattern.compile(
-				"(?<=&nbsp;<a href=\").*?(?=\" target=)", Pattern.DOTALL);
-		Pattern boardNameWithAuthorPattern = Pattern.compile(
-				"(?<=target=\"_blank\">).{0,30}?(?=</a></td><td height=20)",
-				Pattern.DOTALL);
-		Pattern postTimePattern = Pattern.compile(
-				"(?<=\">).{5,18}?(?=</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)",
-				Pattern.DOTALL);
-		Pattern focusWithRplyWitClieckhNumberPattern = Pattern.compile(
-				"(?<=align=middle class=tablebody\\d>).*?(?=</td>)",
-				Pattern.DOTALL);
-
-		String regexString = "&nbsp;<a href=\".*?(</td></tr><TR><TD align=middle|</td></tr><!--data)";
-		Pattern pattern = Pattern.compile(regexString, Pattern.DOTALL);
-		Matcher ma = pattern.matcher(page);
-		while (ma.find()) {
+		List<String> topicList = getMatchedStringList(HOT_TOPIC_WRAPPER, page, -1);
+		for (String topic : topicList) {
 			HotTopicEntity entity = new HotTopicEntity();
-			String postInfo = ma.group();
-			Matcher matcher = topicNamePattern.matcher(postInfo);
-			if (matcher.find()) {
-				String string = matcher.group();
-				string = string.replaceAll("\n", "").replaceAll("&nbsp;", " ")
-						.replaceAll("&lt;", "<").replaceAll("&gt;", ">");
-				entity.setTopicName(string);
-//				System.err.println("topicName" + string);
+			entity.setTopicName(filterHtmlDecode(getMatchedString(HOT_TOPIC_NAME_REGEX, topic)));
+			entity.setPostLink(getMatchedString(HOT_TOPIC_LINK_REGEX, topic));
+			entity.setPostTime(getMatchedString(HOT_TOPIC_POST_TIME_REGEX, topic));
+			//click number
+			{
+				List<String> numList = getMatchedStringList(HOT_TOPIC_CLICK_REGEX, topic, 3);
+				entity.setFocusNumber(Integer.parseInt(numList.get(0)));
+				entity.setReplyNumber(Integer.parseInt(numList.get(1)));
+				entity.setClickNumber(Integer.parseInt(numList.get(2)));
 			}
-			matcher = postLinkPattern.matcher(postInfo);
-			if (matcher.find()) {
-				String string = matcher.group();
-				entity.setPostLink(string);
-//				System.err.println("postLink" + string);
-			}
-			matcher = boardNameWithAuthorPattern.matcher(postInfo);
-			if (matcher.find()) {
-				String string = matcher.group();
-				entity.setBoardName(string);
-//				System.err.println("boardName" + string);
-			}
-			if (matcher.find()) {
-				String string = matcher.group();
-				entity.setPostAuthor(string);
-//				System.err.println("postAuthor" + string);
-			}
-			matcher = postTimePattern.matcher(postInfo);
-			if (matcher.find()) {
-				String string = matcher.group();
-				entity.setPostTime(string);
-//				System.err.println("postTime:" + string);
-			}
-			matcher = focusWithRplyWitClieckhNumberPattern.matcher(postInfo);
-			if (matcher.find()) {
-				entity.setFocusNumber(Integer.parseInt(matcher.group()));
-//				System.err
-//						.println("focusNumber" + entity.getFocusNumber() + "");
-			}
-			if (matcher.find()) {
-				entity.setReplyNumber(Integer.parseInt(matcher.group()));
-//				System.err.println("replyNumber" + entity.getReplyNumber());
-			}
-			if (matcher.find()) {
-				entity.setClickNumber(Integer.parseInt(matcher.group()));
-//				System.err.println("clickNumber:" + entity.getClickNumber());
+			//board name, author
+			{
+				List<String> bList = getMatchedStringList(HOT_TOPIC_BOARD_NAME_WITH_AUTHOR_REGEX, topic, 2);
+				entity.setBoardName(bList.get(0));
+				entity.setPostAuthor(bList.get(1));
 			}
 			list.add(entity);
 		}
 		return list;
-
-	}
+ 	}
 
 	/**
 	 * Store information of the msgs in a list
@@ -671,11 +418,7 @@ public class CC98Parser {
 	 *            The html of the inbox page
 	 * @return A list of PmInfo
 	 */
-	protected  List<PmInfo> parsePmList(String html, InboxInfo inboxInfo) {
-		if (html == null)
-			throw new IllegalArgumentException("Null html String!");
-
-		// Parse
+	protected List<PmInfo> parsePmList(String html, InboxInfo inboxInfo) {
 		List<PmInfo> pmList = new ArrayList<PmInfo>();
 		String regexString = "(?<=<img src=pic/m_)\\w+(?=\\.gif>)|(?<=target=_blank>)[^:]+(?=</a>)|(?<=\\s>).*?(?=</a></td>)|(?<=<a href=\"messanger.asp\\?action=(read|outread)&id=)\\d+?(?=&sender)|(?<=target=_blank>).*?(?=</a></td>)";
 		Pattern p1 = Pattern.compile(regexString);
@@ -698,23 +441,6 @@ public class CC98Parser {
 	}
 
 	/**
-	 * Get the html of the pm using the given pm id.
-	 * 
-	 * @author zsy
-	 * 
-	 * @param pmId
-	 *            The id which CC98 assigned to each pm.
-	 * @return The html of the pm page.
-	 * @throws IOException
-	 * @throws ParseException
-	 * @throws ClientProtocolException
-	 */
-	private  String getMsgPageHtml(int pmId)
-			throws ClientProtocolException, ParseException, IOException {
-		return cc98Client.getPage(cc98UrlManager.getMessagePageUrl(pmId));
-	}
-
-	/**
 	 * Get a list of PmInfo.
 	 * 
 	 * @author zsy
@@ -722,7 +448,7 @@ public class CC98Parser {
 	 * @param pmList
 	 * @param m1
 	 */
-	private  void getInboxList(List<PmInfo> pmList, Matcher m1) {
+	private void getInboxList(List<PmInfo> pmList, Matcher m1) {
 		while (m1.find()) {
 			String isNewString = m1.group();
 			boolean isNew = isNewString.equals("olds")
@@ -738,7 +464,6 @@ public class CC98Parser {
 			pmList.add(new PmInfo.Builder(pmId).fromWho(sender)
 					.topicTitle(topic).sendTime(time).newTopic(isNew)
 					.userAvatar("")
-					// .content(TextParseHelper.getMsgContent(pmId))
 					.build());
 		}
 	}
@@ -754,8 +479,8 @@ public class CC98Parser {
 	 * @throws ParseException
 	 * @throws ClientProtocolException
 	 */
-	public  String getMsgContent(int pmId)
-			throws ClientProtocolException, ParseException, IOException {
+	public String getMsgContent(int pmId) throws ClientProtocolException,
+			ParseException, IOException {
 		String html = getMsgPageHtml(pmId);
 		Pattern p = Pattern
 				.compile("(?<=<span id=\"ubbcode1\" >).*?(?=</span>)");
@@ -775,29 +500,30 @@ public class CC98Parser {
 	 * @throws ClientProtocolException
 	 */
 
-	public  List<PmInfo> getPmData(int page_num, InboxInfo inboxInfo,
-			int type) throws ClientProtocolException, ParseException,
-			IOException {
-		if (type == PmActivity.INBOX) {
-			return parsePmList(cc98Client.getPage(cc98UrlManager.getInboxUrl(page_num)), inboxInfo);
-		} else if (type == PmActivity.OUTBOX) {
+	public List<PmInfo> getPmData(int page_num, InboxInfo inboxInfo, int type)
+			throws ClientProtocolException, ParseException, IOException {
+		if (type == 0) {
+			return parsePmList(
+					cc98Client.getPage(cc98UrlManager.getInboxUrl(page_num)),
+					inboxInfo);
+		} else if (type == 1) {
 			return parsePmList(cc98Client.getOutboxHtml(page_num), inboxInfo);
 		}
 		return new ArrayList<PmInfo>();
 	}
 
-	public  List<Map<String, Object>> searchPost(String keyword,
-			int boardid, String sType, int page) throws ParseException,
-			IOException {
+	public List<Map<String, Object>> searchPost(String keyword, int boardid,
+			String sType, int page) throws ParseException, IOException {
 		/*
 		 * http://www.cc98.org/queryresult.asp?page=2&stype=2&pSearch=1&nSearch=&
 		 * keyword=t&SearchDate=1000&boardid=0&sertype=1
 		 */
 		keyword = URLEncoder.encode(keyword);
- 		return parseQueryResult(cc98Client.getPage(cc98UrlManager.getSearchUrl(keyword, boardid, sType, page)));
+		return parseQueryResult(cc98Client.getPage(cc98UrlManager.getSearchUrl(
+				keyword, boardid, sType, page)));
 	}
 
-	public  List<Map<String, Object>> query(String keyWord, String sType,
+	public List<Map<String, Object>> query(String keyWord, String sType,
 			String searchDate, int boardArea, int boardID)
 			throws ParseException, IOException {
 		return parseQueryResult(cc98Client.queryPosts(keyWord, sType,
@@ -810,8 +536,8 @@ public class CC98Parser {
 	 * @param html
 	 * @return
 	 */
-	public  List<Map<String, Object>> parseQueryResult(String html) {
- 		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+	public List<Map<String, Object>> parseQueryResult(String html) {
+		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 		Map<String, Object> mmap = new HashMap<String, Object>();
 
 		Pattern pattern = Pattern
@@ -858,7 +584,7 @@ public class CC98Parser {
 				string = string.replaceAll("&lt;", "<");
 				string = string.replaceAll("&gt;", ">");
 
-//				System.err.println("postTitle:" + string);
+				// System.err.println("postTitle:" + string);
 				map.put("postTitle", string);
 			} else {
 				map.put("postTitle", "");
@@ -867,7 +593,7 @@ public class CC98Parser {
 			sMatcher = authorPattern.matcher(sPost);
 			if (sMatcher.find()) {
 				String string = sMatcher.group();
-//				 System.err.println("author:" + string);
+				// System.err.println("author:" + string);
 				map.put("author", string);
 			} else {
 				map.put("author", "");
@@ -912,7 +638,7 @@ public class CC98Parser {
 		return list;
 	}
 
-	private  List<UserStatueEntity> parseUserFriendList(String html)
+	private List<UserStatueEntity> parseUserFriendList(String html)
 			throws ClientProtocolException, ParseException, IOException {
 		if (html == null) {
 			throw new IllegalArgumentException("Null pointer!");
@@ -931,11 +657,11 @@ public class CC98Parser {
 			Matcher mMatcher = userNamePattern.matcher(mString);
 			if (mMatcher.find()) {
 				mEntity.setUserName(mMatcher.group());
- 			}
+			}
 			mMatcher = userStatuePattern.matcher(mString);
 			if (mMatcher.find()) {
 				String string = mMatcher.group().replaceAll("<.*?>", "");
- 				if (string.contains("离线")) {
+				if (string.contains("离线")) {
 					mEntity.setStatue(UserStatue.OFF_LINE);
 				} else {
 					mEntity.setStatue(UserStatue.ON_LINE);
@@ -955,7 +681,7 @@ public class CC98Parser {
 	 * @throws ParseException
 	 * @throws IOException
 	 */
-	public  List<NameValuePair> getTodayBoardList()
+	public List<NameValuePair> getTodayBoardList()
 			throws ClientProtocolException, ParseException, IOException {
 		String content = cc98Client.getPage(cc98UrlManager.getTodayBoardList());
 		List<NameValuePair> list = new ArrayList<NameValuePair>();
@@ -966,8 +692,8 @@ public class CC98Parser {
 			String mString = matcher.group();
 			int idx = mString.indexOf("\">");
 			if (idx == -1 || idx + 2 >= mString.length()) {
- 				throw new IllegalStateException("parse error.");
- 			}
+				throw new IllegalStateException("parse error.");
+			}
 			String boardLink = mString.substring(0, idx);
 			String boardName = mString.substring(idx + 2);
 			list.add(new BasicNameValuePair(boardName, boardLink));
@@ -983,7 +709,8 @@ public class CC98Parser {
 	}
 
 	/**
-	 * @param cc98Client the cc98Client to set
+	 * @param cc98Client
+	 *            the cc98Client to set
 	 */
 	public void setCC98Client(CC98Client cc98Client) {
 		this.cc98Client = cc98Client;
@@ -997,7 +724,8 @@ public class CC98Parser {
 	}
 
 	/**
-	 * @param cc98UrlManager the cc98UrlManager to set
+	 * @param cc98UrlManager
+	 *            the cc98UrlManager to set
 	 */
 	public void setCC98UrlManager(CC98UrlManager cc98UrlManager) {
 		this.cc98UrlManager = cc98UrlManager;

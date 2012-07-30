@@ -122,7 +122,7 @@ public class PostContentEntity {
 	/**
 	 * @return the postFace
 	 */
-	public String getPostFace() {
+	public int getPostFace() {
 		return postFace;
 	}
 
@@ -130,31 +130,14 @@ public class PostContentEntity {
 	 * @param postFace
 	 *            the postFace to set
 	 */
-	public void setPostFace(String postFace) {
+	public void setPostFace(int postFace) {
 		this.postFace = postFace;
 	}
 
-	/**
-	 * @return the postTime
-	 */
-	public String getPostTimeAsString() {
-		return DateFormatUtil.convertDateToString(postTime, true);
-	}
-
-	/**
-	 * @param postTime
-	 *            the postTime to set
-	 * @throws ParseException 
-	 */
-	public void setPostTime(String postTimeString) throws ParseException {
-		postTime = DateFormatUtil
-				.convertStringToDateInPostContent(postTimeString);
-	}
-
-	/**
+ 	/**
 	 * @return the gender
 	 */
-	public String getGender() {
+	public Gender getGender() {
 		return gender;
 	}
 
@@ -162,53 +145,24 @@ public class PostContentEntity {
 	 * @param gender
 	 *            the gender to set
 	 */
-	public void setGender(String gender) {
+	public void setGender(Gender gender) {
 		this.gender = gender;
 	}
 
-	/**
-	 * @return the quoteLink
-	 */
-	public String getQuoteLink() {
-		return quoteLink;
+ 	public int getRelpyId() {
+		return relpyId;
 	}
 
-	/**
-	 * @param quoteLink
-	 *            the quoteLink to set
-	 */
-	public void setQuoteLink(String quoteLink) {
-		this.quoteLink = quoteLink;
+	public void setRelpyId(int relpyId) {
+		this.relpyId = relpyId;
 	}
 
-	/**
-	 * @return the trackUserLink
-	 */
-	public String getTrackUserLink() {
-		return trackUserLink;
+	public Date getPostTime() {
+		return postTime;
 	}
 
-	/**
-	 * @param trackUserLink
-	 *            the trackUserLink to set
-	 */
-	public void setTrackUserLink(String trackUserLink) {
-		this.trackUserLink = trackUserLink;
-	}
-
-	/**
-	 * @return the editPostLink
-	 */
-	public String getEditPostLink() {
-		return editPostLink;
-	}
-
-	/**
-	 * @param editPostLink
-	 *            the editPostLink to set
-	 */
-	public void setEditPostLink(String editPostLink) {
-		this.editPostLink = editPostLink;
+	public void setPostTime(Date postTime) {
+		this.postTime = postTime;
 	}
 
 	private String postTopic = "";
@@ -218,11 +172,8 @@ public class PostContentEntity {
 	private String postContent = "";
 	private String userAvatarLink = "";
 	private String postTitle = "";
-	private String postFace = "";
+	private int postFace = 7;
 	private Date postTime = new Date();
-	private String gender = "file:///android_asset/pic/male.gif";
-	private String quoteLink = "";
-	private String trackUserLink = "";
-	private String editPostLink = "";
-
+	private Gender gender = Gender.MALE;
+	private int relpyId=0;
 }
