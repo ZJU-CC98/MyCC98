@@ -60,4 +60,7 @@ public class CC98ParseRepository {
  	public static final String HOT_TOPIC_POST_TIME_REGEX = "(?<=\">).{5,18}?(?=</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)";
  	public static final String HOT_TOPIC_CLICK_REGEX = "(?<=align=middle class=tablebody\\d>).*?(?=</td>)";
 
+ 	
+ 	public static final String UPLOAD_PIC_ADDRESS_REGEX = "\\[upload.*?\\]http://file.cc98.org.*?\\[/upload\\]";
+ 	
 }

@@ -15,12 +15,9 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.net.URLEncoder;
 import java.net.UnknownServiceException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 import org.apache.http.HttpEntity;
@@ -32,6 +29,7 @@ import org.apache.http.ParseException;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.CookieStore;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -58,54 +56,62 @@ import tk.djcrazy.libCC98.util.RegexUtil;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
- 
+
+import com.google.inject.Inject;
+
 /**
  * 
  * This class take care of the connection with CC98, keep the cookies and the
  * user information.
  */
-public class CC98Client {
+public class CC98ClientImpl implements ICC98Client {
 
-	private CC98UrlManager manager;
+	@Inject
+	private ICC98UrlManager manager;
+
+	public final int PM_SEND_FAIL = -1;
+	public final int PM_SEND_SUCC = 0;
+
+	public final String SEARCH_TYPE_TITLE = "2";
+	public final String SEARCH_TYPE_AUTHOR = "1";
+
+	private Bitmap userImg;
+ 	private String username;
+	private String passwd;
 	
-	
-	public  final int PM_SEND_FAIL = -1;
-	public  final int PM_SEND_SUCC = 0;
+	public final String ID_PASSWD_ERROR_MSG = "用户名/密码错误";
+	public final String SERVER_ERROR = "CC98服务器异常！";
 
-	public  final String SEARCH_TYPE_TITLE = "2";
-	public  final String SEARCH_TYPE_AUTHOR = "1";
 
- 	private  Bitmap userImg;
-
-	private  String passwd;
-	public  final String ID_PASSWD_ERROR_MSG = "用户名/密码错误";
-	public  final String SERVER_ERROR = "CC98服务器异常！";
-
-	/**
-	 * Store the id
-	 */
-	private  String username;
-
-	/*
-	 * Store cookies
-	 */
-	private  List<Cookie> cookies;
-
+ 
 	/**
 	 * Don't using this, to avoid null pointer, use getHttpClient instead
 	 */
-	private  DefaultHttpClient client = getHttpClient();
+	private DefaultHttpClient client = getHttpClient();
 
-	public  Bitmap getLoginUserImg() {
+	/* (non-Javadoc)
+	 * @see tk.djcrazy.libCC98.ICC98Client#getLoginUserImg()
+	 */
+	@Override
+	public Bitmap getLoginUserImg() {
 		return userImg;
 	}
-	public  void setLoginUserImg(Bitmap bitmap) {
-		  userImg = bitmap;
+
+	/* (non-Javadoc)
+	 * @see tk.djcrazy.libCC98.ICC98Client#setLoginUserImg(android.graphics.Bitmap)
+	 */
+	@Override
+	public void setLoginUserImg(Bitmap bitmap) {
+		userImg = bitmap;
 	}
 
-	private  DefaultHttpClient getHttpClient() {
+	public void clearLoginInfo() {
+		client.getCookieStore().clear();
+		client.getCredentialsProvider().clear();
+	}
+	private DefaultHttpClient getHttpClient() {
 		if (client == null) {
- 			HttpParams params = new BasicHttpParams();
+			HttpParams params = new BasicHttpParams();
 			HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
 			HttpProtocolParams.setContentCharset(params,
 					HTTP.DEFAULT_CONTENT_CHARSET);
@@ -126,18 +132,12 @@ public class CC98Client {
 		return client;
 	}
 
-	/**
-	 * Login method
-	 * 
-	 * @param id
-	 * @param password
-	 * @return is success
-	 * @throws IOException
-	 * @throws ClientProtocolException
-	 * @throws IllegalAccessException
+	/* (non-Javadoc)
+	 * @see tk.djcrazy.libCC98.ICC98Client#doLogin(java.lang.String, java.lang.String)
 	 */
-	 public void doLogin(String id, String pw)
-			throws ClientProtocolException, IOException, IllegalAccessException {
+	@Override
+	public void doLogin(String id, String pw) throws ClientProtocolException,
+			IOException, IllegalAccessException, ParseException, ParseContentException {
 
 		HttpResponse response;
 		HttpPost httpost = new HttpPost(manager.getLoginUrl());
@@ -153,86 +153,64 @@ public class CC98Client {
 		if (response.getStatusLine().getStatusCode() != 200) {
 			throw new IllegalAccessException(SERVER_ERROR);
 		}
-//		System.err.println("Login form get: " + response.getStatusLine());
 		String sysMsg = EntityUtils.toString(response.getEntity());
-//		System.err.println("Login form get: " + sysMsg);
 		if (sysMsg.contains("密码错误") || sysMsg.contains("论坛错误信息")) {
 			throw new IllegalAccessException(ID_PASSWD_ERROR_MSG);
 		}
-		cookies = getHttpClient().getCookieStore().getCookies();
-		userImg = getUserImg(id);
+ 		userImg = getUserImg(id);
 	}
 
-	/**
-	 * @author zsy
-	 * @param ip
-	 * @param port
+	/* (non-Javadoc)
+	 * @see tk.djcrazy.libCC98.ICC98Client#setProxy(java.lang.String, int)
 	 */
-	public  void setProxy(String ip, int port) {
-		System.err.println("Proxy: " + ip + ":" + port);
+	@Override
+	public void setProxy(String ip, int port) {
 		HttpHost proxy = new HttpHost(ip, port);
 		getHttpClient().getParams().setParameter(ConnRouteParams.DEFAULT_PROXY,
 				proxy);
 	}
 
-	/**
-	 * @author zsy
+	/* (non-Javadoc)
+	 * @see tk.djcrazy.libCC98.ICC98Client#rmProxy()
 	 */
-	public  void rmProxy() {
+	@Override
+	public void rmProxy() {
 		getHttpClient().getParams().removeParameter(
 				ConnRouteParams.DEFAULT_PROXY);
 	}
 
-	public  List<Cookie> getCookies() {
-		return cookies;
-	}
-
-	/**
-	 * Reply ?
-	 * 
-	 * @author DJ
-	 * @param nvpsList
-	 * @param boardID
-	 * @param rootID
-	 * @return ?
-	 * @throws IOException
-	 * @throws ClientProtocolException
+	/* (non-Javadoc)
+	 * @see tk.djcrazy.libCC98.ICC98Client#pushNewPost(java.util.List, java.lang.String)
 	 */
-	 public boolean pushNewPost(List<NameValuePair> nvpsList,
-			String boardID) throws ClientProtocolException, IOException {
+	@Override
+	public boolean pushNewPost(List<NameValuePair> nvpsList, String boardID)
+			throws ClientProtocolException, IOException {
 		System.out.println("" + boardID);
 		HttpEntity entity;
-		HttpPost httpPost = new HttpPost(getCC98Domain()
-				+ "SaveAnnounce.asp?boardID=" + boardID);
+		HttpPost httpPost = new HttpPost(manager.getPushNewPostUrl(boardID));
 		HttpResponse response = null;
 		String html = null;
-		httpPost.addHeader("Referer", getCC98Domain() + "announce.asp?boardid="
-				+ boardID);
+		httpPost.addHeader("Referer", manager.getPushNewPostReferer(boardID));
 		nvpsList.add(new BasicNameValuePair("username", username));
 		nvpsList.add(new BasicNameValuePair("passwd", passwd));
-//		System.err.println("User Info:" + username + " " + passwd);
+		// System.err.println("User Info:" + username + " " + passwd);
 		httpPost.setEntity(new UrlEncodedFormEntity(nvpsList, HTTP.UTF_8));
 		response = getHttpClient().execute(httpPost);
 		entity = response.getEntity();
 		if (entity != null) {
 			html = EntityUtils.toString(entity);
-			// System.err.println("Reply Html:" + html.toLowerCase());
 			if (html.contains("状态：发表帖子成功")) {
-//				System.err.println("new post OK!");
 				return true;
 			}
 		}
 		return false;
 	}
 
-	/**
-	 * Edit post
-	 * 
-	 * @author zsy
-	 * @throws IOException
-	 * @throws ClientProtocolException
+	/* (non-Javadoc)
+	 * @see tk.djcrazy.libCC98.ICC98Client#editPost(java.util.List, java.lang.String)
 	 */
-	 public boolean editPost(List<NameValuePair> nvpsList, String link)
+	@Override
+	public boolean editPost(List<NameValuePair> nvpsList, String link)
 			throws ClientProtocolException, IOException {
 		HttpEntity entity;
 		HttpPost httpPost = new HttpPost(link);
@@ -241,7 +219,7 @@ public class CC98Client {
 		entity = response.getEntity();
 		if (entity != null) {
 			String html = EntityUtils.toString(entity);
-//			System.err.println("Reply Html:" + link + html.toLowerCase());
+			// System.err.println("Reply Html:" + link + html.toLowerCase());
 
 			if (html.contains("编辑帖子成功")) {
 				return true;
@@ -250,63 +228,40 @@ public class CC98Client {
 		return false;
 	}
 
-	/**
-	 * Reply ?
-	 * 
-	 * @author DJ
-	 * @param nvpsList
-	 * @param boardID
-	 * @param rootID
-	 * @return ?
-	 * @throws IOException
-	 * @throws ClientProtocolException
+	/* (non-Javadoc)
+	 * @see tk.djcrazy.libCC98.ICC98Client#submitReply(java.util.List, java.lang.String, java.lang.String)
 	 */
-	 public boolean submitReply(List<NameValuePair> nvpsList,
-			String boardID, String rootID) throws ClientProtocolException,
-			IOException {
+	@Override
+	public boolean submitReply(List<NameValuePair> nvpsList, String boardID,
+			String rootID) throws ClientProtocolException, IOException {
 		HttpEntity entity;
-		HttpPost httpPost = new HttpPost(getCC98Domain()
-				+ "SaveReAnnounce.asp?method=Topic&boardID=" + boardID);
+		HttpPost httpPost = new HttpPost(manager.getSubmitReplyUrl(boardID));
 		HttpResponse response = null;
 		String html = null;
 
-		httpPost.addHeader("Referer", getCC98Domain()
-				+ "reannounce.asp?BoardID=" + boardID + "&id=" + rootID
-				+ "&star=1");
+		httpPost.addHeader("Referer",
+				manager.getSubmitReplyReferer(boardID, rootID));
 		nvpsList.add(new BasicNameValuePair("username", username));
 		nvpsList.add(new BasicNameValuePair("passwd", passwd));
-		System.err.println("User Info:" + username + " " + passwd);
-
 		httpPost.setEntity(new UrlEncodedFormEntity(nvpsList, HTTP.UTF_8));
 		response = getHttpClient().execute(httpPost);
 		entity = response.getEntity();
 
 		if (entity != null) {
 			html = EntityUtils.toString(entity);
-			// System.err.println("Reply Html:" + html.toLowerCase());
-
 			if (html.contains("状态：回复帖子成功")) {
-
-				System.err.println("Reply OK!");
 				return true;
 			}
 		}
 		return false;
 	}
-	/**
-	 * @author zsy
-	 * @param keyWord
-	 * @param sType
-	 * @param searchDate
-	 * @param boardArea
-	 * @param boardID
-	 * @return
-	 * @throws ParseException
-	 * @throws IOException
+
+	/* (non-Javadoc)
+	 * @see tk.djcrazy.libCC98.ICC98Client#queryPosts(java.lang.String, java.lang.String, java.lang.String, int, int)
 	 */
-	 public String queryPosts(String keyWord, String sType,
-			String searchDate, int boardArea, int boardID)
-			throws ParseException, IOException {
+	@Override
+	public String queryPosts(String keyWord, String sType, String searchDate,
+			int boardArea, int boardID) throws ParseException, IOException {
 		/*
 		 * action: queryresult.asp name=keyword name=sType, value=2: 主题关键字搜索,
 		 * value=1: 主题作者搜索 name=SearchDate, value=ALL: 所有日期, value=1: 昨天以来 ,
@@ -316,10 +271,10 @@ public class CC98Client {
 		 */
 		List<NameValuePair> nvpsList = new ArrayList<NameValuePair>();
 		HttpEntity entity;
-		HttpPost httpPost = new HttpPost(getCC98Domain() + "queryresult.asp");
+		HttpPost httpPost = new HttpPost(manager.getQueryUrl());
 		HttpResponse response = null;
 		String html = null;
-		httpPost.addHeader("Referer", getCC98Domain() + "query.asp?boardid=0");
+		httpPost.addHeader("Referer", manager.getQueryReferer());
 		nvpsList.add(new BasicNameValuePair("keyword", keyWord));
 		nvpsList.add(new BasicNameValuePair("sType", sType));
 		nvpsList.add(new BasicNameValuePair("SearchDate", searchDate));
@@ -333,73 +288,48 @@ public class CC98Client {
 
 		if (entity != null) {
 			html = EntityUtils.toString(entity);
-			// System.err.println("Reply Html:" + html.toLowerCase());
 			if (html.contains("搜索主题共查询到")) {
-				System.err.println("Search OK!");
 				return html;
 			} else if (html.contains("没有找到您要查询的内容")) {
 				System.err.println("没有找到您要查询的内容!");
-				return null;
+				return "";
 			}
 		}
 
 		return null;
 	}
 
-	/**
-	 * get the HTML code of the link address
-	 * 
-	 * @param link
-	 * @return HTML of the link address
-	 * @throws IOException
-	 * @throws ClientProtocolException
-	 * @throws ParseException
+	/* (non-Javadoc)
+	 * @see tk.djcrazy.libCC98.ICC98Client#getPage(java.lang.String)
 	 */
-	public  String getPage(String link) throws ClientProtocolException,
+	@Override
+	public String getPage(String link) throws ClientProtocolException,
 			IOException, ParseException {
-		System.err.println("URL:" + link);
-		String content = "";
 		HttpGet get = new HttpGet(link);
 		HttpResponse rsp = null;
-		for (int i = 0; i < 3; ++i) {
-			try {
-				// Why null pointer here ?
-				rsp = getHttpClient().execute(get);
-				System.err.println("Try get the " + i + "th time");
-				break;
-			} catch (NullPointerException e) {
-
-			}
-		}
+		rsp = getHttpClient().execute(get);
 		int mCode = rsp.getStatusLine().getStatusCode();
 		if (mCode != 200) {
 			throw new IOException("服务器有误！");
 		}
 		HttpEntity entity = rsp.getEntity();
-
-		if (entity != null) {
-			content = EntityUtils.toString(entity);
-		}
-
+		String content = EntityUtils.toString(entity);
 		return content;
 	}
 
-	/**
-	 * 
-	 * @param picFile
-	 * @return
-	 * @throws IOException
-	 * @throws MalformedURLException
-	 * @throws PatternSyntaxException
+	/* (non-Javadoc)
+	 * @see tk.djcrazy.libCC98.ICC98Client#uploadPictureToCC98(java.io.File)
 	 */
-	public  String uploadPictureToCC98(File picFile)
-			throws PatternSyntaxException, MalformedURLException, IOException {
+	@Override
+	public String uploadPictureToCC98(File picFile)
+			throws PatternSyntaxException, MalformedURLException, IOException,
+			ParseContentException {
 
-		URL url = new URL(getCC98Domain() + "saveannouce_upfile.asp?boardid=10");
+		URL url = new URL(manager.getUploadPictureUrl());
 		HttpURLConnection uc = (HttpURLConnection) url.openConnection();
 		// 上传图片的一些参数设置
 		String cookieString = "";
-		for (Cookie cookie : getCookies()) {
+		for (Cookie cookie : getHttpClient().getCookieStore().getCookies()) {
 			cookieString += cookie.getName() + "=" + cookie.getValue() + "; ";
 		}
 		uc.setRequestProperty("Cookie", cookieString);
@@ -447,110 +377,87 @@ public class CC98Client {
 				if (sCurrentLine.length() > 0)
 					sTotalString = sTotalString + sCurrentLine.trim();
 		} else {
-			sTotalString = "远程服务器连接失败,错误代码:" + code;
+			throw new IllegalStateException("upload error");
 		}
-		Pattern pattern = Pattern.compile(
-				"\\[upload.*?\\]http://file.cc98.org.*?\\[/upload\\]",
-				Pattern.DOTALL);
-		Matcher matcher = pattern.matcher(sTotalString);
-		if (matcher.find()) {
-			return matcher.group().replace(",1", "");
-		} else {
-			return "";
-		}
+		return RegexUtil.getMatchedString(
+				CC98ParseRepository.UPLOAD_PIC_ADDRESS_REGEX, sTotalString)
+				.replace(",1", "");
 	}
 
-	/**
-	 * get the HTML of the PM inbox
-	 * 
-	 * @author zsy
-	 * 
-	 * @param pageNumber
-	 *            The Page number of the inbox
-	 * @return A String contains the HTML of inbox
-	 * @throws IOException
-	 * @throws ParseException
-	 * @throws ClientProtocolException
+	/* (non-Javadoc)
+	 * @see tk.djcrazy.libCC98.ICC98Client#getInboxHtml(int)
 	 */
-	public  String getInboxHtml(int page_number)
+	@Override
+	public String getInboxHtml(int pageNumber) throws ClientProtocolException,
+			ParseException, IOException {
+		return getPage(manager.getInboxUrl(pageNumber));
+	}
+
+	/* (non-Javadoc)
+	 * @see tk.djcrazy.libCC98.ICC98Client#getOutboxHtml(int)
+	 */
+	@Override
+	public String getOutboxHtml(int pageNumber)
 			throws ClientProtocolException, ParseException, IOException {
-		return getPage(getCC98Domain() + "usersms.asp?action=inbox&page="
-				+ page_number);
+		return getPage(manager.getOutboxUrl(pageNumber));
 	}
 
-	/**
-	 * get the HTML of the PM outbox
-	 * 
-	 * @author zsy
-	 * 
-	 * @param pageNumber
-	 *            The Page number of the outbox
-	 * @return A String contains the HTML of outbox
-	 * @throws IOException
-	 * @throws ParseException
-	 * @throws ClientProtocolException
+	/* (non-Javadoc)
+	 * @see tk.djcrazy.libCC98.ICC98Client#getUserImgUrl(java.lang.String)
 	 */
-	public  String getOutboxHtml(int page_number)
-			throws ClientProtocolException, ParseException, IOException {
-		return getPage(getCC98Domain() + "usersms.asp?action=issend&page="
-				+ page_number);
-	}
-
-	/**
-	 * Get user's avatar URL using user's id.
-	 * 
-	 * @author zsy
-	 * 
-	 * @param userName
-	 * @return User's avatar URL.
-	 * @throws IOException
-	 * @throws ParseException
-	 * @throws ClientProtocolException
-	 * @throws ParseContentException 
-	 */
-	public  String getUserImgUrl(String userName)
-			throws ClientProtocolException, ParseException, IOException, ParseContentException {
+	@Override
+	public String getUserImgUrl(String userName)
+			throws ClientProtocolException, ParseException, IOException,
+			ParseContentException {
 
 		String html = getPage(manager.getUserProfileUrl(userName));
- 		String url = RegexUtil.getMatchedString(
- 				CC98ParseRepository.USER_PROFILE_AVATAR_REGEX, html);
+		String url = RegexUtil.getMatchedString(
+				CC98ParseRepository.USER_PROFILE_AVATAR_REGEX, html);
 		if (!url.startsWith("http") && !url.startsWith("ftp")) {
 			url = manager.getClientUrl() + url;
 		}
 		return url;
 	}
 
-	public  String getPasswd() {
+	/* (non-Javadoc)
+	 * @see tk.djcrazy.libCC98.ICC98Client#getPasswd()
+	 */
+	@Override
+	public String getPasswd() {
 		return passwd;
 	}
 
-	public  String getUserName() {
+	/* (non-Javadoc)
+	 * @see tk.djcrazy.libCC98.ICC98Client#getUserName()
+	 */
+	@Override
+	public String getUserName() {
 		return username;
 	}
 
-	 public void setPassword(String pwd) {
+	/* (non-Javadoc)
+	 * @see tk.djcrazy.libCC98.ICC98Client#setPassword(java.lang.String)
+	 */
+	@Override
+	public void setPassword(String pwd) {
 		passwd = pwd;
 	}
 
-	 public void setUserName(String name) {
+	/* (non-Javadoc)
+	 * @see tk.djcrazy.libCC98.ICC98Client#setUserName(java.lang.String)
+	 */
+	@Override
+	public void setUserName(String name) {
 		username = name;
 	}
 
-	/**
-	 * @author zsy
-	 * @param touser
-	 *            User's name
-	 * @param title
-	 *            Message title
-	 * @param message
-	 *            The message
-	 * @return PM_SEND_SUCC on success PM_SEND_FAIL on failure
-	 * @throws IOException
-	 * @throws ClientProtocolException
+	/* (non-Javadoc)
+	 * @see tk.djcrazy.libCC98.ICC98Client#sendPm(java.lang.String, java.lang.String, java.lang.String)
 	 */
-	 public int sendPm(String touser, String title, String message)
+	@Override
+	public int sendPm(String touser, String title, String message)
 			throws ClientProtocolException, IOException {
- 		HttpPost post = new HttpPost(manager.getSendPmUrl());
+		HttpPost post = new HttpPost(manager.getSendPmUrl());
 		List<NameValuePair> msgInfo = new ArrayList<NameValuePair>();
 		msgInfo.add(new BasicNameValuePair("touser", touser));
 		msgInfo.add(new BasicNameValuePair("title", title));
@@ -571,15 +478,11 @@ public class CC98Client {
 		return flag;
 	}
 
- 	/**
-	 * add one user to friend list
-	 * 
-	 * @param userId
-	 * @throws ParseException
-	 * @throws NoUserFoundException
-	 * @throws IOException
+	/* (non-Javadoc)
+	 * @see tk.djcrazy.libCC98.ICC98Client#addFriend(java.lang.String)
 	 */
-	public  void addFriend(String userId) throws ParseException,
+	@Override
+	public void addFriend(String userId) throws ParseException,
 			NoUserFoundException, IOException {
 		if (userId == null) {
 			throw new IllegalArgumentException("Null argument!");
@@ -610,7 +513,11 @@ public class CC98Client {
 		}
 	}
 
-	public  String getUserProfileHtml(String userName)
+	/* (non-Javadoc)
+	 * @see tk.djcrazy.libCC98.ICC98Client#getUserProfileHtml(java.lang.String)
+	 */
+	@Override
+	public String getUserProfileHtml(String userName)
 			throws NoUserFoundException, IOException {
 		String mString = getPage(manager.getUserProfileUrl(userName));
 		if (mString.contains("您查询的名字不存在")) {
@@ -622,15 +529,12 @@ public class CC98Client {
 		}
 	}
 
- 	/**
-	 * Get bitmap using the url given
-	 * 
-	 * @param url
-	 * @return
-	 * @throws IOException
+	/* (non-Javadoc)
+	 * @see tk.djcrazy.libCC98.ICC98Client#getBitmapFromUrl(java.lang.String)
 	 */
 
-	public  Bitmap getBitmapFromUrl(String url) throws IOException {
+	@Override
+	public Bitmap getBitmapFromUrl(String url) throws IOException {
 		if (url == null) {
 			throw new IllegalArgumentException();
 		}
@@ -647,15 +551,21 @@ public class CC98Client {
 
 	}
 
-	public  Bitmap getUserImg(String user_name)
-			throws ClientProtocolException, ParseException, IOException {
-		return getBitmapFromUrl(getUserImgUrl(user_name));
+	/* (non-Javadoc)
+	 * @see tk.djcrazy.libCC98.ICC98Client#getUserImg(java.lang.String)
+	 */
+	@Override
+	public Bitmap getUserImg(String userName) throws ClientProtocolException,
+			ParseException, IOException, ParseContentException {
+		return getBitmapFromUrl(getUserImgUrl(userName));
 	}
 
-	public  boolean doHttpBasicAuthorization(String authName,
-			String authPassword) throws ClientProtocolException, IOException,
-			URISyntaxException {
-		// Set url
+	/* (non-Javadoc)
+	 * @see tk.djcrazy.libCC98.ICC98Client#doHttpBasicAuthorization(java.lang.String, java.lang.String)
+	 */
+	@Override
+	public boolean doHttpBasicAuthorization(String authName, String authPassword)
+			throws ClientProtocolException, IOException, URISyntaxException {
 		URI uri = null;
 		uri = new URI(manager.getClientUrl());
 		getHttpClient().getCredentialsProvider().setCredentials(
@@ -663,15 +573,10 @@ public class CC98Client {
 						AuthScope.ANY_SCHEME),
 				new UsernamePasswordCredentials(authName, authPassword));
 
-		// // Set timeout
-		// client.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT,
-		// 8000);
-		HttpGet request = new HttpGet(uri);
+ 		HttpGet request = new HttpGet(uri);
 
 		HttpResponse response = getHttpClient().execute(request);
-	//	Log.d("auth", EntityUtils.toString(response.getEntity()));
-
-		if (response.getStatusLine().getStatusCode() == 200) {
+ 		if (response.getStatusLine().getStatusCode() == 200) {
 			return true;
 		} else {
 			return false;

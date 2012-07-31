@@ -11,8 +11,8 @@ import org.apache.http.client.ClientProtocolException;
 
 import tk.djcrazy.MyCC98.helper.HtmlGenHelper;
 import tk.djcrazy.MyCC98.view.HeaderView;
-import tk.djcrazy.libCC98.CC98Client;
-import tk.djcrazy.libCC98.CC98Parser;
+import tk.djcrazy.libCC98.CC98ClientImpl;
+import tk.djcrazy.libCC98.CC98ParserImpl;
 import tk.djcrazy.libCC98.data.PostContentEntity;
 import tk.djcrazy.libCC98.data.PostContentsListPage;
 import tk.djcrazy.libCC98.exception.NoUserFoundException;
@@ -244,7 +244,7 @@ public class PostContentsJSActivity extends BaseActivity {
 		}
 		Bundle bundle = new Bundle();
 		bundle.putString(PostListActivity.BOARD_LINK,
-				CC98Client.getCC98Domain() + "list.asp?boardid=" + boardID);
+				CC98ClientImpl.getCC98Domain() + "list.asp?boardid=" + boardID);
 		bundle.putString(PostListActivity.BOARD_NAME, boardName);
 		bundle.putInt(PostListActivity.PAGE_NUMBER, 1);
 		bundle.putParcelable(PostListActivity.USER_IMAGE, userImage);
@@ -281,7 +281,7 @@ public class PostContentsJSActivity extends BaseActivity {
 			@Override
 			public boolean shouldOverrideUrlLoading(WebView view, String url) {
 				if (url.startsWith("dispbbs")) {
-					url = CC98Client.getCC98Domain() + url;
+					url = CC98ClientImpl.getCC98Domain() + url;
 				}
 				Intent i = new Intent(Intent.ACTION_VIEW);
 				i.setData(Uri.parse(url));
@@ -449,7 +449,7 @@ public class PostContentsJSActivity extends BaseActivity {
 			threadCancel = false;
 			return "";
 		}
-		List<PostContentEntity> contentList = CC98Parser
+		List<PostContentEntity> contentList = CC98ParserImpl
 				.getPostContentList(postLink + "&star=" + pageNum);
 		page.setList(contentList);
 
@@ -478,7 +478,7 @@ public class PostContentsJSActivity extends BaseActivity {
 				avatarUrl = avatar.toString();
 			}
 			if (avatarUrl.equals("")) {
-				avatarUrl = CC98Client.getCC98Domain() + "face/deaduser.gif";
+				avatarUrl = CC98ClientImpl.getCC98Domain() + "face/deaduser.gif";
 			}
 			StringBuilder mBuilder = new StringBuilder(300);
 			mBuilder.append(ITEM_OPEN)
@@ -717,7 +717,7 @@ public class PostContentsJSActivity extends BaseActivity {
 			break;
 		case 4:
 			if (item.getUserName().equals(
-					CC98Client.getUserName())) {
+					CC98ClientImpl.getUserName())) {
 				String tmp = item.getPostContent().replaceAll(
 						"(<br>|<BR>)", "\n");
 				String topic = item.getPostTitle();
@@ -750,7 +750,7 @@ public class PostContentsJSActivity extends BaseActivity {
 			@Override
 			public void run() {
 				try {
-					CC98Client.addFriend(userName);
+					CC98ClientImpl.addFriend(userName);
 					handler.sendEmptyMessage(ADD_FRIEND_SUCCESS);
 				} catch (ParseException e) {
 					handler.sendEmptyMessage(ADD_FRIEND_FAILED);

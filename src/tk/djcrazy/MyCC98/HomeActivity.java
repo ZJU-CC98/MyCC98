@@ -24,7 +24,7 @@ import tk.djcrazy.MyCC98.adapter.HomeFragmentPagerAdapter;
 import tk.djcrazy.MyCC98.dialog.AboutDialog;
 import tk.djcrazy.MyCC98.listener.LoadingListener;
 import tk.djcrazy.MyCC98.view.HeaderView;
-import tk.djcrazy.libCC98.CC98Client;
+import tk.djcrazy.libCC98.CC98ClientImpl;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -149,7 +149,7 @@ public class HomeActivity extends RoboFragmentActivity implements
 			@Override
 			public void run() {
 				try {
-					bmUserImg = CC98Client.getLoginUserImg();
+					bmUserImg = CC98ClientImpl.getLoginUserImg();
 					handler.sendEmptyMessage(MSG_USERIMG_SUCC);
 				} catch (Exception e) {
 					handler.sendEmptyMessage(MSG_USERIMG_FAIL);
@@ -190,7 +190,7 @@ public class HomeActivity extends RoboFragmentActivity implements
 		case R.id.check_personal_info:
 			Intent profiIntent = new Intent();
 			profiIntent.setClass(HomeActivity.this, ProfileActivity.class);
-			profiIntent.putExtra("userName", CC98Client.getUserName());
+			profiIntent.putExtra("userName", CC98ClientImpl.getUserName());
 			profiIntent.putExtra(ProfileActivity.USER_IMAGE, bmUserImg);
 			startActivity(profiIntent);
 			overridePendingTransition(R.anim.forward_activity_move_in,

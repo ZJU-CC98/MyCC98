@@ -9,7 +9,7 @@ import org.apache.http.NameValuePair;
 
 import tk.djcrazy.MyCC98.PostListActivity;
 import tk.djcrazy.MyCC98.R;
-import tk.djcrazy.libCC98.CC98Client;
+import tk.djcrazy.libCC98.CC98ClientImpl;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -86,7 +86,7 @@ public class SearchResultListAdapter extends BaseAdapter {
 			public void onClick(View v) {
 				Bundle bundle = new Bundle();
 				bundle.putString(PostListActivity.BOARD_LINK,
-						CC98Client.getCC98Domain()
+						CC98ClientImpl.getCC98Domain()
 								+ mBoardList.get(clkpos).getValue());
 				bundle.putString(PostListActivity.BOARD_NAME, mBoardList
 						.get(clkpos).getName());

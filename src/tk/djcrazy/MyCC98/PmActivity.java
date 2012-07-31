@@ -10,8 +10,8 @@ import tk.djcrazy.MyCC98.adapter.PmListViewAdapter;
 import tk.djcrazy.MyCC98.view.HeaderView;
 import tk.djcrazy.MyCC98.view.PullToRefreshListView;
 import tk.djcrazy.MyCC98.view.PullToRefreshListView.OnRefreshListener;
-import tk.djcrazy.libCC98.CC98Client;
-import tk.djcrazy.libCC98.CC98Parser;
+import tk.djcrazy.libCC98.CC98ClientImpl;
+import tk.djcrazy.libCC98.CC98ParserImpl;
 import tk.djcrazy.libCC98.data.InboxInfo;
 import tk.djcrazy.libCC98.data.PmInfo;
 import android.app.Activity;
@@ -81,10 +81,10 @@ public class PmActivity extends BaseActivity implements OnRefreshListener {
 		// Get the correct list
 		List<PmInfo> page;
 		if (mod == INBOX) {
-			page = CC98Parser.getPmData(page_num, inboxInfo, mod);
+			page = CC98ParserImpl.getPmData(page_num, inboxInfo, mod);
 			totalPageNum = inboxInfo.getTotalInPage();
 		} else {
-			page = CC98Parser.getPmData(page_num, outboxInfo, mod);
+			page = CC98ParserImpl.getPmData(page_num, outboxInfo, mod);
 			totalPageNum = outboxInfo.getTotalInPage();
 		}
 		return page;
@@ -137,7 +137,7 @@ public class PmActivity extends BaseActivity implements OnRefreshListener {
 		setContentView(R.layout.pm);
 		setTitle(R.string.pm_activity_title);
 		findViews();
-		headerView.setUserImg(CC98Client.getLoginUserImg());
+		headerView.setUserImg(CC98ClientImpl.getLoginUserImg());
 		setListeners();
 		currentPageNum = 1;
 		switchToMod(currentMod);

@@ -25,7 +25,7 @@ import tk.djcrazy.MyCC98.task.TaskListener;
 import tk.djcrazy.MyCC98.task.TaskParams;
 import tk.djcrazy.MyCC98.task.TaskResult;
 import tk.djcrazy.MyCC98.view.HeaderView;
-import tk.djcrazy.libCC98.CC98Client;
+import tk.djcrazy.libCC98.CC98ClientImpl;
 import android.R.bool;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -361,7 +361,7 @@ public class EditActivity extends BaseActivity {
 		Bundle bundle = getIntent().getBundleExtra(BUNDLE);
 		mod = bundle.getInt(MOD, MOD_REPLY);
 		findViews();
-		mHeaderView.setUserImg(CC98Client.getLoginUserImg());
+		mHeaderView.setUserImg(CC98ClientImpl.getLoginUserImg());；
 		mHeaderView.setButtonImageResource(R.drawable.reply_send_ico);
 		if (mod == MOD_REPLY) {
 			postLink = bundle.getString(POST_LINK);
@@ -464,16 +464,16 @@ public class EditActivity extends BaseActivity {
 		nvpsList.add(new BasicNameValuePair("content", editContent));
 		nvpsList.add(new BasicNameValuePair("followup", editLink.substring(
 				editLink.indexOf("&id=") + 4, editLink.indexOf("&star"))));
-		nvpsList.add(new BasicNameValuePair("username", CC98Client
+		nvpsList.add(new BasicNameValuePair("username", CC98ClientImpl
 				.getUserName()));
-		nvpsList.add(new BasicNameValuePair("passwd", md5.MyMD5(CC98Client
+		nvpsList.add(new BasicNameValuePair("passwd", md5.MyMD5(CC98ClientImpl
 				.getPasswd())));
 		nvpsList.add(new BasicNameValuePair("signflag", "yes"));
 		nvpsList.add(new BasicNameValuePair("TotalUseTable", "bbs2"));
 		nvpsList.add(new BasicNameValuePair("star", editLink.substring(
 				editLink.indexOf("&star=") + 6, editLink.indexOf("&bm"))));
 		try {
-			if (CC98Client.editPost(nvpsList,
+			if (CC98ClientImpl.editPost(nvpsList,
 					editLink.replace("editannounce", "SaveditAnnounce"))) {
 				Toast.makeText(EditActivity.this, "编辑成功", Toast.LENGTH_SHORT)
 						.show();
@@ -674,12 +674,12 @@ public class EditActivity extends BaseActivity {
 								new Thread() {
 									public void run() {
 										try {
-											CC98Client
+											CC98ClientImpl
 													.sendPm(replyUserName,
 															new StringBuilder(
 																	30)
 																	.append("用户：")
-																	.append(CC98Client
+																	.append(CC98ClientImpl
 																			.getUserName())
 																	.append(" 在帖子中回复了你")
 																	.toString(),
@@ -1098,7 +1098,7 @@ public class EditActivity extends BaseActivity {
 			TaskParams param = params[0];
 
 			try {
-				picLink = CC98Client.uploadPictureToCC98((File) param
+				picLink = CC98ClientImpl.uploadPictureToCC98((File) param
 						.get("picture"));
 				if (picLink.equals("")) {
 					mResult = TaskResult.FAILED;
@@ -1151,7 +1151,7 @@ public class EditActivity extends BaseActivity {
 				title = param.getString("title");
 				faceExpression = param.getString("faceExpression");
 				configReplyParams();
-				if (CC98Client.submitReply(nvpsList, boardID, rootID)) {
+				if (CC98ClientImpl.submitReply(nvpsList, boardID, rootID)) {
 					return TaskResult.OK;
 				} else {
 					return TaskResult.FAILED;
@@ -1214,7 +1214,7 @@ public class EditActivity extends BaseActivity {
 				System.out.println("content:" + content + "  " + "title:"
 						+ title + " " + "face:" + faceExpression);
 				configPushParams();
-				if (CC98Client.pushNewPost(nvpsList, String.valueOf(boardID))) {
+				if (CC98ClientImpl.pushNewPost(nvpsList, String.valueOf(boardID))) {
 					return TaskResult.OK;
 				} else {
 					return TaskResult.FAILED;
@@ -1241,12 +1241,12 @@ public class EditActivity extends BaseActivity {
 
 	public void sendPm(String touser, String title, String message)
 			throws ClientProtocolException, IOException {
-		int flag = CC98Client.sendPm(touser, title, message
+		int flag = CC98ClientImpl.sendPm(touser, title, message
 				+ (SettingsActivity.addTail ? TAIL : ""));
-		if (flag == CC98Client.PM_SEND_SUCC) {
+		if (flag == CC98ClientImpl.PM_SEND_SUCC) {
 			Toast.makeText(this, "发送短信息成功", Toast.LENGTH_SHORT).show();
 			this.finish();
-		} else if (flag == CC98Client.PM_SEND_FAIL) {
+		} else if (flag == CC98ClientImpl.PM_SEND_FAIL) {
 			Toast.makeText(this, "发送短信息失败", Toast.LENGTH_SHORT).show();
 		}
 	}

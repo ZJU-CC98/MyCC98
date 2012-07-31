@@ -1,10 +1,54 @@
 package tk.djcrazy.libCC98;
 
+import static tk.djcrazy.libCC98.CC98ParseRepository.HOT_TOPIC_BOARD_NAME_WITH_AUTHOR_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.HOT_TOPIC_CLICK_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.HOT_TOPIC_LINK_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.HOT_TOPIC_NAME_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.HOT_TOPIC_POST_TIME_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.HOT_TOPIC_WRAPPER;
+import static tk.djcrazy.libCC98.CC98ParseRepository.POST_CONTENT_GENDER_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.POST_CONTENT_INFO_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.POST_CONTENT_POST_CONTENT_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.POST_CONTENT_POST_FACE_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.POST_CONTENT_POST_TIME_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.POST_CONTENT_POST_TITLE_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.POST_CONTENT_USERNAME_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.POST_CONTENT_USER_AVATAR_LINK_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.POST_CONTENT_WHOLE_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.POST_LIST_LAST_REPLY_AUTHOR_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.POST_LIST_LAST_REPLY_LINK_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.POST_LIST_LAST_REPLY_TIME_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.POST_LIST_POST_AUTHOR_NAME_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.POST_LIST_POST_ENTITY_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.POST_LIST_POST_LINK_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.POST_LIST_POST_NAME_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.POST_LIST_POST_PAGE_NUMBER_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.POST_LIST_POST_TYPE_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.POST_LIST_REPLY_NUM_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.P_BOARD_BOARD_MASTER_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.P_BOARD_INTRO_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.P_BOARD_LAST_REPLY_AUTHOR_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.P_BOARD_LAST_REPLY_TIME_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.P_BOARD_LAST_REPLY_TOPIC_LINK_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.P_BOARD_LAST_REPLY_TOPIC_NAME_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.P_BOARD_LINK_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.P_BOARD_NAME_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.P_BOARD_OUTER_WRAAPER_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.P_BOARD_POST_NUMBER_TODAY;
+import static tk.djcrazy.libCC98.CC98ParseRepository.P_BOARD_SINGLE_BOARD_WRAPPER_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.USER_PROFILE_AVATAR_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.USER_PROFILE_GENERAL_PROFILE_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.USER_PROFILE_ONLINE_INFO_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.USER_PROFILE_PERSON_PROFILE_REGEX;
+import static tk.djcrazy.libCC98.util.DateFormatUtil.convertStringToDateInPostContent;
+import static tk.djcrazy.libCC98.util.RegexUtil.getMatchedString;
+import static tk.djcrazy.libCC98.util.RegexUtil.getMatchedStringList;
+import static tk.djcrazy.libCC98.util.StringUtil.filterHtmlDecode;
+
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -15,7 +59,8 @@ import org.apache.http.ParseException;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.message.BasicNameValuePair;
 
-import tk.djcrazy.MyCC98.PmActivity;
+import com.google.inject.Inject;
+
 import tk.djcrazy.libCC98.data.BoardEntity;
 import tk.djcrazy.libCC98.data.Gender;
 import tk.djcrazy.libCC98.data.HotTopicEntity;
@@ -28,30 +73,18 @@ import tk.djcrazy.libCC98.data.UserStatue;
 import tk.djcrazy.libCC98.data.UserStatueEntity;
 import tk.djcrazy.libCC98.exception.NoUserFoundException;
 import tk.djcrazy.libCC98.exception.ParseContentException;
-import static tk.djcrazy.libCC98.util.StringUtil.*;
-import static tk.djcrazy.libCC98.util.RegexUtil.*;
-import static tk.djcrazy.libCC98.CC98ParseRepository.*;
-import static tk.djcrazy.libCC98.util.DateFormatUtil.*;
 
-public class CC98Parser {
+public class CC98ParserImpl implements ICC98Parser {
 
-	private CC98Client cc98Client;
-	private CC98UrlManager cc98UrlManager;
+	@Inject
+	private ICC98Client cc98Client;
+	@Inject
+	private ICC98UrlManager cc98UrlManager;
 
-	/**
-	 * Get a List of Maps of posts info.
-	 * 
-	 * @author DJ
-	 * @param boardLink
-	 *            , url String
-	 * @return A List that contains each post's basic information,
-	 * @throws IOException
-	 * @throws ParseException
-	 * @throws ClientProtocolException
-	 * @throws ParseContentException
-	 * 
-	 * @see #parsePostList(String)
+	/* (non-Javadoc)
+	 * @see tk.djcrazy.libCC98.ICC98Parser#getPostList(int, int)
 	 */
+	@Override
 	public List<PostEntity> getPostList(int boardId, int pageNum)
 			throws ClientProtocolException, ParseException, IOException,
 			ParseContentException {
@@ -60,54 +93,30 @@ public class CC98Parser {
 				boardId, pageNum)));
 	}
 
-	/**
-	 * Get a List of HashMaps of hot Topic
-	 * 
-	 * @author DJ
-	 * @return List of hot topic
-	 * @throws IOException
-	 * @throws ParseException
-	 * @throws ClientProtocolException
-	 * @throws ParseContentException 
-	 * 
+	/* (non-Javadoc)
+	 * @see tk.djcrazy.libCC98.ICC98Parser#getHotTopicList()
 	 */
+	@Override
 	public List<HotTopicEntity> getHotTopicList()
 			throws ClientProtocolException, ParseException, IOException, ParseContentException {
 		return parseHotTopicList(cc98Client.getPage(cc98UrlManager
 				.getHotTopicUrl()));
 	}
 
-	/**
-	 * Get a List of BoardEntity of board info from your personal board list.
-	 * 
-	 * @author DJ
-	 * @return List board info.
-	 * @throws IOException
-	 * @throws ParseException
-	 * @throws ClientProtocolException
-	 * @throws ParseContentException 
-	 * 
-	 * @see #parsePersonalBoardList(String)
+	/* (non-Javadoc)
+	 * @see tk.djcrazy.libCC98.ICC98Parser#getPersonalBoardList()
 	 */
+	@Override
 	public List<BoardEntity> getPersonalBoardList()
 			throws ClientProtocolException, ParseException, IOException, ParseContentException {
 		return parsePersonalBoardList(cc98Client.getPage(cc98UrlManager
 				.getPersonalBoardUrl()));
 	}
 
-	/**
-	 * Get a list of Maps of each reply post's info.
-	 * 
-	 * @author DJ
-	 * @param postLink
-	 * @return A list of Maps of each reply post's info.
-	 * @throws java.text.ParseException
-	 * @throws IOException
-	 * @throws ParseException
-	 * @throws ClientProtocolException
-	 * @throws ParseContentException
-	 * @see #parsePostContentList(String)
+	/* (non-Javadoc)
+	 * @see tk.djcrazy.libCC98.ICC98Parser#getPostContentList(int, int, int)
 	 */
+	@Override
 	public List<PostContentEntity> getPostContentList(int boardId, int postId,
 			int pageNum) throws ClientProtocolException, ParseException,
 			ParseContentException, java.text.ParseException, IOException {
@@ -115,47 +124,32 @@ public class CC98Parser {
 				.getPostUrl(boardId, postId, pageNum)));
 	}
 
-	/**
-	 * @author DJ
-	 * @param userName
-	 * @return Map of user profile info
-	 * 
-	 *         //TODO the keys in the map are ...not finished, to be added
-	 * @throws IOException
-	 * @throws NoUserFoundException
-	 * @throws ParseContentException 
-	 * @throws ParseException 
+	/* (non-Javadoc)
+	 * @see tk.djcrazy.libCC98.ICC98Parser#getUserProfile(java.lang.String)
 	 */
+	@Override
 	public UserProfileEntity getUserProfile(String userName)
 			throws NoUserFoundException, IOException, ParseException, ParseContentException {
 		return parseUserProfile(cc98Client.getPage(cc98UrlManager
 				.getUserProfileUrl(userName)));
 	}
 
-	/**
-	 * @author DJ
-	 * @return
-	 * @throws IOException
-	 * @throws ParseException
-	 * @throws ClientProtocolException
+	/* (non-Javadoc)
+	 * @see tk.djcrazy.libCC98.ICC98Parser#getNewPostList()
 	 */
+	@Override
 	public List<Map<String, Object>> getNewPostList()
 			throws ClientProtocolException, ParseException, IOException {
 		return parseQueryResult(cc98Client.getPage(cc98UrlManager
 				.getNewPostUrl()));
 	}
 
-	/**
-	 * get user friend list
-	 * 
-	 * @param html
-	 * @return list of user
-	 * @throws ClientProtocolException
-	 * @throws ParseException
-	 * @throws IOException
+	/* (non-Javadoc)
+	 * @see tk.djcrazy.libCC98.ICC98Parser#getUserFriendList()
 	 */
+	@Override
 	public List<UserStatueEntity> getUserFriendList()
-			throws ClientProtocolException, ParseException, IOException {
+			throws ClientProtocolException, ParseException, IOException, ParseContentException {
 		return parseUserFriendList(cc98Client.getPage(cc98UrlManager
 				.getUserManagerUrl()));
 	}
@@ -468,17 +462,10 @@ public class CC98Parser {
 		}
 	}
 
-	/**
-	 * Get the content of the pm using the given pm id.
-	 * 
-	 * @author zsy
-	 * 
-	 * @param pmId
-	 * @return A String of pm content.
-	 * @throws IOException
-	 * @throws ParseException
-	 * @throws ClientProtocolException
+	/* (non-Javadoc)
+	 * @see tk.djcrazy.libCC98.ICC98Parser#getMsgContent(int)
 	 */
+	@Override
 	public String getMsgContent(int pmId) throws ClientProtocolException,
 			ParseException, IOException {
 		String html = getMsgPageHtml(pmId);
@@ -491,15 +478,11 @@ public class CC98Parser {
 		return m.group();
 	}
 
-	/**
-	 * 
-	 * @param page_num
-	 * @return
-	 * @throws IOException
-	 * @throws ParseException
-	 * @throws ClientProtocolException
+	/* (non-Javadoc)
+	 * @see tk.djcrazy.libCC98.ICC98Parser#getPmData(int, tk.djcrazy.libCC98.data.InboxInfo, int)
 	 */
 
+	@Override
 	public List<PmInfo> getPmData(int page_num, InboxInfo inboxInfo, int type)
 			throws ClientProtocolException, ParseException, IOException {
 		if (type == 0) {
@@ -512,6 +495,10 @@ public class CC98Parser {
 		return new ArrayList<PmInfo>();
 	}
 
+	/* (non-Javadoc)
+	 * @see tk.djcrazy.libCC98.ICC98Parser#searchPost(java.lang.String, int, java.lang.String, int)
+	 */
+	@Override
 	public List<Map<String, Object>> searchPost(String keyword, int boardid,
 			String sType, int page) throws ParseException, IOException {
 		/*
@@ -523,6 +510,10 @@ public class CC98Parser {
 				keyword, boardid, sType, page)));
 	}
 
+	/* (non-Javadoc)
+	 * @see tk.djcrazy.libCC98.ICC98Parser#query(java.lang.String, java.lang.String, java.lang.String, int, int)
+	 */
+	@Override
 	public List<Map<String, Object>> query(String keyWord, String sType,
 			String searchDate, int boardArea, int boardID)
 			throws ParseException, IOException {
@@ -530,12 +521,10 @@ public class CC98Parser {
 				searchDate, boardArea, boardID));
 	}
 
-	/**
-	 * @author DJ
-	 * @author zsy (bug fix)
-	 * @param html
-	 * @return
+	/* (non-Javadoc)
+	 * @see tk.djcrazy.libCC98.ICC98Parser#parseQueryResult(java.lang.String)
 	 */
+	@Override
 	public List<Map<String, Object>> parseQueryResult(String html) {
 		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 		Map<String, Object> mmap = new HashMap<String, Object>();
@@ -639,7 +628,7 @@ public class CC98Parser {
 	}
 
 	private List<UserStatueEntity> parseUserFriendList(String html)
-			throws ClientProtocolException, ParseException, IOException {
+			throws ClientProtocolException, ParseException, IOException, ParseContentException {
 		if (html == null) {
 			throw new IllegalArgumentException("Null pointer!");
 		}
@@ -674,13 +663,10 @@ public class CC98Parser {
 		return list;
 	}
 
-	/**
-	 * @author zsy
-	 * @return
-	 * @throws ClientProtocolException
-	 * @throws ParseException
-	 * @throws IOException
+	/* (non-Javadoc)
+	 * @see tk.djcrazy.libCC98.ICC98Parser#getTodayBoardList()
 	 */
+	@Override
 	public List<NameValuePair> getTodayBoardList()
 			throws ClientProtocolException, ParseException, IOException {
 		String content = cc98Client.getPage(cc98UrlManager.getTodayBoardList());
@@ -701,33 +687,35 @@ public class CC98Parser {
 		return list;
 	}
 
-	/**
-	 * @return the cc98Client
+	/* (non-Javadoc)
+	 * @see tk.djcrazy.libCC98.ICC98Parser#getCC98Client()
 	 */
-	public CC98Client getCC98Client() {
+	@Override
+	public ICC98Client getCC98Client() {
 		return cc98Client;
 	}
 
-	/**
-	 * @param cc98Client
-	 *            the cc98Client to set
+	/* (non-Javadoc)
+	 * @see tk.djcrazy.libCC98.ICC98Parser#setCC98Client(tk.djcrazy.libCC98.ICC98Client)
 	 */
-	public void setCC98Client(CC98Client cc98Client) {
+	@Override
+	public void setCC98Client(ICC98Client cc98Client) {
 		this.cc98Client = cc98Client;
 	}
 
-	/**
-	 * @return the cc98UrlManager
+	/* (non-Javadoc)
+	 * @see tk.djcrazy.libCC98.ICC98Parser#getCC98UrlManager()
 	 */
-	public CC98UrlManager getCC98UrlManager() {
+	@Override
+	public ICC98UrlManager getCC98UrlManager() {
 		return cc98UrlManager;
 	}
 
-	/**
-	 * @param cc98UrlManager
-	 *            the cc98UrlManager to set
+	/* (non-Javadoc)
+	 * @see tk.djcrazy.libCC98.ICC98Parser#setCC98UrlManager(tk.djcrazy.libCC98.CC98UrlManager)
 	 */
-	public void setCC98UrlManager(CC98UrlManager cc98UrlManager) {
+	@Override
+	public void setCC98UrlManager(ICC98UrlManager cc98UrlManager) {
 		this.cc98UrlManager = cc98UrlManager;
 	}
 

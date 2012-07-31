@@ -1,6 +1,6 @@
 package tk.djcrazy.MyCC98.fragment;
 
-import static tk.djcrazy.libCC98.CC98Parser.getNewPostList;
+import static tk.djcrazy.libCC98.CC98ParserImpl.getNewPostList;
 
 import java.io.IOException;
 import java.util.List;

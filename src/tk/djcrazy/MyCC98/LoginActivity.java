@@ -27,7 +27,7 @@ import tk.djcrazy.MyCC98.db.BoardInfoDbAdapter;
 import tk.djcrazy.MyCC98.dialog.AuthDialog;
 import tk.djcrazy.MyCC98.dialog.AuthDialog.MyAuthDialogListener;
 import tk.djcrazy.MyCC98.util.DisplayUtil;
-import tk.djcrazy.libCC98.CC98Client;
+import tk.djcrazy.libCC98.CC98ClientImpl;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -181,7 +181,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 		public void run() {
 
 			try {
-				if (CC98Client.doHttpBasicAuthorization(authUserName,
+				if (CC98ClientImpl.doHttpBasicAuthorization(authUserName,
 						authPassword)) {
 					authHandler.sendEmptyMessage(LIFETOY_AUTHORIZE_SUCCESS);
 				} else {
@@ -543,7 +543,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 
 					@Override
 					public void onClick(DialogInterface arg0, int arg1) {
-						CC98Client.setCC98Domain("http://hz.cc98.lifetoy.org/");
+						CC98ClientImpl.setCC98Domain("http://hz.cc98.lifetoy.org/");
 						authDialog.show();
 					}
 				});
@@ -552,7 +552,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 
 					@Override
 					public void onClick(DialogInterface arg0, int arg1) {
-						CC98Client.setCC98Domain("http://www.cc98.org/");
+						CC98ClientImpl.setCC98Domain("http://www.cc98.org/");
 						showLoginField();
 					}
 				});
@@ -700,9 +700,9 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 		mUsername = mUsernameEdit.getText().toString();
 		mPassword = mPasswordEdit.getText().toString();
 		if (useProxy) {
-			CC98Client.setProxy(sProxyIP, iProxyPort);
+			CC98ClientImpl.setProxy(sProxyIP, iProxyPort);
 		} else {
-			CC98Client.rmProxy();
+			CC98ClientImpl.rmProxy();
 		}
 		onLoginBegin();
 		new Thread(new Runnable() {
@@ -710,7 +710,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 			@Override
 			public void run() {
 				try {
-					CC98Client.doLogin(mUsername, mPassword);
+					CC98ClientImpl.doLogin(mUsername, mPassword);
 					handler.sendEmptyMessage(LOGIN_SUCCESS);
 				} catch (ClientProtocolException e) {
 					handler.sendEmptyMessage(LOGIN_FAILED_WITH_CP_ERROR);
@@ -719,9 +719,9 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 					handler.sendEmptyMessage(LOGIN_FAILED_WITH_IO_ERROR);
 					e.printStackTrace();
 				} catch (IllegalAccessException e) {
-					if (e.getMessage() == CC98Client.ID_PASSWD_ERROR_MSG) {
+					if (e.getMessage() == CC98ClientImpl.ID_PASSWD_ERROR_MSG) {
 						handler.sendEmptyMessage(LOGIN_FAILED_WITH_WRONG_USERNAME_OR_PASSWORD);
-					} else if (e.getMessage() == CC98Client.SERVER_ERROR) {
+					} else if (e.getMessage() == CC98ClientImpl.SERVER_ERROR) {
 						handler.sendEmptyMessage(LOGIN_FAILED_WITH_SERVER_ERROR);
 					}
 					e.printStackTrace();
@@ -738,8 +738,8 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 
 	private void onLoginSuccess() {
 		dialog.dismiss();
-		CC98Client.setUserName(mUsername);
-		CC98Client.setPassword(mPassword);
+		CC98ClientImpl.setUserName(mUsername);
+		CC98ClientImpl.setPassword(mPassword);
 		Editor editor = getSharedPreferences(USERINFO, 0).edit();
 		// save info
 		if (autoLoginBox.isChecked())

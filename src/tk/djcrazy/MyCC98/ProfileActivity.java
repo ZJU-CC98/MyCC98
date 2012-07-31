@@ -3,8 +3,8 @@ package tk.djcrazy.MyCC98;
 import java.io.IOException;
 
 import tk.djcrazy.MyCC98.view.HeaderView;
-import tk.djcrazy.libCC98.CC98Client;
-import tk.djcrazy.libCC98.CC98Parser;
+import tk.djcrazy.libCC98.CC98ClientImpl;
+import tk.djcrazy.libCC98.CC98ParserImpl;
 import tk.djcrazy.libCC98.data.UserProfileEntity;
 import tk.djcrazy.libCC98.exception.NoUserFoundException;
 import android.app.Activity;
@@ -70,7 +70,7 @@ public class ProfileActivity extends BaseActivity {
 		@Override
 		public void run() {
 			try {
-				profileEntity = CC98Parser.getUserProfile(mUserName);
+				profileEntity = CC98ParserImpl.getUserProfile(mUserName);
 				handler.sendEmptyMessage(LOAD_PROFILE_SUCCESS);
 
 			} catch (NoUserFoundException e) {
@@ -88,7 +88,7 @@ public class ProfileActivity extends BaseActivity {
 		@Override
 		public void run() {
 			try {
-				userPortraitmBitmap = CC98Client.getBitmapFromUrl(url);
+				userPortraitmBitmap = CC98ClientImpl.getBitmapFromUrl(url);
 				handler.sendEmptyMessage(LOAD_USER_AVARTAR_SUCCESS);
 			} catch (IOException e) {
 				handler.sendEmptyMessage(LOAD_USER_AVARTAR_FAILED);
@@ -201,7 +201,7 @@ public class ProfileActivity extends BaseActivity {
 			@Override
 			public void run() {
 				try {
-					CC98Client.addFriend(userName);
+					CC98ClientImpl.addFriend(userName);
 					handler.sendEmptyMessage(ADD_FRIEND_SUCCESS);
 				} catch (ParseException e) {
 					handler.sendEmptyMessage(ADD_FRIEND_FAILED);

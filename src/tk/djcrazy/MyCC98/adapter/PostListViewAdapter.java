@@ -4,7 +4,7 @@ import java.util.List;
 
 import tk.djcrazy.MyCC98.PostContentsJSActivity;
 import tk.djcrazy.MyCC98.R;
-import tk.djcrazy.libCC98.CC98Client;
+import tk.djcrazy.libCC98.CC98ClientImpl;
 import tk.djcrazy.libCC98.data.PostEntity;
 import tk.djcrazy.libCC98.data.PostType;
 import android.app.Activity;
@@ -148,7 +148,7 @@ public class PostListViewAdapter extends BaseAdapter {
 			@Override
 			public void onClick(View v) {
 
-				String postLink = CC98Client.getCC98Domain()
+				String postLink = CC98ClientImpl.getCC98Domain()
 						+ listItem.get(clickPosition).getPostLink();
 
 				intent.setClass(context, PostContentsJSActivity.class);
@@ -168,7 +168,7 @@ public class PostListViewAdapter extends BaseAdapter {
 					@Override
 					public void onClick(View v) {
 
-						String postLink = CC98Client.getCC98Domain()
+						String postLink = CC98ClientImpl.getCC98Domain()
 								+ listItem.get(clickPosition).getPostLink();
 
 						intent.setClass(context, PostContentsJSActivity.class);

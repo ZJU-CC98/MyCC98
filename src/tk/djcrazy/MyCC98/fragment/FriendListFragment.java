@@ -13,7 +13,7 @@ import tk.djcrazy.MyCC98.adapter.FriendListViewAdapter;
 import tk.djcrazy.MyCC98.util.ViewUtils;
 import tk.djcrazy.MyCC98.view.PullToRefreshListView;
 import tk.djcrazy.MyCC98.view.PullToRefreshListView.OnRefreshListener;
-import tk.djcrazy.libCC98.CC98Parser;
+import tk.djcrazy.libCC98.CC98ParserImpl;
 import tk.djcrazy.libCC98.data.UserStatueEntity;
 import android.os.Bundle;
 import android.os.Handler;
@@ -93,7 +93,7 @@ public class FriendListFragment extends RoboFragment implements
 			@Override
 			public void run() {
 				try {
-					friendList = CC98Parser.getUserFriendList();
+					friendList = CC98ParserImpl.getUserFriendList();
 					friendListViewAdapter = new FriendListViewAdapter(
 							getActivity(), friendList);
 					handler.sendEmptyMessage(GET_LIST_SUCCESS);

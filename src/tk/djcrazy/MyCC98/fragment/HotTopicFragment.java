@@ -13,7 +13,7 @@ import tk.djcrazy.MyCC98.adapter.HotTopicListAdapter;
 import tk.djcrazy.MyCC98.util.ViewUtils;
 import tk.djcrazy.MyCC98.view.PullToRefreshListView;
 import tk.djcrazy.MyCC98.view.PullToRefreshListView.OnRefreshListener;
-import tk.djcrazy.libCC98.CC98Parser;
+import tk.djcrazy.libCC98.CC98ParserImpl;
 import tk.djcrazy.libCC98.data.HotTopicEntity;
 import android.os.Bundle;
 import android.os.Handler;
@@ -66,7 +66,7 @@ public class HotTopicFragment extends RoboFragment implements OnRefreshListener{
 			@Override
 			public void run() {
 				try {
-					topicList = CC98Parser.getHotTopicList();
+					topicList = CC98ParserImpl.getHotTopicList();
 					getTopicHandler.sendEmptyMessage(GET_HOT_TOPIC_LIST_SUCCESS);
 					
 				} catch (ClientProtocolException e) {

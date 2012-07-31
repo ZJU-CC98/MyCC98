@@ -9,7 +9,7 @@ import org.apache.http.client.ClientProtocolException;
 import tk.djcrazy.MyCC98.R;
 import tk.djcrazy.MyCC98.adapter.PersonalboardListViewAdapter;
 import tk.djcrazy.MyCC98.view.PullToRefreshListView.OnRefreshListener;
-import tk.djcrazy.libCC98.CC98Parser;
+import tk.djcrazy.libCC98.CC98ParserImpl;
 import tk.djcrazy.libCC98.data.BoardEntity;
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -94,7 +94,7 @@ public class PersonalBoardView extends LinearLayout implements ChildView, OnRefr
 			@Override
 			public void run() {
 				try {
-					boardList = CC98Parser.getPersonalBoardList();
+					boardList = CC98ParserImpl.getPersonalBoardList();
 					boardListViewAdapter = new PersonalboardListViewAdapter((Activity) getContext(), boardList);
 					boardListViewAdapter.setUserImage(userImage);
 					handler.sendEmptyMessage(GET_LIST_SUCCESS);

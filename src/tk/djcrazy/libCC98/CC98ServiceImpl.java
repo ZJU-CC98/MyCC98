@@ -5,8 +5,11 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
 
+ 
 import org.apache.http.ParseException;
 import org.apache.http.client.ClientProtocolException;
+
+import com.google.inject.Inject;
 
 import tk.djcrazy.libCC98.data.BoardEntity;
 import tk.djcrazy.libCC98.data.BoardStatue;
@@ -18,6 +21,7 @@ import tk.djcrazy.libCC98.data.PostEntity;
 import tk.djcrazy.libCC98.data.SearchResultEntity;
 import tk.djcrazy.libCC98.data.UserProfileEntity;
 import tk.djcrazy.libCC98.data.UserStatueEntity;
+import tk.djcrazy.libCC98.exception.ParseContentException;
 import android.graphics.Bitmap;
 
 public class CC98ServiceImpl implements ICC98Service {
@@ -25,8 +29,11 @@ public class CC98ServiceImpl implements ICC98Service {
 		INIT, PROXYED, LOGINED, PROXY_LOGINED;
 	}
 	private Status status = Status.INIT;
-	private CC98Client cc98Client;
-	private CC98Parser cc98Parser;
+	@Inject
+	private ICC98Client cc98Client;
+	@Inject
+	private ICC98Parser cc98Parser;
+	
 	private boolean useProxy=false;
 	
 	@Override
@@ -54,7 +61,7 @@ public class CC98ServiceImpl implements ICC98Service {
 	}
 
 	@Override
-	public void doLogin(String userName, String pwd) throws ClientProtocolException, IOException, IllegalAccessException {
+	public void doLogin(String userName, String pwd) throws ClientProtocolException, IOException, IllegalAccessException, ParseException, ParseContentException {
 		if (useProxy==false&&status==Status.INIT) {
 			cc98Client.doLogin(userName, pwd);
 			status = Status.LOGINED;
@@ -68,7 +75,6 @@ public class CC98ServiceImpl implements ICC98Service {
 
 	@Override
 	public void logOut() {
-		
 		
 	}
 

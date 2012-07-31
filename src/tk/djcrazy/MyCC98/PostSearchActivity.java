@@ -8,8 +8,8 @@ import org.apache.http.ParseException;
 
 import tk.djcrazy.MyCC98.adapter.NewTopicListAdapter;
 import tk.djcrazy.MyCC98.view.HeaderView;
-import tk.djcrazy.libCC98.CC98Client;
-import tk.djcrazy.libCC98.CC98Parser;
+import tk.djcrazy.libCC98.CC98ClientImpl;
+import tk.djcrazy.libCC98.CC98ParserImpl;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.graphics.Bitmap;
@@ -51,7 +51,7 @@ public class PostSearchActivity extends BaseActivity {
 	private int totalPage;
 	private int boardid = 0;
 	private String boardname = "全站";
-	private String currentType = CC98Client.SEARCH_TYPE_TITLE;
+	private String currentType = CC98ClientImpl.SEARCH_TYPE_TITLE;
 
 	private ProgressDialog pg;
 
@@ -104,7 +104,7 @@ public class PostSearchActivity extends BaseActivity {
 			@Override
 			public void run() {
 				try {
-					datalist = CC98Parser.searchPost(etKeyword.getText()
+					datalist = CC98ParserImpl.searchPost(etKeyword.getText()
 							.toString(), boardid, currentType, currentPage);
 					if (datalist.size()>1) {
 						handler.sendEmptyMessage(FETCH_SUCC);
@@ -145,9 +145,9 @@ public class PostSearchActivity extends BaseActivity {
 			@Override
 			public void onCheckedChanged(RadioGroup arg0, int arg1) {
 				if (arg1 == R.id.rb_postsearch_by_author) {
-					currentType = CC98Client.SEARCH_TYPE_AUTHOR;
+					currentType = CC98ClientImpl.SEARCH_TYPE_AUTHOR;
 				} else if (arg1 == R.id.rb_postsearch_by_title) {
-					currentType = CC98Client.SEARCH_TYPE_TITLE;
+					currentType = CC98ClientImpl.SEARCH_TYPE_TITLE;
 				}
 			}
 		});
@@ -158,7 +158,7 @@ public class PostSearchActivity extends BaseActivity {
 				fetchContent();
 			}
 		});
-		mHeaderView.setUserImg(CC98Client.getLoginUserImg());
+		mHeaderView.setUserImg(CC98ClientImpl.getLoginUserImg());
 		vNext.setOnClickListener(new OnClickListener() {
 
 			@Override

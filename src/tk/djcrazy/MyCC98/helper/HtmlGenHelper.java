@@ -3,7 +3,7 @@ package tk.djcrazy.MyCC98.helper;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import tk.djcrazy.libCC98.CC98Client;
+import tk.djcrazy.libCC98.CC98ClientImpl;
 import android.util.Log;
 
 public class HtmlGenHelper {
@@ -113,10 +113,10 @@ public class HtmlGenHelper {
 					"(\\&star=\\d+.*)|(\\[url\\])|(\\[/url\\])", "");
 			if (!pageLink.startsWith("http")) {
 				if (pageLink.startsWith("/")) {
-					pageLink = CC98Client.getCC98Domain()
+					pageLink = CC98ClientImpl.getCC98Domain()
 							+ pageLink.substring(1);
 				} else {
-					pageLink = CC98Client.getCC98Domain() + pageLink;
+					pageLink = CC98ClientImpl.getCC98Domain() + pageLink;
 				}
 			}
 			Log.d(TAG, " link" + pageLink);

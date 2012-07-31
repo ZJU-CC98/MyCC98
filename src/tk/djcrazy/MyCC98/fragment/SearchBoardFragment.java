@@ -15,8 +15,8 @@ import tk.djcrazy.MyCC98.R;
 import tk.djcrazy.MyCC98.adapter.SearchResultListAdapter;
 import tk.djcrazy.MyCC98.listener.LoadingListener;
 import tk.djcrazy.MyCC98.util.ViewUtils;
-import tk.djcrazy.libCC98.CC98Client;
-import tk.djcrazy.libCC98.CC98Parser;
+import tk.djcrazy.libCC98.CC98ClientImpl;
+import tk.djcrazy.libCC98.CC98ParserImpl;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -110,7 +110,7 @@ public class SearchBoardFragment extends RoboFragment {
 			@Override
 			public void run() {
 				try {
-					boardList = CC98Parser.getTodayBoardList();
+					boardList = CC98ParserImpl.getTodayBoardList();
 					handler.sendEmptyMessage(FETCH_SUCC);
 				} catch (ClientProtocolException e) {
 					handler.sendEmptyMessage(FETCH_FAIL);
@@ -158,7 +158,7 @@ public class SearchBoardFragment extends RoboFragment {
 					long arg3) {
 				Bundle bundle = new Bundle();
 				bundle.putString(PostListActivity.BOARD_LINK,
-						CC98Client.getCC98Domain()
+						CC98ClientImpl.getCC98Domain()
 								+ currentResult.get(arg2).getValue());
 				bundle.putString(PostListActivity.BOARD_NAME, currentResult
 						.get(arg2).getName());

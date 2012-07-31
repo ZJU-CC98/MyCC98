@@ -11,8 +11,8 @@ import org.apache.http.client.ClientProtocolException;
 import tk.djcrazy.MyCC98.PostListActivity;
 import tk.djcrazy.MyCC98.R;
 import tk.djcrazy.MyCC98.adapter.SearchResultListAdapter;
-import tk.djcrazy.libCC98.CC98Client;
-import tk.djcrazy.libCC98.CC98Parser;
+import tk.djcrazy.libCC98.CC98ClientImpl;
+import tk.djcrazy.libCC98.CC98ParserImpl;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -87,7 +87,7 @@ public class SearchBoardView extends LinearLayout implements ChildView {
 			@Override
 			public void run() {
 				try {
-					boardList = CC98Parser.getTodayBoardList();
+					boardList = CC98ParserImpl.getTodayBoardList();
 				} catch (ClientProtocolException e) {
 					e.printStackTrace();
 				} catch (ParseException e) {
@@ -141,7 +141,7 @@ public class SearchBoardView extends LinearLayout implements ChildView {
 					long arg3) {
 				Bundle bundle = new Bundle();
 				bundle.putString(PostListActivity.BOARD_LINK,
-						CC98Client.getCC98Domain() + currentResult.get(arg2).getValue());
+						CC98ClientImpl.getCC98Domain() + currentResult.get(arg2).getValue());
 				bundle.putString(PostListActivity.BOARD_NAME,
 						currentResult.get(arg2).getName());
 				bundle.putInt(PostListActivity.PAGE_NUMBER, 1);

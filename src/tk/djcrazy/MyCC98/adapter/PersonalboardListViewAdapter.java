@@ -5,7 +5,7 @@ import java.util.List;
 import tk.djcrazy.MyCC98.PostContentsJSActivity;
 import tk.djcrazy.MyCC98.PostListActivity;
 import tk.djcrazy.MyCC98.R;
-import tk.djcrazy.libCC98.CC98Client;
+import tk.djcrazy.libCC98.CC98ClientImpl;
 import tk.djcrazy.libCC98.data.BoardEntity;
 import android.app.Activity;
 import android.content.Context;
@@ -157,7 +157,7 @@ public class PersonalboardListViewAdapter extends BaseAdapter {
 
 					@Override
 					public void onClick(View v) {
-						String boardlink = CC98Client.getCC98Domain()
+						String boardlink = CC98ClientImpl.getCC98Domain()
 								+ listItem.get(clickPosition).getBoardLink();
 
 						intent.setClass(context, PostListActivity.class);
@@ -178,7 +178,7 @@ public class PersonalboardListViewAdapter extends BaseAdapter {
 
 					@Override
 					public void onClick(View v) {
-						String postlink = CC98Client.getCC98Domain()
+						String postlink = CC98ClientImpl.getCC98Domain()
 								+ listItem.get(clickPosition)
 										.getLastReplyTopicLink();
 
@@ -201,7 +201,7 @@ public class PersonalboardListViewAdapter extends BaseAdapter {
 
 					@Override
 					public void onClick(View v) {
-						String postlink = CC98Client.getCC98Domain()
+						String postlink = CC98ClientImpl.getCC98Domain()
 								+ listItem.get(clickPosition)
 										.getLastReplyTopicLink();
 

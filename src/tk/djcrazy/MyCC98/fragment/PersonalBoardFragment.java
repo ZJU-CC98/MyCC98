@@ -14,7 +14,7 @@ import tk.djcrazy.MyCC98.listener.LoadingListener;
 import tk.djcrazy.MyCC98.util.ViewUtils;
 import tk.djcrazy.MyCC98.view.PullToRefreshListView;
 import tk.djcrazy.MyCC98.view.PullToRefreshListView.OnRefreshListener;
-import tk.djcrazy.libCC98.CC98Parser;
+import tk.djcrazy.libCC98.CC98ParserImpl;
 import tk.djcrazy.libCC98.data.BoardEntity;
 import android.os.Bundle;
 import android.os.Handler;
@@ -96,7 +96,7 @@ public class PersonalBoardFragment extends RoboFragment implements
 			@Override
 			public void run() {
 				try {
-					boardList = CC98Parser.getPersonalBoardList();
+					boardList = CC98ParserImpl.getPersonalBoardList();
 					boardListViewAdapter = new PersonalboardListViewAdapter(
 							getActivity(), boardList);
 					handler.sendEmptyMessage(GET_LIST_SUCCESS);

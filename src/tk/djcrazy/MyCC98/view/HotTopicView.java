@@ -9,7 +9,7 @@ import org.apache.http.client.ClientProtocolException;
 import tk.djcrazy.MyCC98.R;
 import tk.djcrazy.MyCC98.adapter.HotTopicListAdapter;
 import tk.djcrazy.MyCC98.view.PullToRefreshListView.OnRefreshListener;
-import tk.djcrazy.libCC98.CC98Parser;
+import tk.djcrazy.libCC98.CC98ParserImpl;
 import tk.djcrazy.libCC98.data.HotTopicEntity;
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -49,7 +49,7 @@ public class HotTopicView extends LinearLayout implements ChildView, OnRefreshLi
 			@Override
 			public void run() {
 				try {
-					topicList = CC98Parser.getHotTopicList();
+					topicList = CC98ParserImpl.getHotTopicList();
 					getTopicHandler.sendEmptyMessage(GET_HOT_TOPIC_LIST_SUCCESS);
 					
 				} catch (ClientProtocolException e) {

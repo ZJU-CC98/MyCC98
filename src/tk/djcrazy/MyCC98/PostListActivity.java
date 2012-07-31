@@ -14,8 +14,8 @@ import tk.djcrazy.MyCC98.adapter.PostListViewAdapter;
 import tk.djcrazy.MyCC98.view.HeaderView;
 import tk.djcrazy.MyCC98.view.PullToRefreshListView;
 import tk.djcrazy.MyCC98.view.PullToRefreshListView.OnRefreshListener;
-import tk.djcrazy.libCC98.CC98Client;
-import tk.djcrazy.libCC98.CC98Parser;
+import tk.djcrazy.libCC98.CC98ClientImpl;
+import tk.djcrazy.libCC98.CC98ParserImpl;
 import tk.djcrazy.libCC98.data.PostEntity;
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -80,7 +80,7 @@ public class PostListActivity extends BaseActivity implements OnRefreshListener 
 		pageNumber = bundle.getInt(PAGE_NUMBER);
 
 		userImage = (Bitmap) bundle.getParcelable(USER_IMAGE);
-		boardid = Integer.parseInt(boardlink.replace(CC98Client.getCC98Domain()
+		boardid = Integer.parseInt(boardlink.replace(CC98ClientImpl.getCC98Domain()
 				+ "list.asp?boardid=", ""));
 		pageIntent.setClass(this, PostListActivity.class);
 		dialog = ProgressDialog.show(PostListActivity.this, "", "Loading...",
@@ -99,7 +99,7 @@ public class PostListActivity extends BaseActivity implements OnRefreshListener 
 			@Override
 			public void run() {
 				try {
-					PostList = CC98Parser.getPostList(boardlink + "&page="
+					PostList = CC98ParserImpl.getPostList(boardlink + "&page="
 							+ pageNumber);
 					handler.sendEmptyMessage(MSG_LIST_SUCC);
 				} catch (ClientProtocolException e) {
