@@ -2,6 +2,7 @@ package tk.djcrazy.libCC98;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.List;
 
 import org.apache.http.ParseException;
@@ -20,34 +21,55 @@ import tk.djcrazy.libCC98.data.UserStatueEntity;
 import android.graphics.Bitmap;
 
 public class CC98ServiceImpl implements ICC98Service {
-
+	private enum Status{
+		INIT, PROXYED, LOGINED, PROXY_LOGINED;
+	}
+	private Status status = Status.INIT;
+	private CC98Client cc98Client;
+	private CC98Parser cc98Parser;
+	private boolean useProxy=false;
+	
 	@Override
-	public void doProxyAuthorization(String userName, String pwd) {
-		
+	public void doProxyAuthorization(String userName, String pwd) throws ClientProtocolException, IOException, URISyntaxException {
+		if (useProxy==true||status==Status.INIT) {
+			cc98Client.doHttpBasicAuthorization(userName, pwd);
+			status = Status.PROXYED;
+		} else {
+			throw new IllegalStateException("You cannot do this before you set proxy, or have done login or do proxy.");
+		}
 	}
 
 	@Override
 	public void setUseProxy(boolean b) {
-		// TODO Auto-generated method stub
-
+		if (status==Status.INIT) {
+			useProxy = true;
+		} else {
+			throw new IllegalStateException("You cannnot do this when you hava proxyed or logined");
+		}
 	}
 
 	@Override
 	public boolean isUseProxy() {
-		// TODO Auto-generated method stub
-		return false;
+		return useProxy;
 	}
 
 	@Override
-	public void doLogin(String userName, String pwd) {
-		// TODO Auto-generated method stub
-
+	public void doLogin(String userName, String pwd) throws ClientProtocolException, IOException, IllegalAccessException {
+		if (useProxy==false&&status==Status.INIT) {
+			cc98Client.doLogin(userName, pwd);
+			status = Status.LOGINED;
+		} else if (useProxy==true&&status==Status.INIT) {
+			cc98Client.doLogin(userName, pwd);
+			status = Status.PROXY_LOGINED;
+		} else {
+			throw new IllegalStateException("You cannot do login due to illegal state.");
+		}
 	}
 
 	@Override
 	public void logOut() {
-		// TODO Auto-generated method stub
-
+		
+		
 	}
 
 	@Override

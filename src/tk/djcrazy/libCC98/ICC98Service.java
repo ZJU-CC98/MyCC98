@@ -2,6 +2,7 @@ package tk.djcrazy.libCC98;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.List;
 
 import org.apache.http.ParseException;
@@ -20,10 +21,10 @@ import tk.djcrazy.libCC98.data.UserStatueEntity;
 import android.graphics.Bitmap;
 
 public interface ICC98Service {
-	public void doProxyAuthorization(String userName, String pwd);
+	public void doProxyAuthorization(String userName, String pwd) throws ClientProtocolException, IOException, URISyntaxException;
 	public void setUseProxy(boolean b);
 	public boolean isUseProxy();
-	public void doLogin(String userName, String pwd);
+	public void doLogin(String userName, String pwd) throws ClientProtocolException, IOException, IllegalAccessException;
 	public void logOut();
 	public void clearProxy();
 	public void addFriend(String friendName);

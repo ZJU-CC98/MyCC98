@@ -53,6 +53,8 @@ import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 
 import tk.djcrazy.libCC98.exception.NoUserFoundException;
+import tk.djcrazy.libCC98.exception.ParseContentException;
+import tk.djcrazy.libCC98.util.RegexUtil;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
@@ -64,22 +66,21 @@ import android.util.Log;
  */
 public class CC98Client {
 
+	private CC98UrlManager manager;
+	
+	
 	public  final int PM_SEND_FAIL = -1;
 	public  final int PM_SEND_SUCC = 0;
-	/**
-	 * Store the URL of CC98
-	 */
-	private  String CC98 = "http://www.cc98.org/";
 
-	public  String HOT_TOPIC_LINK = CC98 + "hottopic.asp";
-	public  String USER_PROFILE = CC98 + "dispuser.asp?name=";
-	public  String NEW_POST_LINK = CC98 + "queryresult.asp?stype=3";
-	public  String USER_CONTROL_LINK = CC98 + "usermanager.asp";
-	public  String ADD_FRIEND_LINK = CC98 + "usersms.asp?action=friend";
-	public  String ADD_FRIEND_REFERRER = CC98
-			+ "usersms.asp?action=friend&todo=addF";
-	public  String LOGIN_LINK = CC98 + "login.asp?action=chk";
-	private  Bitmap userImg;
+	public  final String SEARCH_TYPE_TITLE = "2";
+	public  final String SEARCH_TYPE_AUTHOR = "1";
+
+ 	private  Bitmap userImg;
+
+	private  String passwd;
+	public  final String ID_PASSWD_ERROR_MSG = "用户名/密码错误";
+	public  final String SERVER_ERROR = "CC98服务器异常！";
+
 	/**
 	 * Store the id
 	 */
@@ -93,7 +94,7 @@ public class CC98Client {
 	/**
 	 * Don't using this, to avoid null pointer, use getHttpClient instead
 	 */
-	protected  DefaultHttpClient client = getHttpClient();
+	private  DefaultHttpClient client = getHttpClient();
 
 	public  Bitmap getLoginUserImg() {
 		return userImg;
@@ -102,11 +103,9 @@ public class CC98Client {
 		  userImg = bitmap;
 	}
 
-	public  DefaultHttpClient getHttpClient() {
+	private  DefaultHttpClient getHttpClient() {
 		if (client == null) {
-			System.err.println("Create HttpClient...");
-
-			HttpParams params = new BasicHttpParams();
+ 			HttpParams params = new BasicHttpParams();
 			HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
 			HttpProtocolParams.setContentCharset(params,
 					HTTP.DEFAULT_CONTENT_CHARSET);
@@ -123,15 +122,9 @@ public class CC98Client {
 					CoreConnectionPNames.CONNECTION_TIMEOUT, 1500);
 			client.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT,
 					10000);
-
 		}
-
 		return client;
 	}
-
-	private  String passwd;
-	public  final String ID_PASSWD_ERROR_MSG = "用户名/密码错误";
-	public  final String SERVER_ERROR = "CC98服务器异常！";
 
 	/**
 	 * Login method
@@ -147,7 +140,7 @@ public class CC98Client {
 			throws ClientProtocolException, IOException, IllegalAccessException {
 
 		HttpResponse response;
-		HttpPost httpost = new HttpPost(CC98 + "login.asp?action=chk");
+		HttpPost httpost = new HttpPost(manager.getLoginUrl());
 		List<NameValuePair> nvps = new ArrayList<NameValuePair>();
 		nvps.add(new BasicNameValuePair("username", id));
 		nvps.add(new BasicNameValuePair("password", pw));
@@ -300,10 +293,6 @@ public class CC98Client {
 		}
 		return false;
 	}
-
-	public  final String SEARCH_TYPE_TITLE = "2";
-	public  final String SEARCH_TYPE_AUTHOR = "1";
-
 	/**
 	 * @author zsy
 	 * @param keyWord
@@ -512,29 +501,22 @@ public class CC98Client {
 	 * 
 	 * @author zsy
 	 * 
-	 * @param username
+	 * @param userName
 	 * @return User's avatar URL.
 	 * @throws IOException
 	 * @throws ParseException
 	 * @throws ClientProtocolException
+	 * @throws ParseContentException 
 	 */
-	public  String getUserImgUrl(String username)
-			throws ClientProtocolException, ParseException, IOException {
+	public  String getUserImgUrl(String userName)
+			throws ClientProtocolException, ParseException, IOException, ParseContentException {
 
-		String html = getPage(getCC98Domain() + "dispuser.asp?name="
-				+ URLEncoder.encode(username));
-		// System.err.println("HTML:" + html);
-		Pattern p = Pattern.compile("(?<=&nbsp;<img src=).*?(?= )");
-		Matcher m = p.matcher(html);
-		if (!m.find()) {
-			System.err.println("Can't get " + username + "'s image url");
-			return null;
-		}
-		String url = m.group();
+		String html = getPage(manager.getUserProfileUrl(userName));
+ 		String url = RegexUtil.getMatchedString(
+ 				CC98ParseRepository.USER_PROFILE_AVATAR_REGEX, html);
 		if (!url.startsWith("http") && !url.startsWith("ftp")) {
-			url = getCC98Domain() + url;
+			url = manager.getClientUrl() + url;
 		}
-		System.err.println("URL:" + url);
 		return url;
 	}
 
@@ -568,8 +550,7 @@ public class CC98Client {
 	 */
 	 public int sendPm(String touser, String title, String message)
 			throws ClientProtocolException, IOException {
-		String url = getCC98Domain() + "messanger.asp?action=send";
-		HttpPost post = new HttpPost(url);
+ 		HttpPost post = new HttpPost(manager.getSendPmUrl());
 		List<NameValuePair> msgInfo = new ArrayList<NameValuePair>();
 		msgInfo.add(new BasicNameValuePair("touser", touser));
 		msgInfo.add(new BasicNameValuePair("title", title));
@@ -590,25 +571,7 @@ public class CC98Client {
 		return flag;
 	}
 
-	/**
-	 * @return the cC98
-	 */
-	public  String getCC98Domain() {
-		return CC98;
-	}
-
-	public  void setCC98Domain(String cC98) {
-		CC98 = cC98;
- 		HOT_TOPIC_LINK = CC98 + "hottopic.asp";
-		USER_PROFILE = CC98 + "dispuser.asp?name=";
-		NEW_POST_LINK = CC98 + "queryresult.asp?stype=3";
-		USER_CONTROL_LINK = CC98 + "usermanager.asp";
-		ADD_FRIEND_LINK = CC98 + "usersms.asp?action=friend";
-		ADD_FRIEND_REFERRER = CC98 + "usersms.asp?action=friend&todo=addF";
-		LOGIN_LINK = CC98 + "login.asp?action=chk";
-	}
-
-	/**
+ 	/**
 	 * add one user to friend list
 	 * 
 	 * @param userId
@@ -621,8 +584,8 @@ public class CC98Client {
 		if (userId == null) {
 			throw new IllegalArgumentException("Null argument!");
 		}
-		HttpPost httpPost = new HttpPost(ADD_FRIEND_LINK);
-		httpPost.addHeader("Referer", ADD_FRIEND_REFERRER);
+		HttpPost httpPost = new HttpPost(manager.getAddFriendUrl());
+		httpPost.addHeader("Referer", manager.getAddFriendUrlReferrer());
 		List<NameValuePair> nvpsList = new ArrayList<NameValuePair>();
 		nvpsList.add(new BasicNameValuePair("todo", "saveF"));
 		nvpsList.add(new BasicNameValuePair("touser", userId));
@@ -649,7 +612,7 @@ public class CC98Client {
 
 	public  String getUserProfileHtml(String userName)
 			throws NoUserFoundException, IOException {
-		String mString = getPage(USER_PROFILE + URLEncoder.encode(userName));
+		String mString = getPage(manager.getUserProfileUrl(userName));
 		if (mString.contains("您查询的名字不存在")) {
 			throw new NoUserFoundException("您查询的名字不存在");
 		} else if (mString.contains("用户头衔")) {
@@ -659,19 +622,7 @@ public class CC98Client {
 		}
 	}
 
-	/**
-	 * 
-	 * @return
-	 * @throws ClientProtocolException
-	 * @throws ParseException
-	 * @throws IOException
-	 */
-	public  String getNewPostListHtml() throws ClientProtocolException,
-			ParseException, IOException {
-		return getPage(NEW_POST_LINK);
-	}
-
-	/**
+ 	/**
 	 * Get bitmap using the url given
 	 * 
 	 * @param url
@@ -706,7 +657,7 @@ public class CC98Client {
 			URISyntaxException {
 		// Set url
 		URI uri = null;
-		uri = new URI("http://hz.cc98.lifetoy.org/index.asp");
+		uri = new URI(manager.getClientUrl());
 		getHttpClient().getCredentialsProvider().setCredentials(
 				new AuthScope(uri.getHost(), uri.getPort(),
 						AuthScope.ANY_SCHEME),

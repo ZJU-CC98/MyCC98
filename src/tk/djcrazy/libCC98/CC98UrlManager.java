@@ -1,5 +1,7 @@
 package tk.djcrazy.libCC98;
 
+import java.net.URLEncoder;
+
 public class CC98UrlManager {
 	private final String CC98 = "http://www.cc98.org/";
 	private final String LIFETOY = "http://hz.cc98.lifetoy.org/";
@@ -16,6 +18,7 @@ public class CC98UrlManager {
 	private String loginUrl;
 	private String inboxUrl;
 	private String outboxUrl;
+	private String sendPmUrl;
 	
 	private String messagePageUrl;
 	
@@ -79,7 +82,7 @@ public class CC98UrlManager {
 	 * @return the userProfileUrl
 	 */
 	public String getUserProfileUrl(String userName) {
-		return userProfileUrl + userName;
+		return userProfileUrl + URLEncoder.encode(userName);
 	}
 
 	/**
@@ -133,6 +136,10 @@ public class CC98UrlManager {
 		updateLink(lifetoyVersion);
 	}
 
+	public String getSendPmUrl() {
+		return sendPmUrl;
+	}
+
 	private void updateLink(boolean lifetoyVersion) {
 		if (this.lifetoyVersion == lifetoyVersion) {
 			return;
@@ -152,5 +159,6 @@ public class CC98UrlManager {
 		inboxUrl  = client +"usersms.asp?action=inbox&page=";
 		outboxUrl = client +"usersms.asp?action=issend&page=";
 		todayBoardList = client + "boardstat.asp?boardid=0";
+		sendPmUrl = client + "messanger.asp?action=send";
 	}
 }
