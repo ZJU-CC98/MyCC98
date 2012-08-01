@@ -2,6 +2,7 @@ package tk.djcrazy.MyCC98;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -9,13 +10,18 @@ import java.util.regex.Pattern;
 import org.apache.http.ParseException;
 import org.apache.http.client.ClientProtocolException;
 
+import com.google.inject.Inject;
+
 import tk.djcrazy.MyCC98.helper.HtmlGenHelper;
 import tk.djcrazy.MyCC98.view.HeaderView;
 import tk.djcrazy.libCC98.CC98ClientImpl;
 import tk.djcrazy.libCC98.CC98ParserImpl;
+import tk.djcrazy.libCC98.ICC98Service;
+import tk.djcrazy.libCC98.data.Gender;
 import tk.djcrazy.libCC98.data.PostContentEntity;
 import tk.djcrazy.libCC98.data.PostContentsListPage;
 import tk.djcrazy.libCC98.exception.NoUserFoundException;
+import tk.djcrazy.libCC98.util.DateFormatUtil;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -95,7 +101,7 @@ public class PostContentsJSActivity extends BaseActivity {
 	private static final String JS_INTERFACE = "PostContents";
 
 	private static final String ITEM_OPEN = "<div class=\"post\"><div class=\"post-content-wrapper\">";
-	private static final String ITEM_CLOSE =  "</div>" ;
+	private static final String ITEM_CLOSE = "</div>";
 	private static final String TAG = "PostContentsJS";
 	private static final int MNU_REFRESH = Menu.FIRST;
 	private static final int MNU_FIRST = Menu.FIRST + 1;
@@ -105,6 +111,9 @@ public class PostContentsJSActivity extends BaseActivity {
 	private static final int MNU_NEXT = Menu.FIRST + 5;
 	private boolean threadCancel = false;
 	private boolean searchMode = false;
+
+	@Inject
+	private ICC98Service service;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -211,13 +220,6 @@ public class PostContentsJSActivity extends BaseActivity {
 				nextPage();
 			}
 		});
-		vButtomPostReturn.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				returnToBoard();
-			}
-		});
 		vRe.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -232,26 +234,6 @@ public class PostContentsJSActivity extends BaseActivity {
 				webView.loadUrl("javascript:showAllImages.fireEvent('click');");
 			}
 		});
-	}
-
-	private void returnToBoard() {
-		Pattern pattern = Pattern.compile("(?<=boardid=).*?(?=&)",
-				Pattern.DOTALL);
-		Matcher matcher = pattern.matcher(postLink.toLowerCase());
-		String boardID = "0";
-		if (matcher.find()) {
-			boardID = matcher.group();
-		}
-		Bundle bundle = new Bundle();
-		bundle.putString(PostListActivity.BOARD_LINK,
-				CC98ClientImpl.getCC98Domain() + "list.asp?boardid=" + boardID);
-		bundle.putString(PostListActivity.BOARD_NAME, boardName);
-		bundle.putInt(PostListActivity.PAGE_NUMBER, 1);
-		bundle.putParcelable(PostListActivity.USER_IMAGE, userImage);
-		startActivity(new Intent().setClass(getApplicationContext(),
-				PostListActivity.class).putExtra(PostListActivity.BOARD_LIST,
-				bundle));
-		finish();
 	}
 
 	/**
@@ -281,7 +263,7 @@ public class PostContentsJSActivity extends BaseActivity {
 			@Override
 			public boolean shouldOverrideUrlLoading(WebView view, String url) {
 				if (url.startsWith("dispbbs")) {
-					url = CC98ClientImpl.getCC98Domain() + url;
+					url = service.getDomain() + url;
 				}
 				Intent i = new Intent(Intent.ACTION_VIEW);
 				i.setData(Uri.parse(url));
@@ -449,8 +431,8 @@ public class PostContentsJSActivity extends BaseActivity {
 			threadCancel = false;
 			return "";
 		}
-		List<PostContentEntity> contentList = CC98ParserImpl
-				.getPostContentList(postLink + "&star=" + pageNum);
+		List<PostContentEntity> contentList = service.getPostContentList(
+				boardId, postId, pageNum);
 		page.setList(contentList);
 
 		StringBuilder builder = new StringBuilder(5000);
@@ -467,10 +449,10 @@ public class PostContentsJSActivity extends BaseActivity {
 			String author = item.getUserName();
 			String content = HtmlGenHelper.parseInnerLink(
 					item.getPostContent(), JS_INTERFACE);
-			Object avatar = item.getUserAvatarLink();
-			String gender = item.getGender();
+			String avatar = item.getUserAvatarLink();
+			Gender gender = item.getGender();
 			String postTitle = item.getPostTitle();
-			String postTime = item.getPostTime();
+			Date postTime = item.getPostTime();
 			String postFace = item.getPostFace();
 			int floorNum = (tmpNum - 1) * 10 + i;
 			String avatarUrl = "";
@@ -478,26 +460,35 @@ public class PostContentsJSActivity extends BaseActivity {
 				avatarUrl = avatar.toString();
 			}
 			if (avatarUrl.equals("")) {
-				avatarUrl = CC98ClientImpl.getCC98Domain() + "face/deaduser.gif";
+				avatarUrl = service.getDomain() + "face/deaduser.gif";
 			}
 			StringBuilder mBuilder = new StringBuilder(300);
 			mBuilder.append(ITEM_OPEN)
 					.append(HtmlGenHelper.addPostInfo(postTitle, avatarUrl,
-							author, gender, floorNum, postTime, i))
+							author, gender.getName(), floorNum,
+							DateFormatUtil.convertDateToString(postTime, true),
+							i))
 					.append("<img class=\"post-face\" src=\"file:///android_asset/pic/")
-					.append(postFace).append("\" /><br />")
+					.append(postFace)
+					.append("\" /><br />")
 					.append("<div class=\"post-content\">")
-					.append("<span id=\"ubbcode").append(i).append("\">")
+					.append("<span id=\"ubbcode")
+					.append(i)
+					.append("\">")
 					.append(content)
-					.append("</span><script>searchubb('ubbcode").append(i)
+					.append("</span><script>searchubb('ubbcode")
+					.append(i)
 					.append("',1,'tablebody2');</script></div>")
 					.append("</div>")
 					.append("<div class=\"btn-group\">")
-					.append("<a class=\"btn\" onclick=\"PostContents.showContentDialog("+i +","+0+ ");\">吐槽</a>")
-					.append("<a class=\"btn\" onclick=\"PostContents.showContentDialog("+i +","+1+ ");\">站短</a>")
-					.append("<a class=\"btn\" onclick=\"PostContents.showContentDialog("+i +","+3+ ");\">查看</a>")
-					.append("<a class=\"btn\" onclick=\"PostContents.showContentDialog("+i +","+2+ ");\">加好友</a>")
-					.append("</div>")
+					.append("<a class=\"btn\" onclick=\"PostContents.showContentDialog("
+							+ i + "," + 0 + ");\">吐槽</a>")
+					.append("<a class=\"btn\" onclick=\"PostContents.showContentDialog("
+							+ i + "," + 1 + ");\">站短</a>")
+					.append("<a class=\"btn\" onclick=\"PostContents.showContentDialog("
+							+ i + "," + 3 + ");\">查看</a>")
+					.append("<a class=\"btn\" onclick=\"PostContents.showContentDialog("
+							+ i + "," + 2 + ");\">加好友</a>").append("</div>")
 					.append(ITEM_CLOSE);
 			builder.append(mBuilder.toString());
 		}
@@ -506,9 +497,9 @@ public class PostContentsJSActivity extends BaseActivity {
 			return "";
 		}
 		builder.append(HtmlGenHelper.PAGE_CLOSE);
- 		return builder.toString();
+		return builder.toString();
 	}
- 
+
 	private void prefetch() {
 		if (threadCancel) {
 			threadCancel = false;
@@ -674,16 +665,15 @@ public class PostContentsJSActivity extends BaseActivity {
 		}
 	}
 
-	public void showContentDialog(final int index,int which) {
+	public void showContentDialog(final int index, int which) {
 		final PostContentEntity item = currPage.getList().get(index);
 		switch (which) {
 		case 0: {
 			// quote & reply
-			String tmp = item.getPostContent().replaceAll(
-					"(<br>|<BR>)", "\n");
-			quoteReply(postLink, item.getPostTitle(),
-					item.getUserName(), item.getPostTime(),
-					tmp, index, currPageNum);
+			String tmp = item.getPostContent().replaceAll("(<br>|<BR>)", "\n");
+			quoteReply(postLink, item.getPostTitle(), item.getUserName(),
+					DateFormatUtil.convertDateToString(item.getPostTime(),
+							false), tmp, index, currPageNum);
 		}
 			break;
 		case 1:
@@ -694,19 +684,19 @@ public class PostContentsJSActivity extends BaseActivity {
 			AlertDialog.Builder builder = new AlertDialog.Builder(
 					PostContentsJSActivity.this);
 			builder.setTitle("提示");
-			builder.setMessage("确认添加 "+item.getUserName()+" 为好友？");
+			builder.setMessage("确认添加 " + item.getUserName() + " 为好友？");
 			builder.setPositiveButton("确定", new OnClickListener() {
-				
+
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-					add_friend(item.getUserName());
+					addFriend(item.getUserName());
 				}
 			});
 			builder.setNegativeButton("取消", new OnClickListener() {
-				
+
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-					
+
 				}
 			});
 			builder.create().show();
@@ -715,42 +705,41 @@ public class PostContentsJSActivity extends BaseActivity {
 			// view user info
 			viewUserInfo(item.getUserName());
 			break;
-		case 4:
-			if (item.getUserName().equals(
-					CC98ClientImpl.getUserName())) {
-				String tmp = item.getPostContent().replaceAll(
-						"(<br>|<BR>)", "\n");
-				String topic = item.getPostTitle();
-				editPost(item.getEditPostLink(), tmp, topic);
-			}
-			break;
+//		case 4:
+//			if (item.getUserName().equals(service.getUserName())) {
+//				String tmp = item.getPostContent().replaceAll("(<br>|<BR>)",
+//						"\n");
+//				String topic = item.getPostTitle();
+//				editPost(item.getEditPostLink(), tmp, topic);
+//			}
+//			break;
 		case 5:
 			// cancel
 			break;
 		}
- 	}
-
-	private void editPost(String link, String content, String topic) {
-		Bundle bundle = new Bundle();
-		bundle.putString(EditActivity.EDIT_CONTENT,
-				content.replaceAll("<.*?>|searchubb.*?;", ""));
-		bundle.putString(EditActivity.EDIT_TOPIC, topic);
-		bundle.putString(EditActivity.EDIT_LINK, link);
-		bundle.putInt(EditActivity.MOD, EditActivity.MOD_EDIT);
-		Intent intent = new Intent(this, EditActivity.class);
-		intent.putExtra(EditActivity.BUNDLE, bundle);
-		startActivity(intent);
-		overridePendingTransition(R.anim.forward_activity_move_in,
-				R.anim.forward_activity_move_out);
 	}
 
-	private void add_friend(final String userName) {
+//	private void editPost(String link, String content, String topic) {
+//		Bundle bundle = new Bundle();
+//		bundle.putString(EditActivity.EDIT_CONTENT,
+//				content.replaceAll("<.*?>|searchubb.*?;", ""));
+//		bundle.putString(EditActivity.EDIT_TOPIC, topic);
+//		bundle.putString(EditActivity.EDIT_LINK, link);
+//		bundle.putInt(EditActivity.MOD, EditActivity.MOD_EDIT);
+//		Intent intent = new Intent(this, EditActivity.class);
+//		intent.putExtra(EditActivity.BUNDLE, bundle);
+//		startActivity(intent);
+//		overridePendingTransition(R.anim.forward_activity_move_in,
+//				R.anim.forward_activity_move_out);
+//	}
+
+	private void addFriend(final String userName) {
 		new Thread(new Runnable() {
 
 			@Override
 			public void run() {
 				try {
-					CC98ClientImpl.addFriend(userName);
+					service.addFriend(userName);
 					handler.sendEmptyMessage(ADD_FRIEND_SUCCESS);
 				} catch (ParseException e) {
 					handler.sendEmptyMessage(ADD_FRIEND_FAILED);

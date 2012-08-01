@@ -12,6 +12,7 @@ import tk.djcrazy.MyCC98.view.PullToRefreshListView;
 import tk.djcrazy.MyCC98.view.PullToRefreshListView.OnRefreshListener;
 import tk.djcrazy.libCC98.CC98ClientImpl;
 import tk.djcrazy.libCC98.CC98ParserImpl;
+import tk.djcrazy.libCC98.ICC98Service;
 import tk.djcrazy.libCC98.data.InboxInfo;
 import tk.djcrazy.libCC98.data.PmInfo;
 import android.app.Activity;
@@ -33,6 +34,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.flurry.android.FlurryAgent;
+import com.google.inject.Inject;
 
 public class PmActivity extends BaseActivity implements OnRefreshListener {
 
@@ -75,16 +77,18 @@ public class PmActivity extends BaseActivity implements OnRefreshListener {
 	// current mod is INBOX or OUTBOX
 	private int currentMod = INBOX;
 	private int prevPageNum = 0;
-
+	@Inject
+	private ICC98Service service;
+	
 	private List<PmInfo> fetchList(int page_num, int mod)
 			throws ClientProtocolException, ParseException, IOException {
 		// Get the correct list
 		List<PmInfo> page;
 		if (mod == INBOX) {
-			page = CC98ParserImpl.getPmData(page_num, inboxInfo, mod);
+			page = service.getPmData(page_num, inboxInfo, mod);
 			totalPageNum = inboxInfo.getTotalInPage();
 		} else {
-			page = CC98ParserImpl.getPmData(page_num, outboxInfo, mod);
+			page = service.getPmData(page_num, outboxInfo, mod);
 			totalPageNum = outboxInfo.getTotalInPage();
 		}
 		return page;
@@ -137,7 +141,7 @@ public class PmActivity extends BaseActivity implements OnRefreshListener {
 		setContentView(R.layout.pm);
 		setTitle(R.string.pm_activity_title);
 		findViews();
-		headerView.setUserImg(CC98ClientImpl.getLoginUserImg());
+		headerView.setUserImg(service.getUserAvatar());
 		setListeners();
 		currentPageNum = 1;
 		switchToMod(currentMod);

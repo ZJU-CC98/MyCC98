@@ -2,6 +2,9 @@ package tk.djcrazy.libCC98;
 
 import java.net.URLEncoder;
 
+import com.google.inject.Singleton;
+
+@Singleton
 public class CC98UrlManagerImpl implements ICC98UrlManager {
 	private final String CC98 = "http://www.cc98.org/";
 	private final String LIFETOY = "http://hz.cc98.lifetoy.org/";

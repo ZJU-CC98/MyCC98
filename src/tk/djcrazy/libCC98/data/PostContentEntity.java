@@ -122,7 +122,7 @@ public class PostContentEntity {
 	/**
 	 * @return the postFace
 	 */
-	public int getPostFace() {
+	public String getPostFace() {
 		return postFace;
 	}
 
@@ -130,7 +130,7 @@ public class PostContentEntity {
 	 * @param postFace
 	 *            the postFace to set
 	 */
-	public void setPostFace(int postFace) {
+	public void setPostFace(String postFace) {
 		this.postFace = postFace;
 	}
 
@@ -172,7 +172,7 @@ public class PostContentEntity {
 	private String postContent = "";
 	private String userAvatarLink = "";
 	private String postTitle = "";
-	private int postFace = 7;
+	private String postFace = "face7.gif";
 	private Date postTime = new Date();
 	private Gender gender = Gender.MALE;
 	private int relpyId=0;

@@ -10,6 +10,7 @@ import tk.djcrazy.MyCC98.adapter.NewTopicListAdapter;
 import tk.djcrazy.MyCC98.view.HeaderView;
 import tk.djcrazy.libCC98.CC98ClientImpl;
 import tk.djcrazy.libCC98.CC98ParserImpl;
+import tk.djcrazy.libCC98.ICC98Service;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.graphics.Bitmap;
@@ -28,13 +29,16 @@ import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.Toast;
 
 import com.flurry.android.FlurryAgent;
+import com.google.inject.Inject;
  
 public class PostSearchActivity extends BaseActivity {
 
 	public static final String BOARDID = "boardid";
 	public static final String BOARDNAME = "boardname";
 	public static final String USER_IMAGE = "userImage";
-	
+	public final String SEARCH_TYPE_TITLE = "2";
+	public final String SEARCH_TYPE_AUTHOR = "1";
+
 	private NewTopicListAdapter newTopicListAdapter;
 	private EditText etKeyword;
  	private View vNext;
@@ -51,10 +55,13 @@ public class PostSearchActivity extends BaseActivity {
 	private int totalPage;
 	private int boardid = 0;
 	private String boardname = "全站";
-	private String currentType = CC98ClientImpl.SEARCH_TYPE_TITLE;
+	private String currentType = SEARCH_TYPE_TITLE;
 
 	private ProgressDialog pg;
 
+	@Inject
+	private ICC98Service service;
+	
 	private static final int FETCH_SUCC = 0;
 	private static final int NOTFOUND = 1;
 
@@ -104,7 +111,7 @@ public class PostSearchActivity extends BaseActivity {
 			@Override
 			public void run() {
 				try {
-					datalist = CC98ParserImpl.searchPost(etKeyword.getText()
+					datalist = service.searchPost(etKeyword.getText()
 							.toString(), boardid, currentType, currentPage);
 					if (datalist.size()>1) {
 						handler.sendEmptyMessage(FETCH_SUCC);
@@ -145,9 +152,9 @@ public class PostSearchActivity extends BaseActivity {
 			@Override
 			public void onCheckedChanged(RadioGroup arg0, int arg1) {
 				if (arg1 == R.id.rb_postsearch_by_author) {
-					currentType = CC98ClientImpl.SEARCH_TYPE_AUTHOR;
+					currentType =  SEARCH_TYPE_AUTHOR;
 				} else if (arg1 == R.id.rb_postsearch_by_title) {
-					currentType = CC98ClientImpl.SEARCH_TYPE_TITLE;
+					currentType =  SEARCH_TYPE_TITLE;
 				}
 			}
 		});
@@ -158,7 +165,7 @@ public class PostSearchActivity extends BaseActivity {
 				fetchContent();
 			}
 		});
-		mHeaderView.setUserImg(CC98ClientImpl.getLoginUserImg());
+		mHeaderView.setUserImg(service.getUserAvatar());
 		vNext.setOnClickListener(new OnClickListener() {
 
 			@Override

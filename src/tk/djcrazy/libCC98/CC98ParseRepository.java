@@ -15,7 +15,7 @@ public class CC98ParseRepository {
 	public static final String POST_CONTENT_POST_CONTENT_REGEX = "(?<=</b><br>)<span id=.*?</script>";
 	public static final String POST_CONTENT_USER_AVATAR_LINK_REGEX = "(?<= ><img src=).*?(?= )|(?<=&nbsp;<img src=\").*?(?=\" border=0 ><br>)";
 	public static final String POST_CONTENT_POST_TITLE_REGEX = "(?<=alt=\"发贴心情\">&nbsp;<b>).*?(?=</b><br><span id)";
-	public static final String POST_CONTENT_POST_FACE_REGEX = "(?<=<img src=face/face).*?(?=\\.gif border=0)";
+	public static final String POST_CONTENT_POST_FACE_REGEX = "(?<=<img src=face/)face.*?.gif(?= border=0)";
 	public static final String POST_CONTENT_POST_TIME_REGEX = "<img align=absmiddle border=0 width=13 height=15.*?(?=</td>)";
 	public static final String POST_CONTENT_GENDER_REGEX = "(?<=<img src=pic/).*?Male(?=\\.gif)";
  	public static final String POST_CONTENT_REPLY_ID_REGEX = "";

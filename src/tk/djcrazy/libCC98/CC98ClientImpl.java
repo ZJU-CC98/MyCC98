@@ -53,17 +53,20 @@ import org.apache.http.util.EntityUtils;
 import tk.djcrazy.libCC98.exception.NoUserFoundException;
 import tk.djcrazy.libCC98.exception.ParseContentException;
 import tk.djcrazy.libCC98.util.RegexUtil;
+import android.accounts.NetworkErrorException;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /**
  * 
  * This class take care of the connection with CC98, keep the cookies and the
  * user information.
  */
+@Singleton
 public class CC98ClientImpl implements ICC98Client {
 
 	@Inject
@@ -72,8 +75,6 @@ public class CC98ClientImpl implements ICC98Client {
 	public final int PM_SEND_FAIL = -1;
 	public final int PM_SEND_SUCC = 0;
 
-	public final String SEARCH_TYPE_TITLE = "2";
-	public final String SEARCH_TYPE_AUTHOR = "1";
 
 	private Bitmap userImg;
  	private String username;
@@ -81,7 +82,6 @@ public class CC98ClientImpl implements ICC98Client {
 	
 	public final String ID_PASSWD_ERROR_MSG = "用户名/密码错误";
 	public final String SERVER_ERROR = "CC98服务器异常！";
-
 
  
 	/**
@@ -105,6 +105,7 @@ public class CC98ClientImpl implements ICC98Client {
 		userImg = bitmap;
 	}
 
+	@Override
 	public void clearLoginInfo() {
 		client.getCookieStore().clear();
 		client.getCredentialsProvider().clear();
@@ -137,7 +138,7 @@ public class CC98ClientImpl implements ICC98Client {
 	 */
 	@Override
 	public void doLogin(String id, String pw) throws ClientProtocolException,
-			IOException, IllegalAccessException, ParseException, ParseContentException {
+			IOException, IllegalAccessException, ParseException, ParseContentException, NetworkErrorException {
 
 		HttpResponse response;
 		HttpPost httpost = new HttpPost(manager.getLoginUrl());
@@ -151,12 +152,14 @@ public class CC98ClientImpl implements ICC98Client {
 
 		response = getHttpClient().execute(httpost);
 		if (response.getStatusLine().getStatusCode() != 200) {
-			throw new IllegalAccessException(SERVER_ERROR);
+			throw new NetworkErrorException(SERVER_ERROR);
 		}
 		String sysMsg = EntityUtils.toString(response.getEntity());
 		if (sysMsg.contains("密码错误") || sysMsg.contains("论坛错误信息")) {
 			throw new IllegalAccessException(ID_PASSWD_ERROR_MSG);
 		}
+		username = id;
+		passwd = pw;
  		userImg = getUserImg(id);
 	}
 
@@ -581,5 +584,10 @@ public class CC98ClientImpl implements ICC98Client {
 		} else {
 			return false;
 		}
+	}
+
+	@Override
+	public String getDomain() {
+		return manager.getClientUrl();
 	}
 }

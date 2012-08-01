@@ -28,6 +28,7 @@ import tk.djcrazy.MyCC98.dialog.AuthDialog;
 import tk.djcrazy.MyCC98.dialog.AuthDialog.MyAuthDialogListener;
 import tk.djcrazy.MyCC98.util.DisplayUtil;
 import tk.djcrazy.libCC98.CC98ClientImpl;
+import tk.djcrazy.libCC98.ICC98Service;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -64,6 +65,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.flurry.android.FlurryAgent;
+import com.google.inject.Inject;
 
 public class LoginActivity extends BaseActivity implements OnClickListener {
 	// Please always use the strings here, for it is easier to modify in the
@@ -151,6 +153,9 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 	private static final int INIT_BOARD_DB_SUCCESS = 3;
 	private static final int INIT_BOARD_DB_FAILED = 4;
 
+	@Inject
+	private ICC98Service service;
+
 	private AlertDialog.Builder authBuilder;
 
 	MyAuthDialogListener listener = new MyAuthDialogListener() {
@@ -181,8 +186,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 		public void run() {
 
 			try {
-				if (CC98ClientImpl.doHttpBasicAuthorization(authUserName,
-						authPassword)) {
+				if (service.doProxyAuthorization(authUserName, authPassword)) {
 					authHandler.sendEmptyMessage(LIFETOY_AUTHORIZE_SUCCESS);
 				} else {
 					authHandler.sendEmptyMessage(LIFETOY_AUTHORIZE_FAILED);
@@ -302,7 +306,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 							@Override
 							public void onClick(DialogInterface arg0, int arg1) {
 								forwardToNextActivity();
-								
+
 							}
 
 						});
@@ -313,6 +317,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 			}
 		}
 	};
+
 	/**
 	 * 
 	 */
@@ -510,7 +515,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 		}
 	};
 
- 	/**
+	/**
 	 * Called when the activity is first created.
 	 **/
 	@Override
@@ -543,7 +548,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 
 					@Override
 					public void onClick(DialogInterface arg0, int arg1) {
-						CC98ClientImpl.setCC98Domain("http://hz.cc98.lifetoy.org/");
+						service.setUseProxy(true);
 						authDialog.show();
 					}
 				});
@@ -552,7 +557,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 
 					@Override
 					public void onClick(DialogInterface arg0, int arg1) {
-						CC98ClientImpl.setCC98Domain("http://www.cc98.org/");
+						service.setUseProxy(false);
 						showLoginField();
 					}
 				});
@@ -699,18 +704,18 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 	private void doLogin() {
 		mUsername = mUsernameEdit.getText().toString();
 		mPassword = mPasswordEdit.getText().toString();
-		if (useProxy) {
-			CC98ClientImpl.setProxy(sProxyIP, iProxyPort);
-		} else {
-			CC98ClientImpl.rmProxy();
-		}
+		// if (useProxy) {
+		// service.setProxy(sProxyIP, iProxyPort);
+		// } else {
+		// service.rmProxy();
+		// }
 		onLoginBegin();
 		new Thread(new Runnable() {
 
 			@Override
 			public void run() {
 				try {
-					CC98ClientImpl.doLogin(mUsername, mPassword);
+					service.doLogin(mUsername, mPassword);
 					handler.sendEmptyMessage(LOGIN_SUCCESS);
 				} catch (ClientProtocolException e) {
 					handler.sendEmptyMessage(LOGIN_FAILED_WITH_CP_ERROR);
@@ -719,12 +724,10 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 					handler.sendEmptyMessage(LOGIN_FAILED_WITH_IO_ERROR);
 					e.printStackTrace();
 				} catch (IllegalAccessException e) {
-					if (e.getMessage() == CC98ClientImpl.ID_PASSWD_ERROR_MSG) {
-						handler.sendEmptyMessage(LOGIN_FAILED_WITH_WRONG_USERNAME_OR_PASSWORD);
-					} else if (e.getMessage() == CC98ClientImpl.SERVER_ERROR) {
-						handler.sendEmptyMessage(LOGIN_FAILED_WITH_SERVER_ERROR);
-					}
+					handler.sendEmptyMessage(LOGIN_FAILED_WITH_WRONG_USERNAME_OR_PASSWORD);
 					e.printStackTrace();
+				} catch (Exception e) {
+					handler.sendEmptyMessage(LOGIN_FAILED_WITH_SERVER_ERROR);
 				}
 			}
 		}).start();
@@ -738,9 +741,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 
 	private void onLoginSuccess() {
 		dialog.dismiss();
-		CC98ClientImpl.setUserName(mUsername);
-		CC98ClientImpl.setPassword(mPassword);
-		Editor editor = getSharedPreferences(USERINFO, 0).edit();
+ 		Editor editor = getSharedPreferences(USERINFO, 0).edit();
 		// save info
 		if (autoLoginBox.isChecked())
 			editor.putBoolean(AUTOLOGIN, true);
@@ -765,7 +766,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 						.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 		Toast.makeText(this, R.string.msg_login_ok, Toast.LENGTH_SHORT).show();
 		forwardToNextActivity();
-		
+
 	}
 
 	private void onLoginFailure(String reason) {

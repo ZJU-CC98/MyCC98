@@ -60,6 +60,7 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.message.BasicNameValuePair;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 import tk.djcrazy.libCC98.data.BoardEntity;
 import tk.djcrazy.libCC98.data.Gender;
@@ -74,6 +75,7 @@ import tk.djcrazy.libCC98.data.UserStatueEntity;
 import tk.djcrazy.libCC98.exception.NoUserFoundException;
 import tk.djcrazy.libCC98.exception.ParseContentException;
 
+@Singleton
 public class CC98ParserImpl implements ICC98Parser {
 
 	@Inject
@@ -203,8 +205,8 @@ public class CC98ParserImpl implements ICC98Parser {
 					POST_CONTENT_POST_CONTENT_REGEX, reply));
 			entity.setPostTitle(getMatchedString(POST_CONTENT_POST_TITLE_REGEX,
 					reply));
-			entity.setPostFace(Integer.parseInt(getMatchedString(
-					POST_CONTENT_POST_FACE_REGEX, reply)));
+			entity.setPostFace(getMatchedString(
+					POST_CONTENT_POST_FACE_REGEX, reply));
 			entity.setPostTime(convertStringToDateInPostContent(getMatchedString(
 					POST_CONTENT_POST_TIME_REGEX, reply)));
 			{

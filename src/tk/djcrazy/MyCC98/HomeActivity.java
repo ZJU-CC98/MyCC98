@@ -25,6 +25,7 @@ import tk.djcrazy.MyCC98.dialog.AboutDialog;
 import tk.djcrazy.MyCC98.listener.LoadingListener;
 import tk.djcrazy.MyCC98.view.HeaderView;
 import tk.djcrazy.libCC98.CC98ClientImpl;
+import tk.djcrazy.libCC98.ICC98Service;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -47,6 +48,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.inject.Inject;
 import com.viewpagerindicator.TitlePageIndicator;
 
 @ContentView(R.layout.home)
@@ -87,6 +89,9 @@ public class HomeActivity extends RoboFragmentActivity implements
 	@InjectView(R.id.home_header_userimg)
 	private ImageView userAvatar;
 	@InjectView(R.id.home_header_user_name)
+	
+	@Inject
+	private ICC98Service service;
 	
 	
 	private ProgressDialog pBar;
@@ -149,7 +154,7 @@ public class HomeActivity extends RoboFragmentActivity implements
 			@Override
 			public void run() {
 				try {
-					bmUserImg = CC98ClientImpl.getLoginUserImg();
+					bmUserImg = service.getUserAvatar();
 					handler.sendEmptyMessage(MSG_USERIMG_SUCC);
 				} catch (Exception e) {
 					handler.sendEmptyMessage(MSG_USERIMG_FAIL);
@@ -190,7 +195,7 @@ public class HomeActivity extends RoboFragmentActivity implements
 		case R.id.check_personal_info:
 			Intent profiIntent = new Intent();
 			profiIntent.setClass(HomeActivity.this, ProfileActivity.class);
-			profiIntent.putExtra("userName", CC98ClientImpl.getUserName());
+			profiIntent.putExtra("userName", service.getUserName());
 			profiIntent.putExtra(ProfileActivity.USER_IMAGE, bmUserImg);
 			startActivity(profiIntent);
 			overridePendingTransition(R.anim.forward_activity_move_in,

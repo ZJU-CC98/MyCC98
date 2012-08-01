@@ -10,13 +10,17 @@ import java.util.List;
 import org.apache.http.ParseException;
 import org.apache.http.client.ClientProtocolException;
 
+import com.google.inject.Inject;
+
 import tk.djcrazy.MyCC98.adapter.PostListViewAdapter;
 import tk.djcrazy.MyCC98.view.HeaderView;
 import tk.djcrazy.MyCC98.view.PullToRefreshListView;
 import tk.djcrazy.MyCC98.view.PullToRefreshListView.OnRefreshListener;
 import tk.djcrazy.libCC98.CC98ClientImpl;
 import tk.djcrazy.libCC98.CC98ParserImpl;
+import tk.djcrazy.libCC98.ICC98Service;
 import tk.djcrazy.libCC98.data.PostEntity;
+import tk.djcrazy.libCC98.exception.ParseContentException;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -67,6 +71,8 @@ public class PostListActivity extends BaseActivity implements OnRefreshListener 
 	private Bitmap userImage;
 	private HeaderView headerView;
 
+	@Inject
+	private ICC98Service service;
 	@Override
 	public void onCreate(Bundle SavedInstanceState) {
 		super.onCreate(SavedInstanceState);
@@ -80,7 +86,7 @@ public class PostListActivity extends BaseActivity implements OnRefreshListener 
 		pageNumber = bundle.getInt(PAGE_NUMBER);
 
 		userImage = (Bitmap) bundle.getParcelable(USER_IMAGE);
-		boardid = Integer.parseInt(boardlink.replace(CC98ClientImpl.getCC98Domain()
+		boardid = Integer.parseInt(boardlink.replace(service.getDomain()
 				+ "list.asp?boardid=", ""));
 		pageIntent.setClass(this, PostListActivity.class);
 		dialog = ProgressDialog.show(PostListActivity.this, "", "Loading...",
@@ -99,14 +105,15 @@ public class PostListActivity extends BaseActivity implements OnRefreshListener 
 			@Override
 			public void run() {
 				try {
-					PostList = CC98ParserImpl.getPostList(boardlink + "&page="
-							+ pageNumber);
+					PostList = service.getPostList(boardid, pageNumber);
 					handler.sendEmptyMessage(MSG_LIST_SUCC);
 				} catch (ClientProtocolException e) {
 					e.printStackTrace();
 				} catch (ParseException e) {
 					e.printStackTrace();
 				} catch (IOException e) {
+					e.printStackTrace();
+				} catch (ParseContentException e) {
 					e.printStackTrace();
 				}
 			}

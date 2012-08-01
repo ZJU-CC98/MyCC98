@@ -14,6 +14,7 @@ import org.apache.http.cookie.Cookie;
 
 import tk.djcrazy.libCC98.exception.NoUserFoundException;
 import tk.djcrazy.libCC98.exception.ParseContentException;
+import android.accounts.NetworkErrorException;
 import android.graphics.Bitmap;
 
 public interface ICC98Client {
@@ -33,10 +34,11 @@ public interface ICC98Client {
 	 * @throws IllegalAccessException
 	 * @throws ParseContentException 
 	 * @throws ParseException 
+	 * @throws NetworkErrorException 
 	 */
 	public void doLogin(String id, String pw) throws ClientProtocolException,
 			IOException, IllegalAccessException, ParseException,
-			ParseContentException;
+			ParseContentException, NetworkErrorException;
 
 	/**
 	 * @author zsy
@@ -225,5 +227,9 @@ public interface ICC98Client {
 
 	public boolean doHttpBasicAuthorization(String authName, String authPassword)
 			throws ClientProtocolException, IOException, URISyntaxException;
+
+	void clearLoginInfo();
+	
+	public String getDomain();
 
 }

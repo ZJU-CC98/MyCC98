@@ -26,6 +26,8 @@ import tk.djcrazy.MyCC98.task.TaskParams;
 import tk.djcrazy.MyCC98.task.TaskResult;
 import tk.djcrazy.MyCC98.view.HeaderView;
 import tk.djcrazy.libCC98.CC98ClientImpl;
+import tk.djcrazy.libCC98.ICC98Service;
+import tk.djcrazy.libCC98.exception.ParseContentException;
 import android.R.bool;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -61,6 +63,7 @@ import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.Toast;
 
 import com.flurry.android.FlurryAgent;
+import com.google.inject.Inject;
 
 public class EditActivity extends BaseActivity {
 
@@ -167,6 +170,9 @@ public class EditActivity extends BaseActivity {
 	private String editLink;
 	private String editContent;
 	private String editTopic;
+
+	@Inject
+	private ICC98Service service;
 
 	private boolean mIsQuoteUser = false;
 
@@ -361,7 +367,7 @@ public class EditActivity extends BaseActivity {
 		Bundle bundle = getIntent().getBundleExtra(BUNDLE);
 		mod = bundle.getInt(MOD, MOD_REPLY);
 		findViews();
-		mHeaderView.setUserImg(CC98ClientImpl.getLoginUserImg());；
+		mHeaderView.setUserImg(service.getUserAvatar());
 		mHeaderView.setButtonImageResource(R.drawable.reply_send_ico);
 		if (mod == MOD_REPLY) {
 			postLink = bundle.getString(POST_LINK);
@@ -454,39 +460,40 @@ public class EditActivity extends BaseActivity {
 		this.finish();
 	}
 
-	private void submitEdit(String editLink, String editTopic,
-			String editContent) {
-
-		List<NameValuePair> nvpsList = new ArrayList<NameValuePair>();
-		nvpsList.add(new BasicNameValuePair("upfilerename", ""));
-		nvpsList.add(new BasicNameValuePair("Expression", faceGroupChooseString));
-		nvpsList.add(new BasicNameValuePair("subject", editTopic));
-		nvpsList.add(new BasicNameValuePair("content", editContent));
-		nvpsList.add(new BasicNameValuePair("followup", editLink.substring(
-				editLink.indexOf("&id=") + 4, editLink.indexOf("&star"))));
-		nvpsList.add(new BasicNameValuePair("username", CC98ClientImpl
-				.getUserName()));
-		nvpsList.add(new BasicNameValuePair("passwd", md5.MyMD5(CC98ClientImpl
-				.getPasswd())));
-		nvpsList.add(new BasicNameValuePair("signflag", "yes"));
-		nvpsList.add(new BasicNameValuePair("TotalUseTable", "bbs2"));
-		nvpsList.add(new BasicNameValuePair("star", editLink.substring(
-				editLink.indexOf("&star=") + 6, editLink.indexOf("&bm"))));
-		try {
-			if (CC98ClientImpl.editPost(nvpsList,
-					editLink.replace("editannounce", "SaveditAnnounce"))) {
-				Toast.makeText(EditActivity.this, "编辑成功", Toast.LENGTH_SHORT)
-						.show();
-			} else {
-				Toast.makeText(EditActivity.this, "编辑失败", Toast.LENGTH_SHORT)
-						.show();
-			}
-		} catch (Exception e) {
-			Toast.makeText(EditActivity.this, "编辑失败", Toast.LENGTH_SHORT)
-					.show();
-			e.printStackTrace();
-		}
-	}
+	// private void submitEdit(String editLink, String editTopic,
+	// String editContent) {
+	//
+	// List<NameValuePair> nvpsList = new ArrayList<NameValuePair>();
+	// nvpsList.add(new BasicNameValuePair("upfilerename", ""));
+	// nvpsList.add(new BasicNameValuePair("Expression",
+	// faceGroupChooseString));
+	// nvpsList.add(new BasicNameValuePair("subject", editTopic));
+	// nvpsList.add(new BasicNameValuePair("content", editContent));
+	// nvpsList.add(new BasicNameValuePair("followup", editLink.substring(
+	// editLink.indexOf("&id=") + 4, editLink.indexOf("&star"))));
+	// nvpsList.add(new BasicNameValuePair("username", CC98ClientImpl
+	// .getUserName()));
+	// nvpsList.add(new BasicNameValuePair("passwd", md5.MyMD5(CC98ClientImpl
+	// .getPasswd())));
+	// nvpsList.add(new BasicNameValuePair("signflag", "yes"));
+	// nvpsList.add(new BasicNameValuePair("TotalUseTable", "bbs2"));
+	// nvpsList.add(new BasicNameValuePair("star", editLink.substring(
+	// editLink.indexOf("&star=") + 6, editLink.indexOf("&bm"))));
+	// try {
+	// if (CC98ClientImpl.editPost(nvpsList,
+	// editLink.replace("editannounce", "SaveditAnnounce"))) {
+	// Toast.makeText(EditActivity.this, "编辑成功", Toast.LENGTH_SHORT)
+	// .show();
+	// } else {
+	// Toast.makeText(EditActivity.this, "编辑失败", Toast.LENGTH_SHORT)
+	// .show();
+	// }
+	// } catch (Exception e) {
+	// Toast.makeText(EditActivity.this, "编辑失败", Toast.LENGTH_SHORT)
+	// .show();
+	// e.printStackTrace();
+	// }
+	// }
 
 	/**
      * 
@@ -649,7 +656,7 @@ public class EditActivity extends BaseActivity {
 							e.printStackTrace();
 						}
 					} else if (mod == MOD_EDIT) {
-						submitEdit(editLink, titleString, contentString);
+						// submitEdit(editLink, titleString, contentString);
 					}
 				}
 			}
@@ -674,25 +681,23 @@ public class EditActivity extends BaseActivity {
 								new Thread() {
 									public void run() {
 										try {
-											CC98ClientImpl
-													.sendPm(replyUserName,
-															new StringBuilder(
-																	30)
-																	.append("用户：")
-																	.append(CC98ClientImpl
-																			.getUserName())
-																	.append(" 在帖子中回复了你")
-																	.toString(),
-															new StringBuilder(
-																	50)
-																	.append("详情请点击：")
-																	.append(postLink)
-																	.append("&star=")
-																	.append(mQuotePageNumber)
-																	.append("#")
-																	.append(mQuoteFloorNumber)
-																	.append("\n\n\n[right]此消息由[url=10.110.19.123/mycc98/intro.html][color=red]MyCC98[/color][/url]发送[/right]")
-																	.toString());
+											service.sendPm(
+													replyUserName,
+													new StringBuilder(30)
+															.append("用户：")
+															.append(service
+																	.getUserName())
+															.append(" 在帖子中回复了你")
+															.toString(),
+													new StringBuilder(50)
+															.append("详情请点击：")
+															.append(postLink)
+															.append("&star=")
+															.append(mQuotePageNumber)
+															.append("#")
+															.append(mQuoteFloorNumber)
+															.append("\n\n\n[right]此消息由[url=10.110.19.123/mycc98/intro.html][color=red]MyCC98[/color][/url]发送[/right]")
+															.toString());
 										} catch (ClientProtocolException e) {
 											e.printStackTrace();
 										} catch (IOException e) {
@@ -753,7 +758,7 @@ public class EditActivity extends BaseActivity {
 				builder.show();
 			}
 		});
- 
+
 		replyTitleEditText.addTextChangedListener(new TextWatcher() {
 
 			@Override
@@ -1098,8 +1103,7 @@ public class EditActivity extends BaseActivity {
 			TaskParams param = params[0];
 
 			try {
-				picLink = CC98ClientImpl.uploadPictureToCC98((File) param
-						.get("picture"));
+				picLink = service.uploadFile((File) param.get("picture"));
 				if (picLink.equals("")) {
 					mResult = TaskResult.FAILED;
 				} else {
@@ -1115,11 +1119,12 @@ public class EditActivity extends BaseActivity {
 			} catch (IOException e) {
 				mResult = TaskResult.FAILED;
 				e.printStackTrace();
+			} catch (ParseContentException e) {
+				mResult = TaskResult.FAILED;
+				e.printStackTrace();
 			}
 			return mResult;
-
 		}
-
 	}
 
 	private class PushReplyTask extends GenericTask {
@@ -1150,8 +1155,8 @@ public class EditActivity extends BaseActivity {
 						+ (SettingsActivity.addTail ? TAIL : "");
 				title = param.getString("title");
 				faceExpression = param.getString("faceExpression");
-				configReplyParams();
-				if (CC98ClientImpl.submitReply(nvpsList, boardID, rootID)) {
+				if (service.reply(boardID, postId, title, faceExpression,
+						content)) {
 					return TaskResult.OK;
 				} else {
 					return TaskResult.FAILED;
@@ -1160,31 +1165,6 @@ public class EditActivity extends BaseActivity {
 
 				return TaskResult.FAILED;
 			}
-		}
-
-		private void configReplyParams() {
-			Log.d("dd", postLink);
-			postLink = postLink.toLowerCase();
-			int indexbegin = postLink.indexOf("&id");
-			int indexend = postLink.indexOf("&page");
-			rootID = postLink.substring(indexbegin + 4, indexend);
-			Log.d("rootID", rootID);
-			indexbegin = postLink.indexOf("boardid=");
-			indexend = postLink.indexOf("&id");
-			boardID = postLink.substring(indexbegin + 8, indexend);
-
-			Log.d("boardID", boardID + " " + indexbegin + " " + indexend);
-			nvpsList = new ArrayList<NameValuePair>();
-			nvpsList.add(new BasicNameValuePair("upfilername", ""));
-			nvpsList.add(new BasicNameValuePair("followup", rootID));
-			nvpsList.add(new BasicNameValuePair("rootID", rootID));
-			nvpsList.add(new BasicNameValuePair("star", ""));
-			nvpsList.add(new BasicNameValuePair("TotalUseTable", "bbs5"));
-			nvpsList.add(new BasicNameValuePair("subject", title));
-			nvpsList.add(new BasicNameValuePair("Expression", faceExpression));
-			nvpsList.add(new BasicNameValuePair("Content", content));
-			nvpsList.add(new BasicNameValuePair("signflag", "yes"));
-
 		}
 	}
 
@@ -1197,8 +1177,6 @@ public class EditActivity extends BaseActivity {
 		String title;
 
 		String faceExpression;
-
-		List<NameValuePair> nvpsList;
 
 		@Override
 		protected TaskResult _doInBackground(TaskParams... params) {
@@ -1213,40 +1191,25 @@ public class EditActivity extends BaseActivity {
 
 				System.out.println("content:" + content + "  " + "title:"
 						+ title + " " + "face:" + faceExpression);
-				configPushParams();
-				if (CC98ClientImpl.pushNewPost(nvpsList, String.valueOf(boardID))) {
-					return TaskResult.OK;
-				} else {
-					return TaskResult.FAILED;
-				}
+				service.pushNewPost("" + boardID, title, faceExpression,
+						content);
+				return TaskResult.OK;
 			} catch (Exception e) {
 
 				return TaskResult.FAILED;
 			}
 		}
-
-		private void configPushParams() {
-
-			nvpsList = new ArrayList<NameValuePair>();
-			nvpsList.add(new BasicNameValuePair("upfilername", ""));
-			nvpsList.add(new BasicNameValuePair("subject", title));
-			nvpsList.add(new BasicNameValuePair("Expression", faceExpression));
-			nvpsList.add(new BasicNameValuePair("Content", content));
-			nvpsList.add(new BasicNameValuePair("signflag", "yes"));
-			nvpsList.add(new BasicNameValuePair("Submit", "发 表"));
-
-		}
-
 	}
 
 	public void sendPm(String touser, String title, String message)
 			throws ClientProtocolException, IOException {
-		int flag = CC98ClientImpl.sendPm(touser, title, message
-				+ (SettingsActivity.addTail ? TAIL : ""));
-		if (flag == CC98ClientImpl.PM_SEND_SUCC) {
+		try {
+			service.sendPm(touser, title, message
+					+ (SettingsActivity.addTail ? TAIL : ""));
 			Toast.makeText(this, "发送短信息成功", Toast.LENGTH_SHORT).show();
 			this.finish();
-		} else if (flag == CC98ClientImpl.PM_SEND_FAIL) {
+
+		} catch (Exception e) {
 			Toast.makeText(this, "发送短信息失败", Toast.LENGTH_SHORT).show();
 		}
 	}

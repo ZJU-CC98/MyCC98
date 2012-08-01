@@ -13,6 +13,8 @@ import tk.djcrazy.MyCC98.helper.HtmlGenHelper;
 import tk.djcrazy.MyCC98.view.HeaderView;
 import tk.djcrazy.libCC98.CC98ClientImpl;
 import tk.djcrazy.libCC98.CC98ParserImpl;
+import tk.djcrazy.libCC98.ICC98Service;
+import tk.djcrazy.libCC98.exception.ParseContentException;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
@@ -32,10 +34,12 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.flurry.android.FlurryAgent;
+import com.google.inject.Inject;
+
 /**
  * 
  * @author zsy
- *
+ * 
  */
 public class PmViewActivity extends BaseActivity {
 	private static String TAG = "PmReply";
@@ -53,7 +57,10 @@ public class PmViewActivity extends BaseActivity {
 	private Cookie pmCookie;
 	private HeaderView headerView;
 
- 	@Override
+	@Inject
+	private ICC98Service service;
+
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
@@ -96,30 +103,9 @@ public class PmViewActivity extends BaseActivity {
 	 */
 	private void setViews() {
 		// gets all cookies from the HttpClient's cookie jar
-		cookies = CC98ClientImpl.getCookies();
-		headerView.setUserImg(CC98ClientImpl.getLoginUserImg());
+		headerView.setUserImg(service.getUserAvatar());
 		headerView.setTitle("查看短消息");
-		headerView.setUserImg(CC98ClientImpl.getLoginUserImg());
 		headerView.setButtonImageResource(R.drawable.pm_reply);
-		if (!cookies.isEmpty()) {
-
-			CookieSyncManager.createInstance(PmViewActivity.this);
-			CookieManager cookieManager = CookieManager.getInstance();
-
-			// sync all the cookies in the httpclient with the webview by
-			// generating cookie string
-			for (Cookie cookie : cookies) {
-
-				pmCookie = cookie;
-
-				String cookieString = pmCookie.getName() + "="
-						+ pmCookie.getValue() + "; domain="
-						+ pmCookie.getDomain();
-				cookieManager.setCookie(CC98ClientImpl.getCC98Domain(),
-						cookieString);
-				CookieSyncManager.getInstance().sync();
-			}
-		}
 		WebSettings webSettings = webView.getSettings();
 		webSettings.setJavaScriptEnabled(true);
 		webSettings.setPluginsEnabled(true);
@@ -149,7 +135,7 @@ public class PmViewActivity extends BaseActivity {
 			case 0:
 				webView.loadDataWithBaseURL(null, pageString, "text/html",
 						"utf-8", null);
-//				Log.d("WebView", pageString);
+				// Log.d("WebView", pageString);
 				break;
 			case 1:
 				webView.loadUrl("javascript:addEmot('" + faceChoosedString
@@ -168,13 +154,17 @@ public class PmViewActivity extends BaseActivity {
 				String replyed = "";
 				if (pmId != -1) { // in reply mod
 					try {
-						pmContent = CC98ParserImpl.getMsgContent(pmId);
-						senderAvatarUrl = CC98ClientImpl.getUserImgUrl(sender);
+						pmContent = service.getMsgContent(pmId);
+						try {
+							senderAvatarUrl = service.getUserImgUrl(sender);
+						} catch (ParseContentException e) {
+							e.printStackTrace();
+						}
 						replyed = HtmlGenHelper.addPostInfo(readTopic,
 								senderAvatarUrl, sender, "", -1, sendTime, -1)
 								+ "<div class=\"post-content\"><span id=\"ubbcode\">"
-								+ HtmlGenHelper
-										.parseInnerLink(pmContent, "PmReply")
+								+ HtmlGenHelper.parseInnerLink(pmContent,
+										"PmReply")
 								+ "</span><script>searchubb('ubbcode',1,'tablebody2');</script></div>";
 					} catch (ClientProtocolException e) {
 
@@ -208,7 +198,7 @@ public class PmViewActivity extends BaseActivity {
 	private void setListeners() {
 
 		headerView.setButtonOnclickListener(new View.OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent();
@@ -219,7 +209,8 @@ public class PmViewActivity extends BaseActivity {
 				StringBuilder tmp = new StringBuilder();
 				tmp.append("[quote][b]以下是引用").append(sender).append("在[i]")
 						.append(sendTime).append("[/i]时发送的短信：[/b]\n")
-						.append(pmContent.replaceAll("(<BR>|<br>)", "\n")).append("[/quote]");
+						.append(pmContent.replaceAll("(<BR>|<br>)", "\n"))
+						.append("[/quote]");
 				bundle.putString(EditActivity.PM_CONTENT, tmp.toString());
 				bundle.putString(EditActivity.PM_TITLE, readTopic);
 				intent.putExtra(EditActivity.BUNDLE, bundle);
@@ -229,7 +220,7 @@ public class PmViewActivity extends BaseActivity {
 	}
 
 	public void preview(String content) {
-		Log.d( TAG, "preview clicked");
+		Log.d(TAG, "preview clicked");
 		Intent intent = new Intent(this, PreviewActivity.class);
 		intent.putExtra("content", content);
 		startActivity(intent);
@@ -265,4 +256,4 @@ public class PmViewActivity extends BaseActivity {
 		intent.putExtra(PostContentsJSActivity.POST, bundle);
 		this.startActivity(intent);
 	}
- }
+}
