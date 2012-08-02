@@ -53,12 +53,12 @@ public class PmViewActivity extends BaseActivity {
 	private String faceChoosedString = null;
 	private String pmContent;
 
-	private List<Cookie> cookies;
-	private Cookie pmCookie;
-	private HeaderView headerView;
+ 	private HeaderView headerView;
 
 	@Inject
 	private ICC98Service service;
+	
+	private HtmlGenHelper helper = new HtmlGenHelper();
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -160,10 +160,10 @@ public class PmViewActivity extends BaseActivity {
 						} catch (ParseContentException e) {
 							e.printStackTrace();
 						}
-						replyed = HtmlGenHelper.addPostInfo(readTopic,
+						replyed = helper.addPostInfo(readTopic,
 								senderAvatarUrl, sender, "", -1, sendTime, -1)
 								+ "<div class=\"post-content\"><span id=\"ubbcode\">"
-								+ HtmlGenHelper.parseInnerLink(pmContent,
+								+ helper.parseInnerLink(pmContent,
 										"PmReply")
 								+ "</span><script>searchubb('ubbcode',1,'tablebody2');</script></div>";
 					} catch (ClientProtocolException e) {
@@ -186,9 +186,9 @@ public class PmViewActivity extends BaseActivity {
 						readTopic = "";
 					}
 				}
-				pageString = HtmlGenHelper.PAGE_OPEN + replyed
+				pageString = helper.PAGE_OPEN + replyed
 				// + getReplyString(sender, readTopic)
-						+ HtmlGenHelper.PAGE_CLOSE;
+						+ helper.PAGE_CLOSE;
 				handler.sendEmptyMessage(0);
 			}
 		}.start();

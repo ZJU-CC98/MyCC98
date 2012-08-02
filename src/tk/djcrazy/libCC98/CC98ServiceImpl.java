@@ -237,4 +237,9 @@ public class CC98ServiceImpl implements ICC98Service {
 		return cc98Client.getDomain();
 	}
 
+	@Override
+	public Bitmap getBitmapFromUrl(String url) throws IOException {
+		return cc98Client.getBitmapFromUrl(url);
+	}
+
 }

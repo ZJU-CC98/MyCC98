@@ -2,10 +2,13 @@ package tk.djcrazy.MyCC98.adapter;
 
 import java.util.List;
 
+import com.google.inject.Inject;
+
 import tk.djcrazy.MyCC98.PostContentsJSActivity;
 import tk.djcrazy.MyCC98.PostListActivity;
 import tk.djcrazy.MyCC98.R;
 import tk.djcrazy.libCC98.CC98ClientImpl;
+import tk.djcrazy.libCC98.ICC98Service;
 import tk.djcrazy.libCC98.data.BoardEntity;
 import android.app.Activity;
 import android.content.Context;
@@ -29,6 +32,9 @@ public class PersonalboardListViewAdapter extends BaseAdapter {
 
 	private LayoutInflater listInflater;
 	private Bitmap userImage;
+	
+	@Inject
+	private ICC98Service service;
 
 	/**
 	 * @return the userImage
@@ -157,7 +163,7 @@ public class PersonalboardListViewAdapter extends BaseAdapter {
 
 					@Override
 					public void onClick(View v) {
-						String boardlink = CC98ClientImpl.getCC98Domain()
+						String boardlink = service.getDomain()
 								+ listItem.get(clickPosition).getBoardLink();
 
 						intent.setClass(context, PostListActivity.class);
@@ -178,7 +184,7 @@ public class PersonalboardListViewAdapter extends BaseAdapter {
 
 					@Override
 					public void onClick(View v) {
-						String postlink = CC98ClientImpl.getCC98Domain()
+						String postlink = service.getDomain()
 								+ listItem.get(clickPosition)
 										.getLastReplyTopicLink();
 
@@ -201,7 +207,7 @@ public class PersonalboardListViewAdapter extends BaseAdapter {
 
 					@Override
 					public void onClick(View v) {
-						String postlink = CC98ClientImpl.getCC98Domain()
+						String postlink = service.getDomain()
 								+ listItem.get(clickPosition)
 										.getLastReplyTopicLink();
 

@@ -1,13 +1,13 @@
 package tk.djcrazy.MyCC98.fragment;
 
-import static tk.djcrazy.libCC98.CC98ParserImpl.getNewPostList;
-
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.http.ParseException;
 import org.apache.http.client.ClientProtocolException;
+
+import com.google.inject.Inject;
 
 import roboguice.fragment.RoboFragment;
 import roboguice.inject.InjectView;
@@ -16,6 +16,7 @@ import tk.djcrazy.MyCC98.adapter.NewTopicListAdapter;
 import tk.djcrazy.MyCC98.util.ViewUtils;
 import tk.djcrazy.MyCC98.view.PullToRefreshListView;
 import tk.djcrazy.MyCC98.view.PullToRefreshListView.OnRefreshListener;
+import tk.djcrazy.libCC98.ICC98Service;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -42,6 +43,7 @@ public class NewTopicFragment extends RoboFragment implements OnRefreshListener{
 	@InjectView(R.id.new_topic_loading_bar)
 	private ProgressBar progressBar; 
 
+	@Inject ICC98Service service;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -73,8 +75,7 @@ public class NewTopicFragment extends RoboFragment implements OnRefreshListener{
 			@Override
 			public void run() {
 				try {
-					Log.d(TAG, "get topic");
-					topicList = getNewPostList();
+					topicList = service.getNewPostList();
 					topicList.remove(0);
 					getTopicHandler
 							.sendEmptyMessage(GET_NEW_TOPIC_LIST_SUCCESS);

@@ -21,6 +21,7 @@ import tk.djcrazy.libCC98.data.Gender;
 import tk.djcrazy.libCC98.data.PostContentEntity;
 import tk.djcrazy.libCC98.data.PostContentsListPage;
 import tk.djcrazy.libCC98.exception.NoUserFoundException;
+import tk.djcrazy.libCC98.exception.ParseContentException;
 import tk.djcrazy.libCC98.util.DateFormatUtil;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -114,6 +115,8 @@ public class PostContentsJSActivity extends BaseActivity {
 
 	@Inject
 	private ICC98Service service;
+	
+	private HtmlGenHelper helper = new HtmlGenHelper();
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -425,18 +428,18 @@ public class PostContentsJSActivity extends BaseActivity {
 	}
 
 	private String fetchContents(PostContentsListPage page, final int pageNum)
-			throws ClientProtocolException, ParseException, IOException {
+			throws ClientProtocolException, ParseException, IOException, ParseContentException, java.text.ParseException {
 		Log.d(TAG, postLink);
 		if (threadCancel) {
 			threadCancel = false;
 			return "";
 		}
 		List<PostContentEntity> contentList = service.getPostContentList(
-				boardId, postId, pageNum);
+				1234, 1234, pageNum);
 		page.setList(contentList);
 
 		StringBuilder builder = new StringBuilder(5000);
-		builder.append(HtmlGenHelper.PAGE_OPEN).append(
+		builder.append(helper.PAGE_OPEN).append(
 				"<a href=\"javascript:;\" id=\"showAllImages\"></a>");
 		PostContentEntity info = contentList.get(0);
 		totalPageNum = info.getTotalPage();
@@ -447,7 +450,7 @@ public class PostContentsJSActivity extends BaseActivity {
 		for (int i = 1; i < contentList.size() && !threadCancel; ++i) {
 			PostContentEntity item = contentList.get(i);
 			String author = item.getUserName();
-			String content = HtmlGenHelper.parseInnerLink(
+			String content = helper.parseInnerLink(
 					item.getPostContent(), JS_INTERFACE);
 			String avatar = item.getUserAvatarLink();
 			Gender gender = item.getGender();
@@ -464,7 +467,7 @@ public class PostContentsJSActivity extends BaseActivity {
 			}
 			StringBuilder mBuilder = new StringBuilder(300);
 			mBuilder.append(ITEM_OPEN)
-					.append(HtmlGenHelper.addPostInfo(postTitle, avatarUrl,
+					.append(helper.addPostInfo(postTitle, avatarUrl,
 							author, gender.getName(), floorNum,
 							DateFormatUtil.convertDateToString(postTime, true),
 							i))
@@ -496,7 +499,7 @@ public class PostContentsJSActivity extends BaseActivity {
 			threadCancel = false;
 			return "";
 		}
-		builder.append(HtmlGenHelper.PAGE_CLOSE);
+		builder.append(helper.PAGE_CLOSE);
 		return builder.toString();
 	}
 
@@ -520,6 +523,10 @@ public class PostContentsJSActivity extends BaseActivity {
 						} catch (ParseException e) {
 							e.printStackTrace();
 						} catch (IOException e) {
+							e.printStackTrace();
+						} catch (ParseContentException e) {
+							e.printStackTrace();
+						} catch (java.text.ParseException e) {
 							e.printStackTrace();
 						}
 
@@ -547,8 +554,11 @@ public class PostContentsJSActivity extends BaseActivity {
 							e.printStackTrace();
 						} catch (IOException e) {
 							e.printStackTrace();
+						} catch (ParseContentException e) {
+							e.printStackTrace();
+						} catch (java.text.ParseException e) {
+							e.printStackTrace();
 						}
-
 					}
 				}.start();
 			}

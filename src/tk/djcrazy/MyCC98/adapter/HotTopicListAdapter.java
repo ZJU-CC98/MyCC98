@@ -5,9 +5,12 @@ package tk.djcrazy.MyCC98.adapter;
 
 import java.util.List;
 
+import com.google.inject.Inject;
+
 import tk.djcrazy.MyCC98.PostContentsJSActivity;
 import tk.djcrazy.MyCC98.R;
 import tk.djcrazy.libCC98.CC98ClientImpl;
+import tk.djcrazy.libCC98.ICC98Service;
 import tk.djcrazy.libCC98.data.HotTopicEntity;
 import android.app.Activity;
 import android.content.Context;
@@ -30,6 +33,9 @@ public class HotTopicListAdapter extends BaseAdapter {
 	Activity context ;
     Bundle bundle = new Bundle();
     Intent intent = new Intent();
+    
+    @Inject
+    private ICC98Service service;
      
     final List<HotTopicEntity> listItem;
 
@@ -116,7 +122,7 @@ public class HotTopicListAdapter extends BaseAdapter {
                  
                 intent.setClass(context, PostContentsJSActivity.class);
                 Bundle jumpbBundle = new Bundle();
-                jumpbBundle.putString(PostContentsJSActivity.POST_LINK, CC98ClientImpl.getCC98Domain() + listItem.get(clickPosition).getPostLink()+"&page=");
+                jumpbBundle.putString(PostContentsJSActivity.POST_LINK,service.getDomain() + listItem.get(clickPosition).getPostLink()+"&page=");
                 jumpbBundle.putString(PostContentsJSActivity.POST_NAME, listItem.get(clickPosition).getTopicName());
                 jumpbBundle.putInt(PostContentsJSActivity.PAGE_NUMBER, 1);
                 jumpbBundle.putParcelable(PostContentsJSActivity.USER_IMAGE, userImage);

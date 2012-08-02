@@ -6,6 +6,8 @@ import java.util.List;
 import org.apache.http.ParseException;
 import org.apache.http.client.ClientProtocolException;
 
+import com.google.inject.Inject;
+
 import roboguice.fragment.RoboFragment;
 import roboguice.inject.InjectView;
 import tk.djcrazy.MyCC98.R;
@@ -14,7 +16,9 @@ import tk.djcrazy.MyCC98.util.ViewUtils;
 import tk.djcrazy.MyCC98.view.PullToRefreshListView;
 import tk.djcrazy.MyCC98.view.PullToRefreshListView.OnRefreshListener;
 import tk.djcrazy.libCC98.CC98ParserImpl;
+import tk.djcrazy.libCC98.ICC98Service;
 import tk.djcrazy.libCC98.data.UserStatueEntity;
+import tk.djcrazy.libCC98.exception.ParseContentException;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -34,6 +38,11 @@ public class FriendListFragment extends RoboFragment implements
 	private PullToRefreshListView listView;
 	@InjectView(R.id.friend_list_loading_bar)
 	private ProgressBar progressBar;
+	
+	
+	@Inject
+	private ICC98Service service;
+	
 	private static final int GET_LIST_SUCCESS = 1;
 	private static final int GET_LIST_FAILED = 0;
 	private Handler handler = new Handler() {
@@ -93,7 +102,7 @@ public class FriendListFragment extends RoboFragment implements
 			@Override
 			public void run() {
 				try {
-					friendList = CC98ParserImpl.getUserFriendList();
+					friendList = service.getFriendList();
 					friendListViewAdapter = new FriendListViewAdapter(
 							getActivity(), friendList);
 					handler.sendEmptyMessage(GET_LIST_SUCCESS);
@@ -104,6 +113,9 @@ public class FriendListFragment extends RoboFragment implements
 					handler.sendEmptyMessage(GET_LIST_FAILED);
 					e.printStackTrace();
 				} catch (IOException e) {
+					handler.sendEmptyMessage(GET_LIST_FAILED);
+					e.printStackTrace();
+				} catch (ParseContentException e) {
 					handler.sendEmptyMessage(GET_LIST_FAILED);
 					e.printStackTrace();
 				}

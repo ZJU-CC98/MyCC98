@@ -8,6 +8,8 @@ import org.apache.http.NameValuePair;
 import org.apache.http.ParseException;
 import org.apache.http.client.ClientProtocolException;
 
+import com.google.inject.Inject;
+
 import roboguice.fragment.RoboFragment;
 import roboguice.inject.InjectView;
 import tk.djcrazy.MyCC98.PostListActivity;
@@ -17,6 +19,7 @@ import tk.djcrazy.MyCC98.listener.LoadingListener;
 import tk.djcrazy.MyCC98.util.ViewUtils;
 import tk.djcrazy.libCC98.CC98ClientImpl;
 import tk.djcrazy.libCC98.CC98ParserImpl;
+import tk.djcrazy.libCC98.ICC98Service;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -46,6 +49,9 @@ public class SearchBoardFragment extends RoboFragment {
 	@InjectView(R.id.search_board_loading_bar)
 	private ProgressBar progressBar;
 
+	@Inject
+	private ICC98Service service;
+	
 	private SearchResultListAdapter listAdapter;
 	private static final int FETCH_SUCC = 0;
 	private static final int FETCH_FAIL = 1;
@@ -110,7 +116,7 @@ public class SearchBoardFragment extends RoboFragment {
 			@Override
 			public void run() {
 				try {
-					boardList = CC98ParserImpl.getTodayBoardList();
+					boardList = service.getTodayBoardList();
 					handler.sendEmptyMessage(FETCH_SUCC);
 				} catch (ClientProtocolException e) {
 					handler.sendEmptyMessage(FETCH_FAIL);
@@ -158,7 +164,7 @@ public class SearchBoardFragment extends RoboFragment {
 					long arg3) {
 				Bundle bundle = new Bundle();
 				bundle.putString(PostListActivity.BOARD_LINK,
-						CC98ClientImpl.getCC98Domain()
+						service.getDomain()
 								+ currentResult.get(arg2).getValue());
 				bundle.putString(PostListActivity.BOARD_NAME, currentResult
 						.get(arg2).getName());

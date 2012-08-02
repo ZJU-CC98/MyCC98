@@ -1141,8 +1141,6 @@ public class EditActivity extends BaseActivity {
 
 		String faceExpression;
 
-		List<NameValuePair> nvpsList;
-
 		@Override
 		protected TaskResult _doInBackground(TaskParams... params) {
 
@@ -1155,14 +1153,9 @@ public class EditActivity extends BaseActivity {
 						+ (SettingsActivity.addTail ? TAIL : "");
 				title = param.getString("title");
 				faceExpression = param.getString("faceExpression");
-				if (service.reply(boardID, postId, title, faceExpression,
-						content)) {
-					return TaskResult.OK;
-				} else {
-					return TaskResult.FAILED;
-				}
+				service.reply(boardID, "1234", title, faceExpression, content);
+				return TaskResult.OK;
 			} catch (Exception e) {
-
 				return TaskResult.FAILED;
 			}
 		}

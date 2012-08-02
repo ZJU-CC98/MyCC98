@@ -2,9 +2,12 @@ package tk.djcrazy.MyCC98.adapter;
 
 import java.util.List;
 
+import com.google.inject.Inject;
+
 import tk.djcrazy.MyCC98.PostContentsJSActivity;
 import tk.djcrazy.MyCC98.R;
 import tk.djcrazy.libCC98.CC98ClientImpl;
+import tk.djcrazy.libCC98.ICC98Service;
 import tk.djcrazy.libCC98.data.PostEntity;
 import tk.djcrazy.libCC98.data.PostType;
 import android.app.Activity;
@@ -32,6 +35,9 @@ public class PostListViewAdapter extends BaseAdapter {
 	private LayoutInflater listInflater;
 
 	private Bitmap userImage;
+	
+	@Inject
+	private ICC98Service service;
 	/**
 	 * @param userImage the userImage to set
 	 */
@@ -148,7 +154,7 @@ public class PostListViewAdapter extends BaseAdapter {
 			@Override
 			public void onClick(View v) {
 
-				String postLink = CC98ClientImpl.getCC98Domain()
+				String postLink = service.getDomain()
 						+ listItem.get(clickPosition).getPostLink();
 
 				intent.setClass(context, PostContentsJSActivity.class);
@@ -168,7 +174,7 @@ public class PostListViewAdapter extends BaseAdapter {
 					@Override
 					public void onClick(View v) {
 
-						String postLink = CC98ClientImpl.getCC98Domain()
+						String postLink = service.getDomain()
 								+ listItem.get(clickPosition).getPostLink();
 
 						intent.setClass(context, PostContentsJSActivity.class);

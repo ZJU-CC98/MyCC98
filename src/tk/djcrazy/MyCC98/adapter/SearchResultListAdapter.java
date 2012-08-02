@@ -7,9 +7,12 @@ import java.util.List;
 
 import org.apache.http.NameValuePair;
 
+import com.google.inject.Inject;
+
 import tk.djcrazy.MyCC98.PostListActivity;
 import tk.djcrazy.MyCC98.R;
 import tk.djcrazy.libCC98.CC98ClientImpl;
+import tk.djcrazy.libCC98.ICC98Service;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -27,14 +30,16 @@ import android.widget.TextView;
  */
 public class SearchResultListAdapter extends BaseAdapter {
 
-	final List<NameValuePair> mBoardList;
-	Activity context;
+	private final List<NameValuePair> mBoardList;
+	private Activity context;
 
-	LayoutInflater listInflater;
-	View view;
+	private LayoutInflater listInflater;
+	private View view;
 
+	@Inject 
+	private ICC98Service service;
+	
 	public final class ListItemView {
-
 		public TextView boardName;
 	}
 
@@ -86,7 +91,7 @@ public class SearchResultListAdapter extends BaseAdapter {
 			public void onClick(View v) {
 				Bundle bundle = new Bundle();
 				bundle.putString(PostListActivity.BOARD_LINK,
-						CC98ClientImpl.getCC98Domain()
+						service.getDomain()
 								+ mBoardList.get(clkpos).getValue());
 				bundle.putString(PostListActivity.BOARD_NAME, mBoardList
 						.get(clkpos).getName());

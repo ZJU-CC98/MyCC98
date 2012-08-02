@@ -6,6 +6,8 @@ import java.util.List;
 import org.apache.http.ParseException;
 import org.apache.http.client.ClientProtocolException;
 
+import com.google.inject.Inject;
+
 import roboguice.fragment.RoboFragment;
 import roboguice.inject.InjectView;
 import tk.djcrazy.MyCC98.R;
@@ -14,7 +16,9 @@ import tk.djcrazy.MyCC98.util.ViewUtils;
 import tk.djcrazy.MyCC98.view.PullToRefreshListView;
 import tk.djcrazy.MyCC98.view.PullToRefreshListView.OnRefreshListener;
 import tk.djcrazy.libCC98.CC98ParserImpl;
+import tk.djcrazy.libCC98.ICC98Service;
 import tk.djcrazy.libCC98.data.HotTopicEntity;
+import tk.djcrazy.libCC98.exception.ParseContentException;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -39,6 +43,9 @@ public class HotTopicFragment extends RoboFragment implements OnRefreshListener{
 	@InjectView(R.id.hot_topic_loading_bar)
 	private ProgressBar progressBar; 
 
+	@Inject 
+	private ICC98Service service;
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -66,7 +73,7 @@ public class HotTopicFragment extends RoboFragment implements OnRefreshListener{
 			@Override
 			public void run() {
 				try {
-					topicList = CC98ParserImpl.getHotTopicList();
+					topicList = service.getHotTopicList();
 					getTopicHandler.sendEmptyMessage(GET_HOT_TOPIC_LIST_SUCCESS);
 					
 				} catch (ClientProtocolException e) {
@@ -76,6 +83,9 @@ public class HotTopicFragment extends RoboFragment implements OnRefreshListener{
 					getTopicHandler.sendEmptyMessage(GET_HOT_TOPIC_LIST_FAILED);
 					e.printStackTrace();
 				} catch (IOException e) {
+					getTopicHandler.sendEmptyMessage(GET_HOT_TOPIC_LIST_FAILED);
+					e.printStackTrace();
+				} catch (ParseContentException e) {
 					getTopicHandler.sendEmptyMessage(GET_HOT_TOPIC_LIST_FAILED);
 					e.printStackTrace();
 				}

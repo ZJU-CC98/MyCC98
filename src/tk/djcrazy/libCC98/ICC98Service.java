@@ -106,4 +106,6 @@ public interface ICC98Service {
 	public String getUserImgUrl(String userName) throws ParseContentException, ClientProtocolException, ParseException, IOException;
  
 	public String getDomain();
+
+	public Bitmap getBitmapFromUrl(String url) throws IOException;
 }

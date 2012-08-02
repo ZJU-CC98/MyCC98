@@ -16,10 +16,11 @@ import com.flurry.android.FlurryAgent;
 public class PreviewActivity extends BaseActivity {
 	
 	public static final String CONTENT = "content";
-	WebView webView;
-	String content = "";
-	String tagedContent = "";
- 
+	private WebView webView;
+	private String content = "";
+	private String tagedContent = "";
+	private HtmlGenHelper helper = new HtmlGenHelper();
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 
@@ -60,11 +61,11 @@ public class PreviewActivity extends BaseActivity {
 		new Thread() {
 			@Override
 			public void run(){
-				tagedContent = HtmlGenHelper.PAGE_OPEN
+				tagedContent = helper.PAGE_OPEN
 						+ "<br><span id=\"ubbcode1\">"
 						+ content.replaceAll("\n", "<BR>")
 						+ "</span><script type=\"text/javascript\">searchubb('ubbcode1',1,'tablebody2');</script>"
-						+ HtmlGenHelper.PAGE_CLOSE;
+						+ helper.PAGE_CLOSE;
 				System.err.println(content);
 				handler.sendEmptyMessage(0);
 			}

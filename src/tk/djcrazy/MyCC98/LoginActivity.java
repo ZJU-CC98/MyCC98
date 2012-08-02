@@ -704,12 +704,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 	private void doLogin() {
 		mUsername = mUsernameEdit.getText().toString();
 		mPassword = mPasswordEdit.getText().toString();
-		// if (useProxy) {
-		// service.setProxy(sProxyIP, iProxyPort);
-		// } else {
-		// service.rmProxy();
-		// }
-		onLoginBegin();
+ 		onLoginBegin();
 		new Thread(new Runnable() {
 
 			@Override
@@ -728,6 +723,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 					e.printStackTrace();
 				} catch (Exception e) {
 					handler.sendEmptyMessage(LOGIN_FAILED_WITH_SERVER_ERROR);
+					e.printStackTrace();
 				}
 			}
 		}).start();

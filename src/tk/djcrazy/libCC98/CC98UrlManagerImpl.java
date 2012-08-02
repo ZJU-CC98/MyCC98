@@ -277,6 +277,7 @@ public class CC98UrlManagerImpl implements ICC98UrlManager {
 		queryReferer = client + "query.asp?boardid=0";
 		getInboxUrl = client + "usersms.asp?action=inbox&page=";
 		getOutboxUrl = client +"usersms.asp?action=issend&page=";
+		loginUrl  = client + "";
 	}
 
 	/* (non-Javadoc)

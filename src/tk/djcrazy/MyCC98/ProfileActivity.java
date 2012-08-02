@@ -5,8 +5,10 @@ import java.io.IOException;
 import tk.djcrazy.MyCC98.view.HeaderView;
 import tk.djcrazy.libCC98.CC98ClientImpl;
 import tk.djcrazy.libCC98.CC98ParserImpl;
+import tk.djcrazy.libCC98.ICC98Service;
 import tk.djcrazy.libCC98.data.UserProfileEntity;
 import tk.djcrazy.libCC98.exception.NoUserFoundException;
+import tk.djcrazy.libCC98.exception.ParseContentException;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -23,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.flurry.android.FlurryAgent;
+import com.google.inject.Inject;
 
 public class ProfileActivity extends BaseActivity {
 
@@ -65,18 +68,28 @@ public class ProfileActivity extends BaseActivity {
 	private HeaderView mHeaderView;
 	private ProgressDialog dialog;
 	private Bitmap userImage;
+	
+	@Inject
+	private ICC98Service service; 
+	
 	Thread profileThread = new Thread() {
 		// child thread
 		@Override
 		public void run() {
 			try {
-				profileEntity = CC98ParserImpl.getUserProfile(mUserName);
+				profileEntity = service.getUserProfile(mUserName);
 				handler.sendEmptyMessage(LOAD_PROFILE_SUCCESS);
 
 			} catch (NoUserFoundException e) {
 				handler.sendEmptyMessage(LOAD_PROFILE_FAILED);
 				e.printStackTrace();
 			} catch (IOException e) {
+				handler.sendEmptyMessage(LOAD_PROFILE_FAILED);
+				e.printStackTrace();
+			} catch (org.apache.http.ParseException e) {
+				handler.sendEmptyMessage(LOAD_PROFILE_FAILED);
+				e.printStackTrace();
+			} catch (ParseContentException e) {
 				handler.sendEmptyMessage(LOAD_PROFILE_FAILED);
 				e.printStackTrace();
 			}
@@ -88,7 +101,7 @@ public class ProfileActivity extends BaseActivity {
 		@Override
 		public void run() {
 			try {
-				userPortraitmBitmap = CC98ClientImpl.getBitmapFromUrl(url);
+				userPortraitmBitmap = service.getBitmapFromUrl(url);
 				handler.sendEmptyMessage(LOAD_USER_AVARTAR_SUCCESS);
 			} catch (IOException e) {
 				handler.sendEmptyMessage(LOAD_USER_AVARTAR_FAILED);
@@ -201,7 +214,7 @@ public class ProfileActivity extends BaseActivity {
 			@Override
 			public void run() {
 				try {
-					CC98ClientImpl.addFriend(userName);
+					service.addFriend(userName);
 					handler.sendEmptyMessage(ADD_FRIEND_SUCCESS);
 				} catch (ParseException e) {
 					handler.sendEmptyMessage(ADD_FRIEND_FAILED);

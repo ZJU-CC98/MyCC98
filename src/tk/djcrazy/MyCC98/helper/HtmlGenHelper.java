@@ -3,12 +3,17 @@ package tk.djcrazy.MyCC98.helper;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.google.inject.Inject;
+
 import tk.djcrazy.libCC98.CC98ClientImpl;
+import tk.djcrazy.libCC98.ICC98Service;
 import android.util.Log;
 
 public class HtmlGenHelper {
+	@Inject
+	private ICC98Service service;
 
-    public static final String PAGE_OPEN = "<!DOCTYPE html><html class=\"ui-mobile\">" // min-width-320px
+    public  final String PAGE_OPEN = "<!DOCTYPE html><html class=\"ui-mobile\">" // min-width-320px
                                                                                                  // min-width-480px
             + "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">"
             + "<link rel=\"stylesheet\" href=\"file:///android_asset/custom.css\" />"
@@ -25,11 +30,11 @@ public class HtmlGenHelper {
             + "<meta name=\"viewport\" content=\"width=device-width, user-scalable=no\" />"
             + "</head><body>"
              + "<div  class=\"bg-wrapper\">";
-    public static final String PAGE_CLOSE = "</div> </body></html>";
+    public  final String PAGE_CLOSE = "</div> </body></html>";
 
-    private static final String TAG = "HtmlGenHelper";
+    private  final String TAG = "HtmlGenHelper";
     
-    public static String addPostInfo(String readTopic, String senderAvatarUrl,
+    public  String addPostInfo(String readTopic, String senderAvatarUrl,
             String sender, String gender, int floorNum, String sendTime,
             int index) {
         return "<div class=\"post-info\">" + addTopic(readTopic)
@@ -37,7 +42,7 @@ public class HtmlGenHelper {
                 + addFloorNum(floorNum) + addGender(gender) + addSendTime(sendTime) + "</div>";
     }
 
-    private static String addFloorNum(int floorNum) {
+    private  String addFloorNum(int floorNum) {
         if (floorNum == -1) {
             return "";
         } else {
@@ -45,33 +50,33 @@ public class HtmlGenHelper {
         }
     }
 
-    private static String addGender(String gender) {
+    private  String addGender(String gender) {
         if (gender == "") {
             return "";
         }
         return "<img class=\"img-gender\" src=\"" + gender + "\"/>";
     }
 
-    public static String addSenderAvatar(String senderAvatarUrl, int index) {
+    public  String addSenderAvatar(String senderAvatarUrl, int index) {
          return "<img class=\"img-avatar\" src=\"" + senderAvatarUrl
                 + "\" height=64/>";
     }
 
-    public static String addTopic(String readTopic) {
+    public  String addTopic(String readTopic) {
         return "<div class=\"topic\" ><big><strong>" + readTopic
                 + "</strong></big></div><br />";
     }
 
-    public static String addSenderName(String sender) {
+    public  String addSenderName(String sender) {
         return "<div class=\"name\">" + sender + "</div><br />";
     }
 
-    public static String addSendTime(String sendTime) {
+    public  String addSendTime(String sendTime) {
         return "<div class=\"time\"><small>" + sendTime
                 + "</small></div><br />";
     }
     
-    public static String parseInnerLink(String content, String jsInterface) {
+    public  String parseInnerLink(String content, String jsInterface) {
 		final String regString = "(\\[url\\]|http://www\\.cc98\\.org|\\[url\\]http://www\\.cc98\\.org)(/|)dispbbs\\.asp\\?boardID=\\d+?&ID=\\d+?(&star=\\d+|)(\\[/url\\]|).*?(?=(<br>|[;；#,.!?，。！？]|$))";
 		Pattern pattern = Pattern.compile(regString, Pattern.CASE_INSENSITIVE);
 		Matcher matcher = pattern.matcher(content);
@@ -113,10 +118,10 @@ public class HtmlGenHelper {
 					"(\\&star=\\d+.*)|(\\[url\\])|(\\[/url\\])", "");
 			if (!pageLink.startsWith("http")) {
 				if (pageLink.startsWith("/")) {
-					pageLink = CC98ClientImpl.getCC98Domain()
+					pageLink = service.getDomain()
 							+ pageLink.substring(1);
 				} else {
-					pageLink = CC98ClientImpl.getCC98Domain() + pageLink;
+					pageLink = service.getDomain() + pageLink;
 				}
 			}
 			Log.d(TAG, " link" + pageLink);
