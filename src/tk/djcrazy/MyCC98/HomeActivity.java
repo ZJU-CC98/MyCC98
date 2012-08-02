@@ -38,6 +38,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.Settings.System;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -46,6 +47,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.inject.Inject;
@@ -89,6 +91,7 @@ public class HomeActivity extends RoboFragmentActivity implements
 	@InjectView(R.id.home_header_userimg)
 	private ImageView userAvatar;
 	@InjectView(R.id.home_header_user_name)
+	private TextView userNameView;
 	
 	@Inject
 	private ICC98Service service;
@@ -459,6 +462,7 @@ public class HomeActivity extends RoboFragmentActivity implements
 				}
 			} else {
 				finish();
+				java.lang.System.exit(0);
  			}
 		}
 		return false;

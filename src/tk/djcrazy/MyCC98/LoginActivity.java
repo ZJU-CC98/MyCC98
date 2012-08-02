@@ -274,11 +274,9 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 			switch (msg.what) {
 			case NO_UPDATE:
 			case UPDATE_SERVER_IS_UNREACHABLE:
-				Log.d(TAG, "aaa");
 				if (IS_LIFETOY_VERSION) {
 					authBuilder.create().show();
 				} else {
-
 					showLoginField();
 				}
 				break;

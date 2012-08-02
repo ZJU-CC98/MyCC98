@@ -5,9 +5,12 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import android.util.Log;
+
 import tk.djcrazy.libCC98.exception.ParseContentException;
 
 public final class RegexUtil {
+	private static final String TAG = "RegexUtil";
 
 	/**
 	 * @param regex
@@ -17,11 +20,13 @@ public final class RegexUtil {
 	 */
 	public static String getMatchedString(String regex, String content)
 			throws ParseContentException {
-		Matcher matcher = Pattern.compile(regex, Pattern.DOTALL).matcher(
-				content);
+		Pattern pattern = Pattern.compile(regex, Pattern.DOTALL);
+		Matcher matcher = pattern.matcher(content);
 		if (matcher.matches()) {
 			return matcher.group();
 		} else {
+			Log.e(TAG, content);
+			Log.e(TAG, "regex is: "+regex);
 			throw new ParseContentException("内容解析错误");
 		}
 	}

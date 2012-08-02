@@ -217,7 +217,7 @@ public class CC98UrlManagerImpl implements ICC98UrlManager {
 	}
 
 	public CC98UrlManagerImpl() {
-
+		updateLink(false);
 	}
 
 	/* (non-Javadoc)
@@ -249,10 +249,7 @@ public class CC98UrlManagerImpl implements ICC98UrlManager {
 	}
 
 	private void updateLink(boolean lifetoyVersion) {
-		if (this.lifetoyVersion == lifetoyVersion) {
-			return;
-		}
-		if (lifetoyVersion) {
+ 		if (lifetoyVersion) {
 			client = LIFETOY;
 		} else {
 			client = CC98;
@@ -277,7 +274,7 @@ public class CC98UrlManagerImpl implements ICC98UrlManager {
 		queryReferer = client + "query.asp?boardid=0";
 		getInboxUrl = client + "usersms.asp?action=inbox&page=";
 		getOutboxUrl = client +"usersms.asp?action=issend&page=";
-		loginUrl  = client + "";
+		loginUrl  = client + "login.asp?action=chk";
 	}
 
 	/* (non-Javadoc)

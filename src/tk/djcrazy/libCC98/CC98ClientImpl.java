@@ -69,6 +69,7 @@ import com.google.inject.Singleton;
 @Singleton
 public class CC98ClientImpl implements ICC98Client {
 
+	public static final String TAG = "CC98ClientImpl";
 	@Inject
 	private ICC98UrlManager manager;
 
@@ -141,6 +142,7 @@ public class CC98ClientImpl implements ICC98Client {
 			IOException, IllegalAccessException, ParseException, ParseContentException, NetworkErrorException {
 
 		HttpResponse response;
+		manager.setLifetoyVersion(false);
 		HttpPost httpost = new HttpPost(manager.getLoginUrl());
 		List<NameValuePair> nvps = new ArrayList<NameValuePair>();
 		nvps.add(new BasicNameValuePair("username", id));
@@ -160,7 +162,7 @@ public class CC98ClientImpl implements ICC98Client {
 		}
 		username = id;
 		passwd = pw;
- 		userImg = getUserImg(id);
+// 		userImg = getUserImg(id);
 	}
 
 	/* (non-Javadoc)
@@ -309,6 +311,7 @@ public class CC98ClientImpl implements ICC98Client {
 	public String getPage(String link) throws ClientProtocolException,
 			IOException, ParseException {
 		HttpGet get = new HttpGet(link);
+		Log.d(TAG, "get page: "+link);
 		HttpResponse rsp = null;
 		rsp = getHttpClient().execute(get);
 		int mCode = rsp.getStatusLine().getStatusCode();
