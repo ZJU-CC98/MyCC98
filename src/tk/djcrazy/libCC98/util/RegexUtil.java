@@ -22,12 +22,10 @@ public final class RegexUtil {
 			throws ParseContentException {
 		Pattern pattern = Pattern.compile(regex, Pattern.DOTALL);
 		Matcher matcher = pattern.matcher(content);
-		if (matcher.matches()) {
+		if (matcher.find()) {
 			return matcher.group();
 		} else {
-			Log.e(TAG, content);
-			Log.e(TAG, "regex is: "+regex);
-			throw new ParseContentException("内容解析错误");
+ 			throw new ParseContentException("内容解析错误");
 		}
 	}
 
@@ -51,7 +49,7 @@ public final class RegexUtil {
 		List<String> list = new ArrayList<String>();
 		Matcher matcher = Pattern.compile(regex, Pattern.DOTALL).matcher(
 				content);
-		while (matcher.matches()) {
+		while (matcher.find()) {
 			list.add(matcher.group());
 		}
 		if (expectedMatchStringNumber > 0

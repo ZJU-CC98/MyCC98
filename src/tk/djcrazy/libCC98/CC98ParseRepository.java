@@ -32,7 +32,7 @@ public class CC98ParseRepository {
  	public static final String POST_LIST_POST_ENTITY_REGEX  = "(?<=<tr align=middle><td).*?(?=;</script>)";
 
  	//personal board list
- 	public static final String P_BOARD_OUTER_WRAAPER_REGEX = "(?<=var customboards_disp = new Array).*?(?=document.write)";
+ 	public static final String P_BOARD_OUTER_WRAAPER_REGEX = "var customboards_disp = new Array.*?document.write";
  	public static final String P_BOARD_SINGLE_BOARD_WRAPPER_REGEX = "</a>-->.*?(?=</td></tr></table></TD>)";
  	public static final String P_BOARD_NAME_REGEX = "(?<=<font color=#000066>).*?(?=</font>)";
  	public static final String P_BOARD_LINK_REGEX = "(?<=<a href=\")list.asp\\?boardid=[0-9]+(?=\">)";

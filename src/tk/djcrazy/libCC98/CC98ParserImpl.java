@@ -280,6 +280,7 @@ public class CC98ParserImpl implements ICC98Parser {
 	 */
 	private List<BoardEntity> parsePersonalBoardList(String html)
 			throws ParseContentException {
+		
 		List<BoardEntity> nList = new ArrayList<BoardEntity>();
 		String boardinfo = getMatchedString(P_BOARD_OUTER_WRAAPER_REGEX, html);
 		List<String> board = getMatchedStringList(
@@ -543,7 +544,7 @@ public class CC98ParserImpl implements ICC98Parser {
 		Pattern postTitlePattern = Pattern.compile("(?<=blank>).*?(?=</a>)",
 				Pattern.DOTALL);
 		Pattern authorPattern = Pattern.compile(
-				"(?<=target=_blank>).{0,10}?(?=</a>)", Pattern.DOTALL);
+				"(?<=\"  target=_blank>).{0,10}?(?=</a>)", Pattern.DOTALL);
 		Pattern postTimePattern = Pattern.compile("(?<=195>).*&nbsp;",
 				Pattern.DOTALL);
 
@@ -584,8 +585,7 @@ public class CC98ParserImpl implements ICC98Parser {
 			sMatcher = authorPattern.matcher(sPost);
 			if (sMatcher.find()) {
 				String string = sMatcher.group();
-				// System.err.println("author:" + string);
-				map.put("author", string);
+ 				map.put("author", string);
 			} else {
 				map.put("author", "");
 
