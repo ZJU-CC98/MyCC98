@@ -7,7 +7,12 @@ import java.util.Date;
 public class DateFormatUtil {
 	public static Date convertStringToDateInPostContent(String dateString)
 			throws ParseException {
-		SimpleDateFormat sdf = new SimpleDateFormat("M/d/yyyy h:mm:ss a");
+		SimpleDateFormat sdf = new SimpleDateFormat("M/d/yyyy h:mm:ss aa");
+		return sdf.parse(dateString);
+	}
+	public static Date convertStrToDateInPBoard(String dateString)
+			throws ParseException {
+		SimpleDateFormat sdf = new SimpleDateFormat("M/d/yyyy h:mm:ss aa");
 		return sdf.parse(dateString);
 	}
 
@@ -17,7 +22,6 @@ public class DateFormatUtil {
 		} else {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 			return sdf.format(date);
-
 		}
 	}
 

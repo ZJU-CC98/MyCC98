@@ -102,7 +102,7 @@ public interface ICC98Client {
 	 * @throws IOException
 	 */
 	public String queryPosts(String keyWord, String sType, String searchDate,
-			int boardArea, int boardID) throws ParseException, IOException;
+			int boardArea, String boardID) throws ParseException, IOException;
 
 	/**
 	 * get the HTML code of the link address

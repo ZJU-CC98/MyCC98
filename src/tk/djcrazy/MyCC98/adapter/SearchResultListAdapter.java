@@ -34,8 +34,7 @@ public class SearchResultListAdapter extends BaseAdapter {
 	private Activity context;
 
 	private LayoutInflater listInflater;
-	private View view;
-
+ 
 	@Inject 
 	private ICC98Service service;
 	
@@ -90,22 +89,18 @@ public class SearchResultListAdapter extends BaseAdapter {
 			@Override
 			public void onClick(View v) {
 				Bundle bundle = new Bundle();
-				bundle.putString(PostListActivity.BOARD_LINK,
+				bundle.putString(PostListActivity.BOARD_ID,
 						service.getDomain()
 								+ mBoardList.get(clkpos).getValue());
 				bundle.putString(PostListActivity.BOARD_NAME, mBoardList
 						.get(clkpos).getName());
 				bundle.putInt(PostListActivity.PAGE_NUMBER, 1);
 
-				Intent intent = new Intent().putExtra(
-						PostListActivity.BOARD_ENTITY, bundle).setClass(
-						context, PostListActivity.class);
+				Intent intent = new Intent(context, PostListActivity.class);
 				context.startActivity(intent);
 				context.overridePendingTransition(R.anim.forward_activity_move_in, R.anim.forward_activity_move_out);
-
 			}
 		});
-
 		return convertView;
 	}
 

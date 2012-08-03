@@ -10,6 +10,7 @@ import tk.djcrazy.libCC98.CC98ClientImpl;
 import tk.djcrazy.libCC98.ICC98Service;
 import tk.djcrazy.libCC98.data.PostEntity;
 import tk.djcrazy.libCC98.data.PostType;
+import tk.djcrazy.libCC98.util.DateFormatUtil;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -106,8 +107,8 @@ public class PostListViewAdapter extends BaseAdapter {
 				.getPostAuthorName());
 		listItemView.lastReplyAuthor.setText((CharSequence) listItem.get(
 				position).getLastReplyAuthor());
-		listItemView.lastReplyTime.setText((CharSequence) listItem
-				.get(position).getLastReplyTime().split(" ")[0]);
+		listItemView.lastReplyTime.setText(DateFormatUtil.convertDateToString(listItem
+				.get(position).getLastReplyTime(), true));
 
 		// controlPageNumberListView(pageNumber, listItemView);
 

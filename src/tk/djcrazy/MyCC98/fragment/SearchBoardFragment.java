@@ -163,15 +163,14 @@ public class SearchBoardFragment extends RoboFragment {
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
 				Bundle bundle = new Bundle();
-				bundle.putString(PostListActivity.BOARD_LINK,
+				bundle.putString(PostListActivity.BOARD_ID,
 						service.getDomain()
 								+ currentResult.get(arg2).getValue());
 				bundle.putString(PostListActivity.BOARD_NAME, currentResult
 						.get(arg2).getName());
 				bundle.putInt(PostListActivity.PAGE_NUMBER, 1);
 
-				Intent intent = new Intent().putExtra(
-						PostListActivity.BOARD_ENTITY, bundle).setClass(
+				Intent intent = new Intent().setClass(
 						getActivity(), PostListActivity.class);
 				getActivity().startActivity(intent);
 				getActivity().overridePendingTransition(

@@ -32,12 +32,13 @@ public interface ICC98Parser {
 	 * @throws ParseException
 	 * @throws ClientProtocolException
 	 * @throws ParseContentException
+	 * @throws java.text.ParseException 
 	 * 
 	 * @see #parsePostList(String)
 	 */
-	public List<PostEntity> getPostList(int boardId, int pageNum)
+	public List<PostEntity> getPostList(String boardId, int pageNum)
 			throws ClientProtocolException, ParseException, IOException,
-			ParseContentException;
+			ParseContentException, java.text.ParseException;
 
 	/**
 	 * Get a List of HashMaps of hot Topic
@@ -63,12 +64,13 @@ public interface ICC98Parser {
 	 * @throws ParseException
 	 * @throws ClientProtocolException
 	 * @throws ParseContentException 
+	 * @throws java.text.ParseException 
 	 * 
 	 * @see #parsePersonalBoardList(String)
 	 */
 	public List<BoardEntity> getPersonalBoardList()
 			throws ClientProtocolException, ParseException, IOException,
-			ParseContentException;
+			ParseContentException, java.text.ParseException;
 
 	/**
 	 * Get a list of Maps of each reply post's info.
@@ -83,7 +85,7 @@ public interface ICC98Parser {
 	 * @throws ParseContentException
 	 * @see #parsePostContentList(String)
 	 */
-	public List<PostContentEntity> getPostContentList(int boardId, int postId,
+	public List<PostContentEntity> getPostContentList(String boardId, String postId,
 			int pageNum) throws ClientProtocolException, ParseException,
 			ParseContentException, java.text.ParseException, IOException;
 
@@ -152,11 +154,11 @@ public interface ICC98Parser {
 	public List<PmInfo> getPmData(int page_num, InboxInfo inboxInfo, int type)
 			throws ClientProtocolException, ParseException, IOException;
 
-	public List<Map<String, Object>> searchPost(String keyword, int boardid,
+	public List<Map<String, Object>> searchPost(String keyword, String boardid,
 			String sType, int page) throws ParseException, IOException;
 
 	public List<Map<String, Object>> query(String keyWord, String sType,
-			String searchDate, int boardArea, int boardID)
+			String searchDate, int boardArea, String boardID)
 			throws ParseException, IOException;
 
 	/**

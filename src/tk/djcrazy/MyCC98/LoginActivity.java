@@ -755,10 +755,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 		}
 		editor.putBoolean(USE_PROXY, useProxy);
 		editor.commit();
-		((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE))
-				.hideSoftInputFromWindow(LoginActivity.this.getCurrentFocus()
-						.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-		Toast.makeText(this, R.string.msg_login_ok, Toast.LENGTH_SHORT).show();
+ 		Toast.makeText(this, R.string.msg_login_ok, Toast.LENGTH_SHORT).show();
 		forwardToNextActivity();
 
 	}

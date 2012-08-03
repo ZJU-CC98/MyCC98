@@ -435,7 +435,7 @@ public class PostContentsJSActivity extends BaseActivity {
 			return "";
 		}
 		List<PostContentEntity> contentList = service.getPostContentList(
-				1234, 1234, pageNum);
+				"1234", "1234", pageNum);
 		page.setList(contentList);
 
 		StringBuilder builder = new StringBuilder(5000);

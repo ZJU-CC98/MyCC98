@@ -29,9 +29,9 @@ import static tk.djcrazy.libCC98.CC98ParseRepository.P_BOARD_BOARD_MASTER_REGEX;
 import static tk.djcrazy.libCC98.CC98ParseRepository.P_BOARD_INTRO_REGEX;
 import static tk.djcrazy.libCC98.CC98ParseRepository.P_BOARD_LAST_REPLY_AUTHOR_REGEX;
 import static tk.djcrazy.libCC98.CC98ParseRepository.P_BOARD_LAST_REPLY_TIME_REGEX;
-import static tk.djcrazy.libCC98.CC98ParseRepository.P_BOARD_LAST_REPLY_TOPIC_LINK_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.P_BOARD_LAST_REPLY_TOPIC_ID_REGEX;
 import static tk.djcrazy.libCC98.CC98ParseRepository.P_BOARD_LAST_REPLY_TOPIC_NAME_REGEX;
-import static tk.djcrazy.libCC98.CC98ParseRepository.P_BOARD_LINK_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.P_BOARD_ID_REGEX;
 import static tk.djcrazy.libCC98.CC98ParseRepository.P_BOARD_NAME_REGEX;
 import static tk.djcrazy.libCC98.CC98ParseRepository.P_BOARD_OUTER_WRAAPER_REGEX;
 import static tk.djcrazy.libCC98.CC98ParseRepository.P_BOARD_POST_NUMBER_TODAY;
@@ -59,6 +59,8 @@ import org.apache.http.ParseException;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.message.BasicNameValuePair;
 
+import android.util.Log;
+
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -74,69 +76,87 @@ import tk.djcrazy.libCC98.data.UserStatue;
 import tk.djcrazy.libCC98.data.UserStatueEntity;
 import tk.djcrazy.libCC98.exception.NoUserFoundException;
 import tk.djcrazy.libCC98.exception.ParseContentException;
+import tk.djcrazy.libCC98.util.DateFormatUtil;
 
 @Singleton
 public class CC98ParserImpl implements ICC98Parser {
+	private static final String TAG = "CC98ParserImpl";
 
 	@Inject
 	private ICC98Client cc98Client;
 	@Inject
 	private ICC98UrlManager cc98UrlManager;
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see tk.djcrazy.libCC98.ICC98Parser#getPostList(int, int)
 	 */
 	@Override
-	public List<PostEntity> getPostList(int boardId, int pageNum)
+	public List<PostEntity> getPostList(String boardId, int pageNum)
 			throws ClientProtocolException, ParseException, IOException,
-			ParseContentException {
+			ParseContentException, java.text.ParseException {
 
 		return parsePostList(cc98Client.getPage(cc98UrlManager.getBoardUrl(
 				boardId, pageNum)));
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see tk.djcrazy.libCC98.ICC98Parser#getHotTopicList()
 	 */
 	@Override
 	public List<HotTopicEntity> getHotTopicList()
-			throws ClientProtocolException, ParseException, IOException, ParseContentException {
+			throws ClientProtocolException, ParseException, IOException,
+			ParseContentException {
 		return parseHotTopicList(cc98Client.getPage(cc98UrlManager
 				.getHotTopicUrl()));
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see tk.djcrazy.libCC98.ICC98Parser#getPersonalBoardList()
 	 */
 	@Override
 	public List<BoardEntity> getPersonalBoardList()
-			throws ClientProtocolException, ParseException, IOException, ParseContentException {
+			throws ClientProtocolException, ParseException, IOException,
+			ParseContentException, java.text.ParseException {
 		return parsePersonalBoardList(cc98Client.getPage(cc98UrlManager
 				.getPersonalBoardUrl()));
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see tk.djcrazy.libCC98.ICC98Parser#getPostContentList(int, int, int)
 	 */
 	@Override
-	public List<PostContentEntity> getPostContentList(int boardId, int postId,
-			int pageNum) throws ClientProtocolException, ParseException,
-			ParseContentException, java.text.ParseException, IOException {
+	public List<PostContentEntity> getPostContentList(String boardId,
+			String postId, int pageNum) throws ClientProtocolException,
+			ParseException, ParseContentException, java.text.ParseException,
+			IOException {
 		return parsePostContentList(cc98Client.getPage(cc98UrlManager
 				.getPostUrl(boardId, postId, pageNum)));
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see tk.djcrazy.libCC98.ICC98Parser#getUserProfile(java.lang.String)
 	 */
 	@Override
 	public UserProfileEntity getUserProfile(String userName)
-			throws NoUserFoundException, IOException, ParseException, ParseContentException {
+			throws NoUserFoundException, IOException, ParseException,
+			ParseContentException {
 		return parseUserProfile(cc98Client.getPage(cc98UrlManager
 				.getUserProfileUrl(userName)));
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see tk.djcrazy.libCC98.ICC98Parser#getNewPostList()
 	 */
 	@Override
@@ -146,15 +166,19 @@ public class CC98ParserImpl implements ICC98Parser {
 				.getNewPostUrl()));
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see tk.djcrazy.libCC98.ICC98Parser#getUserFriendList()
 	 */
 	@Override
 	public List<UserStatueEntity> getUserFriendList()
-			throws ClientProtocolException, ParseException, IOException, ParseContentException {
+			throws ClientProtocolException, ParseException, IOException,
+			ParseContentException {
 		return parseUserFriendList(cc98Client.getPage(cc98UrlManager
 				.getUserManagerUrl()));
 	}
+
 	/**
 	 * Get the html of the pm using the given pm id.
 	 * 
@@ -171,7 +195,6 @@ public class CC98ParserImpl implements ICC98Parser {
 			ParseException, IOException {
 		return cc98Client.getPage(cc98UrlManager.getMessagePageUrl(pmId));
 	}
-
 
 	/**
 	 * Parse the HTML, and put posts and their poster id in a list of
@@ -205,8 +228,8 @@ public class CC98ParserImpl implements ICC98Parser {
 					POST_CONTENT_POST_CONTENT_REGEX, reply));
 			entity.setPostTitle(getMatchedString(POST_CONTENT_POST_TITLE_REGEX,
 					reply));
-			entity.setPostFace(getMatchedString(
-					POST_CONTENT_POST_FACE_REGEX, reply));
+			entity.setPostFace(getMatchedString(POST_CONTENT_POST_FACE_REGEX,
+					reply));
 			entity.setPostTime(convertStringToDateInPostContent(getMatchedString(
 					POST_CONTENT_POST_TIME_REGEX, reply)));
 			{
@@ -236,9 +259,10 @@ public class CC98ParserImpl implements ICC98Parser {
 	 * @param html
 	 * @return
 	 * @throws ParseContentException
+	 * @throws java.text.ParseException
 	 */
 	private List<PostEntity> parsePostList(String html)
-			throws ParseContentException {
+			throws ParseContentException, java.text.ParseException {
 
 		List<PostEntity> list = new ArrayList<PostEntity>();
 		List<String> contentList = getMatchedStringList(
@@ -247,8 +271,12 @@ public class CC98ParserImpl implements ICC98Parser {
 			PostEntity entity = new PostEntity();
 			entity.setPostName(filterHtmlDecode(getMatchedString(
 					POST_LIST_POST_NAME_REGEX, post)));
-			entity.setPostPageNumber(Integer.parseInt(getMatchedString(
-					POST_LIST_POST_PAGE_NUMBER_REGEX, post)));
+			try {
+				entity.setPostPageNumber(Integer.parseInt(getMatchedString(
+						POST_LIST_POST_PAGE_NUMBER_REGEX, post)));
+			} catch (ParseContentException e) {
+				entity.setPostPageNumber(1);
+			}
 			entity.setPostType(getMatchedString(POST_LIST_POST_TYPE_REGEX, post));
 			entity.setReplyNumber(getMatchedString(POST_LIST_REPLY_NUM_REGEX,
 					post));
@@ -258,8 +286,9 @@ public class CC98ParserImpl implements ICC98Parser {
 					POST_LIST_LAST_REPLY_AUTHOR_REGEX, post));
 			entity.setLastReplyLink(getMatchedString(
 					POST_LIST_LAST_REPLY_LINK_REGEX, post));
-			entity.setLastReplyTime(getMatchedString(
-					POST_LIST_LAST_REPLY_TIME_REGEX, post));
+			entity.setLastReplyTime(DateFormatUtil
+					.convertStrToDateInPBoard(getMatchedString(
+							POST_LIST_LAST_REPLY_TIME_REGEX, post)));
 			{
 				String tempLink = getMatchedString(POST_LIST_POST_LINK_REGEX,
 						post);
@@ -277,10 +306,11 @@ public class CC98ParserImpl implements ICC98Parser {
 	 * @param html
 	 * @return
 	 * @throws ParseContentException
+	 * @throws java.text.ParseException 
 	 */
 	private List<BoardEntity> parsePersonalBoardList(String html)
-			throws ParseContentException {
-		
+			throws ParseContentException, java.text.ParseException {
+
 		List<BoardEntity> nList = new ArrayList<BoardEntity>();
 		String boardinfo = getMatchedString(P_BOARD_OUTER_WRAAPER_REGEX, html);
 		List<String> board = getMatchedStringList(
@@ -289,16 +319,17 @@ public class CC98ParserImpl implements ICC98Parser {
 			BoardEntity entity = new BoardEntity();
 			entity.setBoardName(getMatchedString(P_BOARD_NAME_REGEX, string));
 			entity.setBoardIntro(getMatchedString(P_BOARD_INTRO_REGEX, string));
-			entity.setBoardLink(getMatchedString(P_BOARD_LINK_REGEX, string));
+			entity.setBoardID(getMatchedString(P_BOARD_ID_REGEX, string));
 			entity.setBoardMaster(getMatchedString(P_BOARD_BOARD_MASTER_REGEX,
 					string));
 			entity.setLastReplyAuthor(getMatchedString(
 					P_BOARD_LAST_REPLY_AUTHOR_REGEX, string));
-			entity.setLastReplyTime(getMatchedString(
-					P_BOARD_LAST_REPLY_TIME_REGEX, string));
-			entity.setLastReplyTopicLink(getMatchedString(
-					P_BOARD_LAST_REPLY_TOPIC_LINK_REGEX, string));
-			entity.setLastReplyTopicName(filterHtmlDecode(getMatchedString(
+			entity.setLastReplyTime(DateFormatUtil
+					.convertStrToDateInPBoard(getMatchedString(
+							P_BOARD_LAST_REPLY_TIME_REGEX, string)));
+			entity.setLastReplyTopicID(getMatchedString(
+					P_BOARD_LAST_REPLY_TOPIC_ID_REGEX, string));
+ 			entity.setLastReplyTopicName(filterHtmlDecode(getMatchedString(
 					P_BOARD_LAST_REPLY_TOPIC_NAME_REGEX, string)));
 			entity.setPostNumberToday(Integer.parseInt(getMatchedString(
 					P_BOARD_POST_NUMBER_TODAY, string)));
@@ -316,7 +347,7 @@ public class CC98ParserImpl implements ICC98Parser {
 	private UserProfileEntity parseUserProfile(String html)
 			throws ParseContentException {
 		UserProfileEntity entity = new UserProfileEntity();
- 		// avatar link
+		// avatar link
 		{
 			String url = getMatchedString(USER_PROFILE_AVATAR_REGEX, html);
 			if (!url.startsWith("http") && !url.startsWith("ftp")) {
@@ -373,39 +404,45 @@ public class CC98ParserImpl implements ICC98Parser {
 		{
 			String string = getMatchedString(USER_PROFILE_AVATAR_REGEX, html);
 			string = string.replaceAll("\t|\n|\r|<br>|&nbsp;|<.*?>| ", "");
- 			entity.setBbsMasterInfo(string);
+			entity.setBbsMasterInfo(string);
 		}
-		//online status
+		// online status
 		entity.setOnlineTime(getMatchedString(USER_PROFILE_ONLINE_INFO_REGEX,
 				html));
 		return entity;
 	}
 
- 	private List<HotTopicEntity> parseHotTopicList(String page) throws ParseContentException {
+	private List<HotTopicEntity> parseHotTopicList(String page)
+			throws ParseContentException {
 		List<HotTopicEntity> list = new ArrayList<HotTopicEntity>();
-		List<String> topicList = getMatchedStringList(HOT_TOPIC_WRAPPER, page, -1);
+		List<String> topicList = getMatchedStringList(HOT_TOPIC_WRAPPER, page,
+				-1);
 		for (String topic : topicList) {
 			HotTopicEntity entity = new HotTopicEntity();
-			entity.setTopicName(filterHtmlDecode(getMatchedString(HOT_TOPIC_NAME_REGEX, topic)));
+			entity.setTopicName(filterHtmlDecode(getMatchedString(
+					HOT_TOPIC_NAME_REGEX, topic)));
 			entity.setPostLink(getMatchedString(HOT_TOPIC_LINK_REGEX, topic));
-			entity.setPostTime(getMatchedString(HOT_TOPIC_POST_TIME_REGEX, topic));
-			//click number
+			entity.setPostTime(getMatchedString(HOT_TOPIC_POST_TIME_REGEX,
+					topic));
+			// click number
 			{
-				List<String> numList = getMatchedStringList(HOT_TOPIC_CLICK_REGEX, topic, 3);
+				List<String> numList = getMatchedStringList(
+						HOT_TOPIC_CLICK_REGEX, topic, 3);
 				entity.setFocusNumber(Integer.parseInt(numList.get(0)));
 				entity.setReplyNumber(Integer.parseInt(numList.get(1)));
 				entity.setClickNumber(Integer.parseInt(numList.get(2)));
 			}
-			//board name, author
+			// board name, author
 			{
-				List<String> bList = getMatchedStringList(HOT_TOPIC_BOARD_NAME_WITH_AUTHOR_REGEX, topic, 2);
+				List<String> bList = getMatchedStringList(
+						HOT_TOPIC_BOARD_NAME_WITH_AUTHOR_REGEX, topic, 2);
 				entity.setBoardName(bList.get(0));
 				entity.setPostAuthor(bList.get(1));
 			}
 			list.add(entity);
 		}
 		return list;
- 	}
+	}
 
 	/**
 	 * Store information of the msgs in a list
@@ -460,12 +497,13 @@ public class CC98ParserImpl implements ICC98Parser {
 			String time = m1.group();
 			pmList.add(new PmInfo.Builder(pmId).fromWho(sender)
 					.topicTitle(topic).sendTime(time).newTopic(isNew)
-					.userAvatar("")
-					.build());
+					.userAvatar("").build());
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see tk.djcrazy.libCC98.ICC98Parser#getMsgContent(int)
 	 */
 	@Override
@@ -481,8 +519,11 @@ public class CC98ParserImpl implements ICC98Parser {
 		return m.group();
 	}
 
-	/* (non-Javadoc)
-	 * @see tk.djcrazy.libCC98.ICC98Parser#getPmData(int, tk.djcrazy.libCC98.data.InboxInfo, int)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see tk.djcrazy.libCC98.ICC98Parser#getPmData(int,
+	 * tk.djcrazy.libCC98.data.InboxInfo, int)
 	 */
 
 	@Override
@@ -498,11 +539,14 @@ public class CC98ParserImpl implements ICC98Parser {
 		return new ArrayList<PmInfo>();
 	}
 
-	/* (non-Javadoc)
-	 * @see tk.djcrazy.libCC98.ICC98Parser#searchPost(java.lang.String, int, java.lang.String, int)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see tk.djcrazy.libCC98.ICC98Parser#searchPost(java.lang.String, int,
+	 * java.lang.String, int)
 	 */
 	@Override
-	public List<Map<String, Object>> searchPost(String keyword, int boardid,
+	public List<Map<String, Object>> searchPost(String keyword, String boardid,
 			String sType, int page) throws ParseException, IOException {
 		/*
 		 * http://www.cc98.org/queryresult.asp?page=2&stype=2&pSearch=1&nSearch=&
@@ -513,18 +557,23 @@ public class CC98ParserImpl implements ICC98Parser {
 				keyword, boardid, sType, page)));
 	}
 
-	/* (non-Javadoc)
-	 * @see tk.djcrazy.libCC98.ICC98Parser#query(java.lang.String, java.lang.String, java.lang.String, int, int)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see tk.djcrazy.libCC98.ICC98Parser#query(java.lang.String,
+	 * java.lang.String, java.lang.String, int, int)
 	 */
 	@Override
 	public List<Map<String, Object>> query(String keyWord, String sType,
-			String searchDate, int boardArea, int boardID)
+			String searchDate, int boardArea, String boardID)
 			throws ParseException, IOException {
 		return parseQueryResult(cc98Client.queryPosts(keyWord, sType,
 				searchDate, boardArea, boardID));
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see tk.djcrazy.libCC98.ICC98Parser#parseQueryResult(java.lang.String)
 	 */
 	@Override
@@ -585,7 +634,7 @@ public class CC98ParserImpl implements ICC98Parser {
 			sMatcher = authorPattern.matcher(sPost);
 			if (sMatcher.find()) {
 				String string = sMatcher.group();
- 				map.put("author", string);
+				map.put("author", string);
 			} else {
 				map.put("author", "");
 
@@ -630,7 +679,8 @@ public class CC98ParserImpl implements ICC98Parser {
 	}
 
 	private List<UserStatueEntity> parseUserFriendList(String html)
-			throws ClientProtocolException, ParseException, IOException, ParseContentException {
+			throws ClientProtocolException, ParseException, IOException,
+			ParseContentException {
 		if (html == null) {
 			throw new IllegalArgumentException("Null pointer!");
 		}
@@ -665,7 +715,9 @@ public class CC98ParserImpl implements ICC98Parser {
 		return list;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see tk.djcrazy.libCC98.ICC98Parser#getTodayBoardList()
 	 */
 	@Override
@@ -689,7 +741,9 @@ public class CC98ParserImpl implements ICC98Parser {
 		return list;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see tk.djcrazy.libCC98.ICC98Parser#getCC98Client()
 	 */
 	@Override
@@ -697,15 +751,21 @@ public class CC98ParserImpl implements ICC98Parser {
 		return cc98Client;
 	}
 
-	/* (non-Javadoc)
-	 * @see tk.djcrazy.libCC98.ICC98Parser#setCC98Client(tk.djcrazy.libCC98.ICC98Client)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * tk.djcrazy.libCC98.ICC98Parser#setCC98Client(tk.djcrazy.libCC98.ICC98Client
+	 * )
 	 */
 	@Override
 	public void setCC98Client(ICC98Client cc98Client) {
 		this.cc98Client = cc98Client;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see tk.djcrazy.libCC98.ICC98Parser#getCC98UrlManager()
 	 */
 	@Override
@@ -713,8 +773,11 @@ public class CC98ParserImpl implements ICC98Parser {
 		return cc98UrlManager;
 	}
 
-	/* (non-Javadoc)
-	 * @see tk.djcrazy.libCC98.ICC98Parser#setCC98UrlManager(tk.djcrazy.libCC98.CC98UrlManager)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see tk.djcrazy.libCC98.ICC98Parser#setCC98UrlManager(tk.djcrazy.libCC98.
+	 * CC98UrlManager)
 	 */
 	@Override
 	public void setCC98UrlManager(ICC98UrlManager cc98UrlManager) {

@@ -61,7 +61,7 @@ public interface ICC98Service {
 			String faceString, String content) throws ClientProtocolException,
 			IOException;
 
-	public List<Map<String, Object>> searchPost(String keyword, int boardid,
+	public List<Map<String, Object>> searchPost(String keyword, String boardid,
 			String sType, int page) throws ParseException, IOException;
 
 	public void sendPm(String toUser, String title, String content)
@@ -79,18 +79,18 @@ public interface ICC98Service {
 
 	public List<BoardEntity> getPersonalBoardList()
 			throws ClientProtocolException, ParseException, IOException,
-			ParseContentException;
+			ParseContentException, java.text.ParseException;
 
 	public List<PmInfo> getPmData(int pageNum, InboxInfo inboxInfo, int type)
 			throws ClientProtocolException, ParseException, IOException;
 
-	public List<PostContentEntity> getPostContentList(int boardId, int postId,
+	public List<PostContentEntity> getPostContentList(String boardId, String postId,
 			int pageNum) throws ClientProtocolException, ParseException,
 			ParseContentException, java.text.ParseException, IOException;
 
-	public List<PostEntity> getPostList(int boardId, int pageNum)
+	public List<PostEntity> getPostList(String boardId, int pageNum)
 			throws ClientProtocolException, ParseException, IOException,
-			ParseContentException;
+			ParseContentException, java.text.ParseException;
 
 	public List<NameValuePair> getTodayBoardList()
 			throws ClientProtocolException, ParseException, IOException;

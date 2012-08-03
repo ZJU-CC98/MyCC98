@@ -3,6 +3,8 @@
  */
 package tk.djcrazy.libCC98.data;
 
+import java.util.Date;
+
 /**
  * @author DJ
  *
@@ -83,13 +85,13 @@ public class PostEntity {
 	/**
 	 * @return the lastReplyTime
 	 */
-	public String getLastReplyTime() {
+	public Date getLastReplyTime() {
 		return lastReplyTime;
 	}
 	/**
 	 * @param lastReplyTime the lastReplyTime to set
 	 */
-	public void setLastReplyTime(String lastReplyTime) {
+	public void setLastReplyTime(Date lastReplyTime) {
 		this.lastReplyTime = lastReplyTime;
 	}
 	/**
@@ -122,7 +124,7 @@ public class PostEntity {
 	private int postPageNumber=0;
 	private String postAuthorName= "";
 	private String replyNumber= "";
-	private String lastReplyTime= "";
+	private Date lastReplyTime;
 	private String lastReplyLink= "";
 	private String lastReplyAuthor= "";
 }

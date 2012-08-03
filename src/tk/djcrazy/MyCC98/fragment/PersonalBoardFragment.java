@@ -119,6 +119,9 @@ public class PersonalBoardFragment extends RoboFragment implements
 				} catch (ParseContentException e) {
 					handler.sendEmptyMessage(GET_LIST_FAILED);
 					e.printStackTrace();
+				} catch (java.text.ParseException e) {
+					handler.sendEmptyMessage(GET_LIST_FAILED);
+					e.printStackTrace();
 				}
 			}
 		}.start();

@@ -85,7 +85,7 @@ public class CC98UrlManagerImpl implements ICC98UrlManager {
 	 * @see tk.djcrazy.libCC98.ICC98UrlMaanager#getSearchUrl(java.lang.String, int, java.lang.String, int)
 	 */
 	@Override
-	public String getSearchUrl(String keyword, int boardid, String sType,
+	public String getSearchUrl(String keyword, String boardid, String sType,
 			int page) {
 		StringBuilder sBuilder = new StringBuilder(client);
 		sBuilder.append("queryresult.asp?page=").append(page).append("&stype=")
@@ -139,7 +139,7 @@ public class CC98UrlManagerImpl implements ICC98UrlManager {
 	 * @see tk.djcrazy.libCC98.ICC98UrlMaanager#getBoardUrl(int, int)
 	 */
 	@Override
-	public String getBoardUrl(int boardId, int pageNum) {
+	public String getBoardUrl(String boardId, int pageNum) {
 		return client + "list.asp?boardid=" + boardId + "&page=" + pageNum;
 	}
 
@@ -147,7 +147,7 @@ public class CC98UrlManagerImpl implements ICC98UrlManager {
 	 * @see tk.djcrazy.libCC98.ICC98UrlMaanager#getBoardUrl(int)
 	 */
 	@Override
-	public String getBoardUrl(int boardId) {
+	public String getBoardUrl(String boardId) {
 		return getBoardUrl(boardId, 1);
 	}
 
@@ -155,7 +155,7 @@ public class CC98UrlManagerImpl implements ICC98UrlManager {
 	 * @see tk.djcrazy.libCC98.ICC98UrlMaanager#getPostUrl(int, int, int)
 	 */
 	@Override
-	public String getPostUrl(int boardId, int postId, int pageNum) {
+	public String getPostUrl(String boardId, String postId, int pageNum) {
 		return client + "dispbbs.asp?boardID=" + boardId + "&ID=" + postId
 				+ "&page=" + pageNum;
 	}

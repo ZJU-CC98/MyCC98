@@ -35,9 +35,9 @@ public class CC98ParseRepository {
  	public static final String P_BOARD_OUTER_WRAAPER_REGEX = "var customboards_disp = new Array.*?document.write";
  	public static final String P_BOARD_SINGLE_BOARD_WRAPPER_REGEX = "</a>-->.*?(?=</td></tr></table></TD>)";
  	public static final String P_BOARD_NAME_REGEX = "(?<=<font color=#000066>).*?(?=</font>)";
- 	public static final String P_BOARD_LINK_REGEX = "(?<=<a href=\")list.asp\\?boardid=[0-9]+(?=\">)";
+ 	public static final String P_BOARD_ID_REGEX = "(?<=<a href=\"list.asp\\?boardid=)[0-9]+(?=\">)";
  	public static final String P_BOARD_INTRO_REGEX = "(?<=<img src=pic/Forum_readme.gif align=middle>).*?(?=</FONT></TD></TR>)";
- 	public static final String P_BOARD_LAST_REPLY_TOPIC_LINK_REGEX= "(?<=主题：<a href=\").*?(?=\">)";
+ 	public static final String P_BOARD_LAST_REPLY_TOPIC_ID_REGEX= "(?<=&ID=)\\d*?(?=\">)";
  	public static final String P_BOARD_LAST_REPLY_TOPIC_NAME_REGEX = "(?<=ID=\\d{0,10}\">).*?(?=</a><BR>作者)";
  	public static final String P_BOARD_LAST_REPLY_AUTHOR_REGEX = "(?<=blank>).*?(?=</a><BR>)";
  	public static final String P_BOARD_LAST_REPLY_TIME_REGEX = "(?<=bottom\">).*?(?=</a>)";

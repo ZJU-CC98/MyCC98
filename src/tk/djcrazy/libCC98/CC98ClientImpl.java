@@ -29,7 +29,6 @@ import org.apache.http.ParseException;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.CookieStore;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -266,7 +265,7 @@ public class CC98ClientImpl implements ICC98Client {
 	 */
 	@Override
 	public String queryPosts(String keyWord, String sType, String searchDate,
-			int boardArea, int boardID) throws ParseException, IOException {
+			int boardArea, String boardID) throws ParseException, IOException {
 		/*
 		 * action: queryresult.asp name=keyword name=sType, value=2: 主题关键字搜索,
 		 * value=1: 主题作者搜索 name=SearchDate, value=ALL: 所有日期, value=1: 昨天以来 ,

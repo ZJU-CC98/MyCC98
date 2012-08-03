@@ -28,7 +28,6 @@ public class DropDownAnimation extends Animation {
 		view.getLayoutParams().height = newHeight;
 		view.requestLayout();
 	}
-
 	@Override
 	public void initialize(int width, int height, int parentWidth,
 			int parentHeight) {

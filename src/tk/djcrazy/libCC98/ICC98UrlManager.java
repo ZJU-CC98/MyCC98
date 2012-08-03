@@ -32,7 +32,7 @@ public interface ICC98UrlManager {
 	 */
 	public String getTodayBoardList();
 
-	public String getSearchUrl(String keyword, int boardid, String sType,
+	public String getSearchUrl(String keyword, String boardid, String sType,
 			int page);
 
 	public String getInboxUrl(int pageNum);
@@ -45,11 +45,11 @@ public interface ICC98UrlManager {
 
 	public String getClientUrl();
 
-	public String getBoardUrl(int boardId, int pageNum);
+	public String getBoardUrl(String boardId, int pageNum);
 
-	public String getBoardUrl(int boardId);
+	public String getBoardUrl(String boardId);
 
-	public String getPostUrl(int boardId, int postId, int pageNum);
+	public String getPostUrl(String boardId, String postId, int pageNum);
 
 	/**
 	 * @return the hotTopicUrl

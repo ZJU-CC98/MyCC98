@@ -9,29 +9,26 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.PatternSyntaxException;
 
- 
 import org.apache.http.NameValuePair;
 import org.apache.http.ParseException;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.message.BasicNameValuePair;
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-
 import tk.djcrazy.libCC98.data.BoardEntity;
-import tk.djcrazy.libCC98.data.BoardStatue;
 import tk.djcrazy.libCC98.data.HotTopicEntity;
 import tk.djcrazy.libCC98.data.InboxInfo;
 import tk.djcrazy.libCC98.data.PmInfo;
 import tk.djcrazy.libCC98.data.PostContentEntity;
 import tk.djcrazy.libCC98.data.PostEntity;
-import tk.djcrazy.libCC98.data.SearchResultEntity;
 import tk.djcrazy.libCC98.data.UserProfileEntity;
 import tk.djcrazy.libCC98.data.UserStatueEntity;
 import tk.djcrazy.libCC98.exception.NoUserFoundException;
 import tk.djcrazy.libCC98.exception.ParseContentException;
 import android.accounts.NetworkErrorException;
 import android.graphics.Bitmap;
+
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 @Singleton
 public class CC98ServiceImpl implements ICC98Service {
@@ -164,7 +161,7 @@ public class CC98ServiceImpl implements ICC98Service {
 	}
 
 	@Override
-	public List<Map<String, Object>> searchPost(String keyword, int boardid,
+	public List<Map<String, Object>> searchPost(String keyword, String boardid,
 			String sType, int page) throws ParseException, IOException {
 			return cc98Parser.searchPost(keyword, boardid, sType, page);
 	}
@@ -190,7 +187,7 @@ public class CC98ServiceImpl implements ICC98Service {
 	}
 
 	@Override
-	public List<BoardEntity> getPersonalBoardList() throws ClientProtocolException, ParseException, IOException, ParseContentException {
+	public List<BoardEntity> getPersonalBoardList() throws ClientProtocolException, ParseException, IOException, ParseContentException, java.text.ParseException {
 		return cc98Parser.getPersonalBoardList();
 	}
 
@@ -201,13 +198,13 @@ public class CC98ServiceImpl implements ICC98Service {
 	}
 
 	@Override
-	public List<PostContentEntity> getPostContentList(int boardId, int postId,
+	public List<PostContentEntity> getPostContentList(String boardId, String postId,
 			int pageNum) throws ClientProtocolException, ParseException, ParseContentException, java.text.ParseException, IOException {
 		return cc98Parser.getPostContentList(boardId, postId, pageNum);
 	}
 
 	@Override
-	public List<PostEntity> getPostList(int boardId, int pageNum) throws ClientProtocolException, ParseException, IOException, ParseContentException {
+	public List<PostEntity> getPostList(String boardId, int pageNum) throws ClientProtocolException, ParseException, IOException, ParseContentException, java.text.ParseException {
 		return cc98Parser.getPostList(boardId, pageNum);
 	}
 

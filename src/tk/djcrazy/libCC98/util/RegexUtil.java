@@ -25,6 +25,8 @@ public final class RegexUtil {
 		if (matcher.find()) {
 			return matcher.group();
 		} else {
+			System.err.println("getMatchedString regex: "+regex);
+			System.err.println("content: "+content);
  			throw new ParseContentException("内容解析错误");
 		}
 	}

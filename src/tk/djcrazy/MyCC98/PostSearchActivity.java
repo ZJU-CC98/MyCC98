@@ -8,17 +8,13 @@ import org.apache.http.ParseException;
 
 import tk.djcrazy.MyCC98.adapter.NewTopicListAdapter;
 import tk.djcrazy.MyCC98.view.HeaderView;
-import tk.djcrazy.libCC98.CC98ClientImpl;
-import tk.djcrazy.libCC98.CC98ParserImpl;
 import tk.djcrazy.libCC98.ICC98Service;
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.KeyEvent;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
@@ -28,7 +24,6 @@ import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.Toast;
 
-import com.flurry.android.FlurryAgent;
 import com.google.inject.Inject;
  
 public class PostSearchActivity extends BaseActivity {
@@ -45,15 +40,14 @@ public class PostSearchActivity extends BaseActivity {
 	private View vPrev;
 	private RadioGroup rg;
 	private RadioButton rbByTitle;
-	private RadioButton rbByAuthor;
-	private HeaderView mHeaderView;
+ 	private HeaderView mHeaderView;
 	private Bitmap userImage;
 	private ListView listView;
 	private List<Map<String, Object>> datalist;
 
 	private int currentPage = 1;
 	private int totalPage;
-	private int boardid = 0;
+	private String boardId;
 	private String boardname = "全站";
 	private String currentType = SEARCH_TYPE_TITLE;
 
@@ -112,7 +106,7 @@ public class PostSearchActivity extends BaseActivity {
 			public void run() {
 				try {
 					datalist = service.searchPost(etKeyword.getText()
-							.toString(), boardid, currentType, currentPage);
+							.toString(), boardId, currentType, currentPage);
 					if (datalist.size()>1) {
 						handler.sendEmptyMessage(FETCH_SUCC);
 					} else {
@@ -131,7 +125,7 @@ public class PostSearchActivity extends BaseActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		boardid = getIntent().getIntExtra(BOARDID, 0);
+		boardId = getIntent().getStringExtra(BOARDID);
 		boardname = getIntent().getStringExtra(BOARDNAME);
 		userImage = getIntent().getParcelableExtra(USER_IMAGE);
 		boardname = boardname == null ? "全站" : boardname;
@@ -192,8 +186,7 @@ public class PostSearchActivity extends BaseActivity {
 		etKeyword = (EditText) findViewById(R.id.et_postsearch_key);
 		rg = (RadioGroup) findViewById(R.id.rg_postsearch_stype);
 		rbByTitle = (RadioButton) findViewById(R.id.rb_postsearch_by_title);
-		rbByAuthor = (RadioButton) findViewById(R.id.rb_postsearch_by_author);
- 		listView = (ListView) findViewById(R.id.lv_postsearch);
+  		listView = (ListView) findViewById(R.id.lv_postsearch);
 		vNext = findViewById(R.id.tv_postsearch_next);
 		vPrev = findViewById(R.id.tv_postsearch_prev);
 		mHeaderView = (HeaderView) findViewById(R.id.main_header);
