@@ -140,7 +140,7 @@ public class PostListActivity extends BaseActivity implements OnRefreshListener,
 			switch (msg.what) {
 			case MSG_LIST_SUCC:
 				postListViewAdapter = new PostListViewAdapter(
-						PostListActivity.this, PostList);
+						PostListActivity.this, PostList, boardId, boardName);
 				listView.setAdapter(postListViewAdapter);
 				if (pageNumber == 1) {
 					vPrev.setVisibility(View.GONE);

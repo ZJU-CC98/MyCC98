@@ -4,18 +4,14 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.Date;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.apache.http.ParseException;
 import org.apache.http.client.ClientProtocolException;
 
-import com.google.inject.Inject;
-
+import roboguice.inject.ContentView;
+import roboguice.inject.InjectExtra;
+import roboguice.inject.InjectView;
 import tk.djcrazy.MyCC98.helper.HtmlGenHelper;
-import tk.djcrazy.MyCC98.view.HeaderView;
-import tk.djcrazy.libCC98.CC98ClientImpl;
-import tk.djcrazy.libCC98.CC98ParserImpl;
 import tk.djcrazy.libCC98.ICC98Service;
 import tk.djcrazy.libCC98.data.Gender;
 import tk.djcrazy.libCC98.data.PostContentEntity;
@@ -27,9 +23,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -43,7 +37,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
+import android.view.View.OnClickListener;
 import android.webkit.WebSettings;
 import android.webkit.WebSettings.LayoutAlgorithm;
 import android.webkit.WebView;
@@ -53,53 +47,73 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
+import com.google.inject.Inject;
+
 /**
  * 
  * @author zsy
  * 
  */
-public class PostContentsJSActivity extends BaseActivity {
+@ContentView(R.layout.post_contents_js)
+public class PostContentsJSActivity extends BaseActivity  implements OnClickListener{
+	private static final String JS_INTERFACE = "PostContentsJSActivity";
 
-	public static final int FETCH_CONTENT_SUCCESS = 1;
-	public static final int FETCH_CONTENT_FAILED = 0;
-	public static final int ADD_FRIEND_SUCCESS = 2;
-	public static final int ADD_FRIEND_FAILED = 3;
+	private static final int FETCH_CONTENT_SUCCESS = 1;
+	private static final int FETCH_CONTENT_FAILED = 0;
+	private static final int ADD_FRIEND_SUCCESS = 2;
+	private static final int ADD_FRIEND_FAILED = 3;
 
-	public static final String POST = "post";
-	public static final String POST_LINK = "postLink";
+	public static final String POST_ID = "postId";
+	public static final String BOARD_ID = "boardId";
+	public static final String BOARD_NAME = "boardName";
 	public static final String POST_NAME = "postName";
 	public static final String PAGE_NUMBER = "pageNumber";
-	public static final String USER_IMAGE = "userImage";
-	public static final int LAST_PAGE = 32767;
-
+ 	public static final int LAST_PAGE = 32767;
+ 
+	@InjectView(R.id.post_contents)
 	private WebView webView;
+	@InjectView(R.id.search_text)
 	private EditText jumpEditText;
+	@InjectView(R.id.search_text)
 	private EditText searchEditText;
+	@InjectView(R.id.post_content_show_all_imgs)
 	private View showAllImageTextView;
+	@InjectView(R.id.find_next)
 	private View findNextButton;
+	@InjectView(R.id.find_prev)
 	private View findPrevButton;
+	@InjectView(R.id.search_done)
 	private View searchDoneButton;
+	@InjectView(R.id.but_post_next)
 	private View vNext;
+	@InjectView(R.id.but_post_prev)
 	private View vPrev;
+	@InjectView(R.id.but_post_jump)
 	private View vJump;
+	@InjectView(R.id.but_post_re)
 	private View vRe;
-	private View vButtomPostReturn;
-	private Bitmap userImage;
-	private RelativeLayout searchBar;
-	private ProgressDialog progressDialog;
-	private ScrollView scrollView;
-	private HeaderView mHeaderView;
-	private int currPageNum = 1;
+	@InjectView(R.id.search_bar)
+ 	private RelativeLayout searchBar;
+//	@InjectView(R.id.post_content_scroll_view)
+//	private ScrollView scrollView;
+	
 	private int prevPageNum = 1;
 	private int totalPageNum = 1;
-	private String boardName;
-	private String postLink;
+	
+	@InjectExtra(value = BOARD_NAME, optional=true)
+	private String boardName="";
+	@InjectExtra(POST_ID)
+	private String postId;
+	@InjectExtra(BOARD_ID)
+	private String boardId;
+	@InjectExtra(POST_NAME)
 	private String postName;
-	private AnimationDrawable aDrawable;
-	private static PostContentsListPage currPage = new PostContentsListPage();
+	@InjectExtra(value=PAGE_NUMBER, optional=true)
+ 	private int currPageNum = 1;
+
+ 	private static PostContentsListPage currPage = new PostContentsListPage();
 	private static PostContentsListPage nextPage = new PostContentsListPage();
 	private static PostContentsListPage prevPage = new PostContentsListPage();
-	private static final String JS_INTERFACE = "PostContents";
 
 	private static final String ITEM_OPEN = "<div class=\"post\"><div class=\"post-content-wrapper\">";
 	private static final String ITEM_CLOSE = "</div>";
@@ -112,6 +126,7 @@ public class PostContentsJSActivity extends BaseActivity {
 	private static final int MNU_NEXT = Menu.FIRST + 5;
 	private boolean threadCancel = false;
 	private boolean searchMode = false;
+	private ProgressDialog progressDialog;
 
 	@Inject
 	private ICC98Service service;
@@ -122,24 +137,7 @@ public class PostContentsJSActivity extends BaseActivity {
 	public void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		setContentView(R.layout.post_contents_js);
-
-		Bundle bundle = getIntent().getBundleExtra(POST);
-		postLink = bundle.getString(POST_LINK);
-		int starIndex = postLink.indexOf("&star=");
-		if (starIndex == -1) {
-			starIndex = postLink.length();
-		}
-		postLink = postLink.substring(0, starIndex);
-		postName = bundle.getString(POST_NAME);
-		currPageNum = bundle.getInt(PAGE_NUMBER);
-		userImage = (Bitmap) bundle.getParcelable(USER_IMAGE);
-		Log.d(TAG, postLink + " " + postName + " " + currPageNum);
-		if (currPageNum == 0)
-			currPageNum = 1;
-		findViews();
-		setViews();
+ 		setViews();
 		addListeners();
 		progressDialog = ProgressDialog.show(PostContentsJSActivity.this, "",
 				this.getText(R.string.connectting));
@@ -147,23 +145,49 @@ public class PostContentsJSActivity extends BaseActivity {
 		dispContents(currPageNum);
 	}
 
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+		case R.id.find_prev:
+			webView.findNext(false);
+			break;
+		case R.id.find_next:
+			webView.findNext(true);
+			break;
+		case R.id.search_done:
+			dismissSearchDialog();
+			break;
+		case R.id.but_post_jump:
+			jumpDialog();
+			break;
+		case R.id.but_post_next:
+			nextPage();
+			break;
+		case R.id.but_post_prev:
+			prevPage();
+			break;
+		case R.id.but_post_re:
+			reply();
+			break;
+		case R.id.post_content_show_all_imgs:
+			webView.loadUrl("javascript:showAllImages.fireEvent('click');");
+			break;
+		default:
+			break;
+		}
+	}
+
 	private void addListeners() {
+ 		findPrevButton.setOnClickListener(this);
+ 		findNextButton.setOnClickListener(this);
+ 		searchDoneButton.setOnClickListener(this);
+ 		vJump.setOnClickListener(this);
+ 		vPrev.setOnClickListener(this);
+ 		vNext.setOnClickListener(this);
+ 		vRe.setOnClickListener(this);
+ 		showAllImageTextView.setOnClickListener(this);
 
-		mHeaderView.setTitleOnclickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				scrollView.scrollTo(0, 0);
-			}
-		});
-
-		mHeaderView.setButtonOnclickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				refreshPage();
-
-			}
-		});
-		searchEditText.addTextChangedListener(new TextWatcher() {
+ 		searchEditText.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before,
 					int count) {
@@ -173,85 +197,23 @@ public class PostContentsJSActivity extends BaseActivity {
 			@Override
 			public void beforeTextChanged(CharSequence s, int start, int count,
 					int after) {
-
 			}
 
 			@Override
 			public void afterTextChanged(Editable s) {
-
 			}
 		});
-
-		findNextButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				webView.findNext(true);
-			}
-		});
-
-		findPrevButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				webView.findNext(false);
-			}
-		});
-
-		searchDoneButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				dismissSearchDialog();
-			}
-		});
-
-		vJump.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				jumpDialog();
-			}
-		});
-
-		vPrev.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				prevPage();
-			}
-		});
-
-		vNext.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				nextPage();
-			}
-		});
-		vRe.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				reply();
-			}
-		});
-
-		showAllImageTextView.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				// webView.loadUrl("javascript:showAllImages.fireEvent('click');");
-				webView.loadUrl("javascript:showAllImages.fireEvent('click');");
-			}
-		});
-	}
+ 	}
 
 	/**
 	 * 
 	 */
 	private void setViews() {
-		mHeaderView.setUserImg(userImage);
-		mHeaderView.setTitleTextSize(12.0f);
-		mHeaderView.setButtonImageResource(R.drawable.top_refresh);
-		mHeaderView.setButtonBackgroundResource(R.color.transparent);
-		mHeaderView.setButtonPadding(2, 2, 2, 2);
-		WebSettings webSettings = webView.getSettings();
+ 		WebSettings webSettings = webView.getSettings();
 		webSettings.setJavaScriptEnabled(true);
 		webSettings.setPluginsEnabled(true);
 		webSettings.setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
+		//这里可以在设置中增加选项
 		webSettings.setAppCacheEnabled(true);
 		webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
 		webView.addJavascriptInterface(this, JS_INTERFACE);
@@ -280,41 +242,21 @@ public class PostContentsJSActivity extends BaseActivity {
 
 	private void onLoadDone() {
 		// progressDialog.dismiss();
-		mHeaderView.getButton().clearAnimation();
-		aDrawable.stop();
-		progressDialog.dismiss();
+ 		progressDialog.dismiss();
 		vPrev.setVisibility(currPageNum == 1 ? View.GONE : View.VISIBLE);
 		vNext.setVisibility(currPageNum == totalPageNum ? View.GONE
 				: View.VISIBLE);
 	}
-
-	private void findViews() {
-		webView = (WebView) findViewById(R.id.post_contents);
-		searchBar = (RelativeLayout) findViewById(R.id.search_bar);
-		jumpEditText = (EditText) findViewById(R.id.search_text);
-		searchEditText = (EditText) findViewById(R.id.search_text);
-		findNextButton = findViewById(R.id.find_next);
-		findPrevButton = findViewById(R.id.find_prev);
-		searchDoneButton = findViewById(R.id.search_done);
-		vJump = findViewById(R.id.but_post_jump);
-		vNext = findViewById(R.id.but_post_next);
-		vPrev = findViewById(R.id.but_post_prev);
-		vRe = findViewById(R.id.but_post_re);
-		vButtomPostReturn = findViewById(R.id.but_post_return);
-		scrollView = (ScrollView) findViewById(R.id.post_content_scroll_view);
-		showAllImageTextView = findViewById(R.id.post_content_show_all_imgs);
-		mHeaderView = (HeaderView) findViewById(R.id.main_header);
-	}
-
+ 
 	public void jumpTo(int pageNum) {
 		dispContents(pageNum);
-		scrollView.scrollTo(0, 0);
+		//scrollView.scrollTo(0, 0);
 	}
 
 	public void prevPage() {
 		if (currPageNum - 1 > 0) {
 			dispContents(currPageNum - 1);
-			scrollView.scrollTo(0, 0);
+			//scrollView.scrollTo(0, 0);
 		}
 
 	}
@@ -326,7 +268,7 @@ public class PostContentsJSActivity extends BaseActivity {
 	public void nextPage() {
 		if (currPageNum + 1 <= totalPageNum) {
 			dispContents(currPageNum + 1);
-			scrollView.scrollTo(0, 0);
+			//scrollView.scrollTo(0, 0);
 		}
 	}
 
@@ -340,11 +282,6 @@ public class PostContentsJSActivity extends BaseActivity {
 				webView.loadDataWithBaseURL(null, currPage.getString(),
 						"text/html", "utf-8", null);
 				setTitle(boardName);
-				mHeaderView.setTitle((new StringBuilder().append(currPageNum)
-						.append("/").append(totalPageNum).append(" ")
-						.append(postName).append("\n").append(boardName)
-						.toString()));
-
 				prefetch();
 				break;
 			case FETCH_CONTENT_FAILED:
@@ -352,7 +289,6 @@ public class PostContentsJSActivity extends BaseActivity {
 				Toast.makeText(PostContentsJSActivity.this, "网络连接或解析失败！",
 						Toast.LENGTH_SHORT).show();
 				break;
-
 			case ADD_FRIEND_SUCCESS:
 				Toast.makeText(PostContentsJSActivity.this, "成功添加好友:)",
 						Toast.LENGTH_SHORT).show();
@@ -368,26 +304,18 @@ public class PostContentsJSActivity extends BaseActivity {
 	};
 
 	private void dispContents(final int pageNum) {
-		aDrawable = (AnimationDrawable) mHeaderView.getButtomDrawable();
-		aDrawable.start();
-		webView.getSettings().setBlockNetworkImage(true);
+ 		webView.getSettings().setBlockNetworkImage(true);
 		new Thread() {
 			@Override
 			public void run() {
-				if (threadCancel) {
-					threadCancel = false;
-					return;
-				}
-
-				if (pageNum == currPageNum - 1 && prevPage.getList() != null) { // backward
+ 				if (pageNum == currPageNum - 1 && prevPage.getList() != null) { // backward
 																				// one
 																				// step
 					nextPage.setList(currPage.getList());
 					nextPage.setString(currPage.getString());
 					currPage.setList(prevPage.getList());
 					currPage.setString(prevPage.getString());
-					Log.d("MyCC98", "hit");
-					prevPageNum = currPageNum;
+ 					prevPageNum = currPageNum;
 					currPageNum = (pageNum == LAST_PAGE) ? totalPageNum
 							: pageNum;
 					handler.sendEmptyMessage(FETCH_CONTENT_SUCCESS);
@@ -407,8 +335,7 @@ public class PostContentsJSActivity extends BaseActivity {
 				} else {
 					try {
 						currPage.setString(fetchContents(currPage, pageNum));
-						Log.d("MyCC98", "miss");
-						prevPageNum = currPageNum;
+ 						prevPageNum = currPageNum;
 						currPageNum = (pageNum == LAST_PAGE) ? totalPageNum
 								: pageNum;
 						handler.sendEmptyMessage(FETCH_CONTENT_SUCCESS);
@@ -429,13 +356,13 @@ public class PostContentsJSActivity extends BaseActivity {
 
 	private String fetchContents(PostContentsListPage page, final int pageNum)
 			throws ClientProtocolException, ParseException, IOException, ParseContentException, java.text.ParseException {
-		Log.d(TAG, postLink);
+		Log.d(TAG, postId);
 		if (threadCancel) {
 			threadCancel = false;
 			return "";
 		}
 		List<PostContentEntity> contentList = service.getPostContentList(
-				"1234", "1234", pageNum);
+				boardId, postId, pageNum);
 		page.setList(contentList);
 
 		StringBuilder builder = new StringBuilder(5000);
@@ -576,11 +503,9 @@ public class PostContentsJSActivity extends BaseActivity {
 		new AlertDialog.Builder(this).setTitle(R.string.jump_dialog_title)
 				.setIcon(android.R.drawable.ic_dialog_info)
 				.setView(jumpEditText)
-				.setPositiveButton(R.string.jump_button, new OnClickListener() {
-
+				.setPositiveButton(R.string.jump_button, new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-
 						int jumpNum = 1;
 						try {
 							jumpNum = Integer.parseInt(jumpEditText.getText()
@@ -602,19 +527,15 @@ public class PostContentsJSActivity extends BaseActivity {
 					}
 				}).setNegativeButton(R.string.go_back, null).show();
 	}
-
-	/**
-	 * 
-	 */
+ 
 	public void reply() {
 		Intent intent = new Intent(PostContentsJSActivity.this,
 				EditActivity.class);
 		Bundle bundle = new Bundle();
 		bundle.putString(EditActivity.POST_NAME, postName);
-		bundle.putString(EditActivity.POST_LINK, postLink);
+		bundle.putString(EditActivity.POST_LINK, postId);
 		bundle.putInt(EditActivity.MOD, EditActivity.MOD_REPLY);
-		bundle.putParcelable(EditActivity.USER_IMAGE, userImage);
-		intent.putExtra(EditActivity.BUNDLE, bundle);
+ 		intent.putExtra(EditActivity.BUNDLE, bundle);
 		startActivityForResult(intent, 1);
 		overridePendingTransition(R.anim.forward_activity_move_in,
 				R.anim.forward_activity_move_out);
@@ -681,7 +602,7 @@ public class PostContentsJSActivity extends BaseActivity {
 		case 0: {
 			// quote & reply
 			String tmp = item.getPostContent().replaceAll("(<br>|<BR>)", "\n");
-			quoteReply(postLink, item.getPostTitle(), item.getUserName(),
+			quoteReply(postId, item.getPostTitle(), item.getUserName(),
 					DateFormatUtil.convertDateToString(item.getPostTime(),
 							false), tmp, index, currPageNum);
 		}
@@ -695,14 +616,14 @@ public class PostContentsJSActivity extends BaseActivity {
 					PostContentsJSActivity.this);
 			builder.setTitle("提示");
 			builder.setMessage("确认添加 " + item.getUserName() + " 为好友？");
-			builder.setPositiveButton("确定", new OnClickListener() {
+			builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
 
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					addFriend(item.getUserName());
 				}
 			});
-			builder.setNegativeButton("取消", new OnClickListener() {
+			builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
 
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
@@ -769,8 +690,7 @@ public class PostContentsJSActivity extends BaseActivity {
 	private void viewUserInfo(String username) {
 		Intent intent = new Intent(this, ProfileActivity.class);
 		intent.putExtra("userName", username);
-		intent.putExtra(ProfileActivity.USER_IMAGE, userImage);
-		PostContentsJSActivity.this.startActivity(intent);
+ 		PostContentsJSActivity.this.startActivity(intent);
 		PostContentsJSActivity.this.overridePendingTransition(
 				R.anim.forward_activity_move_in,
 				R.anim.forward_activity_move_out);
@@ -806,8 +726,7 @@ public class PostContentsJSActivity extends BaseActivity {
 		bundle.putCharSequence(EditActivity.REPLY_CONTENT, postContent);
 		bundle.putInt(EditActivity.FLOOR_NUMBER, floorNum);
 		bundle.putInt(EditActivity.PAGE_NUMBER, pageNum);
-		bundle.putParcelable(EditActivity.USER_IMAGE, userImage);
-		bundle.putInt(EditActivity.MOD, EditActivity.MOD_REPLY);
+ 		bundle.putInt(EditActivity.MOD, EditActivity.MOD_REPLY);
 		intent.putExtra(EditActivity.BUNDLE, bundle);
 		startActivityForResult(intent, 1);
 		overridePendingTransition(R.anim.forward_activity_move_in,
@@ -848,11 +767,11 @@ public class PostContentsJSActivity extends BaseActivity {
 	public void open(String pageLink, int pageNum) {
 		Log.d(TAG, "open new post:" + pageNum);
 		Bundle bundle = new Bundle();
-		bundle.putString(POST_LINK, pageLink);
+		bundle.putString(POST_ID, pageLink);
 		bundle.putInt(PAGE_NUMBER, pageNum);
 		bundle.putString(POST_NAME, "");
 		Intent intent = new Intent(this, PostContentsJSActivity.class);
-		intent.putExtra(POST, bundle);
+//		intent.putExtra(POST, bundle);
 		this.startActivity(intent);
 		overridePendingTransition(R.anim.forward_activity_move_in,
 				R.anim.forward_activity_move_out);

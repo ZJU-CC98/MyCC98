@@ -4,11 +4,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.http.NameValuePair;
 import org.apache.http.ParseException;
 import org.apache.http.client.ClientProtocolException;
-
-import com.google.inject.Inject;
 
 import roboguice.fragment.RoboFragment;
 import roboguice.inject.InjectView;
@@ -17,15 +14,14 @@ import tk.djcrazy.MyCC98.R;
 import tk.djcrazy.MyCC98.adapter.SearchResultListAdapter;
 import tk.djcrazy.MyCC98.listener.LoadingListener;
 import tk.djcrazy.MyCC98.util.ViewUtils;
-import tk.djcrazy.libCC98.CC98ClientImpl;
-import tk.djcrazy.libCC98.CC98ParserImpl;
 import tk.djcrazy.libCC98.ICC98Service;
+import tk.djcrazy.libCC98.data.BoardStatus;
+import tk.djcrazy.libCC98.exception.ParseContentException;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,11 +32,13 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
+import com.google.inject.Inject;
+
 public class SearchBoardFragment extends RoboFragment {
 	private int position = 0;
 	private static final String TAG = "SearchBoardFragment";
-	private List<NameValuePair> currentResult;
-	private List<NameValuePair> boardList;
+	private List<BoardStatus> currentResult;
+	private List<BoardStatus> boardList;
 
 	@InjectView(R.id.search_board_bar)
 	private EditText searchContent;
@@ -51,7 +49,7 @@ public class SearchBoardFragment extends RoboFragment {
 
 	@Inject
 	private ICC98Service service;
-	
+
 	private SearchResultListAdapter listAdapter;
 	private static final int FETCH_SUCC = 0;
 	private static final int FETCH_FAIL = 1;
@@ -98,7 +96,7 @@ public class SearchBoardFragment extends RoboFragment {
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 		if (boardList != null) {
- 			ViewUtils.setGone(progressBar, true);
+			ViewUtils.setGone(progressBar, true);
 			ViewUtils.setGone(lvResultList, false);
 			lvResultList.setAdapter(listAdapter);
 			listAdapter.notifyDataSetChanged();
@@ -107,7 +105,7 @@ public class SearchBoardFragment extends RoboFragment {
 			ViewUtils.setGone(progressBar, true);
 			ViewUtils.setGone(lvResultList, false);
 			fetchBoardlist();
-			
+
 		}
 	}
 
@@ -127,6 +125,9 @@ public class SearchBoardFragment extends RoboFragment {
 				} catch (IOException e) {
 					handler.sendEmptyMessage(FETCH_FAIL);
 					e.printStackTrace();
+				} catch (ParseContentException e) {
+					handler.sendEmptyMessage(FETCH_FAIL);
+					e.printStackTrace();
 				}
 			}
 		}.start();
@@ -142,7 +143,7 @@ public class SearchBoardFragment extends RoboFragment {
 			@Override
 			public void onTextChanged(CharSequence arg0, int arg1, int arg2,
 					int arg3) {
-				doSearch(searchContent.getText().toString());
+				doSearch(searchContent.getText().toString().trim());
 			}
 
 			@Override
@@ -158,20 +159,16 @@ public class SearchBoardFragment extends RoboFragment {
 		});
 
 		lvResultList.setOnItemClickListener(new OnItemClickListener() {
-
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
-				Bundle bundle = new Bundle();
-				bundle.putString(PostListActivity.BOARD_ID,
-						service.getDomain()
-								+ currentResult.get(arg2).getValue());
-				bundle.putString(PostListActivity.BOARD_NAME, currentResult
-						.get(arg2).getName());
-				bundle.putInt(PostListActivity.PAGE_NUMBER, 1);
-
-				Intent intent = new Intent().setClass(
-						getActivity(), PostListActivity.class);
+				Intent intent = new Intent(getActivity(),
+						PostListActivity.class);
+				intent.putExtra(PostListActivity.BOARD_ID,
+						currentResult.get(arg2).getBoardId());
+				intent.putExtra(PostListActivity.BOARD_NAME, currentResult
+						.get(arg2).getBoardName());
+				intent.putExtra(PostListActivity.PAGE_NUMBER, 1);
 				getActivity().startActivity(intent);
 				getActivity().overridePendingTransition(
 						R.anim.forward_activity_move_in,
@@ -182,31 +179,39 @@ public class SearchBoardFragment extends RoboFragment {
 
 	protected void doSearch(String string) {
 		if (string.equals("")) {
-			if (boardList==null) {
-				currentResult = new  ArrayList<NameValuePair>();
+			if (boardList == null ) {
+				currentResult = new ArrayList<BoardStatus>();
+			} else if (boardList.size()<=30) {
+				currentResult = boardList;
+			} else {
+				currentResult = boardList.subList(0, 30);
 			}
-			currentResult = boardList.subList(0, 30);
 		} else if (string.length() < lastquerylen) {
-			List<NameValuePair> tmplist = new ArrayList<NameValuePair>();
-			for (NameValuePair np : boardList) {
-				if (np.getName().toLowerCase().contains(string.toLowerCase())) {
+			List<BoardStatus> tmplist = new ArrayList<BoardStatus>();
+			for (BoardStatus np : boardList) {
+				if (np.getBoardName().toLowerCase().contains(string.toLowerCase())) {
 					tmplist.add(np);
 				}
 			}
 			currentResult = tmplist;
 		} else {
-			List<NameValuePair> tmplist = new ArrayList<NameValuePair>();
-			for (NameValuePair np : currentResult) {
-				if (np.getName().toLowerCase().contains(string.toLowerCase())) {
+			List<BoardStatus> tmplist = new ArrayList<BoardStatus>();
+			for (BoardStatus np : currentResult) {
+				if (np.getBoardName().toLowerCase().contains(string.toLowerCase())) {
 					tmplist.add(np);
 				}
 			}
 			currentResult = tmplist;
 		}
 		lastquerylen = string.length();
-		listAdapter = new SearchResultListAdapter(getActivity(), currentResult);
+		if (listAdapter==null) {
+			listAdapter = new SearchResultListAdapter(getActivity(), currentResult);
+		} else {
+			listAdapter.setBoardList(currentResult);
+		}
 		lvResultList.setAdapter(listAdapter);
-		lvResultList.invalidate();
+ 		listAdapter.notifyDataSetChanged();
+ 		lvResultList.invalidate();
 	}
 
 	/**

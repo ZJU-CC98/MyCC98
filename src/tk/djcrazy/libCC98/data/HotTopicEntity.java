@@ -25,14 +25,14 @@ public class HotTopicEntity {
 	/**
 	 * @return the postLink
 	 */
-	public String getPostLink() {
-		return postLink;
+	public String getPostId() {
+		return postId;
 	}
 	/**
 	 * @param postLink the postLink to set
 	 */
-	public void setPostLink(String postLink) {
-		this.postLink = postLink;
+	public void setPostId(String postLink) {
+		this.postId = postLink;
 	}
 	/**
 	 * @return the boardName
@@ -106,14 +106,25 @@ public class HotTopicEntity {
 	public void setClickNumber(int clickNumber) {
 		this.clickNumber = clickNumber;
 	}
+	/**
+	 * @return the boardId
+	 */
+	public String getBoardId() {
+		return boardId;
+	}
+	/**
+	 * @param boardId the boardId to set
+	 */
+	public void setBoardId(String boardId) {
+		this.boardId = boardId;
+	}
 	private String topicName="";
-	private String postLink="";
+	private String postId="";
+	private String boardId="";
 	private String boardName="";
 	private String postAuthor="";
 	private String postTime="";
 	private int focusNumber=0;
 	private int replyNumber=0;
 	private int clickNumber=0;
-	
-	
 }

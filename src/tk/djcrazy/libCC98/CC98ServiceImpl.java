@@ -15,11 +15,13 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.message.BasicNameValuePair;
 
 import tk.djcrazy.libCC98.data.BoardEntity;
+import tk.djcrazy.libCC98.data.BoardStatus;
 import tk.djcrazy.libCC98.data.HotTopicEntity;
 import tk.djcrazy.libCC98.data.InboxInfo;
 import tk.djcrazy.libCC98.data.PmInfo;
 import tk.djcrazy.libCC98.data.PostContentEntity;
 import tk.djcrazy.libCC98.data.PostEntity;
+import tk.djcrazy.libCC98.data.SearchResultEntity;
 import tk.djcrazy.libCC98.data.UserProfileEntity;
 import tk.djcrazy.libCC98.data.UserStatueEntity;
 import tk.djcrazy.libCC98.exception.NoUserFoundException;
@@ -161,8 +163,8 @@ public class CC98ServiceImpl implements ICC98Service {
 	}
 
 	@Override
-	public List<Map<String, Object>> searchPost(String keyword, String boardid,
-			String sType, int page) throws ParseException, IOException {
+	public List<SearchResultEntity> searchPost(String keyword, String boardid,
+			String sType, int page) throws ParseException, IOException, ParseContentException, java.text.ParseException {
 			return cc98Parser.searchPost(keyword, boardid, sType, page);
 	}
 
@@ -182,7 +184,7 @@ public class CC98ServiceImpl implements ICC98Service {
 	}
 
 	@Override
-	public List<Map<String, Object>> getNewPostList() throws ClientProtocolException, ParseException, IOException {
+	public List<SearchResultEntity> getNewPostList() throws ClientProtocolException, ParseException, IOException, ParseContentException, java.text.ParseException {
 		return cc98Parser.getNewPostList();
 	}
 
@@ -209,7 +211,7 @@ public class CC98ServiceImpl implements ICC98Service {
 	}
 
 	@Override
-	public List<NameValuePair> getTodayBoardList() throws ClientProtocolException, ParseException, IOException {
+	public List<BoardStatus> getTodayBoardList() throws ClientProtocolException, ParseException, IOException, ParseContentException {
 		return cc98Parser.getTodayBoardList();
 	}
 

@@ -3,20 +3,56 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/listview_selector"
-    android:orientation="vertical"
-    android:paddingBottom="20dip"
-    android:paddingLeft="5dip"
-    android:paddingRight="5dip"
-    android:paddingTop="20dip" >
+    android:orientation="vertical" 
+    android:gravity="center_vertical"
+    android:paddingLeft="10dp" >
 
     <!-- 帖子标题 -->
 
-    <TextView
-        android:id="@+id/search_result_board_name"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="空白"
-        android:textColor="#333"
-        android:textSize="13sp" />
+        android:orientation="horizontal" 
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp">
+
+        <TextView
+            android:id="@+id/search_result_board_name"
+            style="@style/board_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.0"
+            android:text="空白" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingRight="6dp"
+            android:layout_gravity="center_vertical" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/today"
+                android:textColor="#aaa"
+                android:textSize="10sp" />
+
+            <TextView
+                android:id="@+id/search_result_post_number_today"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="4dp"
+                android:textColor="#aaa"
+                android:textSize="10sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+		<ImageView
+		    android:id="@+id/post_num_line"
+		    android:layout_width="100dp"
+		    android:layout_height="wrap_content"  
+		    android:scaleType="matrix"
+		    android:src="@drawable/status_line_red" />
 
 </LinearLayout>

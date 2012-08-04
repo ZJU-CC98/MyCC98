@@ -519,10 +519,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-				WindowManager.LayoutParams.FLAG_FULLSCREEN);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		setContentView(R.layout.login);
+  		setContentView(R.layout.login);
 		intent = new Intent(LoginActivity.this, HomeActivity.class);
 		findViews();
 		setupRememberedLoginInfo();

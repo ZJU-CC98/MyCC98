@@ -13,7 +13,7 @@ import org.apache.http.ParseException;
 import org.apache.http.client.ClientProtocolException;
 
 import tk.djcrazy.libCC98.data.BoardEntity;
-import tk.djcrazy.libCC98.data.BoardStatue;
+import tk.djcrazy.libCC98.data.BoardStatus;
 import tk.djcrazy.libCC98.data.HotTopicEntity;
 import tk.djcrazy.libCC98.data.InboxInfo;
 import tk.djcrazy.libCC98.data.PmInfo;
@@ -61,8 +61,8 @@ public interface ICC98Service {
 			String faceString, String content) throws ClientProtocolException,
 			IOException;
 
-	public List<Map<String, Object>> searchPost(String keyword, String boardid,
-			String sType, int page) throws ParseException, IOException;
+	public List<SearchResultEntity> searchPost(String keyword, String boardid,
+			String sType, int page) throws ParseException, IOException, ParseContentException, java.text.ParseException;
 
 	public void sendPm(String toUser, String title, String content)
 			throws ClientProtocolException, IOException;
@@ -74,8 +74,8 @@ public interface ICC98Service {
 	public String getMsgContent(int pmId) throws ClientProtocolException,
 			ParseException, IOException;
 
-	public List<Map<String, Object>> getNewPostList()
-			throws ClientProtocolException, ParseException, IOException;
+	public List<SearchResultEntity> getNewPostList()
+			throws ClientProtocolException, ParseException, IOException, ParseContentException, java.text.ParseException;
 
 	public List<BoardEntity> getPersonalBoardList()
 			throws ClientProtocolException, ParseException, IOException,
@@ -92,8 +92,8 @@ public interface ICC98Service {
 			throws ClientProtocolException, ParseException, IOException,
 			ParseContentException, java.text.ParseException;
 
-	public List<NameValuePair> getTodayBoardList()
-			throws ClientProtocolException, ParseException, IOException;
+	public List<BoardStatus> getTodayBoardList()
+			throws ClientProtocolException, ParseException, IOException, ParseContentException;
 
 	public List<UserStatueEntity> getFriendList()
 			throws ClientProtocolException, ParseException, IOException,

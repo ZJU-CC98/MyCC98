@@ -9,11 +9,13 @@ import org.apache.http.ParseException;
 import org.apache.http.client.ClientProtocolException;
 
 import tk.djcrazy.libCC98.data.BoardEntity;
+import tk.djcrazy.libCC98.data.BoardStatus;
 import tk.djcrazy.libCC98.data.HotTopicEntity;
 import tk.djcrazy.libCC98.data.InboxInfo;
 import tk.djcrazy.libCC98.data.PmInfo;
 import tk.djcrazy.libCC98.data.PostContentEntity;
 import tk.djcrazy.libCC98.data.PostEntity;
+import tk.djcrazy.libCC98.data.SearchResultEntity;
 import tk.djcrazy.libCC98.data.UserProfileEntity;
 import tk.djcrazy.libCC98.data.UserStatueEntity;
 import tk.djcrazy.libCC98.exception.NoUserFoundException;
@@ -110,9 +112,11 @@ public interface ICC98Parser {
 	 * @throws IOException
 	 * @throws ParseException
 	 * @throws ClientProtocolException
+	 * @throws java.text.ParseException 
+	 * @throws ParseContentException 
 	 */
-	public List<Map<String, Object>> getNewPostList()
-			throws ClientProtocolException, ParseException, IOException;
+	public List<SearchResultEntity> getNewPostList()
+			throws ClientProtocolException, ParseException, IOException, ParseContentException, java.text.ParseException;
 
 	/**
 	 * get user friend list
@@ -154,20 +158,22 @@ public interface ICC98Parser {
 	public List<PmInfo> getPmData(int page_num, InboxInfo inboxInfo, int type)
 			throws ClientProtocolException, ParseException, IOException;
 
-	public List<Map<String, Object>> searchPost(String keyword, String boardid,
-			String sType, int page) throws ParseException, IOException;
+	public List<SearchResultEntity> searchPost(String keyword, String boardid,
+			String sType, int page) throws ParseException, IOException, ParseContentException, java.text.ParseException;
 
-	public List<Map<String, Object>> query(String keyWord, String sType,
+	public List<SearchResultEntity> query(String keyWord, String sType,
 			String searchDate, int boardArea, String boardID)
-			throws ParseException, IOException;
+			throws ParseException, IOException, ParseContentException, java.text.ParseException;
 
 	/**
 	 * @author DJ
 	 * @author zsy (bug fix)
 	 * @param html
 	 * @return
+	 * @throws java.text.ParseException 
+	 * @throws ParseContentException 
 	 */
-	public List<Map<String, Object>> parseQueryResult(String html);
+	public List<SearchResultEntity> parseQueryResult(String html) throws ParseContentException, java.text.ParseException;
 
 	/**
 	 * @author zsy
@@ -175,9 +181,10 @@ public interface ICC98Parser {
 	 * @throws ClientProtocolException
 	 * @throws ParseException
 	 * @throws IOException
+	 * @throws ParseContentException 
 	 */
-	public List<NameValuePair> getTodayBoardList()
-			throws ClientProtocolException, ParseException, IOException;
+	public List<BoardStatus> getTodayBoardList()
+			throws ClientProtocolException, ParseException, IOException, ParseContentException;
 
 	/**
 	 * @return the cc98Client

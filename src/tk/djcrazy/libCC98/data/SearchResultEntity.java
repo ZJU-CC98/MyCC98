@@ -7,37 +7,37 @@ public class SearchResultEntity {
 	/**
 	 * @return the faceId
 	 */
-	public int getFaceId() {
+	public String getFaceId() {
 		return faceId;
 	}
 	/**
 	 * @param faceId the faceId to set
 	 */
-	public void setFaceId(int faceId) {
+	public void setFaceId(String faceId) {
 		this.faceId = faceId;
 	}
 	/**
 	 * @return the boardId
 	 */
-	public int getBoardId() {
+	public String getBoardId() {
 		return boardId;
 	}
 	/**
 	 * @param boardId the boardId to set
 	 */
-	public void setBoardId(int boardId) {
+	public void setBoardId(String boardId) {
 		this.boardId = boardId;
 	}
 	/**
 	 * @return the postId
 	 */
-	public int getPostId() {
+	public String getPostId() {
 		return postId;
 	}
 	/**
 	 * @param postId the postId to set
 	 */
-	public void setPostId(int postId) {
+	public void setPostId(String postId) {
 		this.postId = postId;
 	}
 	/**
@@ -76,7 +76,7 @@ public class SearchResultEntity {
 	public void setPostTime(Date postTime) {
 		this.postTime = postTime;
 	}
-	private int faceId ;
+	private String faceId ;
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
@@ -86,9 +86,16 @@ public class SearchResultEntity {
 				+ ", postId=" + postId + ", title=" + title + ", authorName="
 				+ authorName + ", postTime=" + postTime + "]";
 	}
-	private int boardId;
-	private int postId;
+ 	public String getTotalResult() {
+		return totalResult;
+	}
+ 	public void setTotalResult(String totalResult) {
+		this.totalResult = totalResult;
+	}
+	private String boardId;
+	private String postId;
 	private String title;
 	private String authorName; 
 	private Date postTime;
+	private String totalResult;
  }

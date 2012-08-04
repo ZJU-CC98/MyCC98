@@ -1,45 +1,6 @@
 package tk.djcrazy.libCC98;
 
-import static tk.djcrazy.libCC98.CC98ParseRepository.HOT_TOPIC_BOARD_NAME_WITH_AUTHOR_REGEX;
-import static tk.djcrazy.libCC98.CC98ParseRepository.HOT_TOPIC_CLICK_REGEX;
-import static tk.djcrazy.libCC98.CC98ParseRepository.HOT_TOPIC_LINK_REGEX;
-import static tk.djcrazy.libCC98.CC98ParseRepository.HOT_TOPIC_NAME_REGEX;
-import static tk.djcrazy.libCC98.CC98ParseRepository.HOT_TOPIC_POST_TIME_REGEX;
-import static tk.djcrazy.libCC98.CC98ParseRepository.HOT_TOPIC_WRAPPER;
-import static tk.djcrazy.libCC98.CC98ParseRepository.POST_CONTENT_GENDER_REGEX;
-import static tk.djcrazy.libCC98.CC98ParseRepository.POST_CONTENT_INFO_REGEX;
-import static tk.djcrazy.libCC98.CC98ParseRepository.POST_CONTENT_POST_CONTENT_REGEX;
-import static tk.djcrazy.libCC98.CC98ParseRepository.POST_CONTENT_POST_FACE_REGEX;
-import static tk.djcrazy.libCC98.CC98ParseRepository.POST_CONTENT_POST_TIME_REGEX;
-import static tk.djcrazy.libCC98.CC98ParseRepository.POST_CONTENT_POST_TITLE_REGEX;
-import static tk.djcrazy.libCC98.CC98ParseRepository.POST_CONTENT_USERNAME_REGEX;
-import static tk.djcrazy.libCC98.CC98ParseRepository.POST_CONTENT_USER_AVATAR_LINK_REGEX;
-import static tk.djcrazy.libCC98.CC98ParseRepository.POST_CONTENT_WHOLE_REGEX;
-import static tk.djcrazy.libCC98.CC98ParseRepository.POST_LIST_LAST_REPLY_AUTHOR_REGEX;
-import static tk.djcrazy.libCC98.CC98ParseRepository.POST_LIST_LAST_REPLY_LINK_REGEX;
-import static tk.djcrazy.libCC98.CC98ParseRepository.POST_LIST_LAST_REPLY_TIME_REGEX;
-import static tk.djcrazy.libCC98.CC98ParseRepository.POST_LIST_POST_AUTHOR_NAME_REGEX;
-import static tk.djcrazy.libCC98.CC98ParseRepository.POST_LIST_POST_ENTITY_REGEX;
-import static tk.djcrazy.libCC98.CC98ParseRepository.POST_LIST_POST_LINK_REGEX;
-import static tk.djcrazy.libCC98.CC98ParseRepository.POST_LIST_POST_NAME_REGEX;
-import static tk.djcrazy.libCC98.CC98ParseRepository.POST_LIST_POST_PAGE_NUMBER_REGEX;
-import static tk.djcrazy.libCC98.CC98ParseRepository.POST_LIST_POST_TYPE_REGEX;
-import static tk.djcrazy.libCC98.CC98ParseRepository.POST_LIST_REPLY_NUM_REGEX;
-import static tk.djcrazy.libCC98.CC98ParseRepository.P_BOARD_BOARD_MASTER_REGEX;
-import static tk.djcrazy.libCC98.CC98ParseRepository.P_BOARD_INTRO_REGEX;
-import static tk.djcrazy.libCC98.CC98ParseRepository.P_BOARD_LAST_REPLY_AUTHOR_REGEX;
-import static tk.djcrazy.libCC98.CC98ParseRepository.P_BOARD_LAST_REPLY_TIME_REGEX;
-import static tk.djcrazy.libCC98.CC98ParseRepository.P_BOARD_LAST_REPLY_TOPIC_ID_REGEX;
-import static tk.djcrazy.libCC98.CC98ParseRepository.P_BOARD_LAST_REPLY_TOPIC_NAME_REGEX;
-import static tk.djcrazy.libCC98.CC98ParseRepository.P_BOARD_ID_REGEX;
-import static tk.djcrazy.libCC98.CC98ParseRepository.P_BOARD_NAME_REGEX;
-import static tk.djcrazy.libCC98.CC98ParseRepository.P_BOARD_OUTER_WRAAPER_REGEX;
-import static tk.djcrazy.libCC98.CC98ParseRepository.P_BOARD_POST_NUMBER_TODAY;
-import static tk.djcrazy.libCC98.CC98ParseRepository.P_BOARD_SINGLE_BOARD_WRAPPER_REGEX;
-import static tk.djcrazy.libCC98.CC98ParseRepository.USER_PROFILE_AVATAR_REGEX;
-import static tk.djcrazy.libCC98.CC98ParseRepository.USER_PROFILE_GENERAL_PROFILE_REGEX;
-import static tk.djcrazy.libCC98.CC98ParseRepository.USER_PROFILE_ONLINE_INFO_REGEX;
-import static tk.djcrazy.libCC98.CC98ParseRepository.USER_PROFILE_PERSON_PROFILE_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.*;
 import static tk.djcrazy.libCC98.util.DateFormatUtil.convertStringToDateInPostContent;
 import static tk.djcrazy.libCC98.util.RegexUtil.getMatchedString;
 import static tk.djcrazy.libCC98.util.RegexUtil.getMatchedStringList;
@@ -54,10 +15,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.http.NameValuePair;
 import org.apache.http.ParseException;
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.message.BasicNameValuePair;
 
 import android.util.Log;
 
@@ -65,18 +24,21 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import tk.djcrazy.libCC98.data.BoardEntity;
+import tk.djcrazy.libCC98.data.BoardStatus;
 import tk.djcrazy.libCC98.data.Gender;
 import tk.djcrazy.libCC98.data.HotTopicEntity;
 import tk.djcrazy.libCC98.data.InboxInfo;
 import tk.djcrazy.libCC98.data.PmInfo;
 import tk.djcrazy.libCC98.data.PostContentEntity;
 import tk.djcrazy.libCC98.data.PostEntity;
+import tk.djcrazy.libCC98.data.SearchResultEntity;
 import tk.djcrazy.libCC98.data.UserProfileEntity;
 import tk.djcrazy.libCC98.data.UserStatue;
 import tk.djcrazy.libCC98.data.UserStatueEntity;
 import tk.djcrazy.libCC98.exception.NoUserFoundException;
 import tk.djcrazy.libCC98.exception.ParseContentException;
 import tk.djcrazy.libCC98.util.DateFormatUtil;
+import tk.djcrazy.libCC98.util.StringUtil;
 
 @Singleton
 public class CC98ParserImpl implements ICC98Parser {
@@ -160,8 +122,9 @@ public class CC98ParserImpl implements ICC98Parser {
 	 * @see tk.djcrazy.libCC98.ICC98Parser#getNewPostList()
 	 */
 	@Override
-	public List<Map<String, Object>> getNewPostList()
-			throws ClientProtocolException, ParseException, IOException {
+	public List<SearchResultEntity> getNewPostList()
+			throws ClientProtocolException, ParseException, IOException,
+			ParseContentException, java.text.ParseException {
 		return parseQueryResult(cc98Client.getPage(cc98UrlManager
 				.getNewPostUrl()));
 	}
@@ -194,6 +157,14 @@ public class CC98ParserImpl implements ICC98Parser {
 	private String getMsgPageHtml(int pmId) throws ClientProtocolException,
 			ParseException, IOException {
 		return cc98Client.getPage(cc98UrlManager.getMessagePageUrl(pmId));
+	}
+
+	@Override
+	public List<BoardStatus> getTodayBoardList()
+			throws ClientProtocolException, ParseException, IOException,
+			ParseContentException {
+		String content = cc98Client.getPage(cc98UrlManager.getTodayBoardList());
+		return parseTodayBoardList(content);
 	}
 
 	/**
@@ -284,18 +255,10 @@ public class CC98ParserImpl implements ICC98Parser {
 					POST_LIST_POST_AUTHOR_NAME_REGEX, post));
 			entity.setLastReplyAuthor(getMatchedString(
 					POST_LIST_LAST_REPLY_AUTHOR_REGEX, post));
-			entity.setLastReplyLink(getMatchedString(
-					POST_LIST_LAST_REPLY_LINK_REGEX, post));
 			entity.setLastReplyTime(DateFormatUtil
-					.convertStrToDateInPBoard(getMatchedString(
+					.convertStringToDateInPostList(getMatchedString(
 							POST_LIST_LAST_REPLY_TIME_REGEX, post)));
-			{
-				String tempLink = getMatchedString(POST_LIST_POST_LINK_REGEX,
-						post);
-				int idx = tempLink.indexOf("&page=");
-				idx = idx == -1 ? tempLink.length() : idx;
-				entity.setPostLink(tempLink.substring(0, idx));
-			}
+			entity.setPostId(getMatchedString(POST_LIST_POST_ID_REGEX, post));
 			list.add(entity);
 		}
 		return list;
@@ -306,7 +269,7 @@ public class CC98ParserImpl implements ICC98Parser {
 	 * @param html
 	 * @return
 	 * @throws ParseContentException
-	 * @throws java.text.ParseException 
+	 * @throws java.text.ParseException
 	 */
 	private List<BoardEntity> parsePersonalBoardList(String html)
 			throws ParseContentException, java.text.ParseException {
@@ -329,7 +292,7 @@ public class CC98ParserImpl implements ICC98Parser {
 							P_BOARD_LAST_REPLY_TIME_REGEX, string)));
 			entity.setLastReplyTopicID(getMatchedString(
 					P_BOARD_LAST_REPLY_TOPIC_ID_REGEX, string));
- 			entity.setLastReplyTopicName(filterHtmlDecode(getMatchedString(
+			entity.setLastReplyTopicName(filterHtmlDecode(getMatchedString(
 					P_BOARD_LAST_REPLY_TOPIC_NAME_REGEX, string)));
 			entity.setPostNumberToday(Integer.parseInt(getMatchedString(
 					P_BOARD_POST_NUMBER_TODAY, string)));
@@ -421,9 +384,10 @@ public class CC98ParserImpl implements ICC98Parser {
 			HotTopicEntity entity = new HotTopicEntity();
 			entity.setTopicName(filterHtmlDecode(getMatchedString(
 					HOT_TOPIC_NAME_REGEX, topic)));
-			entity.setPostLink(getMatchedString(HOT_TOPIC_LINK_REGEX, topic));
+			entity.setPostId(getMatchedString(HOT_TOPIC_ID_REGEX, topic));
 			entity.setPostTime(getMatchedString(HOT_TOPIC_POST_TIME_REGEX,
 					topic));
+			entity.setBoardId(getMatchedString(HOT_TOPIC_BOARD_ID_REGEX, topic));
 			// click number
 			{
 				List<String> numList = getMatchedStringList(
@@ -546,8 +510,9 @@ public class CC98ParserImpl implements ICC98Parser {
 	 * java.lang.String, int)
 	 */
 	@Override
-	public List<Map<String, Object>> searchPost(String keyword, String boardid,
-			String sType, int page) throws ParseException, IOException {
+	public List<SearchResultEntity> searchPost(String keyword, String boardid,
+			String sType, int page) throws ParseException, IOException,
+			ParseContentException, java.text.ParseException {
 		/*
 		 * http://www.cc98.org/queryresult.asp?page=2&stype=2&pSearch=1&nSearch=&
 		 * keyword=t&SearchDate=1000&boardid=0&sertype=1
@@ -564,9 +529,10 @@ public class CC98ParserImpl implements ICC98Parser {
 	 * java.lang.String, java.lang.String, int, int)
 	 */
 	@Override
-	public List<Map<String, Object>> query(String keyWord, String sType,
+	public List<SearchResultEntity> query(String keyWord, String sType,
 			String searchDate, int boardArea, String boardID)
-			throws ParseException, IOException {
+			throws ParseException, IOException, ParseContentException,
+			java.text.ParseException {
 		return parseQueryResult(cc98Client.queryPosts(keyWord, sType,
 				searchDate, boardArea, boardID));
 	}
@@ -577,103 +543,31 @@ public class CC98ParserImpl implements ICC98Parser {
 	 * @see tk.djcrazy.libCC98.ICC98Parser#parseQueryResult(java.lang.String)
 	 */
 	@Override
-	public List<Map<String, Object>> parseQueryResult(String html) {
-		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
-		Map<String, Object> mmap = new HashMap<String, Object>();
-
-		Pattern pattern = Pattern
-				.compile(
-						"(?<=tablebody1 width=\\*>).*?(?=<!--<font color=\"#FF0000\">)",
-						Pattern.DOTALL);
-
-		Pattern postFacePattern = Pattern.compile(
-				"(?<=<img src='face/face).*?(?=\\.gif)", Pattern.DOTALL);
-		Pattern postLinkPattern = Pattern.compile(
-				"dispbbs.asp\\?boardID.*?(?=')", Pattern.DOTALL);
-		Pattern postTitlePattern = Pattern.compile("(?<=blank>).*?(?=</a>)",
-				Pattern.DOTALL);
-		Pattern authorPattern = Pattern.compile(
-				"(?<=\"  target=_blank>).{0,10}?(?=</a>)", Pattern.DOTALL);
-		Pattern postTimePattern = Pattern.compile("(?<=195>).*&nbsp;",
-				Pattern.DOTALL);
-
-		/* get total post number */
-		Pattern totalPostPattern = Pattern.compile("(?<=查询到).*?(?=</font>)",
-				Pattern.DOTALL);
-		Matcher matcher = totalPostPattern.matcher(html);
-		if (matcher.find()) {
-			String string = matcher.group();
-			string = string.replaceAll("(<.*?>)|([\n\r])", "");
-			System.err.println("totalPost:" + string);
-			mmap.put("totalPost", string);
-		}
-
-		list.add(mmap);
-		matcher = pattern.matcher(html);
-
-		Matcher sMatcher;
-		while (matcher.find()) {
-			Map<String, Object> map = new HashMap<String, Object>();
-			String sPost = matcher.group();
-			// System.err.println(sPost);
-			sMatcher = postTitlePattern.matcher(sPost);
-			if (sMatcher.find()) {
-				sMatcher.find();
-				String string = sMatcher.group();
-				string = string.replaceAll("\n|\t", "");
-				string = string.replaceAll("&nbsp;", " ");
-				string = string.replaceAll("&lt;", "<");
-				string = string.replaceAll("&gt;", ">");
-
-				// System.err.println("postTitle:" + string);
-				map.put("postTitle", string);
-			} else {
-				map.put("postTitle", "");
+	public List<SearchResultEntity> parseQueryResult(String html)
+			throws ParseContentException, java.text.ParseException {
+		List<SearchResultEntity> list = new ArrayList<SearchResultEntity>();
+		String totalPost = getMatchedString(NEW_TOPIC_TOTAL_POST, html);
+		List<String> entityList = getMatchedStringList(NEW_TOPIC_WRAPPER_REGEX,
+				html, -1);
+		for (int i = 0; i < entityList.size(); i++) {
+			String string = entityList.get(i);
+			SearchResultEntity entity = new SearchResultEntity();
+			entity.setTitle(StringUtil.filterHtmlDecode(getMatchedString(
+					NEW_TOPIC_TITLE_REGEX, string)));
+			entity.setAuthorName(getMatchedString(NEW_TOPIC_AUTHOR_REGEX,
+					string));
+			entity.setBoardId(getMatchedString(NEW_TOPIC_BOARD_ID, string));
+			entity.setFaceId(getMatchedString(NEW_TOPIC_FACE_REGEX, string));
+			entity.setPostTime(DateFormatUtil
+					.convertStringToDateInQueryResult(getMatchedString(
+							NEW_TOPIC_TIME, string).replaceAll("&nbsp;", " ")
+							.replaceAll("\n| |\t|\r", "").trim()));
+			entity.setTotalResult(totalPost);
+			entity.setPostId(getMatchedString(NEW_TOPIC_ID_REGEX, string));
+			list.add(entity);
+			if (i==5) {
+				Log.d(TAG, string);
 			}
-
-			sMatcher = authorPattern.matcher(sPost);
-			if (sMatcher.find()) {
-				String string = sMatcher.group();
-				map.put("author", string);
-			} else {
-				map.put("author", "");
-
-			}
-
-			sMatcher = postFacePattern.matcher(sPost);
-			if (sMatcher.find()) {
-				String string = sMatcher.group();
-				// System.err.println("postFace:" + string);
-				map.put("postFace", string);
-			} else {
-				map.put("postFace", "7");
-
-			}
-
-			sMatcher = postLinkPattern.matcher(sPost);
-			if (sMatcher.find()) {
-				String string = sMatcher.group();
-				// System.err.println("postLink:" + string);
-
-				map.put("postLink", cc98UrlManager.getClientUrl() + string);
-			} else {
-				map.put("postLink", "");
-
-			}
-
-			sMatcher = postTimePattern.matcher(sPost);
-			if (sMatcher.find()) {
-				String string = sMatcher.group();
-				string = string.replaceAll("&nbsp;", " ");
-				string = string.replaceAll("\t|\n| ", "");
-				// System.err.println("postTime:" + string);
-
-				map.put("postTime", string);
-			} else {
-				map.put("postTime", "");
-
-			}
-			list.add(map);
 		}
 		return list;
 	}
@@ -715,28 +609,23 @@ public class CC98ParserImpl implements ICC98Parser {
 		return list;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see tk.djcrazy.libCC98.ICC98Parser#getTodayBoardList()
-	 */
-	@Override
-	public List<NameValuePair> getTodayBoardList()
-			throws ClientProtocolException, ParseException, IOException {
-		String content = cc98Client.getPage(cc98UrlManager.getTodayBoardList());
-		List<NameValuePair> list = new ArrayList<NameValuePair>();
-		Pattern linkAndName = Pattern.compile(
-				"(?<=<a href=\")list.*?(?=</a></td><td )", Pattern.DOTALL);
-		Matcher matcher = linkAndName.matcher(content);
-		while (matcher.find()) {
-			String mString = matcher.group();
-			int idx = mString.indexOf("\">");
-			if (idx == -1 || idx + 2 >= mString.length()) {
-				throw new IllegalStateException("parse error.");
-			}
-			String boardLink = mString.substring(0, idx);
-			String boardName = mString.substring(idx + 2);
-			list.add(new BasicNameValuePair(boardName, boardLink));
+	private List<BoardStatus> parseTodayBoardList(String content)
+			throws ParseContentException {
+		int postNum = Integer.parseInt(getMatchedString(
+				TODAY_POST_NUMBER_REGEX, content));
+		List<BoardStatus> list = new ArrayList<BoardStatus>();
+		List<String> contentList = getMatchedStringList(
+				TODAY_BOARD_ENTITY_REGEX, content, -1);
+		for (int i = 0; i < contentList.size(); i++) {
+			String string = contentList.get(i);
+			BoardStatus status = new BoardStatus();
+			status.setBoardId(getMatchedString(TODAY_BOARD_ID_REGEX, string));
+			status.setBoardName(getMatchedString(TODAY_BOARD_NAME_REGEX, string));
+			status.setPostNumberToday(Integer.parseInt(getMatchedString(
+					TODAY_BOARD_TOPIC_NUM_REGEX, string)));
+			status.setTotalPostToday(postNum);
+			status.setRating(i + 1);
+			list.add(status);
 		}
 		return list;
 	}

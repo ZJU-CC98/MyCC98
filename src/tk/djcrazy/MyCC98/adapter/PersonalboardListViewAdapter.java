@@ -87,7 +87,6 @@ public class PersonalboardListViewAdapter extends BaseAdapter {
 		listItemView.postNumberToday.setText(""
 				+ mListItem.get(position).getPostNumberToday());
 		setListeners(position, listItemView);
-
 		return convertView;
 	}
 
@@ -148,16 +147,17 @@ public class PersonalboardListViewAdapter extends BaseAdapter {
 
 		listItemView.lastReplyNameClickable
 				.setOnClickListener(new View.OnClickListener() {
-
 					@Override
 					public void onClick(View v) {
 						Intent intent = new Intent(mContext,
 								PostContentsJSActivity.class);
-						intent.putExtra(PostContentsJSActivity.POST_LINK, "");
+						intent.putExtra(PostContentsJSActivity.POST_ID, mListItem.get(clickPosition).getLastReplyTopicID());
 						intent.putExtra(PostContentsJSActivity.POST_NAME,
 								mListItem.get(clickPosition)
 										.getLastReplyTopicName());
 						intent.putExtra(PostContentsJSActivity.PAGE_NUMBER, 1);
+						intent.putExtra(PostContentsJSActivity.BOARD_ID,mListItem.get(clickPosition).getBoardID());
+						intent.putExtra(PostContentsJSActivity.BOARD_NAME, mListItem.get(clickPosition).getBoardName());
 						mContext.startActivity(intent);
 						mContext.overridePendingTransition(
 								R.anim.forward_activity_move_in,
@@ -172,12 +172,13 @@ public class PersonalboardListViewAdapter extends BaseAdapter {
 					public void onClick(View v) {
 						Intent intent = new Intent(mContext,
 								PostContentsJSActivity.class);
-						intent.putExtra(PostContentsJSActivity.POST_LINK, "");
+						intent.putExtra(PostContentsJSActivity.POST_ID, mListItem.get(clickPosition).getLastReplyTopicID());
 						intent.putExtra(PostContentsJSActivity.POST_NAME,
 								mListItem.get(clickPosition)
 										.getLastReplyTopicName());
-						intent.putExtra(PostContentsJSActivity.PAGE_NUMBER,
-								32767);
+						intent.putExtra(PostContentsJSActivity.PAGE_NUMBER, 32767);
+						intent.putExtra(PostContentsJSActivity.BOARD_ID,mListItem.get(clickPosition).getBoardID());
+						intent.putExtra(PostContentsJSActivity.BOARD_NAME, mListItem.get(clickPosition).getBoardName());
 						mContext.startActivity(intent);
 						mContext.overridePendingTransition(
 								R.anim.forward_activity_move_in,

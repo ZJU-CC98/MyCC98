@@ -27,7 +27,7 @@
     <color name="return_to_top_color">#AAA</color>
     <color name="carbon_text">#BBB</color>
     <color name="post_info">#444444</color>
-    <color name="post_list_last_reply_text_color">#444</color>
+    <color name="post_list_last_reply_text_color">#a0a0a0</color>
     <color name="transparent">#00000000</color>
     <color name="light_transparent">#DDFFFFFF</color>
     <color name="dark_transparent">#BB000000</color>

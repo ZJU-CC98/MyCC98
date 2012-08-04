@@ -34,17 +34,11 @@ public class PostEntity {
 	public void setPostName(String postName) {
 		this.postName = postName;
 	}
-	/**
-	 * @return the postLink
-	 */
-	public String getPostLink() {
-		return postLink;
+ 	public String getPostId() {
+		return postId;
 	}
-	/**
-	 * @param postLink the postLink to set
-	 */
-	public void setPostLink(String postLink) {
-		this.postLink = postLink;
+ 	public void setPostId(String postId) {
+		this.postId = postId;
 	}
 	/**
 	 * @return the postPageNumber
@@ -94,19 +88,7 @@ public class PostEntity {
 	public void setLastReplyTime(Date lastReplyTime) {
 		this.lastReplyTime = lastReplyTime;
 	}
-	/**
-	 * @return the lastReplyLink
-	 */
-	public String getLastReplyLink() {
-		return lastReplyLink;
-	}
-	/**
-	 * @param lastReplyLink the lastReplyLink to set
-	 */
-	public void setLastReplyLink(String lastReplyLink) {
-		this.lastReplyLink = lastReplyLink;
-	}
-	/**
+ 	/**
 	 * @return the lastReplyAuthor
 	 */
 	public String getLastReplyAuthor() {
@@ -120,11 +102,10 @@ public class PostEntity {
 	}
 	private String postType= "";
 	private String postName= "";
-	private String postLink= "";
+	private String postId= "";
 	private int postPageNumber=0;
 	private String postAuthorName= "";
 	private String replyNumber= "";
 	private Date lastReplyTime;
-	private String lastReplyLink= "";
-	private String lastReplyAuthor= "";
+ 	private String lastReplyAuthor= "";
 }

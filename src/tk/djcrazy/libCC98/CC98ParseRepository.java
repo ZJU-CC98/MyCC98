@@ -16,19 +16,20 @@ public class CC98ParseRepository {
 	public static final String POST_CONTENT_USER_AVATAR_LINK_REGEX = "(?<= ><img src=).*?(?= )|(?<=&nbsp;<img src=\").*?(?=\" border=0 ><br>)";
 	public static final String POST_CONTENT_POST_TITLE_REGEX = "(?<=alt=\"发贴心情\">&nbsp;<b>).*?(?=</b><br><span id)";
 	public static final String POST_CONTENT_POST_FACE_REGEX = "(?<=<img src=face/)face.*?.gif(?= border=0)";
-	public static final String POST_CONTENT_POST_TIME_REGEX = "<img align=absmiddle border=0 width=13 height=15.*?(?=</td>)";
+	public static final String POST_CONTENT_POST_TIME_REGEX = "(?<=\"></a>).{10,25}?(PM|AM)";
 	public static final String POST_CONTENT_GENDER_REGEX = "(?<=<img src=pic/).*?Male(?=\\.gif)";
  	public static final String POST_CONTENT_REPLY_ID_REGEX = "";
+ 	
+ 	
  	//post list regex string
  	public static final String POST_LIST_POST_TYPE_REGEX= "(?<=alt=).*?(?=></TD>)";
  	public static final String POST_LIST_POST_NAME_REGEX = "(?<=最后跟贴：\">).*?(?=</a>)";
- 	public static final String POST_LIST_POST_LINK_REGEX = "(?<=<a id=\"topic_\\d{1,10}\" href=\")dispbbs\\.asp\\?.*?(?=\" title=\")";
+ 	public static final String POST_LIST_POST_ID_REGEX = "(?<=&ID=)\\d{1,10}?(?=&page=)";
  	public static final String POST_LIST_POST_PAGE_NUMBER_REGEX = "(?<=<font color=#FF0000>).{1,6}?(?=</font></a>.?</b>\\])";
  	public static final String POST_LIST_POST_AUTHOR_NAME_REGEX = "(?<=target=_blank>).{1,10}(?=</a></a>)";
  	public static final String POST_LIST_REPLY_NUM_REGEX= "(?<=<td width=\\* nowrap class=tablebody1>).*?(?=</td>)";
  	public static final String POST_LIST_LAST_REPLY_TIME_REGEX = "(?<=#bottom\">).*?(?=</a>)";
- 	public static final String POST_LIST_LAST_REPLY_LINK_REGEX = "(?<=&nbsp;<a href=).{5,70}?(?=#bottom)";
- 	public static final String POST_LIST_LAST_REPLY_AUTHOR_REGEX= "(?<=usr\":\").*?(?=\")";
+  	public static final String POST_LIST_LAST_REPLY_AUTHOR_REGEX= "(?<=usr\":\").*?(?=\")";
  	public static final String POST_LIST_POST_ENTITY_REGEX  = "(?<=<tr align=middle><td).*?(?=;</script>)";
 
  	//personal board list
@@ -55,12 +56,29 @@ public class CC98ParseRepository {
  	//hot topic
  	public static final String HOT_TOPIC_WRAPPER = "&nbsp;<a href=\".*?(</td></tr><TR><TD align=middle|</td></tr><!--data)";
  	public static final String HOT_TOPIC_NAME_REGEX = "(?<=\\<font color=#000066>).*?(?=\\</font>)";
- 	public static final String HOT_TOPIC_LINK_REGEX = "(?<=&nbsp;<a href=\").*?(?=\" target=)";
+ 	public static final String HOT_TOPIC_ID_REGEX = "(?<=&id=).*?(?=\" )";
+ 	public static final String HOT_TOPIC_BOARD_ID_REGEX = "(?<=boardid=)\\d{0,5}?(?=&id=)";
  	public static final String HOT_TOPIC_BOARD_NAME_WITH_AUTHOR_REGEX = "(?<=target=\"_blank\">).{0,30}?(?=</a></td><td height=20)";
  	public static final String HOT_TOPIC_POST_TIME_REGEX = "(?<=\">).{5,18}?(?=</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)";
  	public static final String HOT_TOPIC_CLICK_REGEX = "(?<=align=middle class=tablebody\\d>).*?(?=</td>)";
-
+ 	
  	
  	public static final String UPLOAD_PIC_ADDRESS_REGEX = "\\[upload.*?\\]http://file.cc98.org.*?\\[/upload\\]";
  	
-}
+ 	
+ 	
+ 	public static final String TODAY_POST_NUMBER_REGEX = "(?<=今日帖数：)\\d*?(?= )";
+ 	public static final String TODAY_BOARD_ENTITY_REGEX = "list\\.asp\\?boardid=.*?</td></tr>";
+ 	public static final String TODAY_BOARD_ID_REGEX = "(?<=boardid=).*?(?=\">)";
+ 	public static final String TODAY_BOARD_NAME_REGEX  = "(?<=\">).*?(?=</a></td><td)";
+ 	public static final String TODAY_BOARD_TOPIC_NUM_REGEX = "(?<=align=center>)\\d{0,10}?(?=</td>)";
+
+ 	public static final String NEW_TOPIC_WRAPPER_REGEX = "(?<=<img src='face/face).*?(?=<!--<font color=\"#FF0000\">)";
+ 	public static final String NEW_TOPIC_TITLE_REGEX = "(?<=blank>).*?(?=</a>)";
+ 	public static final String NEW_TOPIC_FACE_REGEX = "\\d{0,3}?(?=\\.gif)";
+ 	public static final String NEW_TOPIC_AUTHOR_REGEX = "(?<=\"  target=_blank>).{0,12}?(?=</a>)";
+ 	public static final String NEW_TOPIC_ID_REGEX = "(?<=&ID=)\\d{0,10}?(?=' )";
+ 	public static final String NEW_TOPIC_BOARD_ID = "(?<=boardID=)\\d{0,10}?(?=&ID)";	
+ 	public static final String NEW_TOPIC_TOTAL_POST = "(?<=<font color=#FF0000>)\\d{0,10}?(?=</font>个结果)";
+ 	public static final String NEW_TOPIC_TIME = "(?<=195>).*&nbsp;";
+}	

@@ -23,7 +23,7 @@ public final class RegexUtil {
 		Pattern pattern = Pattern.compile(regex, Pattern.DOTALL);
 		Matcher matcher = pattern.matcher(content);
 		if (matcher.find()) {
-			return matcher.group();
+			return matcher.group().trim();
 		} else {
 			System.err.println("getMatchedString regex: "+regex);
 			System.err.println("content: "+content);

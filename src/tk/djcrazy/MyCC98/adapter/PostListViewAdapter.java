@@ -2,19 +2,14 @@ package tk.djcrazy.MyCC98.adapter;
 
 import java.util.List;
 
-import com.google.inject.Inject;
-
 import tk.djcrazy.MyCC98.PostContentsJSActivity;
 import tk.djcrazy.MyCC98.R;
-import tk.djcrazy.libCC98.CC98ClientImpl;
 import tk.djcrazy.libCC98.ICC98Service;
 import tk.djcrazy.libCC98.data.PostEntity;
 import tk.djcrazy.libCC98.data.PostType;
 import tk.djcrazy.libCC98.util.DateFormatUtil;
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,30 +18,20 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.inject.Inject;
+
 public class PostListViewAdapter extends BaseAdapter {
 
-	private Activity context;
+	private Activity mContext;
+	private String mBoardId;
+	private String mBoardName;
 
-	private Bundle bundle = new Bundle();
+	private final List<PostEntity> mListItem;
 
-	private Intent intent = new Intent();
-
-	private final List<PostEntity> listItem;
-
-	private LayoutInflater listInflater;
-
-	private Bitmap userImage;
-	
 	@Inject
 	private ICC98Service service;
-	/**
-	 * @param userImage the userImage to set
-	 */
-	public void setUserImage(Bitmap userImage) {
-		this.userImage = userImage;
-	}
 
-	public final class ListItemView {
+	private final class ListItemView {
 
 		public ImageView postTypeImageView;
 
@@ -62,16 +47,18 @@ public class PostListViewAdapter extends BaseAdapter {
 
 	}
 
-	public PostListViewAdapter(Activity context, List<PostEntity> postList) {
-		this.context = context;
-		listInflater = LayoutInflater.from(context);
-		this.listItem = postList;
+	public PostListViewAdapter(Activity context, List<PostEntity> postList,
+			String boardId, String boardName) {
+		mContext = context;
+		mListItem = postList;
+		mBoardId = boardId;
+		mBoardName = boardName;
 	}
 
 	@Override
 	public int getCount() {
 
-		return listItem.size();
+		return mListItem.size();
 	}
 
 	@Override
@@ -94,27 +81,26 @@ public class PostListViewAdapter extends BaseAdapter {
 		if (convertView == null) {
 			listItemView = new ListItemView();
 			// 获取布局文件视图
-			convertView = listInflater.inflate(R.layout.post_list_item, null);
+			convertView = LayoutInflater.from(mContext).inflate(
+					R.layout.post_list_item, null);
 			getPostListView(convertView, listItemView);
 			convertView.setTag(listItemView);
 		} else {
 			listItemView = (ListItemView) convertView.getTag();
 		}
 
-		listItemView.postName.setText((CharSequence) listItem.get(position)
+		listItemView.postName.setText((CharSequence) mListItem.get(position)
 				.getPostName());
-		listItemView.postAuthor.setText((CharSequence) listItem.get(position)
+		listItemView.postAuthor.setText((CharSequence) mListItem.get(position)
 				.getPostAuthorName());
-		listItemView.lastReplyAuthor.setText((CharSequence) listItem.get(
+		listItemView.lastReplyAuthor.setText((CharSequence) mListItem.get(
 				position).getLastReplyAuthor());
-		listItemView.lastReplyTime.setText(DateFormatUtil.convertDateToString(listItem
-				.get(position).getLastReplyTime(), true));
-
-		// controlPageNumberListView(pageNumber, listItemView);
+		listItemView.lastReplyTime.setText(DateFormatUtil.convertDateToString(
+				mListItem.get(position).getLastReplyTime(), true));
 
 		setListItemViewListener(clickPosition, listItemView);
 
-		String postType = listItem.get(position).getPostType();
+		String postType = mListItem.get(position).getPostType();
 		Log.d("postType", postType);
 		if (postType.equals(PostType.Z_TOP)) {
 			listItemView.postTypeImageView.setImageResource(R.drawable.ztop);
@@ -144,52 +130,47 @@ public class PostListViewAdapter extends BaseAdapter {
 		return convertView;
 	}
 
-	/**
-	 * @param clickPosition
-	 * @param listItemView
-	 */
 	private void setListItemViewListener(final int clickPosition,
 			final ListItemView listItemView) {
 		listItemView.postName.setOnClickListener(new View.OnClickListener() {
-
 			@Override
 			public void onClick(View v) {
 
-				String postLink = service.getDomain()
-						+ listItem.get(clickPosition).getPostLink();
-
-				intent.setClass(context, PostContentsJSActivity.class);
-				bundle.putString(PostContentsJSActivity.POST_LINK, postLink);
-				bundle.putString(PostContentsJSActivity.POST_NAME, listItem.get(clickPosition).getPostName());
-				bundle.putInt(PostContentsJSActivity.PAGE_NUMBER, 1);
-				bundle.putParcelable(PostContentsJSActivity.USER_IMAGE, userImage);
-				intent.putExtra(PostContentsJSActivity.POST, bundle);
-				context.startActivity(intent);
-				context.overridePendingTransition(R.anim.forward_activity_move_in, R.anim.forward_activity_move_out);
+				Intent intent = new Intent(mContext,
+						PostContentsJSActivity.class);
+				intent.putExtra(PostContentsJSActivity.BOARD_ID, mBoardId);
+				intent.putExtra(PostContentsJSActivity.BOARD_NAME, mBoardName);
+				intent.putExtra(PostContentsJSActivity.POST_ID,
+						mListItem.get(clickPosition).getPostId());
+				intent.putExtra(PostContentsJSActivity.POST_NAME, mListItem
+						.get(clickPosition).getPostName());
+				intent.putExtra(PostContentsJSActivity.PAGE_NUMBER, 1);
+				mContext.startActivity(intent);
+				mContext.overridePendingTransition(
+						R.anim.forward_activity_move_in,
+						R.anim.forward_activity_move_out);
 			}
 		});
 
 		listItemView.postLastReplyClickable
 				.setOnClickListener(new View.OnClickListener() {
- 
+
 					@Override
 					public void onClick(View v) {
 
-						String postLink = service.getDomain()
-								+ listItem.get(clickPosition).getPostLink();
-
-						intent.setClass(context, PostContentsJSActivity.class);
-						bundle.putString(PostContentsJSActivity.POST_LINK,
-								postLink);
-						bundle.putString(PostContentsJSActivity.POST_NAME,
-								listItem.get(clickPosition).getPostName());
-						bundle.putInt(PostContentsJSActivity.PAGE_NUMBER,
-								listItem.get(clickPosition).getPostPageNumber());
-						bundle.putParcelable(PostContentsJSActivity.USER_IMAGE, userImage);
-						intent.putExtra(PostContentsJSActivity.POST, bundle);
-						context.startActivity(intent);
-						context.overridePendingTransition(R.anim.forward_activity_move_in, R.anim.forward_activity_move_out);
-
+						Intent intent = new Intent(mContext,
+								PostContentsJSActivity.class);
+						intent.putExtra(PostContentsJSActivity.BOARD_ID, mBoardId);
+						intent.putExtra(PostContentsJSActivity.BOARD_NAME, mBoardName);
+						intent.putExtra(PostContentsJSActivity.POST_ID,
+								mListItem.get(clickPosition).getPostId());
+						intent.putExtra(PostContentsJSActivity.POST_NAME, mListItem
+								.get(clickPosition).getPostName());
+						intent.putExtra(PostContentsJSActivity.PAGE_NUMBER, 32767);
+						mContext.startActivity(intent);
+						mContext.overridePendingTransition(
+								R.anim.forward_activity_move_in,
+								R.anim.forward_activity_move_out);
 					}
 				});
 	}

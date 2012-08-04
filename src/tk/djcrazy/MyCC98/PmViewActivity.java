@@ -249,11 +249,10 @@ public class PmViewActivity extends BaseActivity {
 	public void open(String pageLink, int pageNum) {
 		Log.d("MyCC98", "open new post:" + pageNum);
 		Bundle bundle = new Bundle();
-		bundle.putString(PostContentsJSActivity.POST_LINK, pageLink);
+		bundle.putString(PostContentsJSActivity.POST_ID, pageLink);
 		bundle.putInt(PostContentsJSActivity.PAGE_NUMBER, pageNum);
 		bundle.putString(PostContentsJSActivity.POST_NAME, "");
 		Intent intent = new Intent(this, PostContentsJSActivity.class);
-		intent.putExtra(PostContentsJSActivity.POST, bundle);
-		this.startActivity(intent);
+ 		this.startActivity(intent);
 	}
 }

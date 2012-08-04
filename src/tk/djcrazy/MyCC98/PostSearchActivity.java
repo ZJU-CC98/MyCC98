@@ -9,6 +9,8 @@ import org.apache.http.ParseException;
 import tk.djcrazy.MyCC98.adapter.NewTopicListAdapter;
 import tk.djcrazy.MyCC98.view.HeaderView;
 import tk.djcrazy.libCC98.ICC98Service;
+import tk.djcrazy.libCC98.data.SearchResultEntity;
+import tk.djcrazy.libCC98.exception.ParseContentException;
 import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -43,7 +45,7 @@ public class PostSearchActivity extends BaseActivity {
  	private HeaderView mHeaderView;
 	private Bitmap userImage;
 	private ListView listView;
-	private List<Map<String, Object>> datalist;
+	private List<SearchResultEntity> datalist;
 
 	private int currentPage = 1;
 	private int totalPage;
@@ -65,7 +67,7 @@ public class PostSearchActivity extends BaseActivity {
 			switch (msg.what) {
 			case FETCH_SUCC:
 				int totalpost = Integer.parseInt(datalist.get(0)
-						.get("totalPost").toString());
+						.getTotalResult());
 				datalist.remove(0);
 				totalPage = totalpost % 20 == 0 ? totalpost / 20
 						: totalpost / 20 + 1;
@@ -115,6 +117,12 @@ public class PostSearchActivity extends BaseActivity {
 				} catch (ParseException e) {
 					e.printStackTrace();
 				} catch (IOException e) {
+					e.printStackTrace();
+				} catch (ParseContentException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (java.text.ParseException e) {
+					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}

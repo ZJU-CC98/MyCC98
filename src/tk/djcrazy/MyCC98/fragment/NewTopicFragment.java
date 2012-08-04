@@ -11,12 +11,17 @@ import com.google.inject.Inject;
 
 import roboguice.fragment.RoboFragment;
 import roboguice.inject.InjectView;
+import tk.djcrazy.MyCC98.PostContentsJSActivity;
 import tk.djcrazy.MyCC98.R;
 import tk.djcrazy.MyCC98.adapter.NewTopicListAdapter;
 import tk.djcrazy.MyCC98.util.ViewUtils;
 import tk.djcrazy.MyCC98.view.PullToRefreshListView;
 import tk.djcrazy.MyCC98.view.PullToRefreshListView.OnRefreshListener;
 import tk.djcrazy.libCC98.ICC98Service;
+import tk.djcrazy.libCC98.data.HotTopicEntity;
+import tk.djcrazy.libCC98.data.SearchResultEntity;
+import tk.djcrazy.libCC98.exception.ParseContentException;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -25,16 +30,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-public class NewTopicFragment extends RoboFragment implements OnRefreshListener{
+public class NewTopicFragment extends RoboFragment implements OnRefreshListener, OnItemClickListener{
 	private static final String TAG = "NewTopicFragment";
 
   	private static final int GET_NEW_TOPIC_LIST_SUCCESS = 1;
 	private static final int GET_NEW_TOPIC_LIST_FAILED = 0;	
 	
-	private List<Map<String, Object>> topicList;
+	private List<SearchResultEntity> topicList;
 	private NewTopicListAdapter newTopicListAdapter;
 	
 	@InjectView(R.id.new_topic_list)
@@ -63,7 +70,8 @@ public class NewTopicFragment extends RoboFragment implements OnRefreshListener{
 			ViewUtils.setGone(listView, true);
 			onRefresh();
 		}
-	}
+		listView.setOnItemClickListener(this);
+ 	}
 
 	public void scrollListTo(int x, int y) {
 		listView.scrollTo(x, y);
@@ -86,6 +94,12 @@ public class NewTopicFragment extends RoboFragment implements OnRefreshListener{
 					getTopicHandler.sendEmptyMessage(GET_NEW_TOPIC_LIST_FAILED);
 					e.printStackTrace();
 				} catch (IOException e) {
+					getTopicHandler.sendEmptyMessage(GET_NEW_TOPIC_LIST_FAILED);
+					e.printStackTrace();
+				} catch (ParseContentException e) {
+					getTopicHandler.sendEmptyMessage(GET_NEW_TOPIC_LIST_FAILED);
+					e.printStackTrace();
+				} catch (java.text.ParseException e) {
 					getTopicHandler.sendEmptyMessage(GET_NEW_TOPIC_LIST_FAILED);
 					e.printStackTrace();
 				}
@@ -123,5 +137,20 @@ public class NewTopicFragment extends RoboFragment implements OnRefreshListener{
 	@Override
 	public void onRefresh() {
 		getTopic();
+	}
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position,
+			long id) {
+		SearchResultEntity entity = topicList.get(position-1);
+		Intent intent = new Intent(getActivity(), PostContentsJSActivity.class);
+		intent.putExtra(PostContentsJSActivity.BOARD_ID, entity.getBoardId());
+ 		intent.putExtra(PostContentsJSActivity.POST_ID, entity.getPostId());
+		intent.putExtra(PostContentsJSActivity.POST_NAME, entity.getTitle());
+		intent.putExtra(PostContentsJSActivity.PAGE_NUMBER, 1);
+		getActivity().startActivity(intent);
+		getActivity().overridePendingTransition(
+				R.anim.forward_activity_move_in,
+				R.anim.forward_activity_move_out);
+		
 	}
 }

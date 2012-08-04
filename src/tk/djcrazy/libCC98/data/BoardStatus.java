@@ -6,17 +6,17 @@ package tk.djcrazy.libCC98.data;
  * @author DJ
  * 
  */
-public class BoardStatue  {
+public class BoardStatus  {
 	/**
 	 * @return the boardId
 	 */
-	public int getBoardId() {
+	public String getBoardId() {
 		return boardId;
 	}
 	/**
 	 * @param boardId the boardId to set
 	 */
-	public void setBoardId(int boardId) {
+	public void setBoardId(String boardId) {
 		this.boardId = boardId;
 	}
 	/**
@@ -75,7 +75,7 @@ public class BoardStatue  {
 			return (float) (postNumberToday*1.0/totalPostToday);
 		}
 	}
-	private int boardId=0;
+	private String boardId="";
 	private String boardName="";
 	private int postNumberToday=0;
 	private int totalPostToday=1;

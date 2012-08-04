@@ -75,7 +75,7 @@
 	<string name="test_time">2011年9月1日10:13</string>
 	<string name="test_bm">版主：jiabin DJ </string>
 	<string name="test_number">100</string>
-	<string name="today">Today: </string>
+	<string name="today">今日帖数: </string>
 	<string name="preview_reply">预览回复</string>
 	<string name="add_to_friend_list">加为好友</string>
 	<string name="menu_settings">设置</string>

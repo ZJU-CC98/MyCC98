@@ -5,24 +5,20 @@ package tk.djcrazy.MyCC98.adapter;
 
 import java.util.List;
 
-import org.apache.http.NameValuePair;
-
-import com.google.inject.Inject;
-
-import tk.djcrazy.MyCC98.PostListActivity;
 import tk.djcrazy.MyCC98.R;
-import tk.djcrazy.libCC98.CC98ClientImpl;
 import tk.djcrazy.libCC98.ICC98Service;
+import tk.djcrazy.libCC98.data.BoardEntity;
+import tk.djcrazy.libCC98.data.BoardStatus;
 import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.google.inject.Inject;
 
 /**
  * @author DJ
@@ -30,28 +26,33 @@ import android.widget.TextView;
  */
 public class SearchResultListAdapter extends BaseAdapter {
 
-	private final List<NameValuePair> mBoardList;
+	private List<BoardStatus> mBoardList;
 	private Activity context;
-
-	private LayoutInflater listInflater;
- 
-	@Inject 
+	private int dispWidth = 480;
+	@Inject
 	private ICC98Service service;
-	
+
 	public final class ListItemView {
 		public TextView boardName;
+		public TextView postNum;
+		public ImageView postNumLine;
 	}
 
 	public SearchResultListAdapter(Activity context,
-			List<NameValuePair> boardList) {
+			List<BoardStatus> currentResult) {
 		this.context = context;
-		listInflater = LayoutInflater.from(context);
-		this.mBoardList = boardList;
+		this.mBoardList = currentResult;
+		DisplayMetrics metric = new DisplayMetrics();
+		context.getWindowManager().getDefaultDisplay().getMetrics(metric);
+		dispWidth = metric.widthPixels;
 	}
 
+	public void setBoardList(List<BoardStatus> list) {
+		mBoardList = list;
+	}
 	@Override
 	public int getCount() {
-		if (mBoardList==null) {
+		if (mBoardList == null) {
 			return 0;
 		}
 		return mBoardList.size();
@@ -70,38 +71,44 @@ public class SearchResultListAdapter extends BaseAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ListItemView listItemView = null;
+		BoardStatus entity = mBoardList.get(position);
 		if (convertView == null) {
 			listItemView = new ListItemView();
-			// 获取布局文件视图
-			convertView = listInflater.inflate(R.layout.search_result_item,
-					null);
+			convertView = LayoutInflater.from(context).inflate(
+					R.layout.search_result_item, null);
 		} else {
 			listItemView = (ListItemView) convertView.getTag();
 		}
 		// 获取控件对象
 		listItemView.boardName = (TextView) convertView
 				.findViewById(R.id.search_result_board_name);
-		listItemView.boardName.setText(mBoardList.get(position).getName());
+		listItemView.postNum = (TextView) convertView
+				.findViewById(R.id.search_result_post_number_today);
+		listItemView.postNumLine = (ImageView) convertView
+				.findViewById(R.id.post_num_line);
+		listItemView.boardName.setText(entity.getBoardName());
+		listItemView.postNum
+				.setText(String.valueOf(entity.getPostNumberToday()));
+		listItemView.postNumLine.getLayoutParams().width = (int) (entity
+				.getPostNumberPercentage() * dispWidth);
+		/**
+		 * 日帖数达到1000帖我们给予红色条，300-999给予黄色条，100-299给予绿色条，<100给予蓝色条，
+		 * 条的长度代表发帖量占全站的发帖量比例
+		 */
+		if (entity.getPostNumberToday() > 999) {
+			listItemView.postNumLine
+					.setImageResource(R.drawable.status_line_red);
+		} else if(entity.getPostNumberToday() > 299) {
+			listItemView.postNumLine
+			.setImageResource(R.drawable.status_line_yellow);
+		} else if (entity.getPostNumberToday()>99) {
+			listItemView.postNumLine
+			.setImageResource(R.drawable.status_line_green);
+		} else {
+			listItemView.postNumLine
+			.setImageResource(R.drawable.status_line_blue);
+		}
 		convertView.setTag(listItemView);
-		final int clkpos = position;
-		listItemView.boardName.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				Bundle bundle = new Bundle();
-				bundle.putString(PostListActivity.BOARD_ID,
-						service.getDomain()
-								+ mBoardList.get(clkpos).getValue());
-				bundle.putString(PostListActivity.BOARD_NAME, mBoardList
-						.get(clkpos).getName());
-				bundle.putInt(PostListActivity.PAGE_NUMBER, 1);
-
-				Intent intent = new Intent(context, PostListActivity.class);
-				context.startActivity(intent);
-				context.overridePendingTransition(R.anim.forward_activity_move_in, R.anim.forward_activity_move_out);
-			}
-		});
 		return convertView;
 	}
-
 }

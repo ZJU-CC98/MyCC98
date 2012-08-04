@@ -1,56 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:background="@color/board_info_background"
-    android:padding="6dp" >
+    android:orientation="vertical" >
 
-    <!-- board name -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal" >
+
         <TextView
             android:id="@+id/board_name"
+            style="@style/board_name"
             android:layout_width="fill_parent"
-            android:layout_height="32sp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.0"
             android:background="@drawable/listview_selector"
-            android:text="@string/test_board_name"
             android:gravity="center_vertical"
-            android:textColor="#000"
-            android:textSize="16sp" />
+            android:paddingBottom="10dp"
+            android:paddingLeft="6dp"
+            android:paddingTop="10dp"
+            android:text="@string/test_board_name" />
 
-        <TextView
-            android:id="@+id/topic_number_today"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/board_name"
-            android:layout_alignParentRight="true"
-            android:layout_marginLeft="4dp"
-            android:text="@string/test_number"
-            android:textColor="#222"
-            android:textSize="10sp" />
+            android:orientation="horizontal"
+            android:paddingRight="6dp" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/today"
+                android:textColor="#aaa"
+                android:textSize="10sp" />
+
+            <TextView
+                android:id="@+id/topic_number_today"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="4dp"
+                android:text="@string/test_number"
+                android:textColor="#aaa"
+                android:textSize="10sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal" >
 
         <TextView
-            android:id="@+id/topic_number_today_h"
-            android:layout_width="wrap_content"
+            android:id="@+id/last_reply_topic_name"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/topic_number_today"
-            android:layout_toLeftOf="@id/topic_number_today"
-            android:text="@string/today"
-            android:textColor="@color/post_info"
-            android:textSize="10sp" />
+            android:layout_weight="1.0"
+            android:background="@drawable/listview_selector"
+            android:gravity="center_vertical"
+            android:paddingBottom="4dp"
+            android:paddingLeft="6dp"
+            android:paddingTop="4dp"
+            android:text="@string/test_topic_name"
+            android:textColor="#777"
+            android:textSize="13sp" />
 
         <LinearLayout
             android:id="@+id/last_reply_time_clickable"
-            android:layout_width="150sp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:layout_alignParentRight="true"
-            android:background="@drawable/reply_bg_selector"
-            android:layout_below="@id/board_name"
-            android:orientation="vertical" >
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/listview_selector"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingBottom="6dp"
+            android:paddingRight="6dp"
+            android:paddingTop="6dp" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="最后回复："
+                android:textSize="10sp" />
 
             <TextView
                 android:id="@+id/last_reply_author"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" 
+                android:layout_height="wrap_content"
                 android:text="@string/test_author"
                 android:textColor="@color/post_list_last_reply_text_color"
                 android:textSize="10sp" />
@@ -59,19 +98,11 @@
                 android:id="@+id/last_reply_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/test_time"
+                android:layout_marginLeft="10dp"
+                android:text="55分钟前"
                 android:textColor="@color/post_list_last_reply_text_color"
                 android:textSize="10sp" />
         </LinearLayout>
-        <TextView
-            android:id="@+id/last_reply_topic_name"
-            android:layout_width="140sp"
-            android:layout_height="48sp"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@id/board_name"
-            android:background="@drawable/listview_selector"
-            android:gravity="center_vertical"
-            android:text="@string/test_topic_name"
-            android:textColor="@color/post_list_title"
-            android:textSize="14sp" />
-    </RelativeLayout>
+    </LinearLayout>
+
+</LinearLayout>

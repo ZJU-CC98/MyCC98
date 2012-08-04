@@ -3,17 +3,29 @@ package tk.djcrazy.libCC98.util;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 public class DateFormatUtil {
 	public static Date convertStringToDateInPostContent(String dateString)
 			throws ParseException {
-		SimpleDateFormat sdf = new SimpleDateFormat("M/d/yyyy h:mm:ss aa");
+		SimpleDateFormat sdf = new SimpleDateFormat("M/d/yyyy h:mm:ss a", Locale.ENGLISH);
 		return sdf.parse(dateString);
 	}
+	public static Date convertStringToDateInPostList(String dateString)
+			throws ParseException {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		return sdf.parse(dateString);
+	}
+	public static Date convertStringToDateInQueryResult(String dateString)
+			throws ParseException {
+		SimpleDateFormat sdf = new SimpleDateFormat("M/d/yyyyHH:mm", Locale.ENGLISH);
+		return sdf.parse(dateString);
+	}
+	
 	public static Date convertStrToDateInPBoard(String dateString)
 			throws ParseException {
-		SimpleDateFormat sdf = new SimpleDateFormat("M/d/yyyy h:mm:ss aa");
-		return sdf.parse(dateString);
+ 		SimpleDateFormat sd = new SimpleDateFormat("M/d/yyyy h:mm:ss a", Locale.ENGLISH);
+		return sd.parse(dateString);
 	}
 
 	public static String convertDateToString(Date date, boolean useFriendlyTime) {
@@ -50,7 +62,7 @@ public class DateFormatUtil {
 			return day + "天前";
 		}
 		if (ct >= 2592000 && ct < 31104000) { // 86400 * 30
-			return ct / 2592000 + "月前";
+			return ct / 2592000 + "个月前";
 		}
 		return ct / 31104000 + "年前";
 	}

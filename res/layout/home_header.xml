@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="55dp"
+    android:layout_height="44dp"
     android:background="@drawable/title_bg_bar"
     android:orientation="horizontal" >
 
@@ -13,8 +13,8 @@
  
         <ImageView
             android:id="@+id/home_header_userimg"
-            android:layout_width="42dp"
-            android:layout_height="42dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:background="@drawable/avatar_bg"
             android:padding="4dp"
             android:scaleType="fitXY"
