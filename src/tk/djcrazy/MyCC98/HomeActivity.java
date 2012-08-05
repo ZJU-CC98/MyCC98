@@ -110,6 +110,9 @@ public class HomeActivity extends RoboFragmentActivity implements
 						Toast.LENGTH_SHORT).show();
 				break;
 			case MSG_USERIMG_SUCC:
+				Toast.makeText(getApplicationContext(), "获取头像成功",
+						Toast.LENGTH_SHORT).show();
+
 				userAvatar.setImageBitmap(bmUserImg);	
  				break;
 			case SEND_FEEDBACK_FAILED:
@@ -149,24 +152,11 @@ public class HomeActivity extends RoboFragmentActivity implements
 		adapter.setLoadingListener(this);
 		viewPager.setAdapter(adapter);
 		indicator.setViewPager(viewPager, 0);
- 		getUserImg();
-	}
+		userNameView.setText(service.getUserName());
+		userAvatar.setImageBitmap(service.getUserAvatar());
+ 	}
 
-	private void getUserImg() {
-		new Thread() {
-			@Override
-			public void run() {
-				try {
-					bmUserImg = service.getUserAvatar();
-					handler.sendEmptyMessage(MSG_USERIMG_SUCC);
-				} catch (Exception e) {
-					handler.sendEmptyMessage(MSG_USERIMG_FAIL);
-					e.printStackTrace();
-				}
-			}
-		}.start();
-	}
-
+ 
 	public void refresh() {
 		viewPager.invalidate();
 	}

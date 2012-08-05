@@ -34,7 +34,7 @@ import android.widget.ProgressBar;
 
 import com.google.inject.Inject;
 
-public class SearchBoardFragment extends RoboFragment {
+public class SearchBoardFragment extends RoboFragment implements OnItemClickListener{
 	private int position = 0;
 	private static final String TAG = "SearchBoardFragment";
 	private List<BoardStatus> currentResult;
@@ -85,6 +85,22 @@ public class SearchBoardFragment extends RoboFragment {
 		}
 	};
 
+	private TextWatcher textWatcher = new TextWatcher() {
+		
+		@Override
+		public void onTextChanged(CharSequence s, int start, int before, int count) {
+			doSearch(searchContent.getText().toString().trim());
+		}
+		
+		@Override
+		public void beforeTextChanged(CharSequence s, int start, int count,
+				int after) {
+		}
+		
+		@Override
+		public void afterTextChanged(Editable s) {
+		}
+	};
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -101,11 +117,12 @@ public class SearchBoardFragment extends RoboFragment {
 			lvResultList.setAdapter(listAdapter);
 			listAdapter.notifyDataSetChanged();
 			lvResultList.invalidate();
+			setListeners();
+			
 		} else {
 			ViewUtils.setGone(progressBar, true);
 			ViewUtils.setGone(lvResultList, false);
 			fetchBoardlist();
-
 		}
 	}
 
@@ -132,49 +149,14 @@ public class SearchBoardFragment extends RoboFragment {
 			}
 		}.start();
 	}
-
+	
 	public void scrollListTo(int x, int y) {
 		lvResultList.scrollTo(x, y);
 	}
 
 	private void setListeners() {
-		searchContent.addTextChangedListener(new TextWatcher() {
-
-			@Override
-			public void onTextChanged(CharSequence arg0, int arg1, int arg2,
-					int arg3) {
-				doSearch(searchContent.getText().toString().trim());
-			}
-
-			@Override
-			public void beforeTextChanged(CharSequence arg0, int arg1,
-					int arg2, int arg3) {
-
-			}
-
-			@Override
-			public void afterTextChanged(Editable arg0) {
-
-			}
-		});
-
-		lvResultList.setOnItemClickListener(new OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
-					long arg3) {
-				Intent intent = new Intent(getActivity(),
-						PostListActivity.class);
-				intent.putExtra(PostListActivity.BOARD_ID,
-						currentResult.get(arg2).getBoardId());
-				intent.putExtra(PostListActivity.BOARD_NAME, currentResult
-						.get(arg2).getBoardName());
-				intent.putExtra(PostListActivity.PAGE_NUMBER, 1);
-				getActivity().startActivity(intent);
-				getActivity().overridePendingTransition(
-						R.anim.forward_activity_move_in,
-						R.anim.forward_activity_move_out);
-			}
-		});
+		searchContent.addTextChangedListener(textWatcher);
+		lvResultList.setOnItemClickListener(this);
 	}
 
 	protected void doSearch(String string) {
@@ -235,6 +217,21 @@ public class SearchBoardFragment extends RoboFragment {
 	 */
 	public void setPosition(int position) {
 		this.position = position;
+	}
+	@Override
+	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+			long arg3) {
+		Intent intent = new Intent(getActivity(),
+				PostListActivity.class);
+		intent.putExtra(PostListActivity.BOARD_ID,
+				currentResult.get(arg2).getBoardId());
+		intent.putExtra(PostListActivity.BOARD_NAME, currentResult
+				.get(arg2).getBoardName());
+		intent.putExtra(PostListActivity.PAGE_NUMBER, 1);
+		getActivity().startActivity(intent);
+		getActivity().overridePendingTransition(
+				R.anim.forward_activity_move_in,
+				R.anim.forward_activity_move_out);
 	}
 
 }

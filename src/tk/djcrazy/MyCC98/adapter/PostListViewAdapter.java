@@ -10,6 +10,7 @@ import tk.djcrazy.libCC98.data.PostType;
 import tk.djcrazy.libCC98.util.DateFormatUtil;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,19 +33,12 @@ public class PostListViewAdapter extends BaseAdapter {
 	private ICC98Service service;
 
 	private final class ListItemView {
-
-		public ImageView postTypeImageView;
-
 		public TextView postName;
-
 		public TextView postAuthor;
-
 		public TextView lastReplyAuthor;
-
 		public TextView lastReplyTime;
-
 		public View postLastReplyClickable;
-
+		public TextView replyNum;
 	}
 
 	public PostListViewAdapter(Activity context, List<PostEntity> postList,
@@ -75,7 +69,7 @@ public class PostListViewAdapter extends BaseAdapter {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-
+		PostEntity entity = mListItem.get(position);
 		final int clickPosition = position;
 		ListItemView listItemView = null;
 		if (convertView == null) {
@@ -89,44 +83,48 @@ public class PostListViewAdapter extends BaseAdapter {
 			listItemView = (ListItemView) convertView.getTag();
 		}
 
-		listItemView.postName.setText((CharSequence) mListItem.get(position)
-				.getPostName());
-		listItemView.postAuthor.setText((CharSequence) mListItem.get(position)
-				.getPostAuthorName());
-		listItemView.lastReplyAuthor.setText((CharSequence) mListItem.get(
-				position).getLastReplyAuthor());
+		listItemView.postName.setText(entity.getPostName());
+		listItemView.postAuthor.setText(entity.getPostAuthorName());
+		listItemView.lastReplyAuthor.setText(entity.getLastReplyAuthor());
 		listItemView.lastReplyTime.setText(DateFormatUtil.convertDateToString(
-				mListItem.get(position).getLastReplyTime(), true));
-
+				entity.getLastReplyTime(), true));
+		listItemView.replyNum.setText(entity.getReplyNumber());
 		setListItemViewListener(clickPosition, listItemView);
 
 		String postType = mListItem.get(position).getPostType();
-		Log.d("postType", postType);
-		if (postType.equals(PostType.Z_TOP)) {
-			listItemView.postTypeImageView.setImageResource(R.drawable.ztop);
-		} else if (postType.equals(PostType.TOP_B)) {
-			listItemView.postTypeImageView.setImageResource(R.drawable.topb);
-		} else if (postType.equals(PostType.TOP)) {
-			listItemView.postTypeImageView.setImageResource(R.drawable.top);
-		} else if (postType.equals(PostType.FOLDER)) {
-			listItemView.postTypeImageView.setImageResource(R.drawable.folder);
-		} else if (postType.equals(PostType.CLOSED_B)) {
-			listItemView.postTypeImageView.setImageResource(R.drawable.closedb);
-		} else if (postType.equals(PostType.FOLDER_RED)) {
-			listItemView.postTypeImageView
-					.setImageResource(R.drawable.folder_red);
-		} else if (postType.equals(PostType.FOLDER_SAVE)) {
-			listItemView.postTypeImageView
-					.setImageResource(R.drawable.foldersave);
-		} else if (postType.equals(PostType.IS_BEST)) {
-			listItemView.postTypeImageView.setImageResource(R.drawable.isbest);
-		} else if (postType.equals(PostType.LOCK_FOLDER)) {
-			listItemView.postTypeImageView
-					.setImageResource(R.drawable.lockfolder);
-		} else if (postType.equals(PostType.HOT_FOLDER)) {
-			listItemView.postTypeImageView
-					.setImageResource(R.drawable.hotfolder);
-		}
+		 Log.d("postType", postType);
+		 //给不同类型的帖子给予不同的颜色的标题
+		 if (postType.equals(PostType.Z_TOP)) {
+			 //总固顶，红色
+			 listItemView.postName.setTextColor(Color.rgb(220, 20, 60));
+ 		 } else if (postType.equals(PostType.TOP_B)) {
+			 //普通固顶，橙色
+			 listItemView.postName.setTextColor(Color.rgb(255, 140, 0));
+ 		 } else if (postType.equals(PostType.TOP)) {
+			 //区固顶，暗橙色
+			 listItemView.postName.setTextColor(Color.rgb(222, 184, 135));
+ 		 } else if (postType.equals(PostType.FOLDER)) {
+			 //普通贴，不变
+ 			 //			 listItemView.postName.setTextColor(Color.rgb(220, 20, 60));
+		 } else if (postType.equals(PostType.CLOSED_B)) {
+			 //投票贴
+			 listItemView.postName.setTextColor(Color.rgb(100, 149, 237));
+		 } else if (postType.equals(PostType.FOLDER_RED)) {
+			 //你发布的帖子
+			 listItemView.postName.setTextColor(Color.rgb(255, 105, 180));
+		 } else if (postType.equals(PostType.FOLDER_SAVE)) {
+			 //保存贴
+			 listItemView.postName.setTextColor(Color.rgb(0, 0, 139));
+		 } else if (postType.equals(PostType.IS_BEST)) {
+			 //精华帖
+			 listItemView.postName.setTextColor(Color.rgb(148, 20, 211));
+		 } else if (postType.equals(PostType.LOCK_FOLDER)) {
+			 //锁定
+			 listItemView.postName.setTextColor(Color.rgb(128, 128, 128));
+		 } else if (postType.equals(PostType.HOT_FOLDER)) {
+			 //热门贴，大红色
+			 listItemView.postName.setTextColor(Color.rgb(255, 0, 0));
+		 }
 		return convertView;
 	}
 
@@ -160,13 +158,16 @@ public class PostListViewAdapter extends BaseAdapter {
 
 						Intent intent = new Intent(mContext,
 								PostContentsJSActivity.class);
-						intent.putExtra(PostContentsJSActivity.BOARD_ID, mBoardId);
-						intent.putExtra(PostContentsJSActivity.BOARD_NAME, mBoardName);
+						intent.putExtra(PostContentsJSActivity.BOARD_ID,
+								mBoardId);
+						intent.putExtra(PostContentsJSActivity.BOARD_NAME,
+								mBoardName);
 						intent.putExtra(PostContentsJSActivity.POST_ID,
 								mListItem.get(clickPosition).getPostId());
-						intent.putExtra(PostContentsJSActivity.POST_NAME, mListItem
-								.get(clickPosition).getPostName());
-						intent.putExtra(PostContentsJSActivity.PAGE_NUMBER, 32767);
+						intent.putExtra(PostContentsJSActivity.POST_NAME,
+								mListItem.get(clickPosition).getPostName());
+						intent.putExtra(PostContentsJSActivity.PAGE_NUMBER,
+								32767);
 						mContext.startActivity(intent);
 						mContext.overridePendingTransition(
 								R.anim.forward_activity_move_in,
@@ -180,8 +181,6 @@ public class PostListViewAdapter extends BaseAdapter {
 	 * @param listItemView
 	 */
 	private void getPostListView(View convertView, ListItemView listItemView) {
-		listItemView.postTypeImageView = (ImageView) convertView
-				.findViewById(R.id.post_type);
 		listItemView.postName = (TextView) convertView
 				.findViewById(R.id.post_title);
 		listItemView.postAuthor = (TextView) convertView
@@ -192,5 +191,7 @@ public class PostListViewAdapter extends BaseAdapter {
 				.findViewById(R.id.post_last_reply_time);
 		listItemView.postLastReplyClickable = convertView
 				.findViewById(R.id.post_last_reply_clickable);
+		listItemView.replyNum = (TextView) convertView
+				.findViewById(R.id.post_list_reply_num);
 	}
 }

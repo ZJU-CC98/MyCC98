@@ -203,19 +203,23 @@ public class CC98ParserImpl implements ICC98Parser {
 					reply));
 			entity.setPostTime(convertStringToDateInPostContent(getMatchedString(
 					POST_CONTENT_POST_TIME_REGEX, reply)));
-			{
+			 
+			try {
 				String avatarLink = getMatchedString(
 						POST_CONTENT_USER_AVATAR_LINK_REGEX, reply);
 				if (!avatarLink.contains("http://")) {
 					avatarLink = cc98UrlManager.getClientUrl() + avatarLink;
 				}
 				entity.setUserAvatarLink(avatarLink);
+
+			} catch (ParseContentException e) {
+					entity.setUserAvatarLink("file:///android_asset/pic/no_avatar.jpg");
 			}
-			{
+ 			{
 				String sex = getMatchedString(POST_CONTENT_GENDER_REGEX, reply);
 				if ("Male".equals(sex)) {
 					entity.setGender(Gender.MALE);
-				} else if ("FeMale".equals(sex)) {
+				} else {
 					entity.setGender(Gender.FEMALE);
 				}
 			}
@@ -250,7 +254,7 @@ public class CC98ParserImpl implements ICC98Parser {
 			}
 			entity.setPostType(getMatchedString(POST_LIST_POST_TYPE_REGEX, post));
 			entity.setReplyNumber(getMatchedString(POST_LIST_REPLY_NUM_REGEX,
-					post));
+					post).replaceAll("<.*?>", ""));
 			entity.setPostAuthorName(getMatchedString(
 					POST_LIST_POST_AUTHOR_NAME_REGEX, post));
 			entity.setLastReplyAuthor(getMatchedString(
@@ -565,10 +569,7 @@ public class CC98ParserImpl implements ICC98Parser {
 			entity.setTotalResult(totalPost);
 			entity.setPostId(getMatchedString(NEW_TOPIC_ID_REGEX, string));
 			list.add(entity);
-			if (i==5) {
-				Log.d(TAG, string);
-			}
-		}
+ 		}
 		return list;
 	}
 
