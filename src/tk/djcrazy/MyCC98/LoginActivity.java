@@ -56,6 +56,7 @@ import android.view.ViewTreeObserver.OnPreDrawListener;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -388,9 +389,10 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 
 	private void showLoginField() {
 		final LinearLayout layout = (LinearLayout) findViewById(R.id.login_field);
-		final Animation showupAnimation = new DropDownAnimation(layout,
-				DisplayUtil.dip2px(getApplicationContext(), 220), true);
+		
+		final Animation showupAnimation = new DropDownAnimation(layout,layout.getHeight(), true);
 		layout.startAnimation(showupAnimation);
+  		layout.setVisibility(View.VISIBLE);
 		// layout.post(new Runnable() {
 		// @Override
 		// public void run() {
