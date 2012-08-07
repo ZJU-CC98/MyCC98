@@ -5,7 +5,9 @@ div {
 }
 
 body {
- 	background-color: #ececec;
+	background-color: #ececec;
+	word-wrap: break-word;
+	word-break: break-all;
 }
 
 .bg-wrapper {
@@ -15,7 +17,7 @@ body {
 }
 
 .btn {
-	color : #08C;
+	color: #08C;
 	width: 25%;
 	font-size: 8px;
 }
@@ -36,7 +38,7 @@ body {
 .img-avatar {
 	float: left;
 	margin: 0px 10px 0 0;
-/* 	-webkit-border-radius: 6px 6px; */
+	/* 	-webkit-border-radius: 6px 6px; */
 	/*-webkit-box-shadow: 0  0 6px #000; */
 }
 
@@ -68,12 +70,13 @@ body {
 	-webkit-border-radius: 4px;
 	background-color: white;
 	margin-bottom: 0px;
- }
+}
 
-.post-content-wrapper{
+.post-content-wrapper {
 	margin: 5px 80px 10px 80px;
 	padding: 10px 10px 10px 10px;
- }
+}
+
 .pm-reply {
 	
 }
@@ -111,7 +114,7 @@ body {
 	border-bottom-style: solid;
 	border-left-style: solid;
 }
- 
+
 .dialog-but {
 	float: right;
 }

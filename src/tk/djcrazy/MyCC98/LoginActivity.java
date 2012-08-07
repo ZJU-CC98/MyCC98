@@ -390,17 +390,9 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 	private void showLoginField() {
 		final LinearLayout layout = (LinearLayout) findViewById(R.id.login_field);
 		
-		final Animation showupAnimation = new DropDownAnimation(layout,layout.getHeight(), true);
+		final Animation showupAnimation = new DropDownAnimation(layout,DisplayUtil.dip2px(getApplicationContext(), 220), true);
 		layout.startAnimation(showupAnimation);
-  		layout.setVisibility(View.VISIBLE);
-		// layout.post(new Runnable() {
-		// @Override
-		// public void run() {
-		// layout.startAnimation(showupAnimation);
-		// showupAnimation.start();
-		// }
-		// });
-	}
+ 	}
 
 	private Handler updateHandler = new Handler() {
 		@Override

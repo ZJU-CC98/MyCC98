@@ -6,29 +6,25 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.regex.PatternSyntaxException;
 
-import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.message.BasicNameValuePair;
 
+import roboguice.inject.ContentView;
+import roboguice.inject.InjectExtra;
+import roboguice.inject.InjectView;
 import tk.djcrazy.MyCC98.dialog.MoreEmotChooseDialog;
 import tk.djcrazy.MyCC98.dialog.MoreEmotChooseDialog.FaceExpressionChooseListener;
 import tk.djcrazy.MyCC98.helper.TextHelper;
-import tk.djcrazy.MyCC98.security.md5;
 import tk.djcrazy.MyCC98.task.GenericTask;
 import tk.djcrazy.MyCC98.task.TaskAdapter;
 import tk.djcrazy.MyCC98.task.TaskListener;
 import tk.djcrazy.MyCC98.task.TaskParams;
 import tk.djcrazy.MyCC98.task.TaskResult;
 import tk.djcrazy.MyCC98.view.HeaderView;
-import tk.djcrazy.libCC98.CC98ClientImpl;
 import tk.djcrazy.libCC98.ICC98Service;
 import tk.djcrazy.libCC98.exception.ParseContentException;
-import android.R.bool;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -51,10 +47,8 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListAdapter;
@@ -62,9 +56,8 @@ import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.Toast;
 
-import com.flurry.android.FlurryAgent;
 import com.google.inject.Inject;
-
+@ContentView(R.layout.reply)
 public class EditActivity extends BaseActivity {
 
 	public static final int MOD_REPLY = 0;
@@ -75,15 +68,14 @@ public class EditActivity extends BaseActivity {
 	public static final String BUNDLE = "bundle";
 	public static final String BOARD_ID = "boardID";
 	public static final String BOARD_NAME = "boardName";
-	public static final String POST_LINK = "postLink";
+	public static final String POST_Id = "postId";
 	public static final String POST_NAME = "postName";
 	public static final String REPLY_USER_NAME = "replyUserName";
 	public static final String REPLY_USER_POST_TIME = "replyUserPostTime";
 	public static final String REPLY_CONTENT = "replyContent";
 	public static final String FLOOR_NUMBER = "floorNumber";
 	public static final String PAGE_NUMBER = "pageNumber";
-	public static final String USER_IMAGE = "userImage";
-	public static final String TO_USER = "touser";
+ 	public static final String TO_USER = "touser";
 	public static final String PM_CONTENT = "pmcontent";
 	public static final String PM_TITLE = "pmtitle";
 	public static final String EDIT_LINK = "editlink";
@@ -94,19 +86,14 @@ public class EditActivity extends BaseActivity {
 			+ Build.MODEL + " via MyCC98[/color][/right]";;
 
 	private static final String TAG = "EditActivity";
-
 	private static final int TITLE_MAX_LENGTH = 100;
-
 	private static final int CONTENT_MAX_LENGTH = 16240;
-
 	/* 用来标识请求照相功能的activity */
 	private static final int CAMERA_WITH_DATA = 3023;
-
 	/* 用来标识请求gallery的activity */
 	private static final int PHOTO_PICKED_WITH_DATA = 3021;
 	/* 照片最大尺寸不能超过500KB */
 	private static final long MAX_IMAGE_SIZE_IN_BYTE = 500 * 1024;
-
 	/**
 	 * get image from sketch
 	 */
@@ -116,61 +103,56 @@ public class EditActivity extends BaseActivity {
 	private static final File PHOTO_DIR = new File(
 			Environment.getExternalStorageDirectory() + "/Camera");
 
+	@InjectExtra(MOD)
 	private int mod;
+	@InjectExtra(value=BOARD_ID, optional=true)
 	private int boardID;
+	@InjectExtra(value=BOARD_NAME, optional=true)
 	private String boardName;
-
-	private File mCurrentPhotoFile;// 照相机拍照得到的图片
-
-	private String postLink;
-
+	@InjectExtra(value=POST_Id, optional=true)
+	private String postId;
+	@InjectExtra(value=POST_NAME, optional=true)
 	private String postName;
-
-	private String picLink;
-
+ 	private String picLink;
+ 	@InjectExtra(value=REPLY_USER_NAME, optional=true)
 	private String replyUserName;
-
+ 	@InjectExtra(value=REPLY_USER_POST_TIME, optional=true)
 	private String replyUserPostTime;
-
+ 	@InjectExtra(value=REPLY_CONTENT,optional=true)
 	private String replyUserPostContent;
-
-	private String faceGroupChooseString;
-
+	@InjectExtra(value=FLOOR_NUMBER, optional=true)
 	private int mQuoteFloorNumber;
-
+	@InjectExtra(value=PAGE_NUMBER,optional=true)
 	private int mQuotePageNumber;
-
+	@InjectView(R.id.insert_expression_button)
 	private View insertFaceExpression;
-
+	@InjectView(R.id.upload_image_button)
 	private View upLoadButton;
-
+	@InjectView(R.id.reply_title_edit)
 	private EditText replyTitleEditText;
-
+	@InjectView(R.id.reply_content)
 	private EditText replyContent;
-
+	@InjectView(R.id.preview_reply)
 	private View previewButton;
-
+	@InjectView(R.id.face_choose_radio_group)
 	private RadioGroup faceRadioGroup;
-
+	@InjectView(R.id.quick_emot_group_one)
 	private RadioGroup quickEmotGroupOne;
-
+	@InjectView(R.id.quick_emot_group_two)
 	private RadioGroup quickEmotGroupTwo;
-
-	private HeaderView mHeaderView;
+ 
 	private String emotChooseString;
 	private GenericTask mReplyTask;
 	private GenericTask pushNewPostTask;
-
 	private ProgressDialog dialog;
-
 	private String pmreplyid;
 	private String pmreplytopic;
 	private String pmreplycontent;
-
-	private String editLink;
-	private String editContent;
+ 	private String editContent;
 	private String editTopic;
-
+	private File mCurrentPhotoFile;// 照相机拍照得到的图片
+	private String faceGroupChooseString;
+ 
 	@Inject
 	private ICC98Service service;
 
@@ -363,27 +345,10 @@ public class EditActivity extends BaseActivity {
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.reply);
-		Bundle bundle = getIntent().getBundleExtra(BUNDLE);
-		mod = bundle.getInt(MOD, MOD_REPLY);
-		findViews();
-		mHeaderView.setUserImg(service.getUserAvatar());
-		mHeaderView.setButtonImageResource(R.drawable.reply_send_ico);
-		if (mod == MOD_REPLY) {
-			postLink = bundle.getString(POST_LINK);
-			Log.d(TAG, postLink);
-			postName = bundle.getString(POST_NAME);
-			replyUserName = bundle.getString(REPLY_USER_NAME);
-			mHeaderView.setTitle("发表回帖");
-			mHeaderView.setTitleTextSize(12f);
-			if (replyUserName != null) {
-				mHeaderView.setTitle("回复->" + replyUserName);
-				mIsQuoteUser = true;
-				replyUserPostTime = bundle.getString(REPLY_USER_POST_TIME);
-				replyUserPostContent = bundle.getString(REPLY_CONTENT);
-				mQuoteFloorNumber = bundle.getInt(FLOOR_NUMBER);
-				mQuotePageNumber = bundle.getInt(PAGE_NUMBER);
-				replyUserPostContent = replyUserPostContent.replaceAll(
+ 		if (mod == MOD_REPLY) {
+   			if (replyUserName != null) {
+ 				mIsQuoteUser = true;
+ 				replyUserPostContent = replyUserPostContent.replaceAll(
 						"<.*?>|searchubb.*?;", "");
 				replyContent.setText("[quote][b]以下是引用[i]" + replyUserName + "在"
 						+ replyUserPostTime + "[/i]的发言：[/b]\n"
@@ -391,28 +356,13 @@ public class EditActivity extends BaseActivity {
 						+ "[/quote]\n");
 			}
 		} else if (mod == MOD_NEW_POST) {
-			boardID = bundle.getInt(BOARD_ID);
-			boardName = bundle.getString(BOARD_NAME);
-
-			System.err.println("boardID:" + boardID);
-			System.out.println("boardName:" + boardName);
-			setTitle("发新帖: " + boardName);
-			mHeaderView.setTitle("发新帖: " + boardName);
-		} else if (mod == MOD_PM) {
-			pmreplyid = bundle.getString(TO_USER);
-			pmreplycontent = bundle.getString(PM_CONTENT);
-			pmreplytopic = bundle.getString(PM_TITLE);
-			pmreplytopic = pmreplytopic == null ? "" : "回复: " + pmreplytopic;
-			mHeaderView.setTitle("站短" + pmreplyid);
-			replyContent.setText(pmreplycontent);
+ 		} else if (mod == MOD_PM) {
+ 			pmreplytopic = pmreplytopic == null ? "" : "回复: " + pmreplytopic;
+ 			replyContent.setText(pmreplycontent);
 			replyTitleEditText.setText(pmreplytopic);
 		} else if (mod == MOD_EDIT) {
-			editLink = bundle.getString(EDIT_LINK);
-			editContent = bundle.getString(EDIT_CONTENT);
-			editTopic = bundle.getString(EDIT_TOPIC);
-			replyContent.setText(editContent);
-			mHeaderView.setTitle("编辑帖子");
-			replyTitleEditText.setText(editTopic);
+ 			replyContent.setText(editContent);
+ 			replyTitleEditText.setText(editTopic);
 		}
 		setupListeners();
 	}
@@ -460,42 +410,7 @@ public class EditActivity extends BaseActivity {
 		this.finish();
 	}
 
-	// private void submitEdit(String editLink, String editTopic,
-	// String editContent) {
-	//
-	// List<NameValuePair> nvpsList = new ArrayList<NameValuePair>();
-	// nvpsList.add(new BasicNameValuePair("upfilerename", ""));
-	// nvpsList.add(new BasicNameValuePair("Expression",
-	// faceGroupChooseString));
-	// nvpsList.add(new BasicNameValuePair("subject", editTopic));
-	// nvpsList.add(new BasicNameValuePair("content", editContent));
-	// nvpsList.add(new BasicNameValuePair("followup", editLink.substring(
-	// editLink.indexOf("&id=") + 4, editLink.indexOf("&star"))));
-	// nvpsList.add(new BasicNameValuePair("username", CC98ClientImpl
-	// .getUserName()));
-	// nvpsList.add(new BasicNameValuePair("passwd", md5.MyMD5(CC98ClientImpl
-	// .getPasswd())));
-	// nvpsList.add(new BasicNameValuePair("signflag", "yes"));
-	// nvpsList.add(new BasicNameValuePair("TotalUseTable", "bbs2"));
-	// nvpsList.add(new BasicNameValuePair("star", editLink.substring(
-	// editLink.indexOf("&star=") + 6, editLink.indexOf("&bm"))));
-	// try {
-	// if (CC98ClientImpl.editPost(nvpsList,
-	// editLink.replace("editannounce", "SaveditAnnounce"))) {
-	// Toast.makeText(EditActivity.this, "编辑成功", Toast.LENGTH_SHORT)
-	// .show();
-	// } else {
-	// Toast.makeText(EditActivity.this, "编辑失败", Toast.LENGTH_SHORT)
-	// .show();
-	// }
-	// } catch (Exception e) {
-	// Toast.makeText(EditActivity.this, "编辑失败", Toast.LENGTH_SHORT)
-	// .show();
-	// e.printStackTrace();
-	// }
-	// }
-
-	/**
+ 	/**
      * 
      */
 	private void setupListeners() {
@@ -593,171 +508,171 @@ public class EditActivity extends BaseActivity {
 			}
 		});
 
-		mHeaderView.setButtonOnclickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-
-				final String titleString = replyTitleEditText.getText()
-						.toString();
-				final String contentString = replyContent.getText().toString();
-
-				if (mIsQuoteUser) {
-
-					setupRefDialog(titleString, contentString);
-				}
-
-				else {
-					if (mod == MOD_REPLY) {
-						if (mReplyTask != null
-								&& mReplyTask.getStatus() == GenericTask.Status.RUNNING) {
-							return;
-						} else {
-							if (!TextHelper.isEmpty(contentString)) {
-								mReplyTask = new PushReplyTask();
-								mReplyTask.setListener(mReplyListener);
-
-								TaskParams params = new TaskParams();
-								params.put("postLink", postLink + "&page=");
-								params.put("content", contentString);
-								params.put("title", titleString);
-								params.put("faceExpression",
-										faceGroupChooseString);
-								mReplyTask.execute(params);
-							}
-						}
-					} else if (mod == MOD_NEW_POST) {
-						if (pushNewPostTask != null
-								&& pushNewPostTask.getStatus() == GenericTask.Status.RUNNING) {
-							return;
-						} else {
-							if (!TextHelper.isEmpty(contentString)) {
-								pushNewPostTask = new PushNewPostTask();
-								pushNewPostTask
-										.setListener(pushNewPostListener);
-
-								TaskParams params = new TaskParams();
-								params.put("boardID", boardID);
-								params.put("content", contentString);
-								params.put("title", titleString);
-								params.put("faceExpression",
-										faceGroupChooseString);
-								pushNewPostTask.execute(params);
-							}
-						}
-					} else if (mod == MOD_PM) {
-						try {
-							sendPm(pmreplyid, replyTitleEditText.getText()
-									.toString(), replyContent.getText()
-									.toString());
-						} catch (ClientProtocolException e) {
-							e.printStackTrace();
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-					} else if (mod == MOD_EDIT) {
-						// submitEdit(editLink, titleString, contentString);
-					}
-				}
-			}
-
-			/**
-			 * @param titleString
-			 * @param contentString
-			 */
-			private void setupRefDialog(final String titleString,
-					final String contentString) {
-				AlertDialog.Builder builder = new AlertDialog.Builder(
-						EditActivity.this);
-				builder.setTitle("提示");
-				builder.setMessage("是否给用户：" + replyUserName + " 发送引用通知？");
-				builder.setPositiveButton("是",
-						new DialogInterface.OnClickListener() {
-
-							@Override
-							public void onClick(DialogInterface dialog,
-									int which) {
-
-								new Thread() {
-									public void run() {
-										try {
-											service.sendPm(
-													replyUserName,
-													new StringBuilder(30)
-															.append("用户：")
-															.append(service
-																	.getUserName())
-															.append(" 在帖子中回复了你")
-															.toString(),
-													new StringBuilder(50)
-															.append("详情请点击：")
-															.append(postLink)
-															.append("&star=")
-															.append(mQuotePageNumber)
-															.append("#")
-															.append(mQuoteFloorNumber)
-															.append("\n\n\n[right]此消息由[url=10.110.19.123/mycc98/intro.html][color=red]MyCC98[/color][/url]发送[/right]")
-															.toString());
-										} catch (ClientProtocolException e) {
-											e.printStackTrace();
-										} catch (IOException e) {
-											e.printStackTrace();
-										}
-									}
-								}.start();
-
-								if (mReplyTask != null
-										&& mReplyTask.getStatus() == GenericTask.Status.RUNNING) {
-									return;
-								} else {
-									if (!TextHelper.isEmpty(contentString)) {
-										mReplyTask = new PushReplyTask();
-										mReplyTask.setListener(mReplyListener);
-
-										TaskParams params = new TaskParams();
-										params.put("postLink", postLink
-												+ "&page=");
-										params.put("content", contentString);
-										params.put("title", titleString);
-										params.put("faceExpression",
-												faceGroupChooseString);
-										mReplyTask.execute(params);
-									}
-								}
-
-							}
-						});
-
-				builder.setNegativeButton("不",
-						new DialogInterface.OnClickListener() {
-
-							@Override
-							public void onClick(DialogInterface dialog,
-									int which) {
-								if (mReplyTask != null
-										&& mReplyTask.getStatus() == GenericTask.Status.RUNNING) {
-									return;
-								} else {
-									if (!TextHelper.isEmpty(contentString)) {
-										mReplyTask = new PushReplyTask();
-										mReplyTask.setListener(mReplyListener);
-
-										TaskParams params = new TaskParams();
-										params.put("postLink", postLink
-												+ "&page=");
-										params.put("content", contentString);
-										params.put("title", titleString);
-										params.put("faceExpression",
-												faceGroupChooseString);
-										mReplyTask.execute(params);
-									}
-								}
-
-							}
-						});
-				builder.show();
-			}
-		});
+//		mHeaderView.setButtonOnclickListener(new OnClickListener() {
+//
+//			@Override
+//			public void onClick(View v) {
+//
+//				final String titleString = replyTitleEditText.getText()
+//						.toString();
+//				final String contentString = replyContent.getText().toString();
+//
+//				if (mIsQuoteUser) {
+//
+//					setupRefDialog(titleString, contentString);
+//				}
+//
+//				else {
+//					if (mod == MOD_REPLY) {
+//						if (mReplyTask != null
+//								&& mReplyTask.getStatus() == GenericTask.Status.RUNNING) {
+//							return;
+//						} else {
+//							if (!TextHelper.isEmpty(contentString)) {
+//								mReplyTask = new PushReplyTask();
+//								mReplyTask.setListener(mReplyListener);
+//
+//								TaskParams params = new TaskParams();
+//								params.put("postLink", postId + "&page=");
+//								params.put("content", contentString);
+//								params.put("title", titleString);
+//								params.put("faceExpression",
+//										faceGroupChooseString);
+//								mReplyTask.execute(params);
+//							}
+//						}
+//					} else if (mod == MOD_NEW_POST) {
+//						if (pushNewPostTask != null
+//								&& pushNewPostTask.getStatus() == GenericTask.Status.RUNNING) {
+//							return;
+//						} else {
+//							if (!TextHelper.isEmpty(contentString)) {
+//								pushNewPostTask = new PushNewPostTask();
+//								pushNewPostTask
+//										.setListener(pushNewPostListener);
+//
+//								TaskParams params = new TaskParams();
+//								params.put("boardID", boardID);
+//								params.put("content", contentString);
+//								params.put("title", titleString);
+//								params.put("faceExpression",
+//										faceGroupChooseString);
+//								pushNewPostTask.execute(params);
+//							}
+//						}
+//					} else if (mod == MOD_PM) {
+//						try {
+//							sendPm(pmreplyid, replyTitleEditText.getText()
+//									.toString(), replyContent.getText()
+//									.toString());
+//						} catch (ClientProtocolException e) {
+//							e.printStackTrace();
+//						} catch (IOException e) {
+//							e.printStackTrace();
+//						}
+//					} else if (mod == MOD_EDIT) {
+//						// submitEdit(editLink, titleString, contentString);
+//					}
+//				}
+//			}
+//
+//			/**
+//			 * @param titleString
+//			 * @param contentString
+//			 */
+//			private void setupRefDialog(final String titleString,
+//					final String contentString) {
+//				AlertDialog.Builder builder = new AlertDialog.Builder(
+//						EditActivity.this);
+//				builder.setTitle("提示");
+//				builder.setMessage("是否给用户：" + replyUserName + " 发送引用通知？");
+//				builder.setPositiveButton("是",
+//						new DialogInterface.OnClickListener() {
+//
+//							@Override
+//							public void onClick(DialogInterface dialog,
+//									int which) {
+//
+//								new Thread() {
+//									public void run() {
+//										try {
+//											service.sendPm(
+//													replyUserName,
+//													new StringBuilder(30)
+//															.append("用户：")
+//															.append(service
+//																	.getUserName())
+//															.append(" 在帖子中回复了你")
+//															.toString(),
+//													new StringBuilder(50)
+//															.append("详情请点击：")
+//															.append(postId)
+//															.append("&star=")
+//															.append(mQuotePageNumber)
+//															.append("#")
+//															.append(mQuoteFloorNumber)
+//															.append("\n\n\n[right]此消息由[url=10.110.19.123/mycc98/intro.html][color=red]MyCC98[/color][/url]发送[/right]")
+//															.toString());
+//										} catch (ClientProtocolException e) {
+//											e.printStackTrace();
+//										} catch (IOException e) {
+//											e.printStackTrace();
+//										}
+//									}
+//								}.start();
+//
+//								if (mReplyTask != null
+//										&& mReplyTask.getStatus() == GenericTask.Status.RUNNING) {
+//									return;
+//								} else {
+//									if (!TextHelper.isEmpty(contentString)) {
+//										mReplyTask = new PushReplyTask();
+//										mReplyTask.setListener(mReplyListener);
+//
+//										TaskParams params = new TaskParams();
+//										params.put("postLink", postId
+//												+ "&page=");
+//										params.put("content", contentString);
+//										params.put("title", titleString);
+//										params.put("faceExpression",
+//												faceGroupChooseString);
+//										mReplyTask.execute(params);
+//									}
+//								}
+//
+//							}
+//						});
+//
+//				builder.setNegativeButton("不",
+//						new DialogInterface.OnClickListener() {
+//
+//							@Override
+//							public void onClick(DialogInterface dialog,
+//									int which) {
+//								if (mReplyTask != null
+//										&& mReplyTask.getStatus() == GenericTask.Status.RUNNING) {
+//									return;
+//								} else {
+//									if (!TextHelper.isEmpty(contentString)) {
+//										mReplyTask = new PushReplyTask();
+//										mReplyTask.setListener(mReplyListener);
+//
+//										TaskParams params = new TaskParams();
+//										params.put("postLink", postId
+//												+ "&page=");
+//										params.put("content", contentString);
+//										params.put("title", titleString);
+//										params.put("faceExpression",
+//												faceGroupChooseString);
+//										mReplyTask.execute(params);
+//									}
+//								}
+//
+//							}
+//						});
+//				builder.show();
+//			}
+//		});
 
 		replyTitleEditText.addTextChangedListener(new TextWatcher() {
 
@@ -771,7 +686,7 @@ public class EditActivity extends BaseActivity {
 			public void beforeTextChanged(CharSequence s, int start, int count,
 					int after) {
 
-			}
+			} 
 
 			@Override
 			public void afterTextChanged(Editable s) {
@@ -845,22 +760,7 @@ public class EditActivity extends BaseActivity {
 		quickEmotGroupTwo.setOnCheckedChangeListener(emotChangeListener);
 	}
 
-	/**
-     * 
-     */
-	private void findViews() {
-		replyContent = (EditText) findViewById(R.id.reply_content);
-		replyTitleEditText = (EditText) findViewById(R.id.reply_title_edit);
-		insertFaceExpression = findViewById(R.id.insert_expression_button);
-		previewButton = findViewById(R.id.preview_reply);
-		faceRadioGroup = (RadioGroup) findViewById(R.id.face_choose_radio_group);
-		upLoadButton = findViewById(R.id.upload_image_button);
-		quickEmotGroupOne = (RadioGroup) findViewById(R.id.quick_emot_group_one);
-		quickEmotGroupTwo = (RadioGroup) findViewById(R.id.quick_emot_group_two);
-		mHeaderView = (HeaderView) findViewById(R.id.main_header);
-
-	}
-
+ 
 	private void onReplyFailure(String string) {
 
 		dialog.dismiss();
@@ -881,7 +781,6 @@ public class EditActivity extends BaseActivity {
 	private void doPickPhotoAction() {
 		final Context context = EditActivity.this;
 
-		// Wrap our context to inflate list items using correct theme
 		final Context dialogContext = new ContextThemeWrapper(context,
 				android.R.style.Theme_Light);
 		String[] choices;
@@ -898,7 +797,6 @@ public class EditActivity extends BaseActivity {
 
 		builder.setSingleChoiceItems(adapter, -1,
 				new DialogInterface.OnClickListener() {
-
 					public void onClick(DialogInterface dialog, int which) {
 						dialog.dismiss();
 						switch (which) {
@@ -917,7 +815,6 @@ public class EditActivity extends BaseActivity {
 						case 1:
 							doPickPhotoFromGallery();// 从相册中去获取
 							break;
-
 						case 2:
 							if (Environment.getExternalStorageState().equals(
 									Environment.MEDIA_MOUNTED)) {
@@ -988,7 +885,7 @@ public class EditActivity extends BaseActivity {
 	}
 
 	// 请求Gallery程序
-	protected void doPickPhotoFromGallery() {
+	private void doPickPhotoFromGallery() {
 		try {
 			// Launch picker to choose photo for selected contact
 			final Intent intent = getPhotoPickIntent();
@@ -1001,7 +898,7 @@ public class EditActivity extends BaseActivity {
 	}
 
 	// 封装请求Gallery的intent
-	public static Intent getPhotoPickIntent() {
+	private static Intent getPhotoPickIntent() {
 		Intent intent = new Intent(Intent.ACTION_GET_CONTENT, null);
 		intent.setType("image/*");
 		return intent;
@@ -1129,9 +1026,7 @@ public class EditActivity extends BaseActivity {
 
 	private class PushReplyTask extends GenericTask {
 
-		String postLink;
-
-		String rootID;
+ 		String postId;
 
 		String boardID;
 
@@ -1148,8 +1043,7 @@ public class EditActivity extends BaseActivity {
 
 			try {
 
-				postLink = param.getString("postLink");
-				content = param.getString("content")
+ 				content = param.getString("content")
 						+ (SettingsActivity.addTail ? TAIL : "");
 				title = param.getString("title");
 				faceExpression = param.getString("faceExpression");

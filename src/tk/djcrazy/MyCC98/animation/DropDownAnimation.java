@@ -1,6 +1,5 @@
 package tk.djcrazy.MyCC98.animation;
 
-import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
@@ -22,7 +21,7 @@ public class DropDownAnimation extends Animation {
 	@Override
 	protected void applyTransformation(float interpolatedTime, Transformation t) {
 
-		newHeight = +(int) ((targetHeight) * interpolatedTime);
+		newHeight =  (int) ((targetHeight) * interpolatedTime);
 		view.getLayoutParams().height = newHeight;
 		view.requestLayout();
 	}
@@ -31,9 +30,7 @@ public class DropDownAnimation extends Animation {
 	public void initialize(int width, int height, int parentWidth,
 			int parentHeight) {
 		super.initialize(width, height, parentWidth, parentHeight);
-		Log.d("DropDownAnimation", height + "");
-		targetHeight = height;
-	}
+  	}
 
 	@Override
 	public boolean willChangeBounds() {

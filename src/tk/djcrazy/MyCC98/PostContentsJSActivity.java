@@ -533,7 +533,7 @@ public class PostContentsJSActivity extends BaseActivity  implements OnClickList
 				EditActivity.class);
 		Bundle bundle = new Bundle();
 		bundle.putString(EditActivity.POST_NAME, postName);
-		bundle.putString(EditActivity.POST_LINK, postId);
+		bundle.putString(EditActivity.POST_Id, postId);
 		bundle.putInt(EditActivity.MOD, EditActivity.MOD_REPLY);
  		intent.putExtra(EditActivity.BUNDLE, bundle);
 		startActivityForResult(intent, 1);
@@ -719,7 +719,7 @@ public class PostContentsJSActivity extends BaseActivity  implements OnClickList
 			String postTime, String postContent, int floorNum, int pageNum) {
 		Intent intent = new Intent(this, EditActivity.class);
 		Bundle bundle = new Bundle();
-		bundle.putCharSequence(EditActivity.POST_LINK, link);
+		bundle.putCharSequence(EditActivity.POST_Id, link);
 		bundle.putCharSequence(EditActivity.POST_NAME, topic);
 		bundle.putCharSequence(EditActivity.REPLY_USER_NAME, sender);
 		bundle.putCharSequence(EditActivity.REPLY_USER_POST_TIME, postTime);
