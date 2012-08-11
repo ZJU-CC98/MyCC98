@@ -43,8 +43,7 @@
                         android:layout_width="120dip"
                         android:layout_height="120dip"
                         android:layout_marginRight="5.0dip"
-                        android:background="@drawable/user_avatar_bg"
-                        android:padding="5dp"
+                         android:padding="5dp"
                         android:scaleType="centerInside"
                         android:src="@drawable/bug" />
                 </RelativeLayout>

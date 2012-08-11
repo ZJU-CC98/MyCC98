@@ -411,13 +411,13 @@ public class PostContentsJSActivity extends BaseActivity  implements OnClickList
 					.append("',1,'tablebody2');</script></div>")
 					.append("</div>")
 					.append("<div class=\"btn-group\">")
-					.append("<a class=\"btn\" onclick=\"PostContents.showContentDialog("
+					.append("<a class=\"btn\" onclick=\"PostContentsJSActivity.showContentDialog("
 							+ i + "," + 0 + ");\">吐槽</a>")
-					.append("<a class=\"btn\" onclick=\"PostContents.showContentDialog("
+					.append("<a class=\"btn\" onclick=\"PostContentsJSActivity.showContentDialog("
 							+ i + "," + 1 + ");\">站短</a>")
-					.append("<a class=\"btn\" onclick=\"PostContents.showContentDialog("
+					.append("<a class=\"btn\" onclick=\"PostContentsJSActivity.showContentDialog("
 							+ i + "," + 3 + ");\">查看</a>")
-					.append("<a class=\"btn\" onclick=\"PostContents.showContentDialog("
+					.append("<a class=\"btn\" onclick=\"PostContentsJSActivity.showContentDialog("
 							+ i + "," + 2 + ");\">加好友</a>").append("</div>")
 					.append(ITEM_CLOSE);
 			builder.append(mBuilder.toString());
@@ -531,18 +531,17 @@ public class PostContentsJSActivity extends BaseActivity  implements OnClickList
 	public void reply() {
 		Intent intent = new Intent(PostContentsJSActivity.this,
 				EditActivity.class);
-		Bundle bundle = new Bundle();
-		bundle.putString(EditActivity.POST_NAME, postName);
-		bundle.putString(EditActivity.POST_Id, postId);
-		bundle.putInt(EditActivity.MOD, EditActivity.MOD_REPLY);
- 		intent.putExtra(EditActivity.BUNDLE, bundle);
+  		intent.putExtra(EditActivity.MOD, EditActivity.MOD_REPLY);
+ 		intent.putExtra(EditActivity.POST_Id, postId);
+ 		intent.putExtra(EditActivity.POST_NAME, postName);
+ 		intent.putExtra(EditActivity.BOARD_ID, boardId);
+ 		intent.putExtra(EditActivity.BOARD_NAME, boardName);
 		startActivityForResult(intent, 1);
 		overridePendingTransition(R.anim.forward_activity_move_in,
 				R.anim.forward_activity_move_out);
 	}
 
-	// option menu
-	@Override
+ 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		menu.add(0, MNU_REFRESH, 0, R.string.refresh);
 		menu.add(0, MNU_FIRST, 1, R.string.first_page);
@@ -550,7 +549,6 @@ public class PostContentsJSActivity extends BaseActivity  implements OnClickList
 		menu.add(0, MNU_PREV, 3, R.string.pre_page);
 		menu.add(0, MNU_JUMP, 4, R.string.jump_dialog_title);
 		menu.add(0, MNU_NEXT, 5, R.string.next_page);
-
 		return super.onCreateOptionsMenu(menu);
 
 	}
@@ -597,19 +595,20 @@ public class PostContentsJSActivity extends BaseActivity  implements OnClickList
 	}
 
 	public void showContentDialog(final int index, int which) {
+		Log.d(TAG, "showContentDialog: "+which);
 		final PostContentEntity item = currPage.getList().get(index);
 		switch (which) {
 		case 0: {
 			// quote & reply
 			String tmp = item.getPostContent().replaceAll("(<br>|<BR>)", "\n");
-			quoteReply(postId, item.getPostTitle(), item.getUserName(),
+			quoteReply(item.getUserName(),
 					DateFormatUtil.convertDateToString(item.getPostTime(),
 							false), tmp, index, currPageNum);
 		}
 			break;
 		case 1:
 			// send pm
-			send_pm(item.getUserName());
+			sendPm(item.getUserName());
 			break;
 		case 2:
 			AlertDialog.Builder builder = new AlertDialog.Builder(
@@ -624,10 +623,8 @@ public class PostContentsJSActivity extends BaseActivity  implements OnClickList
 				}
 			});
 			builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-
 				}
 			});
 			builder.create().show();
@@ -666,7 +663,6 @@ public class PostContentsJSActivity extends BaseActivity  implements OnClickList
 
 	private void addFriend(final String userName) {
 		new Thread(new Runnable() {
-
 			@Override
 			public void run() {
 				try {
@@ -684,30 +680,26 @@ public class PostContentsJSActivity extends BaseActivity  implements OnClickList
 				}
 			}
 		}).start();
-
 	}
 
 	private void viewUserInfo(String username) {
 		Intent intent = new Intent(this, ProfileActivity.class);
 		intent.putExtra("userName", username);
- 		PostContentsJSActivity.this.startActivity(intent);
-		PostContentsJSActivity.this.overridePendingTransition(
+ 		startActivity(intent);
+		overridePendingTransition(
 				R.anim.forward_activity_move_in,
 				R.anim.forward_activity_move_out);
-
 	}
 
-	private void send_pm(String target) {
-		Intent intent = new Intent(this, EditActivity.class);
-		Bundle bundle = new Bundle();
-		bundle.putInt(EditActivity.MOD, EditActivity.MOD_PM);
-		bundle.putString(EditActivity.TO_USER, target);
-		intent.putExtra(EditActivity.BUNDLE, bundle);
-		intent.putExtra(EditActivity.BUNDLE, bundle);
-		startActivity(intent);
+	private void sendPm(String target) {
+		Intent intent = new Intent(getApplicationContext(),EditActivity.class);
+		intent.putExtra(EditActivity.MOD, EditActivity.MOD_PM);
+		intent.putExtra(EditActivity.PM_TO_USER, target);
+  		startActivity(intent);
 		overridePendingTransition(R.anim.forward_activity_move_in,
 				R.anim.forward_activity_move_out);
-	}
+
+ 	}
 
 	private void dismissSearchDialog() {
 		webView.clearMatches();
@@ -715,19 +707,19 @@ public class PostContentsJSActivity extends BaseActivity  implements OnClickList
 		searchMode = false;
 	}
 
-	private void quoteReply(String link, String topic, String sender,
+	private void quoteReply(String sender,
 			String postTime, String postContent, int floorNum, int pageNum) {
 		Intent intent = new Intent(this, EditActivity.class);
-		Bundle bundle = new Bundle();
-		bundle.putCharSequence(EditActivity.POST_Id, link);
-		bundle.putCharSequence(EditActivity.POST_NAME, topic);
-		bundle.putCharSequence(EditActivity.REPLY_USER_NAME, sender);
-		bundle.putCharSequence(EditActivity.REPLY_USER_POST_TIME, postTime);
-		bundle.putCharSequence(EditActivity.REPLY_CONTENT, postContent);
-		bundle.putInt(EditActivity.FLOOR_NUMBER, floorNum);
-		bundle.putInt(EditActivity.PAGE_NUMBER, pageNum);
- 		bundle.putInt(EditActivity.MOD, EditActivity.MOD_REPLY);
-		intent.putExtra(EditActivity.BUNDLE, bundle);
+ 		intent.putExtra(EditActivity.BOARD_ID, boardId);
+		intent.putExtra(EditActivity.BOARD_NAME, boardName);
+		intent.putExtra(EditActivity.POST_Id, postId);
+		intent.putExtra(EditActivity.POST_NAME, postName);
+		intent.putExtra(EditActivity.REPLY_USER_NAME, sender);
+		intent.putExtra(EditActivity.REPLY_USER_POST_TIME, postTime);
+		intent.putExtra(EditActivity.REPLY_CONTENT, postContent);
+		intent.putExtra(EditActivity.FLOOR_NUMBER, floorNum);
+		intent.putExtra(EditActivity.PAGE_NUMBER, pageNum);
+		intent.putExtra(EditActivity.MOD, EditActivity.MOD_QUOTE_REPLY);
 		startActivityForResult(intent, 1);
 		overridePendingTransition(R.anim.forward_activity_move_in,
 				R.anim.forward_activity_move_out);

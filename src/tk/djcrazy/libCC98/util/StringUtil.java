@@ -12,6 +12,6 @@ public class StringUtil {
 		return content.replaceAll("&amp;", "&").replaceAll("<", "&lt;")
 				.replaceAll(">", "&gt;").replaceAll("\'", "&apos;")
 				.replaceAll("&quot;", "\"").replaceAll(" ", "&nbsp;")
-				.replaceAll( "@","&copy;").replaceAll("?", "&reg;");
+				.replaceAll( "@","&copy;").replaceAll("\\?", "&reg;");
 	}
 }

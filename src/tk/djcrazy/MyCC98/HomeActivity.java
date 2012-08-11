@@ -219,12 +219,11 @@ public class HomeActivity extends RoboFragmentActivity implements
 	 * 
 	 */
 	private void doSendFeedBack() {
-		Bundle bundle = new Bundle();
-		bundle.putInt(EditActivity.MOD, EditActivity.MOD_PM);
-		bundle.putString(EditActivity.TO_USER, "MyCC.98");
-		bundle.putString(EditActivity.PM_TITLE, "MyCC98软件反馈");
-		startActivity(new Intent().setClass(getApplicationContext(),
-				EditActivity.class).putExtra(EditActivity.BUNDLE, bundle));
+		Intent intent = new Intent(getApplicationContext(),EditActivity.class);
+		intent.putExtra(EditActivity.MOD, EditActivity.MOD_PM);
+		intent.putExtra(EditActivity.PM_TO_USER, "MyCC.98");
+		intent.putExtra(EditActivity.PM_TITLE, "MyCC98软件反馈");
+ 		startActivity(intent);
 		overridePendingTransition(R.anim.forward_activity_move_in,
 				R.anim.forward_activity_move_out);
 	}

@@ -53,11 +53,11 @@ public class PmViewActivity extends BaseActivity {
 	private String faceChoosedString = null;
 	private String pmContent;
 
- 	private HeaderView headerView;
+	private HeaderView headerView;
 
 	@Inject
 	private ICC98Service service;
-	
+
 	private HtmlGenHelper helper = new HtmlGenHelper();
 
 	@Override
@@ -163,8 +163,7 @@ public class PmViewActivity extends BaseActivity {
 						replyed = helper.addPostInfo(readTopic,
 								senderAvatarUrl, sender, "", -1, sendTime, -1)
 								+ "<div class=\"post-content\"><span id=\"ubbcode\">"
-								+ helper.parseInnerLink(pmContent,
-										"PmReply")
+								+ helper.parseInnerLink(pmContent, "PmReply")
 								+ "</span><script>searchubb('ubbcode',1,'tablebody2');</script></div>";
 					} catch (ClientProtocolException e) {
 
@@ -198,23 +197,22 @@ public class PmViewActivity extends BaseActivity {
 	private void setListeners() {
 
 		headerView.setButtonOnclickListener(new View.OnClickListener() {
-
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent();
-				Bundle bundle = new Bundle();
-				intent.setClass(PmViewActivity.this, EditActivity.class);
-				bundle.putInt(EditActivity.MOD, EditActivity.MOD_PM);
-				bundle.putString(EditActivity.TO_USER, sender);
+				Intent intent = new Intent(getApplicationContext(),
+						EditActivity.class);
+				intent.putExtra(EditActivity.MOD, EditActivity.MOD_PM);
+				intent.putExtra(EditActivity.PM_TO_USER, sender);
+				intent.putExtra(EditActivity.PM_TITLE, readTopic);
 				StringBuilder tmp = new StringBuilder();
 				tmp.append("[quote][b]以下是引用").append(sender).append("在[i]")
 						.append(sendTime).append("[/i]时发送的短信：[/b]\n")
 						.append(pmContent.replaceAll("(<BR>|<br>)", "\n"))
 						.append("[/quote]");
-				bundle.putString(EditActivity.PM_CONTENT, tmp.toString());
-				bundle.putString(EditActivity.PM_TITLE, readTopic);
-				intent.putExtra(EditActivity.BUNDLE, bundle);
+				intent.putExtra(EditActivity.PM_CONTENT, tmp.toString());
 				startActivity(intent);
+				overridePendingTransition(R.anim.forward_activity_move_in,
+						R.anim.forward_activity_move_out);
 			}
 		});
 	}
@@ -253,6 +251,6 @@ public class PmViewActivity extends BaseActivity {
 		bundle.putInt(PostContentsJSActivity.PAGE_NUMBER, pageNum);
 		bundle.putString(PostContentsJSActivity.POST_NAME, "");
 		Intent intent = new Intent(this, PostContentsJSActivity.class);
- 		this.startActivity(intent);
+		this.startActivity(intent);
 	}
 }

@@ -162,13 +162,11 @@ public class PostListActivity extends BaseActivity implements OnRefreshListener,
 	 * 
 	 */
 	private void sendNewPost() {
-		Bundle bundle = new Bundle();
-		bundle.putString(EditActivity.BOARD_NAME, boardName);
-		bundle.putString(EditActivity.BOARD_ID, boardId);
-		bundle.putInt(EditActivity.MOD, EditActivity.MOD_NEW_POST);
-		Intent intent2 = new Intent(PostListActivity.this, EditActivity.class);
-		intent2.putExtra(EditActivity.BUNDLE, bundle);
-		startActivityForResult(intent2, 0);
+ 		Intent intent = new Intent(PostListActivity.this, EditActivity.class);
+		intent.putExtra(EditActivity.MOD, EditActivity.MOD_NEW_POST);
+		intent.putExtra(EditActivity.BOARD_ID, boardId);
+		intent.putExtra(EditActivity.BOARD_NAME, boardName);
+		startActivityForResult(intent, 0);
 		overridePendingTransition(R.anim.forward_activity_move_in,
 				R.anim.forward_activity_move_out);
 	}

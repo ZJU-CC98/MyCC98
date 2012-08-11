@@ -171,11 +171,8 @@ public class ProfileActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent(ProfileActivity.this, EditActivity.class);
-				Bundle bundle = new Bundle();
-				bundle.putInt(EditActivity.MOD, EditActivity.MOD_PM);
-				bundle.putString(EditActivity.TO_USER, mUserName);
-				intent.putExtra(EditActivity.BUNDLE, bundle);
-				intent.putExtra(EditActivity.BUNDLE, bundle);
+ 				intent.putExtra(EditActivity.MOD, EditActivity.MOD_PM);
+				intent.putExtra(EditActivity.PM_TO_USER, mUserName);
 				startActivity(intent);
 				overridePendingTransition(R.anim.forward_activity_move_in, R.anim.forward_activity_move_out);
 			}

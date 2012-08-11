@@ -14,6 +14,7 @@ import org.apache.http.client.ClientProtocolException;
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
+import roboguice.util.RoboAsyncTask;
 import tk.djcrazy.MyCC98.dialog.MoreEmotChooseDialog;
 import tk.djcrazy.MyCC98.dialog.MoreEmotChooseDialog.FaceExpressionChooseListener;
 import tk.djcrazy.MyCC98.helper.TextHelper;
@@ -22,8 +23,10 @@ import tk.djcrazy.MyCC98.task.TaskAdapter;
 import tk.djcrazy.MyCC98.task.TaskListener;
 import tk.djcrazy.MyCC98.task.TaskParams;
 import tk.djcrazy.MyCC98.task.TaskResult;
+import tk.djcrazy.MyCC98.util.ToastUtils;
 import tk.djcrazy.MyCC98.view.HeaderView;
 import tk.djcrazy.libCC98.ICC98Service;
+import tk.djcrazy.libCC98.ICC98UrlManager;
 import tk.djcrazy.libCC98.exception.ParseContentException;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -50,23 +53,28 @@ import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.Toast;
 
 import com.google.inject.Inject;
+
 @ContentView(R.layout.reply)
 public class EditActivity extends BaseActivity {
 
 	public static final int MOD_REPLY = 0;
-	public static final int MOD_NEW_POST = 1;
-	public static final int MOD_PM = 2;
-	public static final int MOD_EDIT = 3;
+	public static final int MOD_QUOTE_REPLY = 1;
+	public static final int MOD_NEW_POST = 2;
+	public static final int MOD_PM = 3;
+	public static final int MOD_EDIT = 4;
 	public static final String MOD = "mod";
-	public static final String BUNDLE = "bundle";
-	public static final String BOARD_ID = "boardID";
+	
+ 	public static final String BOARD_ID = "boardID";
 	public static final String BOARD_NAME = "boardName";
 	public static final String POST_Id = "postId";
 	public static final String POST_NAME = "postName";
@@ -75,12 +83,14 @@ public class EditActivity extends BaseActivity {
 	public static final String REPLY_CONTENT = "replyContent";
 	public static final String FLOOR_NUMBER = "floorNumber";
 	public static final String PAGE_NUMBER = "pageNumber";
- 	public static final String TO_USER = "touser";
+	public static final String PM_TO_USER = "touser";
 	public static final String PM_CONTENT = "pmcontent";
 	public static final String PM_TITLE = "pmtitle";
 	public static final String EDIT_LINK = "editlink";
 	public static final String EDIT_CONTENT = "editcontent";
 	public static final String EDIT_TOPIC = "edittopic";
+	public static final String IS_QUOTE_USER = "isQuoteUser";
+	
 
 	public static final String TAIL = "\n\n[right][color=gray]From  "
 			+ Build.MODEL + " via MyCC98[/color][/right]";;
@@ -105,25 +115,33 @@ public class EditActivity extends BaseActivity {
 
 	@InjectExtra(MOD)
 	private int mod;
-	@InjectExtra(value=BOARD_ID, optional=true)
-	private int boardID;
-	@InjectExtra(value=BOARD_NAME, optional=true)
+	@InjectExtra(value = BOARD_ID, optional = true)
+	private String boardID;
+	@InjectExtra(value = BOARD_NAME, optional = true)
 	private String boardName;
-	@InjectExtra(value=POST_Id, optional=true)
+	@InjectExtra(value = POST_Id, optional = true)
 	private String postId;
-	@InjectExtra(value=POST_NAME, optional=true)
+	@InjectExtra(value = POST_NAME, optional = true)
 	private String postName;
- 	private String picLink;
- 	@InjectExtra(value=REPLY_USER_NAME, optional=true)
+	@InjectExtra(value = REPLY_USER_NAME, optional = true)
 	private String replyUserName;
- 	@InjectExtra(value=REPLY_USER_POST_TIME, optional=true)
+	@InjectExtra(value = REPLY_USER_POST_TIME, optional = true)
 	private String replyUserPostTime;
- 	@InjectExtra(value=REPLY_CONTENT,optional=true)
+	@InjectExtra(value = REPLY_CONTENT, optional = true)
 	private String replyUserPostContent;
-	@InjectExtra(value=FLOOR_NUMBER, optional=true)
-	private int mQuoteFloorNumber;
-	@InjectExtra(value=PAGE_NUMBER,optional=true)
-	private int mQuotePageNumber;
+	@InjectExtra(value = FLOOR_NUMBER, optional = true)
+	private int quoteFloorNumber;
+	@InjectExtra(value = PAGE_NUMBER, optional = true)
+	private int quotePageNumber;
+	@InjectExtra(value = IS_QUOTE_USER, optional = true)
+	private boolean isQuoteUser;
+
+	@InjectView(R.id.reply_ensure_btn)
+	private Button ensureButton;
+	@InjectView(R.id.reply_header_userimg)
+	private ImageView userHeader;
+	@InjectView(R.id.reply_header_title)
+	private TextView headerTitle;
 	@InjectView(R.id.insert_expression_button)
 	private View insertFaceExpression;
 	@InjectView(R.id.upload_image_button)
@@ -131,7 +149,7 @@ public class EditActivity extends BaseActivity {
 	@InjectView(R.id.reply_title_edit)
 	private EditText replyTitleEditText;
 	@InjectView(R.id.reply_content)
-	private EditText replyContent;
+	private EditText replyContentEditText;
 	@InjectView(R.id.preview_reply)
 	private View previewButton;
 	@InjectView(R.id.face_choose_radio_group)
@@ -140,24 +158,32 @@ public class EditActivity extends BaseActivity {
 	private RadioGroup quickEmotGroupOne;
 	@InjectView(R.id.quick_emot_group_two)
 	private RadioGroup quickEmotGroupTwo;
- 
+
 	private String emotChooseString;
-	private GenericTask mReplyTask;
-	private GenericTask pushNewPostTask;
-	private ProgressDialog dialog;
-	private String pmreplyid;
-	private String pmreplytopic;
-	private String pmreplycontent;
- 	private String editContent;
+	@InjectExtra(value=PM_TO_USER, optional=true)
+	private String pmReplyName;
+	@InjectExtra(value=PM_TITLE, optional=true)
+	private String pmReplyTopic;
+	@InjectExtra(value=PM_CONTENT, optional=true)
+	private String pmReplyContent;
+	
+	private String editContent;
 	private String editTopic;
-	private File mCurrentPhotoFile;// 照相机拍照得到的图片
+	private File mCurrentPhotoFile;
 	private String faceGroupChooseString;
- 
+	private String picLink;
 	@Inject
 	private ICC98Service service;
-
-	private boolean mIsQuoteUser = false;
-
+	@Inject
+	private ICC98UrlManager manager;
+	
+	private Handler handler = new Handler() {
+		@Override
+		public void handleMessage(Message msg) {
+			int cursor = replyContentEditText.getSelectionStart();
+			replyContentEditText.getText().insert(cursor, emotChooseString);
+		}
+	};
 	private OnCheckedChangeListener emotChangeListener = new OnCheckedChangeListener() {
 
 		@Override
@@ -270,74 +296,8 @@ public class EditActivity extends BaseActivity {
 			}
 
 			group.clearCheck();
-			int cursor = replyContent.getSelectionStart();
-			replyContent.getText().insert(cursor, emotChooseString);
-		}
-	};
-
-	private TaskListener mUploadPictureListener = new TaskAdapter() {
-
-		@Override
-		public void onPreExecute(GenericTask task) {
-			dialog = ProgressDialog
-					.show(EditActivity.this, "", "正在上传...", true);
-			dialog.show();
-		}
-
-		@Override
-		public void onProgressUpdate(GenericTask task, Object param) {
-
-		}
-
-		@Override
-		public void onPostExecute(GenericTask task, TaskResult result) {
-			if (result == TaskResult.OK) {
-				dialog.dismiss();
-				Toast.makeText(getApplicationContext(), "文件上传成功！",
-						Toast.LENGTH_SHORT).show();
-				int cursor = replyContent.getSelectionStart();
-				replyContent.getText().insert(cursor, picLink);
-			} else {
-				dialog.dismiss();
-				Toast.makeText(getApplicationContext(), "文件上传失败！",
-						Toast.LENGTH_SHORT).show();
-
-			}
-		}
-
-		@Override
-		public String getName() {
-
-			return "UploadPicture";
-		}
-	};
-
-	private TaskListener mReplyListener = new TaskAdapter() {
-
-		@Override
-		public void onPreExecute(GenericTask task) {
-			dialog = ProgressDialog.show(EditActivity.this, "",
-					"Submit Reply...", true);
-		}
-
-		@Override
-		public void onProgressUpdate(GenericTask task, Object param) {
-
-		}
-
-		@Override
-		public void onPostExecute(GenericTask task, TaskResult result) {
-			if (result == TaskResult.OK) {
-				onReplySuccess();
-			} else {
-				onReplyFailure("failed");
-			}
-		}
-
-		@Override
-		public String getName() {
-
-			return "Login";
+			int cursor = replyContentEditText.getSelectionStart();
+			replyContentEditText.getText().insert(cursor, emotChooseString);
 		}
 	};
 
@@ -345,74 +305,31 @@ public class EditActivity extends BaseActivity {
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
- 		if (mod == MOD_REPLY) {
-   			if (replyUserName != null) {
- 				mIsQuoteUser = true;
- 				replyUserPostContent = replyUserPostContent.replaceAll(
-						"<.*?>|searchubb.*?;", "");
-				replyContent.setText("[quote][b]以下是引用[i]" + replyUserName + "在"
-						+ replyUserPostTime + "[/i]的发言：[/b]\n"
-						+ replyUserPostContent.replaceAll("<BR>|<br>", "\r\n")
-						+ "[/quote]\n");
-			}
+		userHeader.setImageBitmap(service.getUserAvatar());
+		if (mod == MOD_REPLY) {
+			headerTitle.setText("回复："+postName);
+		} else if (mod == MOD_QUOTE_REPLY) {
+			headerTitle.setText("回复："+postName);
+			replyUserPostContent = replyUserPostContent.replaceAll(
+					"<.*?>|searchubb.*?;", "");
+			replyContentEditText.setText("[quote][b]以下是引用[i]" + replyUserName + "在"
+					+ replyUserPostTime + "[/i]的发言：[/b]\n"
+					+ replyUserPostContent.replaceAll("<BR>|<br>", "\r\n")
+					+ "[/quote]\n");
 		} else if (mod == MOD_NEW_POST) {
- 		} else if (mod == MOD_PM) {
- 			pmreplytopic = pmreplytopic == null ? "" : "回复: " + pmreplytopic;
- 			replyContent.setText(pmreplycontent);
-			replyTitleEditText.setText(pmreplytopic);
+			headerTitle.setText("发表新话题："+boardName);
+		} else if (mod == MOD_PM) {
+			headerTitle.setText("站短："+pmReplyName);
+			pmReplyTopic = pmReplyTopic == null ? "" : "回复: " + pmReplyTopic;
+			replyContentEditText.setText(pmReplyContent);
+			replyTitleEditText.setText(pmReplyTopic);
 		} else if (mod == MOD_EDIT) {
- 			replyContent.setText(editContent);
- 			replyTitleEditText.setText(editTopic);
+			replyContentEditText.setText(editContent);
+			replyTitleEditText.setText(editTopic);
 		}
 		setupListeners();
 	}
 
-	private TaskListener pushNewPostListener = new TaskAdapter() {
-
-		@Override
-		public void onPreExecute(GenericTask task) {
-			dialog = ProgressDialog.show(EditActivity.this, "",
-					"Submit Reply...", true);
-		}
-
-		@Override
-		public void onProgressUpdate(GenericTask task, Object param) {
-
-		}
-
-		@Override
-		public void onPostExecute(GenericTask task, TaskResult result) {
-			if (result == TaskResult.OK) {
-				onPushSuccess();
-			} else {
-				onPushFailure("failed");
-			}
-		}
-
-		@Override
-		public String getName() {
-
-			return "Login";
-		}
-	};
-
-	private void onPushFailure(String string) {
-
-		dialog.dismiss();
-		Toast.makeText(this, "发表失败，请检查！", Toast.LENGTH_SHORT).show();
-	}
-
-	protected void onPushSuccess() {
-
-		dialog.dismiss();
-		Toast.makeText(this, "发表成功！", Toast.LENGTH_SHORT).show();
-		setResult(Activity.RESULT_OK);
-		this.finish();
-	}
-
- 	/**
-     * 
-     */
 	private void setupListeners() {
 		faceRadioGroup
 				.setOnCheckedChangeListener(new OnCheckedChangeListener() {
@@ -495,234 +412,90 @@ public class EditActivity extends BaseActivity {
 				});
 
 		previewButton.setOnClickListener(new OnClickListener() {
-
 			@Override
 			public void onClick(View v) {
-
-				startActivity(new Intent().setClass(getApplicationContext(),
+				startActivity(new Intent(EditActivity.this,
 						PreviewActivity.class).putExtra(
-						PreviewActivity.CONTENT,
-						replyContent.getText().toString()));
+						PreviewActivity.CONTENT, replyContentEditText.getText()
+								.toString()));
 				overridePendingTransition(R.anim.forward_activity_move_in,
 						R.anim.forward_activity_move_out);
 			}
 		});
 
-//		mHeaderView.setButtonOnclickListener(new OnClickListener() {
-//
-//			@Override
-//			public void onClick(View v) {
-//
-//				final String titleString = replyTitleEditText.getText()
-//						.toString();
-//				final String contentString = replyContent.getText().toString();
-//
-//				if (mIsQuoteUser) {
-//
-//					setupRefDialog(titleString, contentString);
-//				}
-//
-//				else {
-//					if (mod == MOD_REPLY) {
-//						if (mReplyTask != null
-//								&& mReplyTask.getStatus() == GenericTask.Status.RUNNING) {
-//							return;
-//						} else {
-//							if (!TextHelper.isEmpty(contentString)) {
-//								mReplyTask = new PushReplyTask();
-//								mReplyTask.setListener(mReplyListener);
-//
-//								TaskParams params = new TaskParams();
-//								params.put("postLink", postId + "&page=");
-//								params.put("content", contentString);
-//								params.put("title", titleString);
-//								params.put("faceExpression",
-//										faceGroupChooseString);
-//								mReplyTask.execute(params);
-//							}
-//						}
-//					} else if (mod == MOD_NEW_POST) {
-//						if (pushNewPostTask != null
-//								&& pushNewPostTask.getStatus() == GenericTask.Status.RUNNING) {
-//							return;
-//						} else {
-//							if (!TextHelper.isEmpty(contentString)) {
-//								pushNewPostTask = new PushNewPostTask();
-//								pushNewPostTask
-//										.setListener(pushNewPostListener);
-//
-//								TaskParams params = new TaskParams();
-//								params.put("boardID", boardID);
-//								params.put("content", contentString);
-//								params.put("title", titleString);
-//								params.put("faceExpression",
-//										faceGroupChooseString);
-//								pushNewPostTask.execute(params);
-//							}
-//						}
-//					} else if (mod == MOD_PM) {
-//						try {
-//							sendPm(pmreplyid, replyTitleEditText.getText()
-//									.toString(), replyContent.getText()
-//									.toString());
-//						} catch (ClientProtocolException e) {
-//							e.printStackTrace();
-//						} catch (IOException e) {
-//							e.printStackTrace();
-//						}
-//					} else if (mod == MOD_EDIT) {
-//						// submitEdit(editLink, titleString, contentString);
-//					}
-//				}
-//			}
-//
-//			/**
-//			 * @param titleString
-//			 * @param contentString
-//			 */
-//			private void setupRefDialog(final String titleString,
-//					final String contentString) {
-//				AlertDialog.Builder builder = new AlertDialog.Builder(
-//						EditActivity.this);
-//				builder.setTitle("提示");
-//				builder.setMessage("是否给用户：" + replyUserName + " 发送引用通知？");
-//				builder.setPositiveButton("是",
-//						new DialogInterface.OnClickListener() {
-//
-//							@Override
-//							public void onClick(DialogInterface dialog,
-//									int which) {
-//
-//								new Thread() {
-//									public void run() {
-//										try {
-//											service.sendPm(
-//													replyUserName,
-//													new StringBuilder(30)
-//															.append("用户：")
-//															.append(service
-//																	.getUserName())
-//															.append(" 在帖子中回复了你")
-//															.toString(),
-//													new StringBuilder(50)
-//															.append("详情请点击：")
-//															.append(postId)
-//															.append("&star=")
-//															.append(mQuotePageNumber)
-//															.append("#")
-//															.append(mQuoteFloorNumber)
-//															.append("\n\n\n[right]此消息由[url=10.110.19.123/mycc98/intro.html][color=red]MyCC98[/color][/url]发送[/right]")
-//															.toString());
-//										} catch (ClientProtocolException e) {
-//											e.printStackTrace();
-//										} catch (IOException e) {
-//											e.printStackTrace();
-//										}
-//									}
-//								}.start();
-//
-//								if (mReplyTask != null
-//										&& mReplyTask.getStatus() == GenericTask.Status.RUNNING) {
-//									return;
-//								} else {
-//									if (!TextHelper.isEmpty(contentString)) {
-//										mReplyTask = new PushReplyTask();
-//										mReplyTask.setListener(mReplyListener);
-//
-//										TaskParams params = new TaskParams();
-//										params.put("postLink", postId
-//												+ "&page=");
-//										params.put("content", contentString);
-//										params.put("title", titleString);
-//										params.put("faceExpression",
-//												faceGroupChooseString);
-//										mReplyTask.execute(params);
-//									}
-//								}
-//
-//							}
-//						});
-//
-//				builder.setNegativeButton("不",
-//						new DialogInterface.OnClickListener() {
-//
-//							@Override
-//							public void onClick(DialogInterface dialog,
-//									int which) {
-//								if (mReplyTask != null
-//										&& mReplyTask.getStatus() == GenericTask.Status.RUNNING) {
-//									return;
-//								} else {
-//									if (!TextHelper.isEmpty(contentString)) {
-//										mReplyTask = new PushReplyTask();
-//										mReplyTask.setListener(mReplyListener);
-//
-//										TaskParams params = new TaskParams();
-//										params.put("postLink", postId
-//												+ "&page=");
-//										params.put("content", contentString);
-//										params.put("title", titleString);
-//										params.put("faceExpression",
-//												faceGroupChooseString);
-//										mReplyTask.execute(params);
-//									}
-//								}
-//
-//							}
-//						});
-//				builder.show();
-//			}
-//		});
-
-		replyTitleEditText.addTextChangedListener(new TextWatcher() {
-
+		ensureButton.setOnClickListener(new OnClickListener() {
 			@Override
-			public void onTextChanged(CharSequence s, int start, int before,
-					int count) {
-
-			}
-
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count,
-					int after) {
-
-			} 
-
-			@Override
-			public void afterTextChanged(Editable s) {
-				if (s.toString().getBytes().length > TITLE_MAX_LENGTH) {
-					Toast.makeText(EditActivity.this,
-							R.string.title_length_overflow, Toast.LENGTH_SHORT)
-							.show();
+			public void onClick(View v) {
+				final String titleString = replyTitleEditText.getText()
+						.toString();
+				final String contentString = replyContentEditText.getText().toString();
+				if (TextHelper.isEmpty(contentString)) {
+					ToastUtils.show(EditActivity.this, "内容不能为空");
+					return;
 				}
-
-			}
-		});
-
-		replyContent.addTextChangedListener(new TextWatcher() {
-
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before,
-					int count) {
-
-			}
-
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count,
-					int after) {
-			}
-
-			@Override
-			public void afterTextChanged(Editable s) {
-
-				if (s.toString().getBytes().length > CONTENT_MAX_LENGTH) {
-					Toast.makeText(EditActivity.this,
-							R.string.post_content_length_overflow,
-							Toast.LENGTH_SHORT).show();
+				if (!checkReplyContentLimit(titleString, contentString)) {
+					return ;
+				};
+				if (mod == MOD_QUOTE_REPLY) {
+					setupRefDialog(titleString, contentString);
+				}
+				else if (mod == MOD_REPLY) {
+					PushReplyTask task = new PushReplyTask(EditActivity.this,
+							postId, boardID, contentString, titleString,
+							faceGroupChooseString);
+					task.execute();
+				} else if (mod == MOD_NEW_POST) {
+					PushNewPostTask task = new PushNewPostTask(
+							EditActivity.this, boardID, contentString,
+							titleString, faceGroupChooseString);
+					task.execute();
+				} else if (mod == MOD_PM) {
+					new SendPMTask(EditActivity.this, pmReplyName, titleString,
+							contentString
+									+ (SettingsActivity.addTail ? TAIL : ""))
+							.execute();
+				} else if (mod == MOD_EDIT) {
+					// submitEdit(editLink, titleString, contentString);
 				}
 			}
-		});
 
+			private void setupRefDialog(final String titleString,
+					final String contentString) {
+				AlertDialog.Builder builder = new AlertDialog.Builder(
+						EditActivity.this);
+				builder.setTitle("提示");
+				builder.setMessage("是否给用户：" + replyUserName + " 发送引用通知？");
+				builder.setPositiveButton("是",
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								String pmTitle = "用户：" + service.getUserName()+ " 在帖子中回复了你";
+								String pmContent = "详情请点击："+ manager.getPostUrl(boardID,postId,
+										quotePageNumber) + "#"+ quoteFloorNumber 
+										+ (SettingsActivity.addTail ? TAIL: "");
+								new SendPMTask(EditActivity.this,pmReplyName,pmTitle, pmContent)
+								.execute();
+								PushReplyTask task = new PushReplyTask(EditActivity.this,
+										postId, boardID, contentString, titleString,
+										faceGroupChooseString);
+								task.execute();
+  							}
+						});
+				builder.setNegativeButton("不",
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								PushReplyTask task = new PushReplyTask(EditActivity.this,
+										postId, boardID, contentString, titleString,
+										faceGroupChooseString);
+								task.execute();
+							}
+						});
+				builder.show();
+			}
+		});
 		insertFaceExpression.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -735,7 +508,6 @@ public class EditActivity extends BaseActivity {
 		});
 
 		faceListener = new FaceExpressionChooseListener() {
-
 			@Override
 			public void onOkClick() {
 			}
@@ -746,9 +518,7 @@ public class EditActivity extends BaseActivity {
 				handler.sendEmptyMessage(0);
 			}
 		};
-
 		upLoadButton.setOnClickListener(new OnClickListener() {
-
 			@Override
 			public void onClick(View v) {
 				doPickPhotoAction();
@@ -756,45 +526,14 @@ public class EditActivity extends BaseActivity {
 		});
 
 		quickEmotGroupOne.setOnCheckedChangeListener(emotChangeListener);
-
 		quickEmotGroupTwo.setOnCheckedChangeListener(emotChangeListener);
 	}
 
- 
-	private void onReplyFailure(String string) {
-
-		dialog.dismiss();
-		Toast.makeText(EditActivity.this, "回复失败，请检查！", Toast.LENGTH_SHORT)
-				.show();
-	}
-
-	protected void onReplySuccess() {
-
-		dialog.dismiss();
-		Toast.makeText(EditActivity.this, "回复成功！", Toast.LENGTH_SHORT).show();
-		setResult(Activity.RESULT_OK);
-		this.finish();
-		overridePendingTransition(R.anim.backward_activity_move_in,
-				R.anim.backward_activity_move_out);
-	}
-
 	private void doPickPhotoAction() {
-		final Context context = EditActivity.this;
-
-		final Context dialogContext = new ContextThemeWrapper(context,
-				android.R.style.Theme_Light);
-		String[] choices;
-		choices = new String[4];
-		choices[0] = "拍照"; // 拍照
-		choices[1] = "本地上传"; // 从相册中选择
-		choices[2] = "涂鸦"; // from sketch
-		choices[3] = "取消";
-		final ListAdapter adapter = new ArrayAdapter<String>(dialogContext,
+		String[] choices = { "拍照", "本地上传", "涂鸦", "取消" };
+		ListAdapter adapter = new ArrayAdapter<String>(this,
 				android.R.layout.simple_list_item_1, choices);
-
-		final AlertDialog.Builder builder = new AlertDialog.Builder(
-				dialogContext);
-
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setSingleChoiceItems(adapter, -1,
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
@@ -803,27 +542,25 @@ public class EditActivity extends BaseActivity {
 						case 0: {
 							String status = Environment
 									.getExternalStorageState();
-							if (status.equals(Environment.MEDIA_MOUNTED)) {// 判断是否有SD卡
-								doTakePhoto();// 用户点击了从照相机获取
+							if (status.equals(Environment.MEDIA_MOUNTED)) {
+								doTakePhoto();
 							} else {
-								Toast.makeText(context, "您的设备没有SD卡！",
-										Toast.LENGTH_SHORT).show();
+								ToastUtils
+										.show(EditActivity.this, "您的设备没有SD卡！");
 							}
 							break;
-
 						}
 						case 1:
-							doPickPhotoFromGallery();// 从相册中去获取
+							doPickPhotoFromGallery();
 							break;
 						case 2:
 							if (Environment.getExternalStorageState().equals(
 									Environment.MEDIA_MOUNTED)) {
 								uploadSketch();
 							} else {
-								Toast.makeText(context, "您的设备没有SD卡！",
-										Toast.LENGTH_SHORT).show();
+								ToastUtils
+										.show(EditActivity.this, "您的设备没有SD卡！");
 							}
-
 							break;
 						case 3:
 							break;
@@ -836,6 +573,18 @@ public class EditActivity extends BaseActivity {
 		builder.create().show();
 	}
 
+	private boolean checkReplyContentLimit(String title, String content) {
+		if (title.getBytes().length > TITLE_MAX_LENGTH) {
+			ToastUtils.show(this, "标题长度超过，请修改");
+			return false;
+		}
+		if (content.getBytes().length > CONTENT_MAX_LENGTH) {
+			ToastUtils.show(this, "内容超过限制，请修改");
+			return false;
+		}
+		return true;
+	}
+
 	private void uploadSketch() {
 		startActivityForResult(new Intent(this, SketchActivity.class),
 				GET_SKETCH);
@@ -843,52 +592,33 @@ public class EditActivity extends BaseActivity {
 				R.anim.forward_activity_move_out);
 	}
 
-	/**
-	 * 拍照获取图片
-	 * 
-	 */
-	protected void doTakePhoto() {
+	private void doTakePhoto() {
 		try {
 			PHOTO_DIR.mkdirs();// 创建照片的存储目录
 			Log.d(TAG, "doTakePhoto");
-			mCurrentPhotoFile = new File(PHOTO_DIR, getPhotoFileName());// 给新照的照片文件命名
+			Date date = new Date(System.currentTimeMillis());
+			SimpleDateFormat dateFormat = new SimpleDateFormat(
+					"'IMG'_yyyy-MM-dd HH-mm-ss");
+			mCurrentPhotoFile = new File(PHOTO_DIR, dateFormat.format(date)
+					+ ".jpg");
 			mCurrentPhotoFile.createNewFile();
-			final Intent intent = getTakePickIntent();
+			Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+			intent.putExtra(MediaStore.EXTRA_OUTPUT,
+					Uri.fromFile(mCurrentPhotoFile));
 			startActivityForResult(intent, CAMERA_WITH_DATA);
 			overridePendingTransition(R.anim.forward_activity_move_in,
 					R.anim.forward_activity_move_out);
 		} catch (ActivityNotFoundException e) {
-			Toast.makeText(this, "未找到目标！", Toast.LENGTH_LONG).show();
+			ToastUtils.show(this, "未找到目标！");
 		} catch (IOException e) {
-			e.printStackTrace();
+			ToastUtils.show(this, "未知错误");
 		}
 	}
 
-	public Intent getTakePickIntent() {
-
-		Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-		intent.putExtra(MediaStore.EXTRA_OUTPUT,
-				Uri.fromFile(mCurrentPhotoFile));
-		return intent;
-	}
-
-	/**
-	 * 用当前时间给取得的图片命名
-	 * 
-	 */
-	private String getPhotoFileName() {
-		Date date = new Date(System.currentTimeMillis());
-		SimpleDateFormat dateFormat = new SimpleDateFormat(
-				"'IMG'_yyyy-MM-dd HH-mm-ss");
-		return dateFormat.format(date) + ".jpg";
-		// return "aaaa.jpg";
-	}
-
-	// 请求Gallery程序
 	private void doPickPhotoFromGallery() {
 		try {
-			// Launch picker to choose photo for selected contact
-			final Intent intent = getPhotoPickIntent();
+			Intent intent = new Intent(Intent.ACTION_GET_CONTENT, null);
+			intent.setType("image/*");
 			startActivityForResult(intent, PHOTO_PICKED_WITH_DATA);
 			overridePendingTransition(R.anim.forward_activity_move_in,
 					R.anim.forward_activity_move_out);
@@ -897,23 +627,16 @@ public class EditActivity extends BaseActivity {
 		}
 	}
 
-	// 封装请求Gallery的intent
-	private static Intent getPhotoPickIntent() {
-		Intent intent = new Intent(Intent.ACTION_GET_CONTENT, null);
-		intent.setType("image/*");
-		return intent;
-	}
-
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode != RESULT_OK) {
 			Log.d(TAG, resultCode + "");
+//			ToastUtils.show(this, "程序返回错误");
 			return;
 		}
 		switch (requestCode) {
 		case PHOTO_PICKED_WITH_DATA: {// 调用Gallery返回的
 			Uri uri = data.getData();
-
 			ContentResolver cr = this.getContentResolver();
 			Cursor cursor = cr.query(uri, null, null, null, null);
 			cursor.moveToFirst();
@@ -924,16 +647,14 @@ public class EditActivity extends BaseActivity {
 		case CAMERA_WITH_DATA: {// 照相机程序返回的
 			Log.d(TAG, "Returned from camera.");
 			try {
-				if (mCurrentPhotoFile.length() > MAX_IMAGE_SIZE_IN_BYTE) {
-					doCompressPhoto();
-				}
-				if (mCurrentPhotoFile.length() > MAX_IMAGE_SIZE_IN_BYTE) {
+				while (mCurrentPhotoFile.length() > MAX_IMAGE_SIZE_IN_BYTE) {
 					doCompressPhoto();
 				}
 				doUploadPicture(mCurrentPhotoFile);
 			} catch (IOException e) {
 				Toast.makeText(getApplicationContext(), "照片处理失败Q_Q",
 						Toast.LENGTH_SHORT).show();
+				ToastUtils.show(this, "照片处理失败");
 				e.printStackTrace();
 			}
 			break;
@@ -960,7 +681,6 @@ public class EditActivity extends BaseActivity {
 		options.inSampleSize = (int) Math.ceil(Math.sqrt(mCurrentPhotoFile
 				.length() / MAX_IMAGE_SIZE_IN_BYTE));
 		options.inJustDecodeBounds = false;
-
 		bmp = BitmapFactory.decodeFile(mCurrentPhotoFile.getPath(), options);
 		BufferedOutputStream bos = new BufferedOutputStream(
 				new FileOutputStream(mCurrentPhotoFile));
@@ -971,134 +691,216 @@ public class EditActivity extends BaseActivity {
 
 	private void doUploadPicture(File photo) {
 		Log.d(TAG, "doUploadPicture");
-		upLoadPictureTask upTask = new upLoadPictureTask();
-		upTask.setListener(mUploadPictureListener);
-		TaskParams params = new TaskParams();
-		params.put("picture", photo);
-		upTask.execute(params);
-
+		upLoadPictureTask upTask = new upLoadPictureTask(this, photo);
+		upTask.execute();
 	}
 
-	private Handler handler = new Handler() {
-		@Override
-		public void handleMessage(Message msg) {
-			switch (msg.what) {
-			case 0:
-				int cursor = replyContent.getSelectionStart();
-				replyContent.getText().insert(cursor, emotChooseString);
-				break;
-			default:
-				break;
-			}
+	private class upLoadPictureTask extends RoboAsyncTask<String> {
+		private Activity mContext;
+		private File mUploadFile;
+		private ProgressDialog mDialog;
+		@Inject
+		private ICC98Service mService;
+
+		protected upLoadPictureTask(Activity context, File file) {
+			super(context);
+			mContext = context;
+			mUploadFile = file;
 		}
-	};
-
-	private class upLoadPictureTask extends GenericTask {
-		@Override
-		protected TaskResult _doInBackground(TaskParams... params) {
-			TaskResult mResult = TaskResult.FAILED;
-			TaskParams param = params[0];
-
-			try {
-				picLink = service.uploadFile((File) param.get("picture"));
-				if (picLink.equals("")) {
-					mResult = TaskResult.FAILED;
-				} else {
-					mResult = TaskResult.OK;
-				}
-
-			} catch (PatternSyntaxException e) {
-				mResult = TaskResult.FAILED;
-				e.printStackTrace();
-			} catch (MalformedURLException e) {
-				mResult = TaskResult.FAILED;
-				e.printStackTrace();
-			} catch (IOException e) {
-				mResult = TaskResult.FAILED;
-				e.printStackTrace();
-			} catch (ParseContentException e) {
-				mResult = TaskResult.FAILED;
-				e.printStackTrace();
-			}
-			return mResult;
-		}
-	}
-
-	private class PushReplyTask extends GenericTask {
-
- 		String postId;
-
-		String boardID;
-
-		String content;
-
-		String title;
-
-		String faceExpression;
 
 		@Override
-		protected TaskResult _doInBackground(TaskParams... params) {
-
-			TaskParams param = params[0];
-
-			try {
-
- 				content = param.getString("content")
-						+ (SettingsActivity.addTail ? TAIL : "");
-				title = param.getString("title");
-				faceExpression = param.getString("faceExpression");
-				service.reply(boardID, "1234", title, faceExpression, content);
-				return TaskResult.OK;
-			} catch (Exception e) {
-				return TaskResult.FAILED;
-			}
+		protected void onPreExecute() {
+			mDialog = new ProgressDialog(mContext);
+			mDialog.setMessage("正在上传...");
+			mDialog.show();
 		}
-	}
-
-	private class PushNewPostTask extends GenericTask {
-
-		int boardID;
-
-		String content;
-
-		String title;
-
-		String faceExpression;
 
 		@Override
-		protected TaskResult _doInBackground(TaskParams... params) {
+		public String call() throws Exception {
+			return mService.uploadFile(mUploadFile);
+		}
 
-			TaskParams param = params[0];
+		@Override
+		protected void onSuccess(String result) {
+			picLink = result;
+			int cursor = replyContentEditText.getSelectionStart();
+			replyContentEditText.getText().insert(cursor, picLink);
+		}
 
-			try {
-				boardID = param.getInt("boardID");
-				content = param.getString("content");
-				title = param.getString("title");
-				faceExpression = param.getString("faceExpression");
+		@Override
+		protected void onException(Exception e) {
+			ToastUtils.show(mContext, "上传图片失败，请检查网络或图片");
+		}
 
-				System.out.println("content:" + content + "  " + "title:"
-						+ title + " " + "face:" + faceExpression);
-				service.pushNewPost("" + boardID, title, faceExpression,
-						content);
-				return TaskResult.OK;
-			} catch (Exception e) {
+		@Override
+		protected void onFinally() {
+			if (mDialog.isShowing())
+				mDialog.dismiss();
+		}
+	}
 
-				return TaskResult.FAILED;
+	private class PushReplyTask extends RoboAsyncTask<Void> {
+		private Activity mContext;
+		private String mPostId;
+		private String mBoardID;
+		private String mContent;
+		private String mTitle;
+		private String mFaceExpression;
+		private ProgressDialog mDialog;
+		@Inject
+		private ICC98Service mService;
+
+		protected PushReplyTask(Activity context, String postId,
+				String boardId, String content, String title, String face) {
+			super(context);
+			mContext = context;
+			mPostId = postId;
+			mBoardID = boardId;
+			mContent = content;
+			mTitle = title;
+			mFaceExpression = face;
+		}
+
+		@Override
+		protected void onPreExecute() {
+			mDialog = new ProgressDialog(mContext);
+			mDialog.setMessage("正在回复...");
+			mDialog.show();
+		}
+
+		@Override
+		public Void call() throws Exception {
+			mService.reply(mBoardID, mPostId, mTitle, mFaceExpression, mContent);
+			return null;
+		}
+
+		@Override
+		protected void onSuccess(Void v) {
+			ToastUtils.show(mContext, "回复成功");
+			setResult(Activity.RESULT_OK);
+			mContext.finish();
+			overridePendingTransition(R.anim.backward_activity_move_in,
+					R.anim.backward_activity_move_out);
+		}
+
+		@Override
+		protected void onException(Exception e) {
+			ToastUtils.show(mContext, "上传图片失败，请检查网络或图片");
+		}
+
+		@Override
+		protected void onFinally() {
+			if (mDialog.isShowing())
+				mDialog.dismiss();
+		}
+
+	}
+
+	private class PushNewPostTask extends RoboAsyncTask<Void> {
+		private Activity mContext;
+		private String mBoardID;
+		private String mContent;
+		private String mTitle;
+		private String mFaceExpression;
+		private ProgressDialog mDialog;
+		@Inject
+		private ICC98Service mService;
+
+		protected PushNewPostTask(Activity context, String boardId,
+				String content, String title, String face) {
+			super(context);
+			mContext = context;
+			mBoardID = boardId;
+			mContent = content;
+			mTitle = title;
+			mFaceExpression = face;
+		}
+
+		@Override
+		protected void onPreExecute() {
+			mDialog = new ProgressDialog(mContext);
+			mDialog.setMessage("正在发表主题...");
+			mDialog.show();
+		}
+
+		@Override
+		public Void call() throws Exception {
+			mService.pushNewPost(mBoardID, mTitle, mFaceExpression, mContent);
+			return null;
+		}
+
+		@Override
+		protected void onSuccess(Void v) {
+			ToastUtils.show(mContext, "发表成功");
+			setResult(Activity.RESULT_OK);
+			mContext.finish();
+			overridePendingTransition(R.anim.backward_activity_move_in,
+					R.anim.backward_activity_move_out);
+		}
+
+		@Override
+		protected void onException(Exception e) {
+			ToastUtils.show(mContext, "上传图片失败，请检查网络或图片");
+		}
+
+		@Override
+		protected void onFinally() {
+			if (mDialog.isShowing())
+				mDialog.dismiss();
+		}
+	}
+
+	private class SendPMTask extends RoboAsyncTask<Void> {
+		private Activity mContext;
+		private String mToUser;
+		private String mContent;
+		private String mTitle;
+		private ProgressDialog mDialog;
+		@Inject
+		private ICC98Service mService;
+
+		protected SendPMTask(Activity context, String toUser, String title,
+				String content) {
+			super(context);
+			mToUser = toUser;
+			mContext = context;
+			mContent = content;
+			mTitle = title;
+		}
+
+		@Override
+		protected void onPreExecute() {
+			mDialog = new ProgressDialog(mContext);
+			mDialog.setMessage("正在发送站短...");
+			mDialog.show();
+		}
+
+		@Override
+		public Void call() throws Exception {
+			mService.sendPm(mToUser, mTitle, mContent);
+			return null;
+		}
+
+		@Override
+		protected void onSuccess(Void v) {
+			ToastUtils.show(mContext, "发送站短成功");
+			if (mod==MOD_PM) {
+				setResult(Activity.RESULT_OK);
+				mContext.finish();
+				overridePendingTransition(R.anim.backward_activity_move_in,
+						R.anim.backward_activity_move_out);
 			}
 		}
-	}
 
-	public void sendPm(String touser, String title, String message)
-			throws ClientProtocolException, IOException {
-		try {
-			service.sendPm(touser, title, message
-					+ (SettingsActivity.addTail ? TAIL : ""));
-			Toast.makeText(this, "发送短信息成功", Toast.LENGTH_SHORT).show();
-			this.finish();
+		@Override
+		protected void onException(Exception e) {
+			ToastUtils.show(mContext, "发送失败，请检查网络连接");
+		}
 
-		} catch (Exception e) {
-			Toast.makeText(this, "发送短信息失败", Toast.LENGTH_SHORT).show();
+		@Override
+		protected void onFinally() {
+			if (mDialog.isShowing())
+				mDialog.dismiss();
 		}
 	}
-
 }
