@@ -4,33 +4,28 @@
 
 package tk.djcrazy.MyCC98;
 
-import java.io.IOException;
 import java.util.List;
-
-import org.apache.http.ParseException;
-import org.apache.http.client.ClientProtocolException;
 
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
 import tk.djcrazy.MyCC98.adapter.PostListViewAdapter;
 import tk.djcrazy.MyCC98.util.ToastUtils;
-import tk.djcrazy.MyCC98.view.HeaderView;
 import tk.djcrazy.MyCC98.view.PullToRefreshListView;
 import tk.djcrazy.MyCC98.view.PullToRefreshListView.OnRefreshListener;
 import tk.djcrazy.libCC98.ICC98Service;
 import tk.djcrazy.libCC98.data.PostEntity;
-import tk.djcrazy.libCC98.exception.ParseContentException;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.inject.Inject;
 
@@ -63,7 +58,15 @@ public class PostListActivity extends BaseActivity implements OnRefreshListener,
 	private View vPrev;
 	@InjectView(R.id.post_newpost)
 	private View vNewpost;
-
+	@InjectView(R.id.post_list_header_userimg)
+	private ImageView userHeader;
+	@InjectView(R.id.post_list_header_title)
+	private TextView headerTitle;
+	@InjectView(R.id.post_list_push_new_post_btn)
+	private Button pushNewPostButton;
+	@InjectView(R.id.post_list_search_btn)
+	private ImageView searchButton;
+	
 	private ProgressDialog dialog;
 
 	private PostListViewAdapter postListViewAdapter;
@@ -76,12 +79,16 @@ public class PostListActivity extends BaseActivity implements OnRefreshListener,
 		super.onCreate(SavedInstanceState);
 		dialog = ProgressDialog.show(PostListActivity.this, "", "Loading...",
 				true);
-		dialog.setCancelable(true);
+		dialog.setCancelable(false);
 		dialog.show();
 		listView.setOnRefreshListener(this);
 		vPrev.setOnClickListener(this);
 		vNext.setOnClickListener(this);
 		vNewpost.setOnClickListener(this);
+		userHeader.setImageBitmap(service.getUserAvatar());
+		headerTitle.setText(boardName);
+		pushNewPostButton.setOnClickListener(this);
+		searchButton.setOnClickListener(this);
 		fetchContent();
 	}
 
@@ -111,13 +118,7 @@ public class PostListActivity extends BaseActivity implements OnRefreshListener,
 			fetchContent();
 		}
 	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-	}
-
-	private void setListeners() {
+ 	private void setListeners() {
 
 		// headerView.setButtonOnclickListener(new OnClickListener() {
 		//
@@ -152,6 +153,7 @@ public class PostListActivity extends BaseActivity implements OnRefreshListener,
 				break;
 			case MSG_LIST_FAILED:
 				ToastUtils.show(PostListActivity.this, "加载列表失败TAT");
+				listView.onRefreshComplete();
 			default:
 				break;
 			}

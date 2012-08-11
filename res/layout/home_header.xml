@@ -49,8 +49,7 @@
             android:layout_alignParentRight="true"
             android:background="@drawable/search_button_selector"
             android:padding="8dp"
-            android:src="@drawable/search_icon"
-            android:textColor="#fff" />
+            android:src="@drawable/search_icon" />
 
     </RelativeLayout>
 

@@ -530,11 +530,17 @@ public class EditActivity extends BaseActivity {
 	}
 
 	private void doPickPhotoAction() {
+		final Context context = EditActivity.this;
+
+		// Wrap our context to inflate list items using correct theme
+		final Context dialogContext = new ContextThemeWrapper(context,
+				android.R.style.Theme_Light);
 		String[] choices = { "拍照", "本地上传", "涂鸦", "取消" };
-		ListAdapter adapter = new ArrayAdapter<String>(this,
+ 		final ListAdapter adapter = new ArrayAdapter<String>(dialogContext,
 				android.R.layout.simple_list_item_1, choices);
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setSingleChoiceItems(adapter, -1,
+		final AlertDialog.Builder builder = new AlertDialog.Builder(
+				dialogContext);
+ 		builder.setSingleChoiceItems(adapter, -1,
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
 						dialog.dismiss();
@@ -785,7 +791,7 @@ public class EditActivity extends BaseActivity {
 
 		@Override
 		protected void onException(Exception e) {
-			ToastUtils.show(mContext, "上传图片失败，请检查网络或图片");
+			ToastUtils.show(mContext, "请求失败，请检查网络或连接");
 		}
 
 		@Override
@@ -840,7 +846,7 @@ public class EditActivity extends BaseActivity {
 
 		@Override
 		protected void onException(Exception e) {
-			ToastUtils.show(mContext, "上传图片失败，请检查网络或图片");
+			ToastUtils.show(mContext, "请求失败，请检查网络连接");
 		}
 
 		@Override

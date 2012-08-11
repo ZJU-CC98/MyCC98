@@ -5,10 +5,7 @@
     android:orientation="vertical"
     android:scrollbars="vertical" >
 
-    <tk.djcrazy.MyCC98.view.HeaderView
-        android:id="@+id/main_header"
-        android:layout_width="fill_parent"
-        android:layout_height="42dp" />
+    <include layout="@layout/post_list_header" />
 
     <tk.djcrazy.MyCC98.view.PullToRefreshListView
         android:id="@+id/postlistView"

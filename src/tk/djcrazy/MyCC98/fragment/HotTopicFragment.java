@@ -63,6 +63,7 @@ public class HotTopicFragment extends RoboFragment implements
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 		listView.setOnRefreshListener(this);
+		listView.setOnItemClickListener(this);
 		if (hotTopicListAdapter != null) {
 			ViewUtils.setGone(progressBar, true);
 			ViewUtils.setGone(listView, false);
@@ -70,7 +71,6 @@ public class HotTopicFragment extends RoboFragment implements
 		} else {
 			ViewUtils.setGone(progressBar, false);
 			ViewUtils.setGone(listView, true);
-			listView.setOnItemClickListener(this);
 			onRefresh();
 		}
 	}
