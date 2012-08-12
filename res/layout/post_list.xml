@@ -13,52 +13,6 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_weight="1"
-        android:background="@color/board_info_background"/>
-
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="32dp" >
-
-        <TextView
-            android:id="@+id/post_return_to_personal_board"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_weight="1"
-            android:background="@drawable/simple_button_selector"
-            android:gravity="center"
-            android:text="返回定制区"
-            android:textSize="10sp"
-            android:visibility="gone" />
-
-        <TextView
-            android:id="@+id/post_pre_page"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_weight="1"
-            android:background="@drawable/simple_button_selector"
-            android:gravity="center"
-            android:text="上一页"
-            android:textSize="10sp" />
-
-        <TextView
-            android:id="@+id/post_next_page"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_weight="1"
-            android:background="@drawable/simple_button_selector"
-            android:gravity="center"
-            android:text="下一页"
-            android:textSize="10sp" />
-
-        <TextView
-            android:id="@+id/post_newpost"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_weight="1"
-            android:background="@drawable/simple_button_selector"
-            android:gravity="center"
-            android:text="发帖"
-            android:textSize="10sp" />
-    </LinearLayout>
-
+        android:background="@color/board_info_background"
+        />
 </LinearLayout>

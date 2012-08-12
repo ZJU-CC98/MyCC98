@@ -46,6 +46,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -84,7 +86,7 @@ public class HomeActivity extends RoboFragmentActivity implements
 	private static final int INIT_FILESIZE = 32;
 	private static final int UPDATE_PROGRESS = 33;
 
- 	@InjectView(R.id.main_pages)
+	@InjectView(R.id.main_pages)
 	private ViewPager viewPager;
 	@InjectView(R.id.main_titles)
 	private TitlePageIndicator indicator;
@@ -92,11 +94,12 @@ public class HomeActivity extends RoboFragmentActivity implements
 	private ImageView userAvatar;
 	@InjectView(R.id.home_header_user_name)
 	private TextView userNameView;
-	
+	@InjectView(R.id.home_header_search)
+	private ImageView searchButton;
+
 	@Inject
 	private ICC98Service service;
-	
-	
+
 	private ProgressDialog pBar;
 
 	private Bitmap bmUserImg;
@@ -113,8 +116,8 @@ public class HomeActivity extends RoboFragmentActivity implements
 				Toast.makeText(getApplicationContext(), "获取头像成功",
 						Toast.LENGTH_SHORT).show();
 
-				userAvatar.setImageBitmap(bmUserImg);	
- 				break;
+				userAvatar.setImageBitmap(bmUserImg);
+				break;
 			case SEND_FEEDBACK_FAILED:
 				Toast.makeText(getApplicationContext(), "无法连接到服务器，请稍候再试",
 						Toast.LENGTH_SHORT).show();
@@ -154,14 +157,24 @@ public class HomeActivity extends RoboFragmentActivity implements
 		indicator.setViewPager(viewPager, 0);
 		userNameView.setText(service.getUserName());
 		userAvatar.setImageBitmap(service.getUserAvatar());
- 	}
+		searchButton.setOnClickListener(new OnClickListener() {
 
- 
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(HomeActivity.this,
+						PostSearchActivity.class);
+				intent.putExtra(PostSearchActivity.BOARD_ID, "0");
+				startActivity(intent);
+				overridePendingTransition(R.anim.forward_activity_move_in,
+						R.anim.forward_activity_move_out);
+			}
+		});
+	}
+
 	public void refresh() {
 		viewPager.invalidate();
 	}
 
- 
 	/**
 	 * override menu
 	 */
@@ -219,11 +232,11 @@ public class HomeActivity extends RoboFragmentActivity implements
 	 * 
 	 */
 	private void doSendFeedBack() {
-		Intent intent = new Intent(getApplicationContext(),EditActivity.class);
+		Intent intent = new Intent(getApplicationContext(), EditActivity.class);
 		intent.putExtra(EditActivity.MOD, EditActivity.MOD_PM);
 		intent.putExtra(EditActivity.PM_TO_USER, "MyCC.98");
 		intent.putExtra(EditActivity.PM_TITLE, "MyCC98软件反馈");
- 		startActivity(intent);
+		startActivity(intent);
 		overridePendingTransition(R.anim.forward_activity_move_in,
 				R.anim.forward_activity_move_out);
 	}
@@ -418,8 +431,8 @@ public class HomeActivity extends RoboFragmentActivity implements
 
 	@Override
 	public void onLoadComplete(int postion) {
-		if (viewPager.getCurrentItem()==postion) {
-			
+		if (viewPager.getCurrentItem() == postion) {
+
 		}
 	}
 
@@ -444,15 +457,14 @@ public class HomeActivity extends RoboFragmentActivity implements
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
 			if (isExit == false) {
 				isExit = true;
-				Toast.makeText(this,"再按一次退出程序", Toast.LENGTH_SHORT)
-						.show();
+				Toast.makeText(this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
 				if (!hasTask) {
 					tExit.schedule(task, 2000);
 				}
 			} else {
 				finish();
 				java.lang.System.exit(0);
- 			}
+			}
 		}
 		return false;
 	}

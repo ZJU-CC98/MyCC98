@@ -108,6 +108,7 @@ public interface ICC98Parser {
 
 	/**
 	 * @author DJ
+	 * @param pageNum 
 	 * @return
 	 * @throws IOException
 	 * @throws ParseException
@@ -115,7 +116,7 @@ public interface ICC98Parser {
 	 * @throws java.text.ParseException 
 	 * @throws ParseContentException 
 	 */
-	public List<SearchResultEntity> getNewPostList()
+	public List<SearchResultEntity> getNewPostList(int pageNum)
 			throws ClientProtocolException, ParseException, IOException, ParseContentException, java.text.ParseException;
 
 	/**

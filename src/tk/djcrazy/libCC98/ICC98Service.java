@@ -74,7 +74,7 @@ public interface ICC98Service {
 	public String getMsgContent(int pmId) throws ClientProtocolException,
 			ParseException, IOException;
 
-	public List<SearchResultEntity> getNewPostList()
+	public List<SearchResultEntity> getNewPostList(int currentPageNumber)
 			throws ClientProtocolException, ParseException, IOException, ParseContentException, java.text.ParseException;
 
 	public List<BoardEntity> getPersonalBoardList()

@@ -8,7 +8,7 @@
     <!-- 用户头像 -->
 
     <ImageView
-        android:id="@+id/post_list_header_userimg"
+        android:id="@+id/post_search_header_userimg"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:background="@drawable/avatar_bg"
@@ -17,27 +17,17 @@
         android:src="@drawable/bug" />
 
     <TextView
-        android:id="@+id/post_list_header_title"
+        android:id="@+id/post_search_header_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1.0"
         android:gravity="center"
         android:singleLine="true"
-        android:text="暑假"
+        android:text="搜索"
         android:textColor="@color/white" />
 
     <ImageView
-        android:src="@drawable/write_new_post"
-        android:id="@+id/post_list_push_new_post_btn"
-        android:layout_width="42dp"
-        android:layout_height="42dp"
-        android:background="@drawable/search_button_selector"
-        android:gravity="center"
-        android:paddingLeft="2dp"
-        android:paddingRight="2dp"  />
-
-    <ImageView
-        android:id="@+id/post_list_search_btn"
+        android:id="@+id/post_search_btn"
         android:layout_width="42dp"
         android:layout_height="42dp"
         android:background="@drawable/search_button_selector"

@@ -4,10 +4,8 @@
     android:layout_height="match_parent"
     android:background="@color/board_info_background"
     android:orientation="vertical" >
-    <tk.djcrazy.MyCC98.view.HeaderView
-        android:id="@+id/main_header"
-        android:layout_width="fill_parent"
-        android:layout_height="42dp" />
+    
+    <include layout="@layout/post_search_header"/>
     
     <EditText
         android:id="@+id/et_postsearch_key"

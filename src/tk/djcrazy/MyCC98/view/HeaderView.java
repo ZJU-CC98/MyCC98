@@ -72,11 +72,7 @@ public class HeaderView extends LinearLayout implements ChildView {
 		return ivSearch.getDrawable();
 	}
 	
-	public void resetButton() {
-		ivSearch.setImageResource(R.drawable.search_icon);
-		setListeners(null);
-	}
-
+ 
 	public void setButtonPadding(int a, int b, int c, int d) {
 		ivSearch.setPadding(a, b, c, d);
 	}
@@ -85,23 +81,7 @@ public class HeaderView extends LinearLayout implements ChildView {
 		ivSearch.setOnClickListener(listener);
 	}
 
-	public void setListeners(final HomeActivity group) {
  
-		ivSearch.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				getContext().startActivity(
-						(new Intent().setClass(getContext(),
-								PostSearchActivity.class).putExtra(
-								PostSearchActivity.USER_IMAGE, userImage)));
-				((Activity) getContext()).overridePendingTransition(
-						R.anim.forward_activity_move_in,
-						R.anim.forward_activity_move_out);
-			}
-		});
-	}
-
 	private void findViews() {
 		ivUserImg = (ImageView) findViewById(R.id.iv_header_userimg);
 		ivSearch = (ImageView) findViewById(R.id.iv_header_search);

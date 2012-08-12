@@ -6,6 +6,9 @@ import java.util.Map;
 
 import org.apache.http.ParseException;
 
+import roboguice.inject.ContentView;
+import roboguice.inject.InjectExtra;
+import roboguice.inject.InjectView;
 import tk.djcrazy.MyCC98.adapter.NewTopicListAdapter;
 import tk.djcrazy.MyCC98.view.HeaderView;
 import tk.djcrazy.libCC98.ICC98Service;
@@ -20,37 +23,52 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.inject.Inject;
  
+@ContentView(R.layout.post_search)
 public class PostSearchActivity extends BaseActivity {
 
-	public static final String BOARDID = "boardid";
-	public static final String BOARDNAME = "boardname";
-	public static final String USER_IMAGE = "userImage";
-	public final String SEARCH_TYPE_TITLE = "2";
+	public static final String BOARD_ID = "boardid";
+	public static final String BOARD_NAME = "boardname";
+ 	public final String SEARCH_TYPE_TITLE = "2";
 	public final String SEARCH_TYPE_AUTHOR = "1";
 
 	private NewTopicListAdapter newTopicListAdapter;
+	@InjectView(R.id.et_postsearch_key)
 	private EditText etKeyword;
+	@InjectView(R.id.tv_postsearch_next)
  	private View vNext;
+	@InjectView(R.id.tv_postsearch_prev)
 	private View vPrev;
+	@InjectView(R.id.rg_postsearch_stype)
 	private RadioGroup rg;
+	@InjectView(R.id.rb_postsearch_by_title)
 	private RadioButton rbByTitle;
- 	private HeaderView mHeaderView;
-	private Bitmap userImage;
+ 	@InjectView(R.id.lv_postsearch)
 	private ListView listView;
+ 	@InjectView(R.id.post_search_btn)
+ 	private ImageView searchBtn;
+ 	@InjectView(R.id.post_search_header_title)
+ 	private TextView headerTitle;
+ 	@InjectView(R.id.post_search_header_userimg)
+ 	private ImageView userHeader;
+ 	
 	private List<SearchResultEntity> datalist;
-
+	
 	private int currentPage = 1;
 	private int totalPage;
+	@InjectExtra(BOARD_ID)
 	private String boardId;
-	private String boardname = "全站";
+	@InjectExtra(value=BOARD_NAME, optional=true)
+	private String boardName;
 	private String currentType = SEARCH_TYPE_TITLE;
 
 	private ProgressDialog pg;
@@ -82,9 +100,7 @@ public class PostSearchActivity extends BaseActivity {
 					vNext.setVisibility(View.VISIBLE);
 				}
 				setTitle("MyCC98:搜索");
-				mHeaderView.setTitle("搜索" + boardname + ": " + currentPage + "/"
-						+ totalPage);
-				newTopicListAdapter = new NewTopicListAdapter(
+ 				newTopicListAdapter = new NewTopicListAdapter(
 						PostSearchActivity.this, datalist);
 				listView.setAdapter(newTopicListAdapter);
 				pg.dismiss();
@@ -119,10 +135,8 @@ public class PostSearchActivity extends BaseActivity {
 				} catch (IOException e) {
 					e.printStackTrace();
 				} catch (ParseContentException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (java.text.ParseException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -132,19 +146,17 @@ public class PostSearchActivity extends BaseActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		boardId = getIntent().getStringExtra(BOARDID);
-		boardname = getIntent().getStringExtra(BOARDNAME);
-		userImage = getIntent().getParcelableExtra(USER_IMAGE);
-		boardname = boardname == null ? "全站" : boardname;
-		setContentView(R.layout.post_search);
-		findviews();
-		setListeners();
-		setTitle("搜索" + boardname);
-		mHeaderView.setTitle("搜索" + boardname);
-		mHeaderView.setTitleTextSize(12f);
-		mHeaderView.setUserImg(userImage);
-		pg = new ProgressDialog(this);
+  		boardName = boardName == null ? "全站" : boardName;
+  		userHeader.setImageBitmap(service.getUserAvatar());
+  		headerTitle.setText("搜索  "+boardName);
+  		searchBtn.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				fetchContent();
+			}
+		});
+ 		setListeners();
+ 		pg = new ProgressDialog(this);
 		rbByTitle.setChecked(true);
 	}
 
@@ -160,15 +172,7 @@ public class PostSearchActivity extends BaseActivity {
 				}
 			}
 		});
-		mHeaderView.setButtonOnclickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View arg0) {
-				fetchContent();
-			}
-		});
-		mHeaderView.setUserImg(service.getUserAvatar());
-		vNext.setOnClickListener(new OnClickListener() {
+  		vNext.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
@@ -189,15 +193,4 @@ public class PostSearchActivity extends BaseActivity {
 			}
 		});
 	}
-
-	private void findviews() {
-		etKeyword = (EditText) findViewById(R.id.et_postsearch_key);
-		rg = (RadioGroup) findViewById(R.id.rg_postsearch_stype);
-		rbByTitle = (RadioButton) findViewById(R.id.rb_postsearch_by_title);
-  		listView = (ListView) findViewById(R.id.lv_postsearch);
-		vNext = findViewById(R.id.tv_postsearch_next);
-		vPrev = findViewById(R.id.tv_postsearch_prev);
-		mHeaderView = (HeaderView) findViewById(R.id.main_header);
-	}
-
 }

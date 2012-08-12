@@ -184,8 +184,8 @@ public class CC98ServiceImpl implements ICC98Service {
 	}
 
 	@Override
-	public List<SearchResultEntity> getNewPostList() throws ClientProtocolException, ParseException, IOException, ParseContentException, java.text.ParseException {
-		return cc98Parser.getNewPostList();
+	public List<SearchResultEntity> getNewPostList(int pageNum) throws ClientProtocolException, ParseException, IOException, ParseContentException, java.text.ParseException {
+		return cc98Parser.getNewPostList(pageNum);
 	}
 
 	@Override

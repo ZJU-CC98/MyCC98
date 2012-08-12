@@ -12,7 +12,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 public class HomeFragmentPagerAdapter extends FragmentPagerAdapter {
 	private FragmentManager mFragment;
-	private String[] pageTitle = {"我的版面","列表","好友","热门","新帖"};
+	private String[] pageTitle = {"我的版面","热门","列表","新帖","好友"};
 	private final int FRAGMENT_NUMBER = 5;
 	private LoadingListener loadingListener;
 	public HomeFragmentPagerAdapter(FragmentManager fm) {
@@ -35,16 +35,16 @@ public class HomeFragmentPagerAdapter extends FragmentPagerAdapter {
 			pFragment.setPosition(position);
 			return pFragment;
 		case 1:
+			return new HotTopicFragment();
+		case 2:
 			SearchBoardFragment sFragment =  new SearchBoardFragment();
 			sFragment.setLoadingListener(loadingListener);
 			sFragment.setPosition(position);
 			return sFragment;
-		case 2:
-			return new FriendListFragment();
 		case 3:
-			return new HotTopicFragment();
-		case 4:
 			return new NewTopicFragment();
+		case 4:
+			return new FriendListFragment();
 		default:
 			break;
 		}

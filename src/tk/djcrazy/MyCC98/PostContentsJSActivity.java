@@ -11,6 +11,7 @@ import org.apache.http.client.ClientProtocolException;
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
+import tk.djcrazy.MyCC98.R.id;
 import tk.djcrazy.MyCC98.helper.HtmlGenHelper;
 import tk.djcrazy.libCC98.ICC98Service;
 import tk.djcrazy.libCC98.data.Gender;
@@ -42,9 +43,12 @@ import android.webkit.WebSettings;
 import android.webkit.WebSettings.LayoutAlgorithm;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.inject.Inject;
@@ -54,7 +58,7 @@ import com.google.inject.Inject;
  * @author zsy
  * 
  */
-@ContentView(R.layout.post_contents_js)
+@ContentView(R.layout.post_contents)
 public class PostContentsJSActivity extends BaseActivity  implements OnClickListener{
 	private static final String JS_INTERFACE = "PostContentsJSActivity";
 
@@ -94,8 +98,16 @@ public class PostContentsJSActivity extends BaseActivity  implements OnClickList
 	private View vRe;
 	@InjectView(R.id.search_bar)
  	private RelativeLayout searchBar;
-//	@InjectView(R.id.post_content_scroll_view)
-//	private ScrollView scrollView;
+	@InjectView(R.id.post_content_header_userimg)
+	private ImageView userHeader;
+	@InjectView(R.id.post_content_header_title)
+	private TextView headerTitle;
+	@InjectView(R.id.post_content_reply_btn)
+	private Button  replyButton;
+	@InjectView(R.id.post_content_current_page_num)
+	private TextView currentPageTextView;
+	@InjectView(R.id.post_content_total_page_num)
+	private TextView totalPageTextView;
 	
 	private int prevPageNum = 1;
 	private int totalPageNum = 1;
@@ -137,6 +149,11 @@ public class PostContentsJSActivity extends BaseActivity  implements OnClickList
 	public void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
+		userHeader.setImageBitmap(service.getUserAvatar());
+		headerTitle.setText(postName);
+		currentPageTextView.setText(String.valueOf(currPageNum));
+		totalPageTextView.setText(" ");
+		headerTitle.setOnClickListener(this);
  		setViews();
 		addListeners();
 		progressDialog = ProgressDialog.show(PostContentsJSActivity.this, "",
@@ -172,6 +189,9 @@ public class PostContentsJSActivity extends BaseActivity  implements OnClickList
 		case R.id.post_content_show_all_imgs:
 			webView.loadUrl("javascript:showAllImages.fireEvent('click');");
 			break;
+		case R.id.post_content_header_title:
+			webView.scrollTo(0, 0);
+			break;
 		default:
 			break;
 		}
@@ -186,19 +206,16 @@ public class PostContentsJSActivity extends BaseActivity  implements OnClickList
  		vNext.setOnClickListener(this);
  		vRe.setOnClickListener(this);
  		showAllImageTextView.setOnClickListener(this);
-
  		searchEditText.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before,
 					int count) {
 				searchAndHilight(searchEditText.getText().toString());
 			}
-
 			@Override
 			public void beforeTextChanged(CharSequence s, int start, int count,
 					int after) {
 			}
-
 			@Override
 			public void afterTextChanged(Editable s) {
 			}
@@ -250,14 +267,12 @@ public class PostContentsJSActivity extends BaseActivity  implements OnClickList
  
 	public void jumpTo(int pageNum) {
 		dispContents(pageNum);
-		//scrollView.scrollTo(0, 0);
-	}
+ 	}
 
 	public void prevPage() {
 		if (currPageNum - 1 > 0) {
 			dispContents(currPageNum - 1);
-			//scrollView.scrollTo(0, 0);
-		}
+ 		}
 
 	}
 
@@ -268,8 +283,7 @@ public class PostContentsJSActivity extends BaseActivity  implements OnClickList
 	public void nextPage() {
 		if (currPageNum + 1 <= totalPageNum) {
 			dispContents(currPageNum + 1);
-			//scrollView.scrollTo(0, 0);
-		}
+ 		}
 	}
 
 	// handle the message
@@ -281,7 +295,9 @@ public class PostContentsJSActivity extends BaseActivity  implements OnClickList
 			case FETCH_CONTENT_SUCCESS:
 				webView.loadDataWithBaseURL(null, currPage.getString(),
 						"text/html", "utf-8", null);
-				setTitle(boardName);
+				headerTitle.setText(postName);
+				currentPageTextView.setText(String.valueOf(currPageNum));
+				totalPageTextView.setText(String.valueOf(totalPageNum));
 				prefetch();
 				break;
 			case FETCH_CONTENT_FAILED:
@@ -377,8 +393,9 @@ public class PostContentsJSActivity extends BaseActivity  implements OnClickList
 		for (int i = 1; i < contentList.size() && !threadCancel; ++i) {
 			PostContentEntity item = contentList.get(i);
 			String author = item.getUserName();
-			String content = helper.parseInnerLink(
-					item.getPostContent(), JS_INTERFACE);
+//			String content = helper.parseInnerLink(
+//					item.getPostContent(), JS_INTERFACE);
+			String content = item.getPostContent();
 			String avatar = item.getUserAvatarLink();
 			Gender gender = item.getGender();
 			String postTitle = item.getPostTitle();

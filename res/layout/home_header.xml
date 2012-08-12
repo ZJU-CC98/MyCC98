@@ -43,7 +43,7 @@
             android:visibility="gone"/>
 
         <ImageView
-            android:id="@+id/iv_header_search"
+            android:id="@+id/home_header_search"
             android:layout_width="42dp"
             android:layout_height="42dp"
             android:layout_alignParentRight="true"

@@ -5,10 +5,7 @@
     android:orientation="vertical"
     android:background="#ececec" >
 
-    <tk.djcrazy.MyCC98.view.HeaderView
-        android:id="@+id/main_header"
-        android:layout_width="fill_parent"
-        android:layout_height="42dp" />
+    <include layout="@layout/post_content_header"/>
 
     <LinearLayout
         android:layout_width="fill_parent"

@@ -122,11 +122,11 @@ public class CC98ParserImpl implements ICC98Parser {
 	 * @see tk.djcrazy.libCC98.ICC98Parser#getNewPostList()
 	 */
 	@Override
-	public List<SearchResultEntity> getNewPostList()
+	public List<SearchResultEntity> getNewPostList(int pageNum)
 			throws ClientProtocolException, ParseException, IOException,
 			ParseContentException, java.text.ParseException {
 		return parseQueryResult(cc98Client.getPage(cc98UrlManager
-				.getNewPostUrl()));
+				.getNewPostUrl(pageNum)));
 	}
 
 	/*

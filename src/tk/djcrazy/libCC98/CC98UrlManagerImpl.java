@@ -180,8 +180,8 @@ public class CC98UrlManagerImpl implements ICC98UrlManager {
 	 * @see tk.djcrazy.libCC98.ICC98UrlMaanager#getNewPostUrl()
 	 */
 	@Override
-	public String getNewPostUrl() {
-		return newPostUrl;
+	public String getNewPostUrl(int pageNum) {
+		return newPostUrl+"&page="+pageNum;
 	}
 
 	/* (non-Javadoc)

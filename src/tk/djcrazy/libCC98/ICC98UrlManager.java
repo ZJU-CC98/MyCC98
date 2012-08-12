@@ -64,7 +64,7 @@ public interface ICC98UrlManager {
 	/**
 	 * @return the newPostUrl
 	 */
-	public String getNewPostUrl();
+	public String getNewPostUrl(int pageNum);
 
 	/**
 	 * @return the userManagerUrl

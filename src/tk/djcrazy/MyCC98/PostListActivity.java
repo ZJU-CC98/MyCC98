@@ -4,27 +4,28 @@
 
 package tk.djcrazy.MyCC98;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
+import roboguice.util.RoboAsyncTask;
 import tk.djcrazy.MyCC98.adapter.PostListViewAdapter;
 import tk.djcrazy.MyCC98.util.ToastUtils;
+import tk.djcrazy.MyCC98.util.ViewUtils;
 import tk.djcrazy.MyCC98.view.PullToRefreshListView;
 import tk.djcrazy.MyCC98.view.PullToRefreshListView.OnRefreshListener;
 import tk.djcrazy.libCC98.ICC98Service;
 import tk.djcrazy.libCC98.data.PostEntity;
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.inject.Inject;
@@ -47,27 +48,23 @@ public class PostListActivity extends BaseActivity implements OnRefreshListener,
 	@InjectExtra(PAGE_NUMBER)
 	private int pageNumber;
 
-	private List<PostEntity> PostList;
+	private List<PostEntity> postList;
 
 	@InjectView(R.id.postlistView)
 	private PullToRefreshListView listView;
 
-	@InjectView(R.id.post_next_page)
-	private View vNext;
-	@InjectView(R.id.post_pre_page)
-	private View vPrev;
-	@InjectView(R.id.post_newpost)
-	private View vNewpost;
-	@InjectView(R.id.post_list_header_userimg)
+ 	@InjectView(R.id.post_list_header_userimg)
 	private ImageView userHeader;
 	@InjectView(R.id.post_list_header_title)
 	private TextView headerTitle;
 	@InjectView(R.id.post_list_push_new_post_btn)
-	private Button pushNewPostButton;
+	private ImageView pushNewPostButton;
 	@InjectView(R.id.post_list_search_btn)
 	private ImageView searchButton;
-	
-	private ProgressDialog dialog;
+ 	
+	private ProgressBar loadMoreProgressBar;
+ 	private TextView loadMoreTextView;
+	private View  footerView;
 
 	private PostListViewAdapter postListViewAdapter;
 
@@ -77,35 +74,28 @@ public class PostListActivity extends BaseActivity implements OnRefreshListener,
 	@Override
 	public void onCreate(Bundle SavedInstanceState) {
 		super.onCreate(SavedInstanceState);
-		dialog = ProgressDialog.show(PostListActivity.this, "", "Loading...",
-				true);
-		dialog.setCancelable(false);
-		dialog.show();
-		listView.setOnRefreshListener(this);
-		vPrev.setOnClickListener(this);
-		vNext.setOnClickListener(this);
-		vNewpost.setOnClickListener(this);
-		userHeader.setImageBitmap(service.getUserAvatar());
+		postList = new ArrayList<PostEntity>();
+		postListViewAdapter = new PostListViewAdapter(
+				PostListActivity.this, postList, boardId, boardName);
+		listView.setAdapter(postListViewAdapter);
+ 		listView.setOnRefreshListener(this);
+ 		userHeader.setImageBitmap(service.getUserAvatar());
 		headerTitle.setText(boardName);
+		headerTitle.setOnClickListener(this);
 		pushNewPostButton.setOnClickListener(this);
 		searchButton.setOnClickListener(this);
+		footerView = LayoutInflater.from(this).inflate(
+				R.layout.load_more, null);
+		loadMoreProgressBar = (ProgressBar) footerView.findViewById(R.id.load_more_progress);
+		loadMoreTextView = (TextView) footerView.findViewById(R.id.load_more_text);
+		loadMoreTextView.setOnClickListener(this);
+		listView.addFooterView(footerView);
 		fetchContent();
 	}
 
 	private void fetchContent() {
-		new Thread() {
-			@Override
-			public void run() {
-				try {
-					PostList = service.getPostList(boardId, pageNumber);
-					handler.sendEmptyMessage(MSG_LIST_SUCC);
-				} catch (Exception e) {
-					handler.sendEmptyMessage(MSG_LIST_FAILED);
-					e.printStackTrace();
-				}
-			}
-		}.start();
-	}
+		new LoadPostListTask(this, boardId, pageNumber).execute();
+ 	}
 
 	private void nextPage() {
 		++pageNumber;
@@ -134,32 +124,6 @@ public class PostListActivity extends BaseActivity implements OnRefreshListener,
 		// }
 		// });
 	}
-
-	private Handler handler = new Handler() {
-		@Override
-		public void handleMessage(Message msg) {
-			switch (msg.what) {
-			case MSG_LIST_SUCC:
-				postListViewAdapter = new PostListViewAdapter(
-						PostListActivity.this, PostList, boardId, boardName);
-				listView.setAdapter(postListViewAdapter);
-				if (pageNumber == 1) {
-					vPrev.setVisibility(View.GONE);
-				} else {
-					vPrev.setVisibility(View.VISIBLE);
-				}
-				listView.onRefreshComplete();
-				dialog.dismiss();
-				break;
-			case MSG_LIST_FAILED:
-				ToastUtils.show(PostListActivity.this, "加载列表失败TAT");
-				listView.onRefreshComplete();
-			default:
-				break;
-			}
-		}
-	};
-
 	/**
 	 * 
 	 */
@@ -185,23 +149,76 @@ public class PostListActivity extends BaseActivity implements OnRefreshListener,
 
 	@Override
 	public void onRefresh() {
+		pageNumber = 1;
+		postList.clear();
+		postListViewAdapter.notifyDataSetChanged();
 		fetchContent();
 	}
 
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-		case R.id.post_pre_page:
-			prevPage();
+//		case R.id.post_pre_page:
+//			prevPage();
+//			break;
+//		case R.id.post_next_page:
+//			nextPage();
+//			break;
+//		case R.id.post_newpost:
+//			sendNewPost();
+//			break;
+		case R.id.post_list_header_title:
+			listView.smoothScrollToPosition(1);
 			break;
-		case R.id.post_next_page:
-			nextPage();
-			break;
-		case R.id.post_newpost:
-			sendNewPost();
+		case R.id.load_more_text:
+			pageNumber++;
+			fetchContent();
 			break;
 		default:
 			break;
 		}
+	}
+	
+	private class LoadPostListTask extends RoboAsyncTask<List<PostEntity>>  {
+		private Activity mContext;
+		private int mPageNum;
+		private String mBoardId;
+		@Inject
+		private ICC98Service mService;
+		
+		protected LoadPostListTask(Activity context, String boardId, int pageNum) {
+			super(context);
+			mContext = context;
+			mPageNum = pageNum;
+			mBoardId = boardId;
+		}
+		@Override
+		protected void onPreExecute() {
+			ViewUtils.setGone(loadMoreProgressBar, false);
+			loadMoreTextView.setText("正在加载...");
+ 		}
+
+		@Override
+		public List<PostEntity> call() throws Exception {
+			return mService.getPostList(mBoardId, mPageNum);
+		}
+
+		@Override
+		protected void onSuccess(List<PostEntity> list) {
+			postList.addAll(list);
+ 		}
+
+		@Override
+		protected void onException(Exception e) {
+			ToastUtils.show(mContext, "加载失败，请检查网络连接");
+		}
+
+		@Override
+		protected void onFinally() {
+			ViewUtils.setGone(loadMoreProgressBar, true);
+			loadMoreTextView.setText("点击加载更多");
+			listView.onRefreshComplete();
+			postListViewAdapter.notifyDataSetChanged();
+ 		}
 	}
 }
