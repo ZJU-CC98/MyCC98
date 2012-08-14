@@ -550,7 +550,13 @@ public class CC98ParserImpl implements ICC98Parser {
 	public List<SearchResultEntity> parseQueryResult(String html)
 			throws ParseContentException, java.text.ParseException {
 		List<SearchResultEntity> list = new ArrayList<SearchResultEntity>();
-		String totalPost = getMatchedString(NEW_TOPIC_TOTAL_POST, html);
+		String totalPost;
+		try {
+			totalPost = getMatchedString(NEW_TOPIC_TOTAL_POST, html);
+		} catch (Exception e) {
+			totalPost="0";
+			return list;
+		}
 		List<String> entityList = getMatchedStringList(NEW_TOPIC_WRAPPER_REGEX,
 				html, -1);
 		for (int i = 0; i < entityList.size(); i++) {

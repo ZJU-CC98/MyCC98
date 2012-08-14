@@ -31,8 +31,8 @@
     <color name="transparent">#00000000</color>
     <color name="light_transparent">#DDFFFFFF</color>
     <color name="dark_transparent">#BB000000</color>
-    <color name="sel_btn">#0099CC</color>
-    <color name="unsel_btn">#222</color>
+    <color name="sel_btn">#6495ED</color>
+    <color name="unsel_btn">#32b7e4</color>
     <color name="login_unsel_btn">#ffeeee</color>
     <color name="little_dark_bg">#CCC</color>
     <color name="user_profile_bg">#ececec</color>
@@ -52,5 +52,4 @@
     <color name="pager_footer">#FFFFFF</color>
     <color name="list_divider_top">#E2E2E2</color>
     <color name="list_divider_bottom">#FFFFFF</color>
-
 </resources>

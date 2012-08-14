@@ -9,7 +9,9 @@ import org.apache.http.ParseException;
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
+import tk.djcrazy.MyCC98.R.id;
 import tk.djcrazy.MyCC98.adapter.NewTopicListAdapter;
+import tk.djcrazy.MyCC98.util.ToastUtils;
 import tk.djcrazy.MyCC98.view.HeaderView;
 import tk.djcrazy.libCC98.ICC98Service;
 import tk.djcrazy.libCC98.data.SearchResultEntity;
@@ -22,6 +24,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -32,42 +35,44 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.inject.Inject;
- 
+
 @ContentView(R.layout.post_search)
 public class PostSearchActivity extends BaseActivity {
 
 	public static final String BOARD_ID = "boardid";
 	public static final String BOARD_NAME = "boardname";
- 	public final String SEARCH_TYPE_TITLE = "2";
+	public final String SEARCH_TYPE_TITLE = "2";
 	public final String SEARCH_TYPE_AUTHOR = "1";
 
 	private NewTopicListAdapter newTopicListAdapter;
 	@InjectView(R.id.et_postsearch_key)
 	private EditText etKeyword;
 	@InjectView(R.id.tv_postsearch_next)
- 	private View vNext;
+	private View vNext;
 	@InjectView(R.id.tv_postsearch_prev)
 	private View vPrev;
 	@InjectView(R.id.rg_postsearch_stype)
 	private RadioGroup rg;
 	@InjectView(R.id.rb_postsearch_by_title)
 	private RadioButton rbByTitle;
- 	@InjectView(R.id.lv_postsearch)
+	@InjectView(R.id.lv_postsearch)
 	private ListView listView;
- 	@InjectView(R.id.post_search_btn)
- 	private ImageView searchBtn;
- 	@InjectView(R.id.post_search_header_title)
- 	private TextView headerTitle;
- 	@InjectView(R.id.post_search_header_userimg)
- 	private ImageView userHeader;
- 	
+	@InjectView(R.id.post_search_btn)
+	private ImageView searchBtn;
+	@InjectView(R.id.post_search_header_title)
+	private TextView headerTitle;
+	@InjectView(R.id.post_search_header_userimg)
+	private ImageView userHeader;
+	@InjectView(R.id.post_search_clear_input)
+	private Button clearInputButton;
+
 	private List<SearchResultEntity> datalist;
-	
+
 	private int currentPage = 1;
 	private int totalPage;
 	@InjectExtra(BOARD_ID)
 	private String boardId;
-	@InjectExtra(value=BOARD_NAME, optional=true)
+	@InjectExtra(value = BOARD_NAME, optional = true)
 	private String boardName;
 	private String currentType = SEARCH_TYPE_TITLE;
 
@@ -75,9 +80,10 @@ public class PostSearchActivity extends BaseActivity {
 
 	@Inject
 	private ICC98Service service;
-	
+
 	private static final int FETCH_SUCC = 0;
 	private static final int NOTFOUND = 1;
+	private static final int FETCH_ERROR = 2;
 
 	private Handler handler = new Handler() {
 		@Override
@@ -100,7 +106,7 @@ public class PostSearchActivity extends BaseActivity {
 					vNext.setVisibility(View.VISIBLE);
 				}
 				setTitle("MyCC98:搜索");
- 				newTopicListAdapter = new NewTopicListAdapter(
+				newTopicListAdapter = new NewTopicListAdapter(
 						PostSearchActivity.this, datalist);
 				listView.setAdapter(newTopicListAdapter);
 				pg.dismiss();
@@ -111,6 +117,9 @@ public class PostSearchActivity extends BaseActivity {
 				pg.dismiss();
 				Toast.makeText(PostSearchActivity.this, "木有找到...",
 						Toast.LENGTH_SHORT).show();
+			case FETCH_ERROR:
+				pg.dismiss();
+				ToastUtils.show(PostSearchActivity.this, "加载失败");
 			default:
 				break;
 			}
@@ -125,18 +134,22 @@ public class PostSearchActivity extends BaseActivity {
 				try {
 					datalist = service.searchPost(etKeyword.getText()
 							.toString(), boardId, currentType, currentPage);
-					if (datalist.size()>1) {
+					if (datalist.size() > 1) {
 						handler.sendEmptyMessage(FETCH_SUCC);
 					} else {
 						handler.sendEmptyMessage(NOTFOUND);
 					}
 				} catch (ParseException e) {
+					handler.sendEmptyMessage(FETCH_ERROR);
 					e.printStackTrace();
 				} catch (IOException e) {
+					handler.sendEmptyMessage(FETCH_ERROR);
 					e.printStackTrace();
 				} catch (ParseContentException e) {
+					handler.sendEmptyMessage(FETCH_ERROR);
 					e.printStackTrace();
 				} catch (java.text.ParseException e) {
+					handler.sendEmptyMessage(FETCH_ERROR);
 					e.printStackTrace();
 				}
 			}
@@ -146,17 +159,24 @@ public class PostSearchActivity extends BaseActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-  		boardName = boardName == null ? "全站" : boardName;
-  		userHeader.setImageBitmap(service.getUserAvatar());
-  		headerTitle.setText("搜索  "+boardName);
-  		searchBtn.setOnClickListener(new OnClickListener() {
+		boardName = boardName == null ? "全站" : boardName;
+		userHeader.setImageBitmap(service.getUserAvatar());
+		headerTitle.setText("搜索  " + boardName);
+		clearInputButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				etKeyword.setText("");
+			}
+		});
+		searchBtn.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				fetchContent();
 			}
 		});
- 		setListeners();
- 		pg = new ProgressDialog(this);
+		setListeners();
+		pg = new ProgressDialog(this);
+		pg.setMessage("正在加载数据...");
 		rbByTitle.setChecked(true);
 	}
 
@@ -166,13 +186,13 @@ public class PostSearchActivity extends BaseActivity {
 			@Override
 			public void onCheckedChanged(RadioGroup arg0, int arg1) {
 				if (arg1 == R.id.rb_postsearch_by_author) {
-					currentType =  SEARCH_TYPE_AUTHOR;
+					currentType = SEARCH_TYPE_AUTHOR;
 				} else if (arg1 == R.id.rb_postsearch_by_title) {
-					currentType =  SEARCH_TYPE_TITLE;
+					currentType = SEARCH_TYPE_TITLE;
 				}
 			}
 		});
-  		vNext.setOnClickListener(new OnClickListener() {
+		vNext.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
