@@ -69,9 +69,14 @@ import com.flurry.android.FlurryAgent;
 import com.google.inject.Inject;
 
 public class LoginActivity extends BaseActivity implements OnClickListener {
-	// Please always use the strings here, for it is easier to modify in the
-	// future
-	private static final String TAG = "MyCC98";
+ 	private static final String TAG = "MyCC98";
+	
+	public static final String UPDATE_LINK_LIFETOY = "http://10.110.19.123:80/update/lifetoy.html";
+	public static final String UPDATE_LINK_NORMAL = "http://10.110.19.123:80/update/index.html";
+	/**
+	 * configure version
+	 */
+	public static final boolean IS_LIFETOY_VERSION = false;
 
 	public static final String USERNAME = "USERNAME";
 	public static final String PASSWORD = "PASSWORD";
@@ -115,12 +120,6 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 
 	private Intent intent;
 
-	public static final String UPDATE_LINK_LIFETOY = "http://10.110.19.123:80/update/lifetoy.html";
-	public static final String UPDATE_LINK_NORMAL = "http://10.110.19.123:80/update/index.html";
-	/**
-	 * configure version
-	 */
-	public static final boolean IS_LIFETOY_VERSION = false;
 	private String authUserName = "";
 	private String authPassword = "";
 	private Boolean authRememberPwd = false;
@@ -170,6 +169,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 			Log.d("auth", userName);
 			Log.d("auth", password);
 			Log.d("auth", rememberPwd + "");
+			service.setUseProxy(true);
 			authThread.start();
 			progressDialog = ProgressDialog.show(LoginActivity.this, "",
 					"正在进行认证...");
@@ -178,6 +178,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 		@Override
 		public void onCancelClick() {
 			Log.d(TAG, "cancel");
+			service.setUseProxy(false);
 			showLoginField();
 		}
 	};

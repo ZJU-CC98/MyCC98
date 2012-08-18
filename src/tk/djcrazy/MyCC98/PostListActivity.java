@@ -21,6 +21,7 @@ import tk.djcrazy.libCC98.data.PostEntity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -97,34 +98,7 @@ public class PostListActivity extends BaseActivity implements OnRefreshListener,
 		new LoadPostListTask(this, boardId, pageNumber).execute();
  	}
 
-	private void nextPage() {
-		++pageNumber;
-		fetchContent();
-	}
-
-	private void prevPage() {
-		if (pageNumber != 1) {
-			--pageNumber;
-			fetchContent();
-		}
-	}
- 	private void setListeners() {
-
-		// headerView.setButtonOnclickListener(new OnClickListener() {
-		//
-		// @Override
-		// public void onClick(View v) {
-		// Intent intent = new Intent();
-		// intent.setClass(PostListActivity.this, PostSearchActivity.class);
-		// intent.putExtra(PostSearchActivity.BOARDID, boardid);
-		// intent.putExtra(PostSearchActivity.BOARDNAME, boardName);
-		// startActivity(intent);
-		// overridePendingTransition(R.anim.forward_activity_move_in,
-		// R.anim.forward_activity_move_out);
-		// }
-		// });
-	}
-	/**
+  	/**
 	 * 
 	 */
 	private void sendNewPost() {
@@ -210,6 +184,7 @@ public class PostListActivity extends BaseActivity implements OnRefreshListener,
 
 		@Override
 		protected void onException(Exception e) {
+			e.printStackTrace();
 			ToastUtils.show(mContext, "加载失败，请检查网络连接");
 		}
 

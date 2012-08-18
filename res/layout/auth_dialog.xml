@@ -32,7 +32,8 @@
  	android:id="@+id/auth_remember_pwd"
  	android:text="记住用户名密码"
  	android:layout_width="wrap_content"
- 	android:layout_height="wrap_content"/>
+ 	android:layout_height="wrap_content"
+ 	android:checked="true"/>
 
 	<TableRow 
 		android:layout_height="wrap_content"

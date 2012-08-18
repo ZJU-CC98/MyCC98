@@ -26,7 +26,7 @@ public class CC98ParseRepository {
  	public static final String POST_LIST_POST_NAME_REGEX = "(?<=最后跟贴：\">).*?(?=</a>)";
  	public static final String POST_LIST_POST_ID_REGEX = "(?<=&ID=)\\d{1,10}?(?=&page=)";
  	public static final String POST_LIST_POST_PAGE_NUMBER_REGEX = "(?<=<font color=#FF0000>).{1,6}?(?=</font></a>.?</b>\\])";
- 	public static final String POST_LIST_POST_AUTHOR_NAME_REGEX = "(?<=target=_blank>).{1,10}(?=</a></a>)";
+ 	public static final String POST_LIST_POST_AUTHOR_NAME_REGEX = "(?<=target=_blank>).{1,15}(?=</a></a>)|(?<=<td width=80 nowrap class=tablebody2>).{1,15}?(?=</td>)";
  	public static final String POST_LIST_REPLY_NUM_REGEX= "(?<=<td width=\\* nowrap class=tablebody1>).*?(?=</td>)";
  	public static final String POST_LIST_LAST_REPLY_TIME_REGEX = "(?<=#bottom\">).*?(?=</a>)";
   	public static final String POST_LIST_LAST_REPLY_AUTHOR_REGEX= "(?<=usr\":\").*?(?=\")";

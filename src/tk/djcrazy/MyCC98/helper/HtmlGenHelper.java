@@ -54,7 +54,7 @@ public class HtmlGenHelper {
         if (gender == "") {
             return "";
         }
-        return "<img class=\"img-gender\" src=\"" + gender + "\"/>";
+        return "<img class=\"img-gender\" src=\"file:///android_asset/pic/" + gender + ".gif\"/>";
     }
 
     public  String addSenderAvatar(String senderAvatarUrl, int index) {

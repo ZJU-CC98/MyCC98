@@ -22,6 +22,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,7 +35,8 @@ import android.widget.ProgressBar;
 
 import com.google.inject.Inject;
 
-public class SearchBoardFragment extends RoboFragment implements OnItemClickListener{
+public class SearchBoardFragment extends RoboFragment implements
+		OnItemClickListener {
 	private int position = 0;
 	private static final String TAG = "SearchBoardFragment";
 	private List<BoardStatus> currentResult;
@@ -86,21 +88,23 @@ public class SearchBoardFragment extends RoboFragment implements OnItemClickList
 	};
 
 	private TextWatcher textWatcher = new TextWatcher() {
-		
+
 		@Override
-		public void onTextChanged(CharSequence s, int start, int before, int count) {
+		public void onTextChanged(CharSequence s, int start, int before,
+				int count) {
 			doSearch(searchContent.getText().toString().trim());
 		}
-		
+
 		@Override
 		public void beforeTextChanged(CharSequence s, int start, int count,
 				int after) {
 		}
-		
+
 		@Override
 		public void afterTextChanged(Editable s) {
 		}
 	};
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -118,7 +122,7 @@ public class SearchBoardFragment extends RoboFragment implements OnItemClickList
 			listAdapter.notifyDataSetChanged();
 			lvResultList.invalidate();
 			setListeners();
-			
+
 		} else {
 			ViewUtils.setGone(progressBar, true);
 			ViewUtils.setGone(lvResultList, false);
@@ -132,6 +136,7 @@ public class SearchBoardFragment extends RoboFragment implements OnItemClickList
 			public void run() {
 				try {
 					boardList = service.getTodayBoardList();
+					currentResult = boardList;
 					handler.sendEmptyMessage(FETCH_SUCC);
 				} catch (ClientProtocolException e) {
 					handler.sendEmptyMessage(FETCH_FAIL);
@@ -149,7 +154,7 @@ public class SearchBoardFragment extends RoboFragment implements OnItemClickList
 			}
 		}.start();
 	}
-	
+
 	public void scrollListTo(int x, int y) {
 		lvResultList.scrollTo(x, y);
 	}
@@ -159,41 +164,35 @@ public class SearchBoardFragment extends RoboFragment implements OnItemClickList
 		lvResultList.setOnItemClickListener(this);
 	}
 
-	protected void doSearch(String string) {
+	private void doSearch(String string) {
 		if (string.equals("")) {
-			if (boardList == null ) {
+			if (boardList == null) {
 				currentResult = new ArrayList<BoardStatus>();
-			} else if (boardList.size()<=30) {
+			} else if (boardList.size() <= 30) {
 				currentResult = boardList;
 			} else {
 				currentResult = boardList.subList(0, 30);
 			}
-		} else if (string.length() < lastquerylen) {
-			List<BoardStatus> tmplist = new ArrayList<BoardStatus>();
-			for (BoardStatus np : boardList) {
-				if (np.getBoardName().toLowerCase().contains(string.toLowerCase())) {
-					tmplist.add(np);
-				}
-			}
-			currentResult = tmplist;
 		} else {
 			List<BoardStatus> tmplist = new ArrayList<BoardStatus>();
-			for (BoardStatus np : currentResult) {
-				if (np.getBoardName().toLowerCase().contains(string.toLowerCase())) {
+			for (BoardStatus np : boardList) {
+				if (np.getBoardName().toLowerCase()
+						.contains(string.toLowerCase())) {
 					tmplist.add(np);
 				}
 			}
 			currentResult = tmplist;
 		}
 		lastquerylen = string.length();
-		if (listAdapter==null) {
-			listAdapter = new SearchResultListAdapter(getActivity(), currentResult);
+		if (listAdapter == null) {
+			listAdapter = new SearchResultListAdapter(getActivity(),
+					currentResult);
 		} else {
 			listAdapter.setBoardList(currentResult);
 		}
 		lvResultList.setAdapter(listAdapter);
- 		listAdapter.notifyDataSetChanged();
- 		lvResultList.invalidate();
+		listAdapter.notifyDataSetChanged();
+		lvResultList.invalidate();
 	}
 
 	/**
@@ -218,15 +217,14 @@ public class SearchBoardFragment extends RoboFragment implements OnItemClickList
 	public void setPosition(int position) {
 		this.position = position;
 	}
+
 	@Override
-	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
-			long arg3) {
-		Intent intent = new Intent(getActivity(),
-				PostListActivity.class);
-		intent.putExtra(PostListActivity.BOARD_ID,
-				currentResult.get(arg2).getBoardId());
-		intent.putExtra(PostListActivity.BOARD_NAME, currentResult
-				.get(arg2).getBoardName());
+	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+		Intent intent = new Intent(getActivity(), PostListActivity.class);
+		intent.putExtra(PostListActivity.BOARD_ID, currentResult.get(arg2)
+				.getBoardId());
+		intent.putExtra(PostListActivity.BOARD_NAME, currentResult.get(arg2)
+				.getBoardName());
 		intent.putExtra(PostListActivity.PAGE_NUMBER, 1);
 		getActivity().startActivity(intent);
 		getActivity().overridePendingTransition(

@@ -139,7 +139,7 @@ public class CC98ClientImpl implements ICC98Client {
 					params, schReg);
 			client = new DefaultHttpClient(conMgr, params);
 			client.getParams().setParameter(
-					CoreConnectionPNames.CONNECTION_TIMEOUT, 1500);
+					CoreConnectionPNames.CONNECTION_TIMEOUT, 8000);
 			client.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT,
 					10000);
 		}
@@ -158,8 +158,7 @@ public class CC98ClientImpl implements ICC98Client {
 			ParseContentException, NetworkErrorException {
 
 		HttpResponse response;
-		manager.setLifetoyVersion(false);
-		HttpPost httpost = new HttpPost(manager.getLoginUrl());
+ 		HttpPost httpost = new HttpPost(manager.getLoginUrl());
 		List<NameValuePair> nvps = new ArrayList<NameValuePair>();
 		nvps.add(new BasicNameValuePair("username", id));
 		nvps.add(new BasicNameValuePair("password", pw));
@@ -266,8 +265,8 @@ public class CC98ClientImpl implements ICC98Client {
 	 * java.lang.String, java.lang.String)
 	 */
 	@Override
-	public boolean submitReply(List<NameValuePair> nvpsList, String boardID,
-			String rootID) throws ClientProtocolException, IOException {
+	public void submitReply(List<NameValuePair> nvpsList, String boardID,
+			String rootID) throws Exception {
 		HttpEntity entity;
 		HttpPost httpPost = new HttpPost(manager.getSubmitReplyUrl(boardID));
 		HttpResponse response = null;
@@ -284,10 +283,10 @@ public class CC98ClientImpl implements ICC98Client {
 		if (entity != null) {
 			html = EntityUtils.toString(entity);
 			if (html.contains("状态：回复帖子成功")) {
-				return true;
+				return  ;
 			}
 		}
-		return false;
+		throw new Exception("reply failed");
 	}
 
 	/*
@@ -654,6 +653,7 @@ public class CC98ClientImpl implements ICC98Client {
 			throws ClientProtocolException, IOException, URISyntaxException {
 		URI uri = null;
 		uri = new URI(manager.getClientUrl());
+		Log.d("doHttpBasicAuthorization", manager.getClientUrl());
 		getHttpClient().getCredentialsProvider().setCredentials(
 				new AuthScope(uri.getHost(), uri.getPort(),
 						AuthScope.ANY_SCHEME),
@@ -672,5 +672,9 @@ public class CC98ClientImpl implements ICC98Client {
 	@Override
 	public String getDomain() {
 		return manager.getClientUrl();
+	}
+	@Override
+	public void setUseProxy(boolean b) {
+		manager.setLifetoyVersion(b);
 	}
 }

@@ -776,7 +776,7 @@ public class EditActivity extends BaseActivity {
 
 		@Override
 		public Void call() throws Exception {
-			mService.reply(mBoardID, mPostId, mTitle, mFaceExpression, mContent);
+			 mService.reply(mBoardID, mPostId, mTitle, mFaceExpression, mContent);
 			return null;
 		}
 

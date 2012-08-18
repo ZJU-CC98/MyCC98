@@ -59,7 +59,7 @@ public interface ICC98Service {
 
 	public void reply(String boardId, String postId, String title,
 			String faceString, String content) throws ClientProtocolException,
-			IOException;
+			IOException, Exception;
 
 	public List<SearchResultEntity> searchPost(String keyword, String boardid,
 			String sType, int page) throws ParseException, IOException, ParseContentException, java.text.ParseException;

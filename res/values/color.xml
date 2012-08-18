@@ -31,7 +31,7 @@
     <color name="transparent">#00000000</color>
     <color name="light_transparent">#DDFFFFFF</color>
     <color name="dark_transparent">#BB000000</color>
-    <color name="sel_btn">#6495ED</color>
+    <color name="sel_btn">#9fb4f8</color>
     <color name="unsel_btn">#32b7e4</color>
     <color name="login_unsel_btn">#ffeeee</color>
     <color name="little_dark_bg">#CCC</color>

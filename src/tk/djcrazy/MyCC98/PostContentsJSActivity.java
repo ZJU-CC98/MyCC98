@@ -438,6 +438,7 @@ public class PostContentsJSActivity extends BaseActivity  implements OnClickList
 							+ i + "," + 2 + ");\">加好友</a>").append("</div>")
 					.append(ITEM_CLOSE);
 			builder.append(mBuilder.toString());
+			Log.d("post content", mBuilder.toString());
 		}
 		if (threadCancel) {
 			threadCancel = false;

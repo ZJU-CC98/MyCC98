@@ -86,9 +86,10 @@ public interface ICC98Client {
 	 * @return ?
 	 * @throws IOException
 	 * @throws ClientProtocolException
+	 * @throws Exception 
 	 */
-	public boolean submitReply(List<NameValuePair> nvpsList, String boardID,
-			String rootID) throws ClientProtocolException, IOException;
+	public void submitReply(List<NameValuePair> nvpsList, String boardID,
+			String rootID) throws ClientProtocolException, IOException, Exception;
 
 	/**
 	 * @author zsy
@@ -231,5 +232,7 @@ public interface ICC98Client {
 	void clearLoginInfo();
 	
 	public String getDomain();
+
+	void setUseProxy(boolean b);
 
 }

@@ -43,72 +43,37 @@ public class CC98ServiceImpl implements ICC98Service {
 	@Inject
 	private ICC98Parser cc98Parser;
 	
-	private boolean useProxy=false;
-	
 	@Override
 	public boolean doProxyAuthorization(String userName, String pwd) throws ClientProtocolException, IOException, URISyntaxException {
-		if (useProxy==true||status==Status.INIT) {
-			boolean res = cc98Client.doHttpBasicAuthorization(userName, pwd);
+ 			boolean res = cc98Client.doHttpBasicAuthorization(userName, pwd);
 			status = Status.PROXYED;
 			return res;
-		} else {
-			throw new IllegalStateException("You cannot do this before you set proxy, or have done login or do proxy.");
-		}
-	}
+ 	}
 
 	@Override
 	public void setUseProxy(boolean b) {
-		if (status==Status.INIT) {
-			useProxy = true;
-		} else {
-			throw new IllegalStateException("You cannnot do this when you hava proxyed or logined");
-		}
-	}
-
-	@Override
-	public boolean isUseProxy() {
-		return useProxy;
-	}
-
+ 			cc98Client.setUseProxy(b);
+ 	}
+ 
 	@Override
 	public void doLogin(String userName, String pwd) throws ClientProtocolException, IOException, IllegalAccessException, ParseException, ParseContentException, NetworkErrorException {
-		if (useProxy==false&&status==Status.INIT) {
-			cc98Client.doLogin(userName, pwd);
-			status = Status.LOGINED;
-		} else if (useProxy==true&&status==Status.INIT) {
-			cc98Client.doLogin(userName, pwd);
-			status = Status.PROXY_LOGINED;
-		} else {
-			throw new IllegalStateException("You cannot do login due to illegal state.");
-		}
-	}
+ 			cc98Client.doLogin(userName, pwd);
+ 	}
 
 	@Override
 	public void logOut() {
-		if (status==Status.LOGINED||status==Status.PROXY_LOGINED) {
-			cc98Client.clearLoginInfo();
-		} else {
-			throw new IllegalStateException("You cannot do logout due to illegal state.");
-		}
-	}
+ 			cc98Client.clearLoginInfo();
+ 	}
 
 	@Override
 	public void clearProxy() {
-		if (status==Status.PROXYED) {
-			cc98Client.clearLoginInfo();
-		} else {
-			throw new IllegalStateException("You cannot do clear proxy due to illegal state.");
-		}
-	}
+ 			cc98Client.clearLoginInfo();
+ 	}
 
 	@Override
 	public void addFriend(String friendName) throws ParseException, NoUserFoundException, IOException {
-		if (status==Status.LOGINED||status==Status.PROXY_LOGINED) {
-			cc98Client.addFriend(friendName);
-		} else {
-			throw new IllegalStateException("You cannot do this due without login.");
-		}
-	}
+ 			cc98Client.addFriend(friendName);
+ 	}
 
 	@Override
 	public String getUserName() {
@@ -122,18 +87,13 @@ public class CC98ServiceImpl implements ICC98Service {
 
 	@Override
 	public String uploadFile(File file) throws PatternSyntaxException, MalformedURLException, IOException, ParseContentException {
-		if (status==Status.LOGINED||status==Status.PROXY_LOGINED) {
-			return cc98Client.uploadPictureToCC98(file);
-		} else {
-			throw new IllegalStateException("You cannot do this due without login.");
-		}
-	}
+ 			return cc98Client.uploadPictureToCC98(file);
+ 	}
 
 	@Override
 	public void pushNewPost(String boardId, String title, String faceString,
 			String content) throws ClientProtocolException, IOException {
-		if (status==Status.LOGINED||status==Status.PROXY_LOGINED) {
-			List<NameValuePair> nvpsList = new ArrayList<NameValuePair>();
+ 			List<NameValuePair> nvpsList = new ArrayList<NameValuePair>();
 			nvpsList.add(new BasicNameValuePair("upfilername", ""));
 			nvpsList.add(new BasicNameValuePair("subject", title));
 			nvpsList.add(new BasicNameValuePair("Expression", faceString));
@@ -141,14 +101,11 @@ public class CC98ServiceImpl implements ICC98Service {
 			nvpsList.add(new BasicNameValuePair("signflag", "yes"));
 			nvpsList.add(new BasicNameValuePair("Submit", "发 表"));
 			cc98Client.pushNewPost(nvpsList, boardId);
-		} else {
-			throw new IllegalStateException("You cannot do this due without login.");
-		}
-	}
+ 	}
 
 	@Override
 	public void reply(String boardId, String rootId, String title, String faceString,
-			String content) throws ClientProtocolException, IOException {
+			String content) throws Exception {
 		List<NameValuePair> nvpsList = new ArrayList<NameValuePair>();
 		nvpsList.add(new BasicNameValuePair("upfilername", ""));
 		nvpsList.add(new BasicNameValuePair("followup", rootId));
@@ -239,6 +196,11 @@ public class CC98ServiceImpl implements ICC98Service {
 	@Override
 	public Bitmap getBitmapFromUrl(String url) throws IOException {
 		return cc98Client.getBitmapFromUrl(url);
+	}
+
+	@Override
+	public boolean isUseProxy() {
+		return false;
 	}
 
 }

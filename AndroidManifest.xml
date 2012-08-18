@@ -29,7 +29,9 @@
         android:theme="@android:style/Theme.NoTitleBar" >
         <activity
             android:name=".LoginActivity"
+            alwaysRetainTaskState="true"
             android:label="@string/app_name"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -39,56 +41,79 @@
         </activity>
         <activity
             android:name=".PostListActivity"
-            android:configChanges="orientation|keyboardHidden" >
+            alwaysRetainTaskState="true"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".EditActivity"
+            alwaysRetainTaskState="true"
             android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustPan" >
         </activity>
         <activity
             android:name=".PmActivity"
-            android:configChanges="orientation|keyboardHidden" >
+            alwaysRetainTaskState="true"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".PmViewActivity"
-            android:configChanges="orientation|keyboardHidden" >
+            alwaysRetainTaskState="true"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".PostContentsJSActivity"
-            android:configChanges="orientation|keyboardHidden" >
+            alwaysRetainTaskState="true"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".PreviewActivity"
-            android:configChanges="orientation|keyboardHidden" >
+            alwaysRetainTaskState="true"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".PostSearchActivity"
-            android:configChanges="orientation|keyboardHidden" >
+            alwaysRetainTaskState="true"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".ProfileActivity"
-            android:configChanges="orientation|keyboardHidden" >
+            alwaysRetainTaskState="true"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".PushNewPostActivity"
+            alwaysRetainTaskState="true"
             android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="stateVisible|adjustPan" >
         </activity>
         <activity
             android:name=".HomeActivity"
+            alwaysRetainTaskState="true"
             android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustPan" >
         </activity>
         <activity
             android:name=".SketchActivity"
+            alwaysRetainTaskState="true"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden" >
+             android:windowSoftInputMode="stateHidden" >
         </activity>
         <activity
             android:name=".SettingsActivity"
+            alwaysRetainTaskState="true"
             android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustPan" >
         </activity>
     </application>
