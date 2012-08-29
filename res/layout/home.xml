@@ -7,28 +7,28 @@
     android:background="#e3e3e3"
     android:orientation="vertical" >
 
-		<include layout="@layout/home_header"/>
-    
+    <include layout="@layout/home_header" />
+
     <com.viewpagerindicator.TitlePageIndicator
         android:id="@+id/main_titles"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/pager_title_background"
         android:textColor="@color/pager_title_text"
-        android:textSize="10sp"
+        android:textSize="12sp"
         app:clipPadding="5dp"
         app:footerColor="@color/pager_footer"
         app:footerIndicatorHeight="5dp"
         app:footerIndicatorStyle="underline"
-        app:footerLineHeight="0dp"
+        app:footerLineHeight="2dp"
         app:selectedBold="true"
         app:selectedColor="@color/pager_title_selected_text"
         app:titlePadding="5dp" />
 
-         <android.support.v4.view.ViewPager
-            android:id="@+id/main_pages"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#e3e3e3" />
- 
+    <android.support.v4.view.ViewPager
+        android:id="@+id/main_pages"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#e3e3e3" />
+
 </LinearLayout>

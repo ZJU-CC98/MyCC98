@@ -5,7 +5,6 @@ import java.util.Map;
 
 import tk.djcrazy.MyCC98.R;
 import android.app.Activity;
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,7 +29,7 @@ public class contentListViewAdapter extends BaseAdapter {
         this.context = context;
         listInflater = LayoutInflater.from(context);
         this.listItem = listItem;
-    }
+     }
 
     @Override
     public int getCount() {

@@ -23,8 +23,6 @@ import roboguice.inject.InjectView;
 import tk.djcrazy.MyCC98.adapter.HomeFragmentPagerAdapter;
 import tk.djcrazy.MyCC98.dialog.AboutDialog;
 import tk.djcrazy.MyCC98.listener.LoadingListener;
-import tk.djcrazy.MyCC98.view.HeaderView;
-import tk.djcrazy.libCC98.CC98ClientImpl;
 import tk.djcrazy.libCC98.ICC98Service;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -38,7 +36,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.provider.Settings.System;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -47,15 +44,14 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
+ 
 import com.google.inject.Inject;
 import com.viewpagerindicator.TitlePageIndicator;
 
-@ContentView(R.layout.home)
+@ContentView(R.layout.home) 
 public class HomeActivity extends RoboFragmentActivity implements
 		LoadingListener {
 
