@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.http.ParseException;
 import org.apache.http.client.ClientProtocolException;
 
+import roboguice.inject.ContentView;
 import tk.djcrazy.MyCC98.adapter.PmListViewAdapter;
 import tk.djcrazy.MyCC98.view.HeaderView;
 import tk.djcrazy.MyCC98.view.PullToRefreshListView;
@@ -36,6 +37,7 @@ import android.widget.Toast;
 import com.flurry.android.FlurryAgent;
 import com.google.inject.Inject;
 
+@ContentView(R.layout.pm)
 public class PmActivity extends BaseActivity implements OnRefreshListener {
 
 	private static String TAG = "PmActivity";
@@ -135,10 +137,8 @@ public class PmActivity extends BaseActivity implements OnRefreshListener {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		setContentView(R.layout.pm);
+ 		setContentView(R.layout.pm);
 		setTitle(R.string.pm_activity_title);
 		findViews();
 		headerView.setUserImg(service.getUserAvatar());

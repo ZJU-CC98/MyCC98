@@ -161,9 +161,10 @@ public class HomeActivity extends RoboFragmentActivity implements
 
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(HomeActivity.this,
-						PostSearchActivity.class);
-				intent.putExtra(PostSearchActivity.BOARD_ID, "0");
+//				Intent intent = new Intent(HomeActivity.this,
+//						PostSearchActivity.class);
+//				intent.putExtra(PostSearchActivity.BOARD_ID, "0");
+				Intent intent = new Intent(HomeActivity.this, PmActivity.class);
 				startActivity(intent);
 				overridePendingTransition(R.anim.forward_activity_move_in,
 						R.anim.forward_activity_move_out);

@@ -7,6 +7,7 @@ import org.apache.http.ParseException;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.cookie.Cookie;
 
+import roboguice.inject.ContentView;
 import tk.djcrazy.MyCC98.dialog.MoreEmotChooseDialog;
 import tk.djcrazy.MyCC98.dialog.MoreEmotChooseDialog.FaceExpressionChooseListener;
 import tk.djcrazy.MyCC98.helper.HtmlGenHelper;
@@ -41,16 +42,17 @@ import com.google.inject.Inject;
  * @author zsy
  * 
  */
+@ContentView(R.layout.pm_reply)
 public class PmViewActivity extends BaseActivity {
 	private static String TAG = "PmReply";
 	private WebView webView;
 
-	private String pageString = null;
-	private String readTopic = null;
-	private String sender = null;
-	private String senderAvatarUrl = null;
-	private String sendTime = null;
-	private String faceChoosedString = null;
+	private String pageString;
+	private String readTopic;
+	private String sender;
+	private String senderAvatarUrl;
+	private String sendTime;
+	private String faceChoosedString;
 	private String pmContent;
 
 	private HeaderView headerView;
@@ -64,17 +66,13 @@ public class PmViewActivity extends BaseActivity {
 	public void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
-		// Get Html header
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		Intent intent = getIntent();
-
+ 		Intent intent = getIntent();
 		int pmId = intent.getIntExtra("PmId", -1);
 		readTopic = intent.getStringExtra("Topic");
 		sender = intent.getStringExtra("Sender");
 		sendTime = intent.getStringExtra("SendTime");
 
-		setContentView(R.layout.pm_reply);
-		if (pmId == -1) {
+ 		if (pmId == -1) {
 			setTitle("新消息");
 		} else {
 			setTitle(R.string.pm_reply);
