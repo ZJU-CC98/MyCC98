@@ -3,7 +3,8 @@
     android:layout_width="fill_parent"
     android:layout_height="44dp"
     android:background="@drawable/title_bg_bar"
-    android:orientation="horizontal" >
+    android:orientation="horizontal"
+    android:visibility="gone" >
 
     <RelativeLayout
         android:layout_width="match_parent"

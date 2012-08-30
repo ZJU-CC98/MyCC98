@@ -3,36 +3,27 @@ package tk.djcrazy.MyCC98.fragment;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.http.ParseException;
 import org.apache.http.client.ClientProtocolException;
 
-import com.google.inject.Inject;
-
-import roboguice.fragment.RoboFragment;
 import roboguice.inject.InjectView;
 import roboguice.util.RoboAsyncTask;
 import tk.djcrazy.MyCC98.PostContentsJSActivity;
 import tk.djcrazy.MyCC98.R;
-import tk.djcrazy.MyCC98.R.id;
 import tk.djcrazy.MyCC98.adapter.NewTopicListAdapter;
 import tk.djcrazy.MyCC98.util.ToastUtils;
 import tk.djcrazy.MyCC98.util.ViewUtils;
 import tk.djcrazy.MyCC98.view.PullToRefreshListView;
 import tk.djcrazy.MyCC98.view.PullToRefreshListView.OnRefreshListener;
 import tk.djcrazy.libCC98.ICC98Service;
-import tk.djcrazy.libCC98.data.HotTopicEntity;
-import tk.djcrazy.libCC98.data.PostEntity;
 import tk.djcrazy.libCC98.data.SearchResultEntity;
 import tk.djcrazy.libCC98.exception.ParseContentException;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -44,7 +35,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class NewTopicFragment extends RoboFragment implements
+import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
+import com.google.inject.Inject;
+
+public class NewTopicFragment extends RoboSherlockFragment implements
 		OnRefreshListener, OnItemClickListener {
 	private static final String TAG = "NewTopicFragment";
 

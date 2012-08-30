@@ -6,9 +6,6 @@ import java.util.List;
 import org.apache.http.ParseException;
 import org.apache.http.client.ClientProtocolException;
 
-import com.google.inject.Inject;
-
-import roboguice.fragment.RoboFragment;
 import roboguice.inject.InjectView;
 import tk.djcrazy.MyCC98.R;
 import tk.djcrazy.MyCC98.adapter.PersonalboardListViewAdapter;
@@ -16,7 +13,6 @@ import tk.djcrazy.MyCC98.listener.LoadingListener;
 import tk.djcrazy.MyCC98.util.ViewUtils;
 import tk.djcrazy.MyCC98.view.PullToRefreshListView;
 import tk.djcrazy.MyCC98.view.PullToRefreshListView.OnRefreshListener;
-import tk.djcrazy.libCC98.CC98ParserImpl;
 import tk.djcrazy.libCC98.ICC98Service;
 import tk.djcrazy.libCC98.data.BoardEntity;
 import tk.djcrazy.libCC98.exception.ParseContentException;
@@ -29,7 +25,10 @@ import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.ProgressBar;
 
-public class PersonalBoardFragment extends RoboFragment implements
+import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
+import com.google.inject.Inject;
+
+public class PersonalBoardFragment extends RoboSherlockFragment implements
 		OnRefreshListener {
 	private static final int GET_LIST_SUCCESS = 1;
 	private static final int GET_LIST_FAILED = 0;

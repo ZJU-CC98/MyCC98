@@ -69,8 +69,8 @@ import com.flurry.android.FlurryAgent;
 import com.google.inject.Inject;
 
 public class LoginActivity extends BaseActivity implements OnClickListener {
- 	private static final String TAG = "MyCC98";
-	
+	private static final String TAG = "MyCC98";
+
 	public static final String UPDATE_LINK_LIFETOY = "http://10.110.19.123:80/update/lifetoy.html";
 	public static final String UPDATE_LINK_NORMAL = "http://10.110.19.123:80/update/index.html";
 	/**
@@ -116,7 +116,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 	private int iProxyPort;
 	private boolean useProxy;
 
-	private Dialog dialog;
+	private ProgressDialog dialog;
 
 	private Intent intent;
 
@@ -390,10 +390,11 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 
 	private void showLoginField() {
 		final LinearLayout layout = (LinearLayout) findViewById(R.id.login_field);
-		
-		final Animation showupAnimation = new DropDownAnimation(layout,DisplayUtil.dip2px(getApplicationContext(), 220), true);
+
+		final Animation showupAnimation = new DropDownAnimation(layout,
+				DisplayUtil.dip2px(getApplicationContext(), 220), true);
 		layout.startAnimation(showupAnimation);
- 	}
+	}
 
 	private Handler updateHandler = new Handler() {
 		@Override
@@ -514,7 +515,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-  		setContentView(R.layout.login);
+		setContentView(R.layout.login);
 		intent = new Intent(LoginActivity.this, HomeActivity.class);
 		findViews();
 		setupRememberedLoginInfo();
@@ -694,9 +695,8 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 	private void doLogin() {
 		mUsername = mUsernameEdit.getText().toString();
 		mPassword = mPasswordEdit.getText().toString();
- 		onLoginBegin();
+		onLoginBegin();
 		new Thread(new Runnable() {
-
 			@Override
 			public void run() {
 				try {
@@ -720,14 +720,18 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 	}
 
 	private void onLoginBegin() {
-		dialog = ProgressDialog.show(LoginActivity.this, "",
-				"Begin Logining...", true);
+//		dialog = ProgressDialog.show(LoginActivity.this, "",
+//				"Begin Logining...", true);
+		dialog = new ProgressDialog(LoginActivity.this,
+				com.actionbarsherlock.R.style.Theme_Sherlock_Dialog);
+		dialog.setMessage("Begin Logining...");
 		dialog.setCancelable(false);
+		dialog.show();
 	}
 
 	private void onLoginSuccess() {
 		dialog.dismiss();
- 		Editor editor = getSharedPreferences(USERINFO, 0).edit();
+		Editor editor = getSharedPreferences(USERINFO, 0).edit();
 		// save info
 		if (autoLoginBox.isChecked())
 			editor.putBoolean(AUTOLOGIN, true);
@@ -747,7 +751,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 		}
 		editor.putBoolean(USE_PROXY, useProxy);
 		editor.commit();
- 		Toast.makeText(this, R.string.msg_login_ok, Toast.LENGTH_SHORT).show();
+		Toast.makeText(this, R.string.msg_login_ok, Toast.LENGTH_SHORT).show();
 		forwardToNextActivity();
 
 	}

@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.http.ParseException;
 import org.apache.http.client.ClientProtocolException;
 
+import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
 import com.google.inject.Inject;
 
 import roboguice.fragment.RoboFragment;
@@ -29,7 +30,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-public class FriendListFragment extends RoboFragment implements
+public class FriendListFragment extends RoboSherlockFragment implements
 		OnRefreshListener {
 	private static final String TAG = "FriendListFragment";
 	private List<UserStatueEntity> friendList;

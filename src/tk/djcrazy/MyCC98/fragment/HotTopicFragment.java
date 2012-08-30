@@ -6,9 +6,6 @@ import java.util.List;
 import org.apache.http.ParseException;
 import org.apache.http.client.ClientProtocolException;
 
-import com.google.inject.Inject;
-
-import roboguice.fragment.RoboFragment;
 import roboguice.inject.InjectView;
 import tk.djcrazy.MyCC98.PostContentsJSActivity;
 import tk.djcrazy.MyCC98.R;
@@ -16,7 +13,6 @@ import tk.djcrazy.MyCC98.adapter.HotTopicListAdapter;
 import tk.djcrazy.MyCC98.util.ViewUtils;
 import tk.djcrazy.MyCC98.view.PullToRefreshListView;
 import tk.djcrazy.MyCC98.view.PullToRefreshListView.OnRefreshListener;
-import tk.djcrazy.libCC98.CC98ParserImpl;
 import tk.djcrazy.libCC98.ICC98Service;
 import tk.djcrazy.libCC98.data.HotTopicEntity;
 import tk.djcrazy.libCC98.exception.ParseContentException;
@@ -33,7 +29,10 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-public class HotTopicFragment extends RoboFragment implements
+import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
+import com.google.inject.Inject;
+
+public class HotTopicFragment extends RoboSherlockFragment implements
 		OnRefreshListener, OnItemClickListener {
 	private static final String TAG = "HotTopicFragment";
 

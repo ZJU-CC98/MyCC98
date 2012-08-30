@@ -17,7 +17,6 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.util.EntityUtils;
 
-import roboguice.activity.RoboFragmentActivity;
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectView;
 import tk.djcrazy.MyCC98.adapter.HomeFragmentPagerAdapter;
@@ -31,6 +30,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -39,21 +39,23 @@ import android.os.Message;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
- 
+
+import com.actionbarsherlock.app.ActionBar;
+ import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockFragmentActivity;
 import com.google.inject.Inject;
 import com.viewpagerindicator.TitlePageIndicator;
 
-@ContentView(R.layout.home) 
-public class HomeActivity extends RoboFragmentActivity implements
-		LoadingListener {
+@ContentView(R.layout.home)
+public class HomeActivity extends RoboSherlockFragmentActivity implements
+		LoadingListener, ActionBar.OnNavigationListener {
 
 	private boolean IS_LIFETOY_VERSION = true;
 	private static final String UPDATE_LINK_LIFETOY = "http://10.110.19.123/update/lifetoy.html";
@@ -144,8 +146,27 @@ public class HomeActivity extends RoboFragmentActivity implements
 	};
 
 	@Override
+	public boolean onNavigationItemSelected(int itemPosition, long itemId) {
+		// mSelected.setText("Selected: " + mLocations[itemPosition]);
+		return true;
+	}
+
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		setTheme(com.actionbarsherlock.R.style.Theme_Sherlock);
 		super.onCreate(savedInstanceState);
+		String[] mLocations = getResources().getStringArray(R.array.locations);
+
+		Context context = getSupportActionBar().getThemedContext();
+		ArrayAdapter<CharSequence> list = ArrayAdapter.createFromResource(
+				context, R.array.locations, R.layout.sherlock_spinner_item);
+		list.setDropDownViewResource(R.layout.sherlock_spinner_dropdown_item);
+
+		getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+		getSupportActionBar().setListNavigationCallbacks(list, this);
+		getSupportActionBar().setLogo(
+				new BitmapDrawable(service.getUserAvatar()));
+		getSupportActionBar().setTitle(service.getUserName());
 		HomeFragmentPagerAdapter adapter = new HomeFragmentPagerAdapter(
 				getSupportFragmentManager());
 		adapter.setLoadingListener(this);
@@ -157,9 +178,9 @@ public class HomeActivity extends RoboFragmentActivity implements
 
 			@Override
 			public void onClick(View v) {
-//				Intent intent = new Intent(HomeActivity.this,
-//						PostSearchActivity.class);
-//				intent.putExtra(PostSearchActivity.BOARD_ID, "0");
+				// Intent intent = new Intent(HomeActivity.this,
+				// PostSearchActivity.class);
+				// intent.putExtra(PostSearchActivity.BOARD_ID, "0");
 				Intent intent = new Intent(HomeActivity.this, PmActivity.class);
 				startActivity(intent);
 				overridePendingTransition(R.anim.forward_activity_move_in,
@@ -168,62 +189,73 @@ public class HomeActivity extends RoboFragmentActivity implements
 		});
 	}
 
+	@Override
+	public boolean onCreateOptionsMenu(Menu optionMenu) {
+		optionMenu
+				.add("Search")
+				.setIcon(R.drawable.sear_icon_small)
+				.setShowAsAction(
+						MenuItem.SHOW_AS_ACTION_ALWAYS );
+		return true;
+	}
+
 	public void refresh() {
 		viewPager.invalidate();
 	}
 
-	/**
-	 * override menu
-	 */
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.personal_board_menu, menu);
-		return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle item selection
-		switch (item.getItemId()) {
-		// case R.id.exit:
-		// finish();
-		// return true;
-		case R.id.settings:
-			goSettings();
-			return true;
-		case R.id.log_out:
-			logOut();
-			return true;
-		case R.id.check_personal_info:
-			Intent profiIntent = new Intent();
-			profiIntent.setClass(HomeActivity.this, ProfileActivity.class);
-			profiIntent.putExtra("userName", service.getUserName());
-			profiIntent.putExtra(ProfileActivity.USER_IMAGE, bmUserImg);
-			startActivity(profiIntent);
-			overridePendingTransition(R.anim.forward_activity_move_in,
-					R.anim.forward_activity_move_out);
-			return true;
-		case R.id.about:
-			showAboutInfo();
-			return true;
-		case R.id.feedback:
-			doSendFeedBack();
-			return true;
-		case R.id.check_update:
-			new Thread(checkUpateThread).start();
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
-		}
-	}
-
-	private void goSettings() {
-		Intent intent = new Intent(this, SettingsActivity.class);
-		startActivity(intent);
-		overridePendingTransition(R.anim.forward_activity_move_in,
-				R.anim.forward_activity_move_out);
-	}
+	//
+	// /**
+	// * override menu
+	// */
+	// @Override
+	// public boolean onCreateOptionsMenu(Menu menu) {
+	// MenuInflater inflater = getMenuInflater();
+	// inflater.inflate(R.menu.personal_board_menu, menu);
+	// return true;
+	// }
+	//
+	// @Override
+	// public boolean onOptionsItemSelected(MenuItem item) {
+	// // Handle item selection
+	// switch (item.getItemId()) {
+	// // case R.id.exit:
+	// // finish();
+	// // return true;
+	// case R.id.settings:
+	// goSettings();
+	// return true;
+	// case R.id.log_out:
+	// logOut();
+	// return true;
+	// case R.id.check_personal_info:
+	// Intent profiIntent = new Intent();
+	// profiIntent.setClass(HomeActivity.this, ProfileActivity.class);
+	// profiIntent.putExtra("userName", service.getUserName());
+	// profiIntent.putExtra(ProfileActivity.USER_IMAGE, bmUserImg);
+	// startActivity(profiIntent);
+	// overridePendingTransition(R.anim.forward_activity_move_in,
+	// R.anim.forward_activity_move_out);
+	// return true;
+	// case R.id.about:
+	// showAboutInfo();
+	// return true;
+	// case R.id.feedback:
+	// doSendFeedBack();
+	// return true;
+	// case R.id.check_update:
+	// new Thread(checkUpateThread).start();
+	// return true;
+	// default:
+	// return super.onOptionsItemSelected(item);
+	// }
+	// }
+	// //
+	// private void goSettings() {
+	// Intent intent = new Intent(this, SettingsActivity.class);
+	// startActivity(intent);
+	// overridePendingTransition(R.anim.forward_activity_move_in,
+	// R.anim.forward_activity_move_out);
+	// }
 
 	/**
 	 * 

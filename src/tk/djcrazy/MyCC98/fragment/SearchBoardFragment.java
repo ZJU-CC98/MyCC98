@@ -7,7 +7,6 @@ import java.util.List;
 import org.apache.http.ParseException;
 import org.apache.http.client.ClientProtocolException;
 
-import roboguice.fragment.RoboFragment;
 import roboguice.inject.InjectView;
 import tk.djcrazy.MyCC98.PostListActivity;
 import tk.djcrazy.MyCC98.R;
@@ -22,7 +21,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,9 +31,10 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
+import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
 import com.google.inject.Inject;
 
-public class SearchBoardFragment extends RoboFragment implements
+public class SearchBoardFragment extends RoboSherlockFragment implements
 		OnItemClickListener {
 	private int position = 0;
 	private static final String TAG = "SearchBoardFragment";
