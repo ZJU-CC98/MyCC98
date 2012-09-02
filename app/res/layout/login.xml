@@ -5,7 +5,7 @@
     android:background="@color/white" >
 
     <LinearLayout
-        android:layout_width="match_parent"
+         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
 				android:layout_gravity="center"
@@ -23,9 +23,9 @@
         <LinearLayout
             android:id="@+id/login_field"
             android:layout_width="fill_parent"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginLeft="20dip"
+             android:layout_marginLeft="20dip"
             android:layout_marginRight="20dip"
             android:orientation="vertical"
             android:padding="10dip"  >
@@ -100,8 +100,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:button="@drawable/btn_selector"
-                    android:text="@string/rem_pw"
+                     android:text="@string/rem_pw"
                     android:textColor="@color/login_text_color" />
 
                 <CheckBox
@@ -109,7 +108,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:button="@drawable/btn_selector"
                     android:text="@string/auto_login"
                     android:textColor="@color/login_text_color" />
             </LinearLayout>

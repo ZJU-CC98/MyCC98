@@ -1,11 +1,13 @@
 package tk.djcrazy.MyCC98;
 
+import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockFragmentActivity;
+
 import roboguice.activity.RoboActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.Window;
 
-public class BaseActivity extends RoboActivity {
+public class BaseActivity extends RoboSherlockFragmentActivity { 
 	
 	@Override
 	public void onStart() {
@@ -20,6 +22,7 @@ public class BaseActivity extends RoboActivity {
 	}
 	
 	public void onCreate(Bundle savedInstanceState) {
+		setTheme(com.actionbarsherlock.R.style.Theme_Sherlock);
 		super.onCreate(savedInstanceState);
  	}
 	 

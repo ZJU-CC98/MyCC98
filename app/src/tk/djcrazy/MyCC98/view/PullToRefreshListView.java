@@ -74,6 +74,7 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
     }
 
     private void init(Context context) {
+    	
         // Load all of the animations we need in code rather than through XML
         //从下往上转懂的动画
         mFlipAnimation = new RotateAnimation(0, -180,

@@ -4,6 +4,9 @@
 
 package tk.djcrazy.MyCC98;
 
+import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
+import static android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,27 +23,30 @@ import tk.djcrazy.libCC98.ICC98Service;
 import tk.djcrazy.libCC98.data.PostEntity;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import com.google.inject.Inject;
 
 @ContentView(R.layout.post_list)
-public class PostListActivity extends BaseActivity implements OnRefreshListener, OnClickListener {
+public class PostListActivity extends BaseActivity implements
+		OnRefreshListener, OnClickListener {
 	private static final String TAG = "PostListActivity";
 
 	public static final String BOARD_ID = "boardId";
 	public static final String BOARD_NAME = "boardName";
 	public static final String PAGE_NUMBER = "pageNumber";
 
-	private static final int MSG_LIST_SUCC = 0;
-	private static final int MSG_LIST_FAILED = 1;
+	private static final int MENU_SEARCH_ID = 1;
+	private static final int MENU_NEW_POST_ID = 2;
 
 	@InjectExtra(BOARD_NAME)
 	private String boardName;
@@ -54,18 +60,9 @@ public class PostListActivity extends BaseActivity implements OnRefreshListener,
 	@InjectView(R.id.postlistView)
 	private PullToRefreshListView listView;
 
- 	@InjectView(R.id.post_list_header_userimg)
-	private ImageView userHeader;
-	@InjectView(R.id.post_list_header_title)
-	private TextView headerTitle;
-	@InjectView(R.id.post_list_push_new_post_btn)
-	private ImageView pushNewPostButton;
-	@InjectView(R.id.post_list_search_btn)
-	private ImageView searchButton;
- 	
 	private ProgressBar loadMoreProgressBar;
- 	private TextView loadMoreTextView;
-	private View  footerView;
+	private TextView loadMoreTextView;
+	private View footerView;
 
 	private PostListViewAdapter postListViewAdapter;
 
@@ -75,34 +72,39 @@ public class PostListActivity extends BaseActivity implements OnRefreshListener,
 	@Override
 	public void onCreate(Bundle SavedInstanceState) {
 		super.onCreate(SavedInstanceState);
+		configureActionBar();
 		postList = new ArrayList<PostEntity>();
-		postListViewAdapter = new PostListViewAdapter(
-				PostListActivity.this, postList, boardId, boardName);
+		postListViewAdapter = new PostListViewAdapter(PostListActivity.this,
+				postList, boardId, boardName);
 		listView.setAdapter(postListViewAdapter);
- 		listView.setOnRefreshListener(this);
- 		userHeader.setImageBitmap(service.getUserAvatar());
-		headerTitle.setText(boardName);
-		headerTitle.setOnClickListener(this);
-		pushNewPostButton.setOnClickListener(this);
-		searchButton.setOnClickListener(this);
-		footerView = LayoutInflater.from(this).inflate(
-				R.layout.load_more, null);
-		loadMoreProgressBar = (ProgressBar) footerView.findViewById(R.id.load_more_progress);
-		loadMoreTextView = (TextView) footerView.findViewById(R.id.load_more_text);
+		listView.setOnRefreshListener(this);
+		footerView = LayoutInflater.from(this)
+				.inflate(R.layout.load_more, null);
+		loadMoreProgressBar = (ProgressBar) footerView
+				.findViewById(R.id.load_more_progress);
+		loadMoreTextView = (TextView) footerView
+				.findViewById(R.id.load_more_text);
 		loadMoreTextView.setOnClickListener(this);
 		listView.addFooterView(footerView);
 		fetchContent();
 	}
 
+	private void configureActionBar() {
+		ActionBar actionBar = getSupportActionBar();
+		actionBar.setDisplayHomeAsUpEnabled(true);
+		actionBar.setLogo(new BitmapDrawable(service.getUserAvatar()));
+		actionBar.setTitle(boardName);
+	}
+
 	private void fetchContent() {
 		new LoadPostListTask(this, boardId, pageNumber).execute();
- 	}
+	}
 
-  	/**
+	/**
 	 * 
 	 */
 	private void sendNewPost() {
- 		Intent intent = new Intent(PostListActivity.this, EditActivity.class);
+		Intent intent = new Intent(PostListActivity.this, EditActivity.class);
 		intent.putExtra(EditActivity.MOD, EditActivity.MOD_NEW_POST);
 		intent.putExtra(EditActivity.BOARD_ID, boardId);
 		intent.putExtra(EditActivity.BOARD_NAME, boardName);
@@ -122,6 +124,40 @@ public class PostListActivity extends BaseActivity implements OnRefreshListener,
 	}
 
 	@Override
+	public boolean onOptionsItemSelected(
+			com.actionbarsherlock.view.MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			finish();
+			overridePendingTransition(R.anim.backward_activity_move_in,
+					R.anim.backward_activity_move_out);
+			return true;
+		case R.id.post_list_menu_search:
+			onSearchRequested();
+			return true;
+		case R.id.post_list_menu_new_post:
+			sendNewPost();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu optionMenu) {
+		getSupportMenuInflater().inflate(R.menu.post_list, optionMenu);
+		return true;
+	}
+ 	@Override
+ 	public boolean onSearchRequested() {
+ 	     Bundle appData = new Bundle();
+ 	     appData.putString(PostSearchActivity.BOARD_ID, boardId);
+ 	     appData.putString(PostSearchActivity.BOARD_NAME, boardName);
+ 	     startSearch(null, false, appData, false);
+ 	     return true;
+ 	 }
+
+	@Override
 	public void onRefresh() {
 		pageNumber = 1;
 		postList.clear();
@@ -132,15 +168,15 @@ public class PostListActivity extends BaseActivity implements OnRefreshListener,
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-//		case R.id.post_pre_page:
-//			prevPage();
-//			break;
-//		case R.id.post_next_page:
-//			nextPage();
-//			break;
-//		case R.id.post_newpost:
-//			sendNewPost();
-//			break;
+		// case R.id.post_pre_page:
+		// prevPage();
+		// break;
+		// case R.id.post_next_page:
+		// nextPage();
+		// break;
+		// case R.id.post_newpost:
+		// sendNewPost();
+		// break;
 		case R.id.post_list_header_title:
 			listView.smoothScrollToPosition(1);
 			break;
@@ -152,25 +188,26 @@ public class PostListActivity extends BaseActivity implements OnRefreshListener,
 			break;
 		}
 	}
-	
-	private class LoadPostListTask extends RoboAsyncTask<List<PostEntity>>  {
+
+	private class LoadPostListTask extends RoboAsyncTask<List<PostEntity>> {
 		private Activity mContext;
 		private int mPageNum;
 		private String mBoardId;
 		@Inject
 		private ICC98Service mService;
-		
+
 		protected LoadPostListTask(Activity context, String boardId, int pageNum) {
 			super(context);
 			mContext = context;
 			mPageNum = pageNum;
 			mBoardId = boardId;
 		}
+
 		@Override
 		protected void onPreExecute() {
 			ViewUtils.setGone(loadMoreProgressBar, false);
 			loadMoreTextView.setText("正在加载...");
- 		}
+		}
 
 		@Override
 		public List<PostEntity> call() throws Exception {
@@ -180,7 +217,7 @@ public class PostListActivity extends BaseActivity implements OnRefreshListener,
 		@Override
 		protected void onSuccess(List<PostEntity> list) {
 			postList.addAll(list);
- 		}
+		}
 
 		@Override
 		protected void onException(Exception e) {
@@ -194,6 +231,6 @@ public class PostListActivity extends BaseActivity implements OnRefreshListener,
 			loadMoreTextView.setText("点击加载更多");
 			listView.onRefreshComplete();
 			postListViewAdapter.notifyDataSetChanged();
- 		}
+		}
 	}
 }

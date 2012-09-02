@@ -14,12 +14,18 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+     >
 
     <item
-        android:id="@+id/m_search"
-        android:icon="@drawable/search_icon"
+        android:id="@+id/menu_message"
+        android:icon="@drawable/message_box"
         android:showAsAction="ifRoom"
-        android:title="搜索帖子"/>
+        android:title="@string/pm_activity_title" />
+    <item
+        android:id="@+id/menu_search"
+        android:icon="@drawable/search_icon"
+        android:showAsAction="always"
+        android:title="@string/search_for_post"/>
 
 </menu>

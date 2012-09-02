@@ -5,48 +5,6 @@
     android:background="@color/board_info_background"
     android:orientation="vertical" >
 
-    <include layout="@layout/post_search_header" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:background="@drawable/search_bar_bg"
-        android:gravity="center_vertical" >
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="25dp"
-            android:background="@drawable/search_area_bg"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp" 
-            android:gravity="center_vertical">
-
-            <ImageView
-                android:layout_width="18dp"
-                android:layout_height="18dp"
-                android:src="@drawable/sear_icon_small"
-                android:layout_marginLeft="5dp" />
-            
-            <EditText
-                android:id="@+id/et_postsearch_key"
-                android:layout_width="match_parent"
-                android:layout_height="20dp"
-                android:layout_weight="1.0"
-                android:background="@null"
-                 android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:singleLine="true"
-                android:hint="请输入关键词" 
-                android:textSize="13sp"/>
-            <Button 
-                android:id="@+id/post_search_clear_input"
-                android:layout_height="18dp"
-                android:layout_width="18dp"
-                android:background="@drawable/search_clear_input_icon"
-                android:layout_marginRight="2dp"/>
-        </LinearLayout>
-    </LinearLayout>
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="36dp" >
@@ -66,8 +24,8 @@
                 android:layout_height="wrap_content"
                 android:checked="true"
                 android:text="以主题搜索"
-                android:textColor="#000"
-                android:textSize="10sp" />
+                android:textColor="#777"
+                android:textSize="13sp" />
 
             <RadioButton
                 android:id="@+id/rb_postsearch_by_author"
@@ -75,8 +33,8 @@
                 android:layout_height="wrap_content"
                 android:checked="false"
                 android:text="以作者搜索"
-                android:textColor="#000"
-                android:textSize="10sp" />
+                android:textColor="#777"
+                android:textSize="13sp" />
         </RadioGroup>
     </RelativeLayout>
 

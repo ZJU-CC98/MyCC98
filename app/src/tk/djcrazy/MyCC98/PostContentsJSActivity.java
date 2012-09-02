@@ -11,7 +11,6 @@ import org.apache.http.client.ClientProtocolException;
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
-import tk.djcrazy.MyCC98.R.id;
 import tk.djcrazy.MyCC98.helper.HtmlGenHelper;
 import tk.djcrazy.libCC98.ICC98Service;
 import tk.djcrazy.libCC98.data.Gender;
@@ -25,7 +24,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.drawable.AnimationDrawable;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -35,22 +34,19 @@ import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.webkit.WebSettings;
 import android.webkit.WebSettings.LayoutAlgorithm;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import com.google.inject.Inject;
 
 /**
@@ -98,17 +94,7 @@ public class PostContentsJSActivity extends BaseActivity  implements OnClickList
 	private View vRe;
 	@InjectView(R.id.search_bar)
  	private RelativeLayout searchBar;
-	@InjectView(R.id.post_content_header_userimg)
-	private ImageView userHeader;
-	@InjectView(R.id.post_content_header_title)
-	private TextView headerTitle;
-	@InjectView(R.id.post_content_reply_btn)
-	private Button  replyButton;
-	@InjectView(R.id.post_content_current_page_num)
-	private TextView currentPageTextView;
-	@InjectView(R.id.post_content_total_page_num)
-	private TextView totalPageTextView;
-	
+ 	
 	private int prevPageNum = 1;
 	private int totalPageNum = 1;
 	
@@ -127,6 +113,8 @@ public class PostContentsJSActivity extends BaseActivity  implements OnClickList
 	private static PostContentsListPage nextPage = new PostContentsListPage();
 	private static PostContentsListPage prevPage = new PostContentsListPage();
 
+	private static final int MENU_REPLY_ID = 1325416345;
+	
 	private static final String ITEM_OPEN = "<div class=\"post\"><div class=\"post-content-wrapper\">";
 	private static final String ITEM_CLOSE = "</div>";
 	private static final String TAG = "PostContentsJS";
@@ -147,23 +135,45 @@ public class PostContentsJSActivity extends BaseActivity  implements OnClickList
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-
 		super.onCreate(savedInstanceState);
-		userHeader.setImageBitmap(service.getUserAvatar());
-		headerTitle.setText(postName);
-		currentPageTextView.setText(String.valueOf(currPageNum));
-		totalPageTextView.setText(" ");
-		headerTitle.setOnClickListener(this);
- 		setViews();
+ 		configureActionBar();
+  		setViews();
 		addListeners();
 		progressDialog = ProgressDialog.show(PostContentsJSActivity.this, "",
 				this.getText(R.string.connectting));
 		progressDialog.show();
 		dispContents(currPageNum);
-	}
+	} 
 
+	private void configureActionBar() {
+		ActionBar actionBar = getSupportActionBar();
+		actionBar.setDisplayHomeAsUpEnabled(true);
+		actionBar.setLogo(new BitmapDrawable(service.getUserAvatar()));
+ 	}
 	@Override
-	public void onClick(View v) {
+	public boolean onCreateOptionsMenu(Menu optionMenu) {
+		optionMenu.add(android.view.Menu.NONE, MENU_REPLY_ID, 1, "回复").setIcon(R.drawable.feedback_icon)
+				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+ 		return true;
+	}
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			finish();
+			overridePendingTransition(R.anim.backward_activity_move_in,
+					R.anim.backward_activity_move_out);
+			return true;
+		case MENU_REPLY_ID:
+			reply();
+			return true;
+		default:
+			break;
+		}
+		return false;
+	}
+	@Override
+	public void onClick(View v) { 
 		switch (v.getId()) {
 		case R.id.find_prev:
 			webView.findNext(false);
@@ -295,9 +305,8 @@ public class PostContentsJSActivity extends BaseActivity  implements OnClickList
 			case FETCH_CONTENT_SUCCESS:
 				webView.loadDataWithBaseURL(null, currPage.getString(),
 						"text/html", "utf-8", null);
-				headerTitle.setText(postName);
-				currentPageTextView.setText(String.valueOf(currPageNum));
-				totalPageTextView.setText(String.valueOf(totalPageNum));
+				getSupportActionBar().setTitle(postName);
+				getSupportActionBar().setSubtitle("第"+currPageNum+"页 | "+"共"+totalPageNum+"页");
 				prefetch();
 				break;
 			case FETCH_CONTENT_FAILED:
@@ -559,42 +568,42 @@ public class PostContentsJSActivity extends BaseActivity  implements OnClickList
 				R.anim.forward_activity_move_out);
 	}
 
- 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		menu.add(0, MNU_REFRESH, 0, R.string.refresh);
-		menu.add(0, MNU_FIRST, 1, R.string.first_page);
-		menu.add(0, MNU_LAST, 2, R.string.last_page);
-		menu.add(0, MNU_PREV, 3, R.string.pre_page);
-		menu.add(0, MNU_JUMP, 4, R.string.jump_dialog_title);
-		menu.add(0, MNU_NEXT, 5, R.string.next_page);
-		return super.onCreateOptionsMenu(menu);
-
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case MNU_REFRESH:
-			refreshPage();
-			break;
-		case MNU_PREV:
-			prevPage();
-			break;
-		case MNU_JUMP:
-			jumpDialog();
-			break;
-		case MNU_FIRST:
-			jumpTo(1);
-			break;
-		case MNU_NEXT:
-			nextPage();
-			break;
-		case MNU_LAST:
-			jumpTo(totalPageNum);
-			break;
-		}
-		return super.onOptionsItemSelected(item);
-	}
+// 	@Override
+//	public boolean onCreateOptionsMenu(Menu menu) {
+//		menu.add(0, MNU_REFRESH, 0, R.string.refresh);
+//		menu.add(0, MNU_FIRST, 1, R.string.first_page);
+//		menu.add(0, MNU_LAST, 2, R.string.last_page);
+//		menu.add(0, MNU_PREV, 3, R.string.pre_page);
+//		menu.add(0, MNU_JUMP, 4, R.string.jump_dialog_title);
+//		menu.add(0, MNU_NEXT, 5, R.string.next_page);
+//		return super.onCreateOptionsMenu(menu);
+//
+//	}
+//
+//	@Override
+//	public boolean onOptionsItemSelected(MenuItem item) {
+//		switch (item.getItemId()) {
+//		case MNU_REFRESH:
+//			refreshPage();
+//			break;
+//		case MNU_PREV:
+//			prevPage();
+//			break;
+//		case MNU_JUMP:
+//			jumpDialog();
+//			break;
+//		case MNU_FIRST:
+//			jumpTo(1);
+//			break;
+//		case MNU_NEXT:
+//			nextPage();
+//			break;
+//		case MNU_LAST:
+//			jumpTo(totalPageNum);
+//			break;
+//		}
+//		return super.onOptionsItemSelected(item);
+//	}
 
 	private void searchDialog() {
 		searchMode = true;

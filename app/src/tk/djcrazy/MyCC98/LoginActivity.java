@@ -27,12 +27,9 @@ import tk.djcrazy.MyCC98.db.BoardInfoDbAdapter;
 import tk.djcrazy.MyCC98.dialog.AuthDialog;
 import tk.djcrazy.MyCC98.dialog.AuthDialog.MyAuthDialogListener;
 import tk.djcrazy.MyCC98.util.DisplayUtil;
-import tk.djcrazy.libCC98.CC98ClientImpl;
 import tk.djcrazy.libCC98.ICC98Service;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -52,21 +49,18 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
-import android.view.ViewTreeObserver.OnPreDrawListener;
 import android.view.Window;
-import android.view.WindowManager;
 import android.view.animation.Animation;
-import android.view.animation.Animation.AnimationListener;
-import android.view.animation.AnimationUtils;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
-
-import com.flurry.android.FlurryAgent;
 import com.google.inject.Inject;
+import com.nineoldandroids.animation.ArgbEvaluator;
+import com.nineoldandroids.animation.ObjectAnimator;
+import com.nineoldandroids.animation.ValueAnimator;
+import com.nineoldandroids.animation.ValueAnimator.AnimatorUpdateListener;
 
 public class LoginActivity extends BaseActivity implements OnClickListener {
 	private static final String TAG = "MyCC98";
@@ -390,10 +384,24 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 
 	private void showLoginField() {
 		final LinearLayout layout = (LinearLayout) findViewById(R.id.login_field);
-
-		final Animation showupAnimation = new DropDownAnimation(layout,
-				DisplayUtil.dip2px(getApplicationContext(), 220), true);
-		layout.startAnimation(showupAnimation);
+		// final Animation showupAnimation = new DropDownAnimation(layout,
+		// DisplayUtil.dip2px(getApplicationContext(), 220), true);
+		// layout.startAnimation(showupAnimation);
+		final LayoutParams params = layout.getLayoutParams();
+		ValueAnimator colorAnim = ValueAnimator.ofInt(0,
+				DisplayUtil.dip2px(getApplicationContext(), 220));
+		colorAnim.setDuration(700);
+		colorAnim.addUpdateListener(new AnimatorUpdateListener() {
+			@Override
+			public void onAnimationUpdate(ValueAnimator animation) {
+				// Log.i("update", ((Integer)
+				// animation.getAnimatedValue()).toString());
+				params.height = (Integer) animation.getAnimatedValue();
+				layout.setLayoutParams(params);
+			}
+		});
+		colorAnim.start();
+		// animate(myButton).setDuration(2000).rotationYBy(720).x(100).y(100);
 	}
 
 	private Handler updateHandler = new Handler() {
@@ -515,6 +523,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.login);
 		intent = new Intent(LoginActivity.this, HomeActivity.class);
 		findViews();
@@ -720,10 +729,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 	}
 
 	private void onLoginBegin() {
-//		dialog = ProgressDialog.show(LoginActivity.this, "",
-//				"Begin Logining...", true);
-		dialog = new ProgressDialog(LoginActivity.this,
-				com.actionbarsherlock.R.style.Theme_Sherlock_Dialog);
+ 		dialog = new ProgressDialog(LoginActivity.this );
 		dialog.setMessage("Begin Logining...");
 		dialog.setCancelable(false);
 		dialog.show();

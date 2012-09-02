@@ -81,4 +81,5 @@
 	<string name="menu_settings">设置</string>
 	<string name="change_id">切换马甲</string>
 	<string name="edit_post">编辑帖子</string>
+	<string name="search_for_post">搜索帖子</string>
 </resources>

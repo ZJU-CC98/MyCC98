@@ -5,7 +5,7 @@
     android:orientation="vertical"
     android:background="#ececec" >
 
-    <include layout="@layout/post_content_header"/>
+<!--     <include layout="@layout/post_content_header"/> -->
 
     <LinearLayout
         android:layout_width="fill_parent"

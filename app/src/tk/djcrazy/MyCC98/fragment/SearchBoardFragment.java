@@ -41,7 +41,7 @@ public class SearchBoardFragment extends RoboSherlockFragment implements
 	private List<BoardStatus> currentResult;
 	private List<BoardStatus> boardList;
 
-	@InjectView(R.id.search_board_bar)
+	@InjectView(R.id.search_board_bar) 
 	private EditText searchContent;
 	@InjectView(R.id.search_board_result_list)
 	private ListView lvResultList;

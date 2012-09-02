@@ -44,6 +44,9 @@
             alwaysRetainTaskState="true"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait" >
+            <meta-data
+                android:name="android.app.default_searchable"
+                android:value=".PostSearchActivity" />
         </activity>
         <activity
             android:name=".EditActivity"
@@ -80,7 +83,15 @@
             android:name=".PostSearchActivity"
             alwaysRetainTaskState="true"
             android:configChanges="orientation|keyboardHidden"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait" >
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable_posts" />
         </activity>
         <activity
             android:name=".ProfileActivity"
@@ -101,13 +112,16 @@
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustPan" >
+            <meta-data
+                android:name="android.app.default_searchable"
+                android:value=".PostSearchActivity" />
         </activity>
         <activity
             android:name=".SketchActivity"
             alwaysRetainTaskState="true"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
-             android:windowSoftInputMode="stateHidden" >
+            android:windowSoftInputMode="stateHidden" >
         </activity>
         <activity
             android:name=".SettingsActivity"

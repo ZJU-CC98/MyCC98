@@ -1,39 +1,36 @@
 package tk.djcrazy.MyCC98;
 
-import java.io.IOException;
 import java.util.List;
-import java.util.Map;
-
-import org.apache.http.ParseException;
 
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
-import tk.djcrazy.MyCC98.R.id;
 import tk.djcrazy.MyCC98.adapter.NewTopicListAdapter;
 import tk.djcrazy.MyCC98.util.ToastUtils;
-import tk.djcrazy.MyCC98.view.HeaderView;
 import tk.djcrazy.libCC98.ICC98Service;
 import tk.djcrazy.libCC98.data.SearchResultEntity;
-import tk.djcrazy.libCC98.exception.ParseContentException;
 import android.app.ProgressDialog;
-import android.graphics.Bitmap;
+import android.app.SearchManager;
+import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.Window;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import com.google.inject.Inject;
 
 @ContentView(R.layout.post_search)
@@ -41,13 +38,14 @@ public class PostSearchActivity extends BaseActivity {
 
 	public static final String BOARD_ID = "boardid";
 	public static final String BOARD_NAME = "boardname";
-	public final String SEARCH_TYPE_TITLE = "2";
-	public final String SEARCH_TYPE_AUTHOR = "1";
-
-	private NewTopicListAdapter newTopicListAdapter;
-	@InjectView(R.id.et_postsearch_key)
-	private EditText etKeyword;
-	@InjectView(R.id.tv_postsearch_next)
+	public static final String SEARCH_TYPE = "searchType";
+	public static final String SEARCH_TYPE_TITLE = "2";
+	public static final String SEARCH_TYPE_AUTHOR = "1";
+	private static final int FETCH_SUCC = 0;
+	private static final int NOTFOUND = 1;
+	private static final int FETCH_ERROR = 2;
+ 
+ 	@InjectView(R.id.tv_postsearch_next)
 	private View vNext;
 	@InjectView(R.id.tv_postsearch_prev)
 	private View vPrev;
@@ -57,23 +55,16 @@ public class PostSearchActivity extends BaseActivity {
 	private RadioButton rbByTitle;
 	@InjectView(R.id.lv_postsearch)
 	private ListView listView;
-	@InjectView(R.id.post_search_btn)
-	private ImageView searchBtn;
-	@InjectView(R.id.post_search_header_title)
-	private TextView headerTitle;
-	@InjectView(R.id.post_search_header_userimg)
-	private ImageView userHeader;
-	@InjectView(R.id.post_search_clear_input)
-	private Button clearInputButton;
 
-	private List<SearchResultEntity> datalist;
+	private String boardId;
+	private String boardName;
+	private String mQueryString;
+
+	private List<SearchResultEntity> mResList;
+	private NewTopicListAdapter newTopicListAdapter;
 
 	private int currentPage = 1;
-	private int totalPage;
-	@InjectExtra(BOARD_ID)
-	private String boardId;
-	@InjectExtra(value = BOARD_NAME, optional = true)
-	private String boardName;
+	private int totalPage = 1;
 	private String currentType = SEARCH_TYPE_TITLE;
 
 	private ProgressDialog pg;
@@ -81,20 +72,19 @@ public class PostSearchActivity extends BaseActivity {
 	@Inject
 	private ICC98Service service;
 
-	private static final int FETCH_SUCC = 0;
-	private static final int NOTFOUND = 1;
-	private static final int FETCH_ERROR = 2;
-
 	private Handler handler = new Handler() {
 		@Override
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
 			case FETCH_SUCC:
-				int totalpost = Integer.parseInt(datalist.get(0)
+				int totalpost = Integer.parseInt(mResList.get(0)
 						.getTotalResult());
-				datalist.remove(0);
+				mResList.remove(0);
 				totalPage = totalpost % 20 == 0 ? totalpost / 20
 						: totalpost / 20 + 1;
+				getSupportActionBar().setSubtitle(
+						"共" + totalpost + "个结果  " + "第" + currentPage + "页 | 共"
+								+ totalPage + "页");
 				if (currentPage <= 1) {
 					vPrev.setVisibility(View.GONE);
 				} else {
@@ -105,9 +95,8 @@ public class PostSearchActivity extends BaseActivity {
 				} else {
 					vNext.setVisibility(View.VISIBLE);
 				}
-				setTitle("MyCC98:搜索");
 				newTopicListAdapter = new NewTopicListAdapter(
-						PostSearchActivity.this, datalist);
+						PostSearchActivity.this, mResList);
 				listView.setAdapter(newTopicListAdapter);
 				pg.dismiss();
 				getWindow().setSoftInputMode(
@@ -126,29 +115,20 @@ public class PostSearchActivity extends BaseActivity {
 		}
 	};
 
-	private void fetchContent() {
+	private void fetchContent(final String keyWord) {
 		pg.show();
 		new Thread() {
 			@Override
 			public void run() {
 				try {
-					datalist = service.searchPost(etKeyword.getText()
-							.toString(), boardId, currentType, currentPage);
-					if (datalist.size() > 1) {
+					mResList = service.searchPost(keyWord, boardId,
+							currentType, currentPage);
+					if (mResList.size() > 1) {
 						handler.sendEmptyMessage(FETCH_SUCC);
 					} else {
 						handler.sendEmptyMessage(NOTFOUND);
 					}
-				} catch (ParseException e) {
-					handler.sendEmptyMessage(FETCH_ERROR);
-					e.printStackTrace();
-				} catch (IOException e) {
-					handler.sendEmptyMessage(FETCH_ERROR);
-					e.printStackTrace();
-				} catch (ParseContentException e) {
-					handler.sendEmptyMessage(FETCH_ERROR);
-					e.printStackTrace();
-				} catch (java.text.ParseException e) {
+				} catch (Exception e) {
 					handler.sendEmptyMessage(FETCH_ERROR);
 					e.printStackTrace();
 				}
@@ -159,30 +139,78 @@ public class PostSearchActivity extends BaseActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		boardName = boardName == null ? "全站" : boardName;
-		userHeader.setImageBitmap(service.getUserAvatar());
-		headerTitle.setText("搜索  " + boardName);
-		clearInputButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				etKeyword.setText("");
-			}
-		});
-		searchBtn.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				fetchContent();
-			}
-		});
+		configureActionBar();
 		setListeners();
 		pg = new ProgressDialog(this);
 		pg.setMessage("正在加载数据...");
 		rbByTitle.setChecked(true);
+		handleIntent(getIntent());
+	}
+
+	private void configureActionBar() {
+		ActionBar actionBar = getSupportActionBar();
+		actionBar.setDisplayHomeAsUpEnabled(true);
+		actionBar.setLogo(new BitmapDrawable(service.getUserAvatar()));
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu optionMenu) {
+		getSupportMenuInflater().inflate(R.menu.post_search, optionMenu);
+ 		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(
+			com.actionbarsherlock.view.MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			finish();
+			overridePendingTransition(R.anim.backward_activity_move_in,
+					R.anim.backward_activity_move_out);
+			return true;
+		case R.id.post_search_action:
+			onSearchRequested();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+ 	@Override
+ 	public boolean onSearchRequested() {
+ 	     Bundle appData = new Bundle();
+ 	     appData.putString(PostSearchActivity.BOARD_ID, boardId);
+ 	     appData.putString(PostSearchActivity.BOARD_NAME, boardName);
+ 	     appData.putString(SEARCH_TYPE, currentType);
+ 	     startSearch(null, false, appData, false);
+ 	     return true;
+ 	 }
+
+	@Override
+	protected void onNewIntent(Intent intent) {
+		setIntent(intent);
+		handleIntent(intent);
+	}
+
+	private void handleIntent(Intent intent) {
+		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+			String query = intent.getStringExtra(SearchManager.QUERY);
+			mQueryString = query;
+			Bundle appData = intent.getBundleExtra(SearchManager.APP_DATA);
+			boardId = appData.getString(BOARD_ID);
+			boardName = appData.getString(BOARD_NAME);
+			currentType = appData.getString(SEARCH_TYPE);
+			currentPage = 1;
+			totalPage   = 1;
+			if (currentType==null) {
+				currentType=SEARCH_TYPE_TITLE;
+			}
+			getSupportActionBar().setTitle("搜索：" + mQueryString+" 在"+boardName);
+			fetchContent(query);
+		}
 	}
 
 	private void setListeners() {
 		rg.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-
 			@Override
 			public void onCheckedChanged(RadioGroup arg0, int arg1) {
 				if (arg1 == R.id.rb_postsearch_by_author) {
@@ -198,7 +226,7 @@ public class PostSearchActivity extends BaseActivity {
 			public void onClick(View v) {
 				if (currentPage < totalPage) {
 					++currentPage;
-					fetchContent();
+					fetchContent(mQueryString);
 				}
 			}
 		});
@@ -208,8 +236,28 @@ public class PostSearchActivity extends BaseActivity {
 			public void onClick(View v) {
 				if (currentPage > 1) {
 					--currentPage;
-					fetchContent();
+					fetchContent(mQueryString);
 				}
+			}
+		});
+
+		listView.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+					long arg3) {
+				Intent intent = new Intent(PostSearchActivity.this,
+						PostContentsJSActivity.class);
+				intent.putExtra(PostContentsJSActivity.BOARD_ID,
+						mResList.get(arg2).getBoardId());
+				intent.putExtra(PostContentsJSActivity.PAGE_NUMBER, 1);
+				intent.putExtra(PostContentsJSActivity.POST_ID,
+						mResList.get(arg2).getPostId());
+				intent.putExtra(PostContentsJSActivity.POST_NAME,
+						mResList.get(arg2).getTitle());
+				startActivity(intent);
+				overridePendingTransition(R.anim.forward_activity_move_in,
+						R.anim.forward_activity_move_out);
 			}
 		});
 	}
