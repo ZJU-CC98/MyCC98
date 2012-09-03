@@ -69,9 +69,8 @@
         </activity>
         <activity
             android:name=".PostContentsJSActivity"
-            alwaysRetainTaskState="true"
-            android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait" >
+            alwaysRetainTaskState="true" 
+            android:uiOptions="splitActionBarWhenNarrow" >
         </activity>
         <activity
             android:name=".PreviewActivity"

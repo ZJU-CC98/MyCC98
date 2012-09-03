@@ -152,8 +152,14 @@ public class PostContentsJSActivity extends BaseActivity  implements OnClickList
  	}
 	@Override
 	public boolean onCreateOptionsMenu(Menu optionMenu) {
-		optionMenu.add(android.view.Menu.NONE, MENU_REPLY_ID, 1, "回复").setIcon(R.drawable.feedback_icon)
-				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+		optionMenu.add(android.view.Menu.NONE, MENU_REPLY_ID, 1, "回复") 
+		.setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+		optionMenu.add(android.view.Menu.NONE, MENU_REPLY_ID+1, 1, "跳转") 
+		.setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+		optionMenu.add(android.view.Menu.NONE, MENU_REPLY_ID+2, 1, "上一页") 
+		.setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+		optionMenu.add(android.view.Menu.NONE, MENU_REPLY_ID+3, 1, "下一页") 
+		.setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
  		return true;
 	}
 	@Override
@@ -166,7 +172,7 @@ public class PostContentsJSActivity extends BaseActivity  implements OnClickList
 			return true;
 		case MENU_REPLY_ID:
 			reply();
-			return true;
+			return true; 
 		default:
 			break;
 		}

@@ -80,7 +80,6 @@ public class PmListViewAdapter extends BaseAdapter implements ListAdapter {
 						pmInfo.getSendTime(), pmInfo.getTopic());
 			}
 		});
-
 		return convertView;
 	}
 
