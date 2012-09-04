@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:gravity="center_vertical" >
+    <ImageView
+        android:id="@+id/action_item_image"
+        android:src="@drawable/bug" 
+        android:layout_height="30dp"
+        android:layout_width="30dp"
+        android:layout_margin="10dp"
+        android:scaleType="fitXY"
+        android:layout_marginLeft="5dp"/>
+    <TextView 
+        android:id="@+id/action_item_text"
+        android:text="DJ"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:textSize="15sp"
+         android:layout_marginRight="5dp"/>
+</LinearLayout>

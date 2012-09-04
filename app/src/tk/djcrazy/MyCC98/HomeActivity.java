@@ -19,6 +19,7 @@ import org.apache.http.util.EntityUtils;
 
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectView;
+import tk.djcrazy.MyCC98.adapter.HomeActionListAdapter;
 import tk.djcrazy.MyCC98.adapter.HomeFragmentPagerAdapter;
 import tk.djcrazy.MyCC98.dialog.AboutDialog;
 import tk.djcrazy.MyCC98.listener.LoadingListener;
@@ -47,7 +48,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
- import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockFragmentActivity;
 import com.google.inject.Inject;
@@ -84,17 +85,14 @@ public class HomeActivity extends RoboSherlockFragmentActivity implements
 	private static final int INIT_FILESIZE = 32;
 	private static final int UPDATE_PROGRESS = 33;
 
+	private static final int   MENU_SEARCH_ID = 1;
+	private static final int   MENU_MESSAGE_ID = 2;
+	
 	@InjectView(R.id.main_pages)
 	private ViewPager viewPager;
 	@InjectView(R.id.main_titles)
 	private TitlePageIndicator indicator;
-	@InjectView(R.id.home_header_userimg)
-	private ImageView userAvatar;
-	@InjectView(R.id.home_header_user_name)
-	private TextView userNameView;
-	@InjectView(R.id.home_header_search)
-	private ImageView searchButton;
-
+  
 	@Inject
 	private ICC98Service service;
 
@@ -113,9 +111,7 @@ public class HomeActivity extends RoboSherlockFragmentActivity implements
 			case MSG_USERIMG_SUCC:
 				Toast.makeText(getApplicationContext(), "获取头像成功",
 						Toast.LENGTH_SHORT).show();
-
-				userAvatar.setImageBitmap(bmUserImg);
-				break;
+ 				break;
 			case SEND_FEEDBACK_FAILED:
 				Toast.makeText(getApplicationContext(), "无法连接到服务器，请稍候再试",
 						Toast.LENGTH_SHORT).show();
@@ -155,107 +151,103 @@ public class HomeActivity extends RoboSherlockFragmentActivity implements
 	public void onCreate(Bundle savedInstanceState) {
 		setTheme(com.actionbarsherlock.R.style.Theme_Sherlock);
 		super.onCreate(savedInstanceState);
-		String[] mLocations = getResources().getStringArray(R.array.locations);
-
-		Context context = getSupportActionBar().getThemedContext();
-		ArrayAdapter<CharSequence> list = ArrayAdapter.createFromResource(
-				context, R.array.locations, R.layout.sherlock_spinner_item);
-		list.setDropDownViewResource(R.layout.sherlock_spinner_dropdown_item);
-
-		getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-		getSupportActionBar().setListNavigationCallbacks(list, this);
-		getSupportActionBar().setLogo(
-				new BitmapDrawable(service.getUserAvatar()));
-		getSupportActionBar().setTitle(service.getUserName());
+ 		configureActionBar();
 		HomeFragmentPagerAdapter adapter = new HomeFragmentPagerAdapter(
 				getSupportFragmentManager());
 		adapter.setLoadingListener(this);
 		viewPager.setAdapter(adapter);
 		indicator.setViewPager(viewPager, 0);
-		userNameView.setText(service.getUserName());
-		userAvatar.setImageBitmap(service.getUserAvatar());
-		searchButton.setOnClickListener(new OnClickListener() {
+  	}
 
-			@Override
-			public void onClick(View v) {
-				// Intent intent = new Intent(HomeActivity.this,
-				// PostSearchActivity.class);
-				// intent.putExtra(PostSearchActivity.BOARD_ID, "0");
-				Intent intent = new Intent(HomeActivity.this, PmActivity.class);
-				startActivity(intent);
-				overridePendingTransition(R.anim.forward_activity_move_in,
-						R.anim.forward_activity_move_out);
-			}
-		});
+	/**
+	 * 
+	 */
+	private void configureActionBar() {
+		HomeActionListAdapter list = new HomeActionListAdapter(this,
+				service.getUserName(), service.getUserAvatar());
+		getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+		getSupportActionBar().setListNavigationCallbacks(list, this);
+		getSupportActionBar().setDisplayShowTitleEnabled(false);
+		getSupportActionBar().setDisplayUseLogoEnabled(false);
+		getSupportActionBar().setDisplayShowHomeEnabled(false);
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu optionMenu) {
-		optionMenu
-				.add("Search")
-				.setIcon(R.drawable.sear_icon_small)
-				.setShowAsAction(
-						MenuItem.SHOW_AS_ACTION_ALWAYS );
-		return true;
+		 getSupportMenuInflater().inflate(R.menu.home, optionMenu);
+ 		return true;
 	}
 
 	public void refresh() {
 		viewPager.invalidate();
 	}
 
+ 	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+ 		// Handle item selection
+ 		Log.d(TAG, "item id:"+item.getItemId());
+ 		Log.d(TAG, "search id:"+R.id.menu_search);
+ 		Log.d(TAG, "message id:"+R.id.menu_message);
+ 		
+ 		switch (item.getItemId()) {
+		case R.id.menu_search:
+			  onSearchRequested();
+			  return true;
+		case R.id.menu_message:
+			Intent intent = new Intent(HomeActivity.this, PmActivity.class);
+			startActivity(intent);
+			overridePendingTransition(R.anim.forward_activity_move_in,
+					R.anim.forward_activity_move_out);
+			return true;
+		default:
+			break;
+		}
+  		return false;
+//		switch (item.getItemId()) {
+// 		case R.id.settings:
+//			goSettings();
+//			return true;
+//		case R.id.log_out:
+//			logOut();
+//			return true;
+//		case R.id.check_personal_info:
+//			Intent profiIntent = new Intent();
+//			profiIntent.setClass(HomeActivity.this, ProfileActivity.class);
+//			profiIntent.putExtra("userName", service.getUserName());
+//			profiIntent.putExtra(ProfileActivity.USER_IMAGE, bmUserImg);
+//			startActivity(profiIntent);
+//			overridePendingTransition(R.anim.forward_activity_move_in,
+//					R.anim.forward_activity_move_out);
+//			return true;
+//		case R.id.about:
+//			showAboutInfo();
+//			return true;
+//		case R.id.feedback:
+//			doSendFeedBack();
+//			return true;
+//		case R.id.check_update:
+//			new Thread(checkUpateThread).start();
+//			return true;
+//		default:
+//			return super.onOptionsItemSelected(item);
+//		}
+	}
+ 	
+ 	@Override
+ 	public boolean onSearchRequested() {
+ 	     Bundle appData = new Bundle();
+ 	     appData.putString(PostSearchActivity.BOARD_ID, "0");
+ 	     appData.putString(PostSearchActivity.BOARD_NAME, "全站");
+ 	     startSearch(null, false, appData, false);
+ 	     return true;
+ 	 }
 	//
-	// /**
-	// * override menu
-	// */
-	// @Override
-	// public boolean onCreateOptionsMenu(Menu menu) {
-	// MenuInflater inflater = getMenuInflater();
-	// inflater.inflate(R.menu.personal_board_menu, menu);
-	// return true;
-	// }
-	//
-	// @Override
-	// public boolean onOptionsItemSelected(MenuItem item) {
-	// // Handle item selection
-	// switch (item.getItemId()) {
-	// // case R.id.exit:
-	// // finish();
-	// // return true;
-	// case R.id.settings:
-	// goSettings();
-	// return true;
-	// case R.id.log_out:
-	// logOut();
-	// return true;
-	// case R.id.check_personal_info:
-	// Intent profiIntent = new Intent();
-	// profiIntent.setClass(HomeActivity.this, ProfileActivity.class);
-	// profiIntent.putExtra("userName", service.getUserName());
-	// profiIntent.putExtra(ProfileActivity.USER_IMAGE, bmUserImg);
-	// startActivity(profiIntent);
-	// overridePendingTransition(R.anim.forward_activity_move_in,
-	// R.anim.forward_activity_move_out);
-	// return true;
-	// case R.id.about:
-	// showAboutInfo();
-	// return true;
-	// case R.id.feedback:
-	// doSendFeedBack();
-	// return true;
-	// case R.id.check_update:
-	// new Thread(checkUpateThread).start();
-	// return true;
-	// default:
-	// return super.onOptionsItemSelected(item);
-	// }
-	// }
-	// //
-	// private void goSettings() {
-	// Intent intent = new Intent(this, SettingsActivity.class);
-	// startActivity(intent);
-	// overridePendingTransition(R.anim.forward_activity_move_in,
-	// R.anim.forward_activity_move_out);
-	// }
+	private void goSettings() {
+		Intent intent = new Intent(this, SettingsActivity.class);
+		startActivity(intent);
+		overridePendingTransition(R.anim.forward_activity_move_in,
+				R.anim.forward_activity_move_out);
+	}
 
 	/**
 	 * 

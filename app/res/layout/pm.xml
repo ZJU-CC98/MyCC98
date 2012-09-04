@@ -5,11 +5,6 @@
     android:background="@color/body_background"
     android:orientation="vertical" >
 
-    <tk.djcrazy.MyCC98.view.HeaderView
-        android:id="@+id/pm_header"
-        android:layout_width="fill_parent"
-        android:layout_height="42dp" />
-
     <tk.djcrazy.MyCC98.view.PullToRefreshListView
         android:id="@+id/pm_listview"
         style="@style/listview"

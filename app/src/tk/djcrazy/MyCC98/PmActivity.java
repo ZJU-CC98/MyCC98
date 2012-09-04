@@ -7,12 +7,11 @@ import org.apache.http.ParseException;
 import org.apache.http.client.ClientProtocolException;
 
 import roboguice.inject.ContentView;
+import roboguice.inject.InjectView;
 import tk.djcrazy.MyCC98.adapter.PmListViewAdapter;
 import tk.djcrazy.MyCC98.view.HeaderView;
 import tk.djcrazy.MyCC98.view.PullToRefreshListView;
 import tk.djcrazy.MyCC98.view.PullToRefreshListView.OnRefreshListener;
-import tk.djcrazy.libCC98.CC98ClientImpl;
-import tk.djcrazy.libCC98.CC98ParserImpl;
 import tk.djcrazy.libCC98.ICC98Service;
 import tk.djcrazy.libCC98.data.InboxInfo;
 import tk.djcrazy.libCC98.data.PmInfo;
@@ -21,39 +20,36 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.InputType;
 import android.util.Log;
-import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.flurry.android.FlurryAgent;
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import com.google.inject.Inject;
 
 @ContentView(R.layout.pm)
 public class PmActivity extends BaseActivity implements OnRefreshListener {
 
 	private static String TAG = "PmActivity";
-	// Switch to Inbox
-	// private View butInbox;
-	// // Switch to Outbox
-	// private View butSendbox;
-	// Write new PM
-	// To next page
+	private static final int MENU_SWITCH_BOX = 23423146;
+
+	@InjectView(R.id.pm_tv_next)
 	private View butNext;
-	// To prev page
+	@InjectView(R.id.pm_tv_prev)
 	private View butPrev;
-	// Open "jump to dialog"
+	@InjectView(R.id.pm_tv_jump)
 	private View butJump;
+	@InjectView(R.id.pm_listview)
 	private PullToRefreshListView listView;
-	private HeaderView headerView;
+
 	private PmListViewAdapter listViewAdapter;
 
 	private int currentPageNum = 1;
@@ -65,23 +61,17 @@ public class PmActivity extends BaseActivity implements OnRefreshListener {
 	private InboxInfo outboxInfo = new InboxInfo(0, 0);
 	private boolean threadCancel = false;
 
-	private static final int MNU_REFRESH = Menu.FIRST;
-	private static final int MNU_PREV = Menu.FIRST + 1;
-	private static final int MNU_JUMP = Menu.FIRST + 2;
-	private static final int MNU_NEXT = Menu.FIRST + 3;
-
 	private static final int LOAD_SUCC = 0;
 
 	private EditText edtNum;
 
 	public static final int INBOX = 0;
 	public static final int OUTBOX = 1;
-	// current mod is INBOX or OUTBOX
 	private int currentMod = INBOX;
 	private int prevPageNum = 0;
 	@Inject
 	private ICC98Service service;
-	
+
 	private List<PmInfo> fetchList(int page_num, int mod)
 			throws ClientProtocolException, ParseException, IOException {
 		// Get the correct list
@@ -120,8 +110,9 @@ public class PmActivity extends BaseActivity implements OnRefreshListener {
 				} else {
 					mod = "";
 				}
-				headerView.setTitle(mod + " (" + currentPageNum + "/"
-						+ currInfo.getTotalInPage() + ")");
+				getSupportActionBar().setSubtitle(
+						mod + " (" + currentPageNum + "/"
+								+ currInfo.getTotalInPage() + ")");
 				listViewAdapter = new PmListViewAdapter(PmActivity.this,
 						currPage);
 				listView.setAdapter(listViewAdapter);
@@ -138,14 +129,52 @@ public class PmActivity extends BaseActivity implements OnRefreshListener {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
- 		setContentView(R.layout.pm);
-		setTitle(R.string.pm_activity_title);
+		setContentView(R.layout.pm);
+		configureActionBar();
 		findViews();
-		headerView.setUserImg(service.getUserAvatar());
 		setListeners();
 		currentPageNum = 1;
 		switchToMod(currentMod);
 		displayPmList(currentPageNum, currentMod);
+	}
+
+	private void configureActionBar() {
+		ActionBar actionBar = getSupportActionBar();
+		actionBar.setDisplayHomeAsUpEnabled(true);
+		actionBar.setLogo(new BitmapDrawable(service.getUserAvatar()));
+		actionBar.setTitle("论坛短消息");
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu optionMenu) {
+		optionMenu
+				.add(Menu.NONE, MENU_SWITCH_BOX, 1, "切换")
+				.setIcon(R.drawable.switch_mode)
+				.setShowAsAction(
+						MenuItem.SHOW_AS_ACTION_ALWAYS
+								| MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(
+			com.actionbarsherlock.view.MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			finish();
+			overridePendingTransition(R.anim.backward_activity_move_in,
+					R.anim.backward_activity_move_out);
+			return true;
+		case MENU_SWITCH_BOX:
+			if (currentMod == INBOX) {
+				switchToMod(OUTBOX);
+			} else {
+				switchToMod(INBOX);
+			}
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
 	}
 
 	private void onLoadDone() {
@@ -275,25 +304,6 @@ public class PmActivity extends BaseActivity implements OnRefreshListener {
 	}
 
 	private void switchToMod(int mod) {
-		if (mod == INBOX) {
-			headerView.setButtonImageResource(R.drawable.outbox);
-			headerView.setButtonOnclickListener(new View.OnClickListener() {
-
-				@Override
-				public void onClick(View v) {
-					switchToMod(OUTBOX);
-				}
-			});
-		} else if (mod == OUTBOX) {
-			headerView.setButtonImageResource(R.drawable.inbox);
-			headerView.setButtonOnclickListener(new View.OnClickListener() {
-
-				@Override
-				public void onClick(View v) {
-					switchToMod(INBOX);
-				}
-			});
-		}
 		currentMod = mod;
 		currentPageNum = 1;
 		displayPmList(currentPageNum, currentMod);
@@ -328,11 +338,6 @@ public class PmActivity extends BaseActivity implements OnRefreshListener {
 	}
 
 	private void findViews() {
-		butNext = findViewById(R.id.pm_tv_next);
-		butPrev = findViewById(R.id.pm_tv_prev);
-		butJump = findViewById(R.id.pm_tv_jump);
-		listView = (PullToRefreshListView) findViewById(R.id.pm_listview);
-		headerView = (HeaderView) findViewById(R.id.pm_header);
 	}
 
 	public void nextPage() {
@@ -394,36 +399,6 @@ public class PmActivity extends BaseActivity implements OnRefreshListener {
 
 	private void refresh() {
 		displayPmList(currentPageNum, currentMod);
-	}
-
-	// option menu
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		menu.add(0, MNU_REFRESH, 0, R.string.refresh);
-		menu.add(0, MNU_PREV, 1, R.string.pre_page);
-		menu.add(0, MNU_JUMP, 2, R.string.jump_dialog_title);
-		menu.add(0, MNU_NEXT, 3, R.string.next_page);
-		return super.onCreateOptionsMenu(menu);
-
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case MNU_REFRESH:
-			refresh();
-			break;
-		case MNU_PREV:
-			prevPage();
-			break;
-		case MNU_JUMP:
-			jumpDialog();
-			break;
-		case MNU_NEXT:
-			nextPage();
-			break;
-		}
-		return super.onOptionsItemSelected(item);
 	}
 
 	@Override
