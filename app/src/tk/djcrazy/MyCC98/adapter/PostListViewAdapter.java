@@ -21,17 +21,11 @@ import android.widget.TextView;
 
 import com.google.inject.Inject;
 
-public class PostListViewAdapter extends BaseAdapter {
+public class PostListViewAdapter extends BaseItemListAdapter<PostEntity> {
 
-	private Activity mContext;
-	private String mBoardId;
+ 	private String mBoardId;
 	private String mBoardName;
-
-	private final List<PostEntity> mListItem;
-
-	@Inject
-	private ICC98Service service;
-
+ 
 	private final class ListItemView {
 		public TextView postName;
 		public TextView postAuthor;
@@ -43,39 +37,20 @@ public class PostListViewAdapter extends BaseAdapter {
 
 	public PostListViewAdapter(Activity context, List<PostEntity> postList,
 			String boardId, String boardName) {
-		mContext = context;
-		mListItem = postList;
-		mBoardId = boardId;
+		super(context, postList);
+ 		mBoardId = boardId;
 		mBoardName = boardName;
 	}
-
-	@Override
-	public int getCount() {
-
-		return mListItem.size();
-	}
-
-	@Override
-	public Object getItem(int position) {
-
-		return null;
-	}
-
-	@Override
-	public long getItemId(int position) {
-
-		return 0;
-	}
-
+ 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		PostEntity entity = mListItem.get(position);
+		PostEntity entity = items.get(position);
 		final int clickPosition = position;
 		ListItemView listItemView = null;
 		if (convertView == null) {
 			listItemView = new ListItemView();
 			// 获取布局文件视图
-			convertView = LayoutInflater.from(mContext).inflate(
+			convertView = inflater.inflate(
 					R.layout.post_list_item, null);
 			getPostListView(convertView, listItemView);
 			convertView.setTag(listItemView);
@@ -91,7 +66,7 @@ public class PostListViewAdapter extends BaseAdapter {
 		listItemView.replyNum.setText(entity.getReplyNumber());
 		setListItemViewListener(clickPosition, listItemView);
 
-		String postType = mListItem.get(position).getPostType();
+		String postType = items.get(position).getPostType();
 		Log.d("postType", postType);
 		// 给不同类型的帖子给予不同的颜色的标题
 		if (postType.equals(PostType.Z_TOP)) {
@@ -134,17 +109,17 @@ public class PostListViewAdapter extends BaseAdapter {
 			@Override
 			public void onClick(View v) {
 
-				Intent intent = new Intent(mContext,
+				Intent intent = new Intent(context,
 						PostContentsJSActivity.class);
 				intent.putExtra(PostContentsJSActivity.BOARD_ID, mBoardId);
 				intent.putExtra(PostContentsJSActivity.BOARD_NAME, mBoardName);
 				intent.putExtra(PostContentsJSActivity.POST_ID,
-						mListItem.get(clickPosition).getPostId());
-				intent.putExtra(PostContentsJSActivity.POST_NAME, mListItem
+						items.get(clickPosition).getPostId());
+				intent.putExtra(PostContentsJSActivity.POST_NAME, items
 						.get(clickPosition).getPostName());
 				intent.putExtra(PostContentsJSActivity.PAGE_NUMBER, 1);
-				mContext.startActivity(intent);
-				mContext.overridePendingTransition(
+				context.startActivity(intent);
+				context.overridePendingTransition(
 						R.anim.forward_activity_move_in,
 						R.anim.forward_activity_move_out);
 			}
@@ -156,20 +131,20 @@ public class PostListViewAdapter extends BaseAdapter {
 					@Override
 					public void onClick(View v) {
 
-						Intent intent = new Intent(mContext,
+						Intent intent = new Intent(context,
 								PostContentsJSActivity.class);
 						intent.putExtra(PostContentsJSActivity.BOARD_ID,
 								mBoardId);
 						intent.putExtra(PostContentsJSActivity.BOARD_NAME,
 								mBoardName);
 						intent.putExtra(PostContentsJSActivity.POST_ID,
-								mListItem.get(clickPosition).getPostId());
+								items.get(clickPosition).getPostId());
 						intent.putExtra(PostContentsJSActivity.POST_NAME,
-								mListItem.get(clickPosition).getPostName());
+								items.get(clickPosition).getPostName());
 						intent.putExtra(PostContentsJSActivity.PAGE_NUMBER,
 								32767);
-						mContext.startActivity(intent);
-						mContext.overridePendingTransition(
+						context.startActivity(intent);
+						context.overridePendingTransition(
 								R.anim.forward_activity_move_in,
 								R.anim.forward_activity_move_out);
 					}

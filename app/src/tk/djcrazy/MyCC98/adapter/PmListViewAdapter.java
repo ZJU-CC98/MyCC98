@@ -16,11 +16,12 @@ import android.widget.BaseAdapter;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
-public class PmListViewAdapter extends BaseAdapter implements ListAdapter {
+public class PmListViewAdapter extends BaseItemListAdapter<PmInfo> {
 
-	private Activity context;
-	private List<PmInfo> listItem;
-	private LayoutInflater listInflater;
+	public PmListViewAdapter(Activity context, List<PmInfo> list) {
+		super(context, list);
+		// TODO Auto-generated constructor stub
+	}
 
 	public final class ListItemView {
 		public View pmItem;
@@ -29,38 +30,13 @@ public class PmListViewAdapter extends BaseAdapter implements ListAdapter {
 		public TextView time;
 	}
 
-	public PmListViewAdapter(Activity context, List<PmInfo> listItem) {
-		this.context = context;
-		listInflater = LayoutInflater.from(context);
-		this.listItem = listItem;
-	}
-
-	@Override
-	public int getCount() {
-		if (listItem == null)
-			return 0;
-		return listItem.size();
-	}
-
-	@Override
-	public Object getItem(int position) {
-
-		return listItem.get(position);
-	}
-
-	@Override
-	public long getItemId(int arg0) {
-
-		return 0;
-	}
-
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 
 		ListItemView itemView = null;
 		if (convertView == null) {
 			itemView = new ListItemView();
-			convertView = listInflater.inflate(R.layout.pm_item, null);
+			convertView = inflater.inflate(R.layout.pm_item, null);
 
 			findViews(convertView, itemView);
 
@@ -72,10 +48,9 @@ public class PmListViewAdapter extends BaseAdapter implements ListAdapter {
 		fillDataIntoView(position, itemView);
 		final int fpos = position;
 		itemView.pmItem.setOnClickListener(new View.OnClickListener() {
-
 			@Override
 			public void onClick(View v) {
-				PmInfo pmInfo = listItem.get(fpos);
+				PmInfo pmInfo = items.get(fpos);
 				reply_pm(pmInfo.getPmId(), pmInfo.getSender(),
 						pmInfo.getSendTime(), pmInfo.getTopic());
 			}
@@ -95,7 +70,8 @@ public class PmListViewAdapter extends BaseAdapter implements ListAdapter {
 		intent.putExtra("SendTime", sendTime);
 		intent.putExtra("Topic", topic);
 		context.startActivity(intent);
-		context.overridePendingTransition(R.anim.forward_activity_move_in, R.anim.forward_activity_move_out);
+		context.overridePendingTransition(R.anim.forward_activity_move_in,
+				R.anim.forward_activity_move_out);
 
 	}
 
@@ -108,7 +84,7 @@ public class PmListViewAdapter extends BaseAdapter implements ListAdapter {
 	private void findViews(View convertView, ListItemView itemView) {
 		itemView.pmItem = convertView.findViewById(R.id.pm_item_view);
 		itemView.senderName = (TextView) convertView
-				.findViewById(R.id.pm_sender_name); 
+				.findViewById(R.id.pm_sender_name);
 		itemView.topic = (TextView) convertView.findViewById(R.id.pm_topic);
 		itemView.time = (TextView) convertView.findViewById(R.id.pm_time);
 	}
@@ -120,22 +96,10 @@ public class PmListViewAdapter extends BaseAdapter implements ListAdapter {
 	 */
 	private void fillDataIntoView(int position, ListItemView itemView) {
 		// fill data into itemView
-		itemView.senderName.setText((CharSequence) StringEscapeUtils
-				.unescapeHtml4(listItem.get(position).getSender()));
-		itemView.topic.setText((CharSequence) StringEscapeUtils
-				.unescapeHtml4(listItem.get(position).getTopic()));
-		itemView.time.setText((CharSequence) listItem.get(position)
-				.getSendTime());
+		itemView.senderName.setText(StringEscapeUtils.unescapeHtml4(items.get(
+				position).getSender()));
+		itemView.topic.setText(StringEscapeUtils.unescapeHtml4(items.get(
+				position).getTopic()));
+		itemView.time.setText(items.get(position).getSendTime());
 	}
-
-	@Override
-	public boolean areAllItemsEnabled() {
-		return true;
-	}
-
-	@Override
-	public boolean isEnabled(int position) {
-		return true;
-	}
-
 }

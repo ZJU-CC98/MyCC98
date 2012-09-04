@@ -4,6 +4,7 @@ import tk.djcrazy.MyCC98.fragment.FriendListFragment;
 import tk.djcrazy.MyCC98.fragment.HotTopicFragment;
 import tk.djcrazy.MyCC98.fragment.NewTopicFragment;
 import tk.djcrazy.MyCC98.fragment.PersonalBoardFragment;
+import tk.djcrazy.MyCC98.fragment.PersonalBoardFragment;
 import tk.djcrazy.MyCC98.fragment.SearchBoardFragment;
 import tk.djcrazy.MyCC98.listener.LoadingListener;
 import android.support.v4.app.Fragment;
@@ -31,9 +32,7 @@ public class HomeFragmentPagerAdapter extends FragmentPagerAdapter {
  		switch (position) {
 		case 0:
 			PersonalBoardFragment pFragment = new PersonalBoardFragment();
-			pFragment.setLoadingListener(loadingListener);
-			pFragment.setPosition(position);
-			return pFragment;
+ 			return pFragment;
 		case 1:
 			return new HotTopicFragment();
 		case 2:

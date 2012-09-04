@@ -26,71 +26,45 @@ import android.widget.TextView;
 
 /**
  * @author DJ
- *
+ * 
  */
-public class HotTopicListAdapter extends BaseAdapter {
-    
-	Activity mContext ;
-     
-    @Inject
-    private ICC98Service service;
-     
-    final List<HotTopicEntity> mListItem;
-  
-    public final class ListItemView {
+public class HotTopicListAdapter extends BaseItemListAdapter<HotTopicEntity> {
 
-        public TextView boardName;
-        public TextView topicName;
-        public TextView author;
-        public TextView postTime;
-     }
+	public HotTopicListAdapter(Activity context, List<HotTopicEntity> list) {
+		super(context, list);
+	}
 
-    public HotTopicListAdapter(Activity context, List<HotTopicEntity> topicList) {
-        this.mContext = context;
-        this.mListItem = topicList;
-    }
+	public final class ListItemView {
+		public TextView boardName;
+		public TextView topicName;
+		public TextView author;
+		public TextView postTime;
+	}
 
-    @Override
-    public int getCount() {
-        return mListItem.size();
-    }
-    
-    @Override
-    public void unregisterDataSetObserver(DataSetObserver observer) {
-      if (observer != null) {
-        super.unregisterDataSetObserver(observer);
-      }
-    } 
+	@Override
+	public View getView(int position, View convertView, ViewGroup parent) {
 
-    @Override
-    public Object getItem(int position) {
-        return null;
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return 0;
-    }
- 
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-
-        ListItemView listItemView = null;
-        if (convertView == null) {
-            listItemView = new ListItemView();
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.hot_topic_item, null);
-            listItemView.boardName = (TextView) convertView.findViewById(R.id.hot_topic_board_name);
-            listItemView.topicName = (TextView) convertView.findViewById(R.id.hot_topic_name);
-            listItemView.author	   = (TextView) convertView.findViewById(R.id.hot_topic_author);
-            listItemView.postTime  = (TextView) convertView.findViewById(R.id.hot_topic_time);
-            convertView.setTag(listItemView);
-        } else {
-            listItemView = (ListItemView) convertView.getTag();
-        }
-        listItemView.boardName.setText(mListItem.get(position).getBoardName());
-        listItemView.topicName.setText(mListItem.get(position).getTopicName());
-        listItemView.author.setText(mListItem.get(position).getPostAuthor());
-        listItemView.postTime.setText(mListItem.get(position).getPostTime());
-        return convertView;
-    }
+		ListItemView listItemView = null;
+		if (convertView == null) {
+			listItemView = new ListItemView();
+			convertView =inflater.inflate(
+					R.layout.hot_topic_item, null);
+			listItemView.boardName = (TextView) convertView
+					.findViewById(R.id.hot_topic_board_name);
+			listItemView.topicName = (TextView) convertView
+					.findViewById(R.id.hot_topic_name);
+			listItemView.author = (TextView) convertView
+					.findViewById(R.id.hot_topic_author);
+			listItemView.postTime = (TextView) convertView
+					.findViewById(R.id.hot_topic_time);
+			convertView.setTag(listItemView);
+		} else {
+			listItemView = (ListItemView) convertView.getTag();
+		}
+		listItemView.boardName.setText(items.get(position).getBoardName());
+		listItemView.topicName.setText(items.get(position).getTopicName());
+		listItemView.author.setText(items.get(position).getPostAuthor());
+		listItemView.postTime.setText(items.get(position).getPostTime());
+		return convertView;
+	}
 }

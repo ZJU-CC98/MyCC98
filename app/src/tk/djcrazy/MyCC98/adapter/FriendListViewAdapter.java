@@ -25,62 +25,25 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class FriendListViewAdapter extends BaseAdapter {
+public class FriendListViewAdapter extends BaseItemListAdapter<UserStatueEntity> {
 
-	private Activity context;
-	private final List<UserStatueEntity> listItem;
-
-	private LayoutInflater listInflater;
-	private Bitmap userImage;
-	/**
-	 * @param userImage the userImage to set
-	 */
-	public void setUserImage(Bitmap userImage) {
-		this.userImage = userImage;
+	public FriendListViewAdapter(Activity context, List<UserStatueEntity> list) {
+		super(context, list);
 	}
-
 	private final class ListItemView {
 		public ImageView avartar;
 		public TextView userName;
 		public TextView userState;
 	}
 
-	public FriendListViewAdapter(Activity context,
-			List<UserStatueEntity> boardList) {
-		this.context = context;
-		listInflater = LayoutInflater.from(context);
-		this.listItem = boardList;
-	}
-	@Override
-	public void unregisterDataSetObserver(DataSetObserver observer) {
-	  if (observer != null) {
-	    super.unregisterDataSetObserver(observer);
-	  }
-	} 
-
-	@Override
-	public int getCount() {
-		return listItem.size();
-	}
-
-	@Override
-	public Object getItem(int position) {
-		return null;
-	}
-
-	@Override
-	public long getItemId(int position) {
-		return 0;
-	}
-
- 	@Override
+  	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		final int clickPosition = position;
 		ListItemView listItemView = null;
 		if (convertView == null) {
 			listItemView = new ListItemView();
 			// 获取布局文件视图
-			convertView = listInflater.inflate(R.layout.friend_list_item, null);
+			convertView = inflater.inflate(R.layout.friend_list_item, null);
 
 			// 获取控件对象
 
@@ -98,9 +61,9 @@ public class FriendListViewAdapter extends BaseAdapter {
 		}
 
 		try {
-			listItemView.avartar.setImageBitmap(listItem.get(position).getUserAvartar());
-			listItemView.userName.setText(listItem.get(position).getUserName());
-			if (listItem.get(position).getStatue() == UserStatue.ON_LINE) {
+			listItemView.avartar.setImageBitmap(items.get(position).getUserAvartar());
+			listItemView.userName.setText(items.get(position).getUserName());
+			if (items.get(position).getStatue() == UserStatue.ON_LINE) {
 				listItemView.userState.setText("在线");
 				listItemView.userState
 						.setTextColor(Color.RED);
@@ -118,29 +81,26 @@ public class FriendListViewAdapter extends BaseAdapter {
 			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent(context, ProfileActivity.class);
-				intent.putExtra("userName", listItem.get(clickPosition)
+				intent.putExtra("userName", items.get(clickPosition)
 						.getUserName());
-				intent.putExtra(ProfileActivity.USER_IMAGE, userImage);
-				context.startActivity(intent);
+ 				context.startActivity(intent);
 				context.overridePendingTransition(R.anim.forward_activity_move_in, R.anim.forward_activity_move_out);
 			}
 		});
 		
 		listItemView.userName.setOnClickListener(new View.OnClickListener() {
-			
 			@Override
 			public void onClick(View v) {
-				send_pm(listItem.get(clickPosition).getUserName());
-			}
+				sendPm(items.get(clickPosition).getUserName());
+			} 
 		});
 		return convertView;
 	}
-	private void send_pm(String target) {
+	private void sendPm(String target) {
 		Intent intent = new Intent(context, EditActivity.class);
  		intent.putExtra(EditActivity.MOD, EditActivity.MOD_PM);
 		intent.putExtra(EditActivity.PM_TO_USER, target);
 		context.startActivity(intent);
 		context.overridePendingTransition(R.anim.forward_activity_move_in, R.anim.forward_activity_move_out);
-
 	}
 }

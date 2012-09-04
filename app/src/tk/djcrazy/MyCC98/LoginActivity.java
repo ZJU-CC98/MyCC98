@@ -1,5 +1,5 @@
 /**
- * Enterance of program
+ * Entrance of program
  * The login activity
  * 
  */
@@ -22,7 +22,6 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.util.EntityUtils;
 
-import tk.djcrazy.MyCC98.animation.DropDownAnimation;
 import tk.djcrazy.MyCC98.db.BoardInfoDbAdapter;
 import tk.djcrazy.MyCC98.dialog.AuthDialog;
 import tk.djcrazy.MyCC98.dialog.AuthDialog.MyAuthDialogListener;
@@ -50,17 +49,18 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
-import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+
 import com.google.inject.Inject;
-import com.nineoldandroids.animation.ArgbEvaluator;
-import com.nineoldandroids.animation.ObjectAnimator;
+import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ValueAnimator;
 import com.nineoldandroids.animation.ValueAnimator.AnimatorUpdateListener;
+import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
 
 public class LoginActivity extends BaseActivity implements OnClickListener {
 	private static final String TAG = "MyCC98";
@@ -384,24 +384,9 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 
 	private void showLoginField() {
 		final LinearLayout layout = (LinearLayout) findViewById(R.id.login_field);
-		// final Animation showupAnimation = new DropDownAnimation(layout,
-		// DisplayUtil.dip2px(getApplicationContext(), 220), true);
-		// layout.startAnimation(showupAnimation);
-		final LayoutParams params = layout.getLayoutParams();
-		ValueAnimator colorAnim = ValueAnimator.ofInt(0,
-				DisplayUtil.dip2px(getApplicationContext(), 220));
-		colorAnim.setDuration(700);
-		colorAnim.addUpdateListener(new AnimatorUpdateListener() {
-			@Override
-			public void onAnimationUpdate(ValueAnimator animation) {
-				// Log.i("update", ((Integer)
-				// animation.getAnimatedValue()).toString());
-				params.height = (Integer) animation.getAnimatedValue();
-				layout.setLayoutParams(params);
-			}
-		});
-		colorAnim.start();
-		// animate(myButton).setDuration(2000).rotationYBy(720).x(100).y(100);
+		ImageView loginImg = (ImageView) findViewById(R.id.login_img);
+ 				animate(layout).setDuration(1000).alpha(1).start();
+				animate(loginImg).setDuration(600).translationY(0).start();		 
 	}
 
 	private Handler updateHandler = new Handler() {
@@ -729,7 +714,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 	}
 
 	private void onLoginBegin() {
- 		dialog = new ProgressDialog(LoginActivity.this );
+		dialog = new ProgressDialog(LoginActivity.this);
 		dialog.setMessage("Begin Logining...");
 		dialog.setCancelable(false);
 		dialog.show();

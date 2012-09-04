@@ -1,159 +1,49 @@
 package tk.djcrazy.MyCC98.fragment;
 
-import java.io.IOException;
 import java.util.List;
 
-import org.apache.http.ParseException;
-import org.apache.http.client.ClientProtocolException;
-
-import roboguice.inject.InjectView;
-import tk.djcrazy.MyCC98.R;
-import tk.djcrazy.MyCC98.adapter.PersonalboardListViewAdapter;
-import tk.djcrazy.MyCC98.listener.LoadingListener;
-import tk.djcrazy.MyCC98.util.ViewUtils;
-import tk.djcrazy.MyCC98.view.PullToRefreshListView;
-import tk.djcrazy.MyCC98.view.PullToRefreshListView.OnRefreshListener;
+import tk.djcrazy.MyCC98.adapter.BaseItemListAdapter;
+import tk.djcrazy.MyCC98.adapter.PersonalboardListAdapter;
+import tk.djcrazy.MyCC98.util.ThrowableLoader;
 import tk.djcrazy.libCC98.ICC98Service;
 import tk.djcrazy.libCC98.data.BoardEntity;
-import tk.djcrazy.libCC98.exception.ParseContentException;
+import android.app.Activity;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.view.LayoutInflater;
+import android.support.v4.content.Loader;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
-import android.widget.ProgressBar;
+import android.widget.ListView;
 
-import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
 import com.google.inject.Inject;
 
-public class PersonalBoardFragment extends RoboSherlockFragment implements
-		OnRefreshListener {
-	private static final int GET_LIST_SUCCESS = 1;
-	private static final int GET_LIST_FAILED = 0;
-	private int position=0;
-	private static final String TAG = "PersonalBoardFragment";
-	private List<BoardEntity> boardList;
-	private PersonalboardListViewAdapter boardListViewAdapter;
-	
-	@InjectView(R.id.personal_board_list)
- 	private PullToRefreshListView listView;
-	
-	@InjectView(R.id.personal_board_loading_bar)
-	private ProgressBar progressBar; 
-	
+public class PersonalBoardFragment extends PullToRefeshListFragment<BoardEntity>{
+ 
 	@Inject
 	private ICC98Service service;
-	
-	private LoadingListener loadingListener;
-	private Handler handler = new Handler() {
-		@Override
-		public void handleMessage(Message msg) {
-			switch (msg.what) {
-			case GET_LIST_SUCCESS:
-				listView.setAdapter(boardListViewAdapter);
-				boardListViewAdapter.notifyDataSetChanged();
-				listView.onRefreshComplete();
- 				loadingListener.onLoadComplete(position);
-				ViewUtils.setGone(progressBar, true);
-				ViewUtils.setGone(listView, false);
-				listView.startAnimation(AnimationUtils.loadAnimation(getActivity(),
-                        android.R.anim.fade_in));
-				break;
-			case GET_LIST_FAILED:
-				ViewUtils.setGone(progressBar, true);
-				ViewUtils.setGone(listView, true);
-				loadingListener.onLoadFailure(position);
-				break;
-			default:
-				break;
-			}
-		}
-	};
-
+ 
  	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
- 		return LayoutInflater.from(getActivity()).inflate(
-				R.layout.personal_board, null);
-	}
-
-	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-		listView.setOnRefreshListener(this);
-		if (boardListViewAdapter != null) {
-			ViewUtils.setGone(progressBar, true);
-			ViewUtils.setGone(listView, false);
-			listView.setAdapter(boardListViewAdapter);
-		} else {
-			ViewUtils.setGone(progressBar, false);
-			ViewUtils.setGone(listView, true);
-			onRefresh();
-		}
-	}
+ 	}
 
-	public void fetchContent() {
-		if (loadingListener == null) {
-			throw new IllegalStateException("You must set the LoadingListener");
-		}
-		new Thread() {
+	@Override
+	public Loader<List<BoardEntity>> onCreateLoader(int arg0, Bundle arg1) {
+		return new ThrowableLoader<List<BoardEntity>>(getActivity(),items) {
 			@Override
-			public void run() {
-				try {
-					boardList = service.getPersonalBoardList();
-					boardListViewAdapter = new PersonalboardListViewAdapter(
-							getActivity(), boardList);
-					handler.sendEmptyMessage(GET_LIST_SUCCESS);
-				} catch (ClientProtocolException e) {
-					handler.sendEmptyMessage(GET_LIST_FAILED);
-					e.printStackTrace();
-				} catch (ParseException e) {
-					handler.sendEmptyMessage(GET_LIST_FAILED);
-					e.printStackTrace();
-				} catch (IOException e) {
-					handler.sendEmptyMessage(GET_LIST_FAILED);
-					e.printStackTrace();
-				} catch (ParseContentException e) {
-					handler.sendEmptyMessage(GET_LIST_FAILED);
-					e.printStackTrace();
-				} catch (java.text.ParseException e) {
-					handler.sendEmptyMessage(GET_LIST_FAILED);
-					e.printStackTrace();
-				}
+			public List<BoardEntity> loadData() throws Exception {
+				return service.getPersonalBoardList();
 			}
-		}.start();
-	}
-
-	public void scrollListTo(int x, int y) {
-		listView.scrollTo(x, y);
+		};
 	}
 
 	@Override
-	public void onRefresh() {
-		fetchContent();
+	protected void configureList(Activity activity, ListView listView) {
+		super.configureList(activity, listView);
 	}
 
-	/**
-	 * @param loadingListener
-	 *            the loadingListener to set
-	 */
-	public void setLoadingListener(LoadingListener loadingListener) {
-		this.loadingListener = loadingListener;
+	@Override
+	protected BaseItemListAdapter<BoardEntity> createAdapter(
+			List<BoardEntity> items) {
+		return new PersonalboardListAdapter(getActivity(), items);
 	}
 
-	/**
-	 * @return the position
-	 */
-	public int getPosition() {
-		return position;
-	}
-
-	/**
-	 * @param position the position to set
-	 */
-	public void setPosition(int position) {
-		this.position = position;
-	}
-}
+  }

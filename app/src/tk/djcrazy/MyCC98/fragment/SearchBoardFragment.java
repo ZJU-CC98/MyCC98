@@ -10,7 +10,7 @@ import org.apache.http.client.ClientProtocolException;
 import roboguice.inject.InjectView;
 import tk.djcrazy.MyCC98.PostListActivity;
 import tk.djcrazy.MyCC98.R;
-import tk.djcrazy.MyCC98.adapter.SearchResultListAdapter;
+import tk.djcrazy.MyCC98.adapter.SearchBoardListAdapter;
 import tk.djcrazy.MyCC98.listener.LoadingListener;
 import tk.djcrazy.MyCC98.util.ViewUtils;
 import tk.djcrazy.libCC98.ICC98Service;
@@ -51,12 +51,11 @@ public class SearchBoardFragment extends RoboSherlockFragment implements
 	@Inject
 	private ICC98Service service;
 
-	private SearchResultListAdapter listAdapter;
+	private SearchBoardListAdapter listAdapter;
 	private static final int FETCH_SUCC = 0;
 	private static final int FETCH_FAIL = 1;
 
-	private int lastquerylen;
-	private LoadingListener loadingListener;
+ 	private LoadingListener loadingListener;
 
 	private Handler handler = new Handler() {
 		@Override
@@ -182,9 +181,8 @@ public class SearchBoardFragment extends RoboSherlockFragment implements
 			}
 			currentResult = tmplist;
 		}
-		lastquerylen = string.length();
-		if (listAdapter == null) {
-			listAdapter = new SearchResultListAdapter(getActivity(),
+ 		if (listAdapter == null) {
+			listAdapter = new SearchBoardListAdapter(getActivity(),
 					currentResult);
 		} else {
 			listAdapter.setBoardList(currentResult);

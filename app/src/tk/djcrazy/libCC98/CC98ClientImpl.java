@@ -139,9 +139,9 @@ public class CC98ClientImpl implements ICC98Client {
 					params, schReg);
 			client = new DefaultHttpClient(conMgr, params);
 			client.getParams().setParameter(
-					CoreConnectionPNames.CONNECTION_TIMEOUT, 8000);
+					CoreConnectionPNames.CONNECTION_TIMEOUT, 15000);
 			client.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT,
-					10000);
+					15000);
 		}
 		return client;
 	}
