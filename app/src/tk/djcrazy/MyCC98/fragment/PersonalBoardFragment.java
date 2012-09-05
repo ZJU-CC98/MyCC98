@@ -13,7 +13,7 @@ import android.support.v4.content.Loader;
 import com.google.inject.Inject;
 
 public class PersonalBoardFragment extends
-		PullToRefeshListFragment<BoardEntity> {
+		PagedPullToRefeshListFragment<BoardEntity> {
 
 	@Inject
 	private ICC98Service service;
@@ -32,5 +32,10 @@ public class PersonalBoardFragment extends
 	protected BaseItemListAdapter<BoardEntity> createAdapter(
 			List<BoardEntity> items) {
 		return new PersonalboardListAdapter(getActivity(), items);
+	}
+
+	@Override
+	public void OnLoadMore(int currentPage, int pageSize) {
+		
 	}
 }

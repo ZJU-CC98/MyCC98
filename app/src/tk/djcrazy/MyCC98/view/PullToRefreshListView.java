@@ -402,9 +402,7 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
      */
     public void onRefreshComplete() {        
         Log.d(TAG, "onRefreshComplete");
-
         resetHeader();
-
         // If refresh view is visible when loading completes, scroll down to
         // the next item.
         if (mRefreshView.getBottom() > 0) {

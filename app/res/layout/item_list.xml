@@ -19,7 +19,7 @@
     android:layout_height="match_parent" 
     android:background="#f9f9f9">
 
-    <tk.djcrazy.MyCC98.view.PullToRefreshListView
+    <tk.djcrazy.MyCC98.view.PagedPullToRefreshListView
         android:id="@android:id/list"
         style="@style/listview"
         android:layout_width="match_parent"

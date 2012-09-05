@@ -1,11 +1,9 @@
 package tk.djcrazy.MyCC98;
 
-import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockFragmentActivity;
-
-import roboguice.activity.RoboActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
-import android.view.Window;
+
+import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockFragmentActivity;
 
 public class BaseActivity extends RoboSherlockFragmentActivity { 
 	

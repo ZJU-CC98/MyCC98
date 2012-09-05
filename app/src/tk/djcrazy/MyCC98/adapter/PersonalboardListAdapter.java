@@ -106,8 +106,7 @@ public class PersonalboardListAdapter extends BaseItemListAdapter<BoardEntity> {
 								items.get(clickPosition).getBoardID());
 						intent.putExtra(PostListActivity.BOARD_NAME,
 								items.get(clickPosition).getBoardName());
-						intent.putExtra(PostListActivity.PAGE_NUMBER, 1);
-						context.startActivity(intent);
+ 						context.startActivity(intent);
 						context.overridePendingTransition(
 								R.anim.forward_activity_move_in,
 								R.anim.forward_activity_move_out);
