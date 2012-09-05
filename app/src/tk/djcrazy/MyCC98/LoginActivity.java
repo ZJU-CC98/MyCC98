@@ -6,6 +6,8 @@
 
 package tk.djcrazy.MyCC98;
 
+import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
+
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.File;
@@ -25,7 +27,6 @@ import org.apache.http.util.EntityUtils;
 import tk.djcrazy.MyCC98.db.BoardInfoDbAdapter;
 import tk.djcrazy.MyCC98.dialog.AuthDialog;
 import tk.djcrazy.MyCC98.dialog.AuthDialog.MyAuthDialogListener;
-import tk.djcrazy.MyCC98.util.DisplayUtil;
 import tk.djcrazy.libCC98.ICC98Service;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -57,10 +58,6 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.inject.Inject;
-import com.nineoldandroids.animation.AnimatorSet;
-import com.nineoldandroids.animation.ValueAnimator;
-import com.nineoldandroids.animation.ValueAnimator.AnimatorUpdateListener;
-import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
 
 public class LoginActivity extends BaseActivity implements OnClickListener {
 	private static final String TAG = "MyCC98";
