@@ -10,6 +10,7 @@ import java.util.regex.PatternSyntaxException;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.ParseException;
+import org.apache.http.auth.AuthenticationException;
 import org.apache.http.client.ClientProtocolException;
 
 import tk.djcrazy.libCC98.data.BoardEntity;
@@ -28,8 +29,9 @@ import android.accounts.NetworkErrorException;
 import android.graphics.Bitmap;
 
 public interface ICC98Service {
-	public boolean doProxyAuthorization(String userName, String pwd)
-			throws ClientProtocolException, IOException, URISyntaxException;
+	public void doProxyAuthorization(String userName, String pwd)
+			throws ClientProtocolException, IOException, URISyntaxException,
+			AuthenticationException;
 
 	public void setUseProxy(boolean b);
 
@@ -62,7 +64,8 @@ public interface ICC98Service {
 			IOException, Exception;
 
 	public List<SearchResultEntity> searchPost(String keyword, String boardid,
-			String sType, int page) throws ParseException, IOException, ParseContentException, java.text.ParseException;
+			String sType, int page) throws ParseException, IOException,
+			ParseContentException, java.text.ParseException;
 
 	public void sendPm(String toUser, String title, String content)
 			throws ClientProtocolException, IOException;
@@ -75,7 +78,8 @@ public interface ICC98Service {
 			ParseException, IOException;
 
 	public List<SearchResultEntity> getNewPostList(int currentPageNumber)
-			throws ClientProtocolException, ParseException, IOException, ParseContentException, java.text.ParseException;
+			throws ClientProtocolException, ParseException, IOException,
+			ParseContentException, java.text.ParseException;
 
 	public List<BoardEntity> getPersonalBoardList()
 			throws ClientProtocolException, ParseException, IOException,
@@ -84,16 +88,18 @@ public interface ICC98Service {
 	public List<PmInfo> getPmData(int pageNum, InboxInfo inboxInfo, int type)
 			throws ClientProtocolException, ParseException, IOException;
 
-	public List<PostContentEntity> getPostContentList(String boardId, String postId,
-			int pageNum) throws ClientProtocolException, ParseException,
-			ParseContentException, java.text.ParseException, IOException;
+	public List<PostContentEntity> getPostContentList(String boardId,
+			String postId, int pageNum) throws ClientProtocolException,
+			ParseException, ParseContentException, java.text.ParseException,
+			IOException;
 
 	public List<PostEntity> getPostList(String boardId, int pageNum)
 			throws ClientProtocolException, ParseException, IOException,
 			ParseContentException, java.text.ParseException;
 
 	public List<BoardStatus> getTodayBoardList()
-			throws ClientProtocolException, ParseException, IOException, ParseContentException;
+			throws ClientProtocolException, ParseException, IOException,
+			ParseContentException;
 
 	public List<UserStatueEntity> getFriendList()
 			throws ClientProtocolException, ParseException, IOException,
@@ -102,9 +108,10 @@ public interface ICC98Service {
 	public UserProfileEntity getUserProfile(String userName)
 			throws ParseException, NoUserFoundException, IOException,
 			ParseContentException;
-	
-	public String getUserImgUrl(String userName) throws ParseContentException, ClientProtocolException, ParseException, IOException;
- 
+
+	public String getUserImgUrl(String userName) throws ParseContentException,
+			ClientProtocolException, ParseException, IOException;
+
 	public String getDomain();
 
 	public Bitmap getBitmapFromUrl(String url) throws IOException;

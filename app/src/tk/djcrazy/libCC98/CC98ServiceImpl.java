@@ -11,6 +11,7 @@ import java.util.regex.PatternSyntaxException;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.ParseException;
+import org.apache.http.auth.AuthenticationException;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.message.BasicNameValuePair;
 
@@ -34,21 +35,15 @@ import com.google.inject.Singleton;
 
 @Singleton
 public class CC98ServiceImpl implements ICC98Service {
-	private enum Status{
-		INIT, PROXYED, LOGINED, PROXY_LOGINED;
-	}
-	private Status status = Status.INIT;
-	@Inject
+ 	@Inject
 	private ICC98Client cc98Client;
 	@Inject
 	private ICC98Parser cc98Parser;
 	
 	@Override
-	public boolean doProxyAuthorization(String userName, String pwd) throws ClientProtocolException, IOException, URISyntaxException {
- 			boolean res = cc98Client.doHttpBasicAuthorization(userName, pwd);
-			status = Status.PROXYED;
-			return res;
- 	}
+	public void doProxyAuthorization(String userName, String pwd) throws ClientProtocolException, IOException, URISyntaxException, AuthenticationException {
+ 		cc98Client.doHttpBasicAuthorization(userName, pwd);
+   	}
 
 	@Override
 	public void setUseProxy(boolean b) {

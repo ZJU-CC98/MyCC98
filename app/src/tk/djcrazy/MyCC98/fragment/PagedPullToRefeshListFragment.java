@@ -58,6 +58,8 @@ public abstract class PagedPullToRefeshListFragment<E> extends
 		OnRefreshListener, LoadMoreListener {
 
 	private static final String TAG = "PullToRefeshListFragment";
+	
+	private boolean mIsRefreshing = false;
 	/**
 	 * List items provided to {@link #onLoadFinished(Loader, List)}
 	 */
@@ -112,7 +114,6 @@ public abstract class PagedPullToRefeshListFragment<E> extends
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-		Log.d(TAG, "onViewCreated");
 		listView = (PagedPullToRefreshListView) view
 				.findViewById(android.R.id.list);
 		listView.setOnItemClickListener(new OnItemClickListener() {
@@ -140,21 +141,24 @@ public abstract class PagedPullToRefeshListFragment<E> extends
 		listView.setLoadMoreListener(this);
 	}
 
-	@SuppressWarnings("unchecked")
-	@Override
+ 	@Override
 	public void onLoadFinished(Loader<List<E>> loader, List<E> items) {
 		Exception exception = getException(loader);
 		if (exception != null) {
 			showList();
 			return;
 		}
-
-		this.items.addAll(items);
-		((BaseItemListAdapter<E>) getListAdapter().getWrappedAdapter())
-				.setItems(this.items);
-		showList();
-		listView.onLoadDone();
-	}
+		if (mIsRefreshing) {
+			this.items = items;
+			getListAdapter().setItems(this.items);
+			listView.onRefreshComplete();
+		} else {
+			this.items.addAll(items);
+			getListAdapter().setItems(this.items);
+			listView.onLoadComplete();
+		}
+ 		showList();
+ 	}
 
 	@Override
 	public void onLoaderReset(Loader<List<E>> loader) {
@@ -212,9 +216,10 @@ public abstract class PagedPullToRefeshListFragment<E> extends
 	 * @return list adapter
 	 */
 	@SuppressWarnings("unchecked")
-	protected HeaderViewListAdapter getListAdapter() {
+	protected BaseItemListAdapter<E> getListAdapter() {
 		if (listView != null)
-			return (HeaderViewListAdapter) listView.getAdapter();
+			return (BaseItemListAdapter<E>) ((HeaderViewListAdapter) listView
+					.getAdapter()).getWrappedAdapter();
 		else
 			return null;
 	}
@@ -346,22 +351,19 @@ public abstract class PagedPullToRefeshListFragment<E> extends
 		return getActivity() != null;
 	}
 
-	@SuppressWarnings("unchecked")
-	@Override
+ 	@Override
 	public void onRefresh() {
-		Log.d(TAG, "onRefresh");
 		if (getLoaderManager().hasRunningLoaders()) {
 			return;
 		}
-		items.clear();
-		((BaseItemListAdapter<E>) getListAdapter().getWrappedAdapter())
-				.notifyDataSetChanged();
+		mIsRefreshing = true;
+		getListAdapter().notifyDataSetChanged();
 		getLoaderManager().restartLoader(0, null, this);
 	}
 
 	@Override
 	public void OnLoadMore(int currentPage, int pageSize) {
-		Log.d(TAG, "onLoadMore");
+		mIsRefreshing = false;
 		if (getLoaderManager().hasRunningLoaders()) {
 			return;
 		}

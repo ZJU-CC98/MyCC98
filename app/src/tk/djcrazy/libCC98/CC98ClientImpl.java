@@ -4,9 +4,12 @@ import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.ConnectException;
 import java.net.HttpURLConnection;
@@ -27,6 +30,7 @@ import org.apache.http.HttpVersion;
 import org.apache.http.NameValuePair;
 import org.apache.http.ParseException;
 import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.AuthenticationException;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -49,10 +53,15 @@ import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 
+import tk.djcrazy.MyCC98.application.MyApplication;
 import tk.djcrazy.libCC98.exception.NoUserFoundException;
 import tk.djcrazy.libCC98.exception.ParseContentException;
 import tk.djcrazy.libCC98.util.RegexUtil;
 import android.accounts.NetworkErrorException;
+import android.app.Activity;
+import android.app.Application;
+import android.content.Context;
+import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
@@ -69,6 +78,12 @@ import com.google.inject.Singleton;
 public class CC98ClientImpl implements ICC98Client {
 
 	public static final String TAG = "CC98ClientImpl";
+	
+ 	public static final String HTTP_CLIENT = "httpClient";
+	public static final String USER_AVATAR = "userAvatar";
+	public static final String USER_NAME_STORE = "userNameStore";
+	public static final String USER_NAME = "userName";
+
 	@Inject
 	private ICC98UrlManager manager;
 
@@ -77,6 +92,71 @@ public class CC98ClientImpl implements ICC98Client {
 
 	private Bitmap userImg;
 	private String userName;
+ 	private DefaultHttpClient client;
+	private MyApplication appContext;
+	private String passwd;
+	private String userGender;
+	public final String ID_PASSWD_ERROR_MSG = "用户名/密码错误";
+	public final String SERVER_ERROR = "CC98服务器异常！";
+
+	@Inject
+	public CC98ClientImpl(MyApplication application) {
+		Log.d(TAG, ""+(application==null));
+		appContext = application;
+		initUserData();
+	}
+
+	private void initUserData() {
+		try {
+			FileInputStream clientIn = appContext.openFileInput(HTTP_CLIENT);
+			ObjectInputStream ois = new ObjectInputStream(clientIn);
+			client = (DefaultHttpClient) ois.readObject();
+		} catch (FileNotFoundException e1) {
+			e1.printStackTrace();
+			genNewClient();
+			return;
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.exit(0);
+		}
+		try {
+			FileInputStream avatarIn = appContext.openFileInput(USER_AVATAR);
+			userImg = (Bitmap) new ObjectInputStream(avatarIn).readObject();
+			userName = appContext.getSharedPreferences(USER_NAME_STORE,
+					Context.MODE_PRIVATE).getString(USER_NAME, "");
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.exit(0);
+		}
+	}
+
+	/**
+	 * 
+	 */
+	private void genNewClient() {
+		Log.d(TAG, "genNewClient");
+		HttpParams params = new BasicHttpParams();
+		HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
+		HttpProtocolParams.setContentCharset(params,
+				HTTP.DEFAULT_CONTENT_CHARSET);
+		HttpProtocolParams.setUseExpectContinue(params, true);
+		SchemeRegistry schReg = new SchemeRegistry();
+		schReg.register(new Scheme("http", PlainSocketFactory
+				.getSocketFactory(), 80));
+		schReg.register(new Scheme("https",
+				SSLSocketFactory.getSocketFactory(), 443));
+		ClientConnectionManager conMgr = new ThreadSafeClientConnManager(
+				params, schReg);
+		client = new DefaultHttpClient(conMgr, params);
+		client.getParams().setParameter(
+				CoreConnectionPNames.CONNECTION_TIMEOUT, 15000);
+		client.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, 15000);
+	}
+
+	@Override
+	public Bitmap getLoginUserImg() {
+		return userImg;
+	}
 
 	/**
 	 * @return the userGender
@@ -85,33 +165,6 @@ public class CC98ClientImpl implements ICC98Client {
 		return userGender;
 	}
 
-	private String passwd;
-	private String userGender;
-
-	public final String ID_PASSWD_ERROR_MSG = "用户名/密码错误";
-	public final String SERVER_ERROR = "CC98服务器异常！";
-
-	/**
-	 * Don't using this, to avoid null pointer, use getHttpClient instead
-	 */
-	private DefaultHttpClient client = getHttpClient();
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see tk.djcrazy.libCC98.ICC98Client#getLoginUserImg()
-	 */
-	@Override
-	public Bitmap getLoginUserImg() {
-		return userImg;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * tk.djcrazy.libCC98.ICC98Client#setLoginUserImg(android.graphics.Bitmap)
-	 */
 	@Override
 	public void setLoginUserImg(Bitmap bitmap) {
 		userImg = bitmap;
@@ -122,43 +175,37 @@ public class CC98ClientImpl implements ICC98Client {
 		client.getCookieStore().clear();
 		client.getCredentialsProvider().clear();
 	}
+//
+//	private DefaultHttpClient getHttpClient() {
+//		if (client == null) {
+//			HttpParams params = new BasicHttpParams();
+//			HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
+//			HttpProtocolParams.setContentCharset(params,
+//					HTTP.DEFAULT_CONTENT_CHARSET);
+//			HttpProtocolParams.setUseExpectContinue(params, true);
+//			SchemeRegistry schReg = new SchemeRegistry();
+//			schReg.register(new Scheme("http", PlainSocketFactory
+//					.getSocketFactory(), 80));
+//			schReg.register(new Scheme("https", SSLSocketFactory
+//					.getSocketFactory(), 443));
+//			ClientConnectionManager conMgr = new ThreadSafeClientConnManager(
+//					params, schReg);
+//			client = new DefaultHttpClient(conMgr, params);
+//			client.getParams().setParameter(
+//					CoreConnectionPNames.CONNECTION_TIMEOUT, 15000);
+//			client.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT,
+//					15000);
+//		}
+//		return client;
+//	}
 
-	private DefaultHttpClient getHttpClient() {
-		if (client == null) {
-			HttpParams params = new BasicHttpParams();
-			HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
-			HttpProtocolParams.setContentCharset(params,
-					HTTP.DEFAULT_CONTENT_CHARSET);
-			HttpProtocolParams.setUseExpectContinue(params, true);
-			SchemeRegistry schReg = new SchemeRegistry();
-			schReg.register(new Scheme("http", PlainSocketFactory
-					.getSocketFactory(), 80));
-			schReg.register(new Scheme("https", SSLSocketFactory
-					.getSocketFactory(), 443));
-			ClientConnectionManager conMgr = new ThreadSafeClientConnManager(
-					params, schReg);
-			client = new DefaultHttpClient(conMgr, params);
-			client.getParams().setParameter(
-					CoreConnectionPNames.CONNECTION_TIMEOUT, 15000);
-			client.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT,
-					15000);
-		}
-		return client;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see tk.djcrazy.libCC98.ICC98Client#doLogin(java.lang.String,
-	 * java.lang.String)
-	 */
 	@Override
 	public void doLogin(String id, String pw) throws ClientProtocolException,
 			IOException, IllegalAccessException, ParseException,
 			ParseContentException, NetworkErrorException {
 
 		HttpResponse response;
- 		HttpPost httpost = new HttpPost(manager.getLoginUrl());
+		HttpPost httpost = new HttpPost(manager.getLoginUrl());
 		List<NameValuePair> nvps = new ArrayList<NameValuePair>();
 		nvps.add(new BasicNameValuePair("username", id));
 		nvps.add(new BasicNameValuePair("password", pw));
@@ -167,7 +214,7 @@ public class CC98ClientImpl implements ICC98Client {
 		nvps.add(new BasicNameValuePair("userhidden", "2"));
 		httpost.setEntity(new UrlEncodedFormEntity(nvps, HTTP.UTF_8));
 
-		response = getHttpClient().execute(httpost);
+		response = client.execute(httpost);
 		if (response.getStatusLine().getStatusCode() != 200) {
 			throw new NetworkErrorException(SERVER_ERROR);
 		}
@@ -175,20 +222,30 @@ public class CC98ClientImpl implements ICC98Client {
 		if (sysMsg.contains("密码错误") || sysMsg.contains("论坛错误信息")) {
 			throw new IllegalAccessException(ID_PASSWD_ERROR_MSG);
 		}
+		appContext.setUserName(userName);
+		appContext.setUserAvatar(userImg);
+		storeUserInfo();
 		userName = id;
 		passwd = pw;
 		getLoginUserImgAndGender();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see tk.djcrazy.libCC98.ICC98Client#setProxy(java.lang.String, int)
-	 */
+	private void storeUserInfo() throws FileNotFoundException, IOException {
+		new ObjectOutputStream(appContext.openFileOutput(
+				MyApplication.HTTP_CLIENT, Context.MODE_PRIVATE))
+				.writeObject(client);
+		new ObjectOutputStream(appContext.openFileOutput(
+				MyApplication.USER_AVATAR, Context.MODE_PRIVATE))
+				.writeObject(userImg);
+		Editor editor = appContext.getSharedPreferences(MyApplication.USER_NAME_STORE, Context.MODE_PRIVATE).edit();
+		editor.putString(MyApplication.USER_NAME, userName);
+		editor.commit();
+	}
+
 	@Override
 	public void setProxy(String ip, int port) {
 		HttpHost proxy = new HttpHost(ip, port);
-		getHttpClient().getParams().setParameter(ConnRouteParams.DEFAULT_PROXY,
+		client.getParams().setParameter(ConnRouteParams.DEFAULT_PROXY,
 				proxy);
 	}
 
@@ -199,17 +256,11 @@ public class CC98ClientImpl implements ICC98Client {
 	 */
 	@Override
 	public void rmProxy() {
-		getHttpClient().getParams().removeParameter(
+		client.getParams().removeParameter(
 				ConnRouteParams.DEFAULT_PROXY);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see tk.djcrazy.libCC98.ICC98Client#pushNewPost(java.util.List,
-	 * java.lang.String)
-	 */
-	@Override
+ 	@Override
 	public boolean pushNewPost(List<NameValuePair> nvpsList, String boardID)
 			throws ClientProtocolException, IOException {
 		System.out.println("" + boardID);
@@ -222,7 +273,7 @@ public class CC98ClientImpl implements ICC98Client {
 		nvpsList.add(new BasicNameValuePair("passwd", passwd));
 		// System.err.println("User Info:" + username + " " + passwd);
 		httpPost.setEntity(new UrlEncodedFormEntity(nvpsList, HTTP.UTF_8));
-		response = getHttpClient().execute(httpPost);
+		response = client.execute(httpPost);
 		entity = response.getEntity();
 		if (entity != null) {
 			html = EntityUtils.toString(entity);
@@ -233,19 +284,13 @@ public class CC98ClientImpl implements ICC98Client {
 		return false;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see tk.djcrazy.libCC98.ICC98Client#editPost(java.util.List,
-	 * java.lang.String)
-	 */
-	@Override
+ 	@Override
 	public boolean editPost(List<NameValuePair> nvpsList, String link)
 			throws ClientProtocolException, IOException {
 		HttpEntity entity;
 		HttpPost httpPost = new HttpPost(link);
 		httpPost.setEntity(new UrlEncodedFormEntity(nvpsList, HTTP.UTF_8));
-		HttpResponse response = getHttpClient().execute(httpPost);
+		HttpResponse response = client.execute(httpPost);
 		entity = response.getEntity();
 		if (entity != null) {
 			String html = EntityUtils.toString(entity);
@@ -258,13 +303,7 @@ public class CC98ClientImpl implements ICC98Client {
 		return false;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see tk.djcrazy.libCC98.ICC98Client#submitReply(java.util.List,
-	 * java.lang.String, java.lang.String)
-	 */
-	@Override
+ 	@Override
 	public void submitReply(List<NameValuePair> nvpsList, String boardID,
 			String rootID) throws Exception {
 		HttpEntity entity;
@@ -277,13 +316,13 @@ public class CC98ClientImpl implements ICC98Client {
 		nvpsList.add(new BasicNameValuePair("username", userName));
 		nvpsList.add(new BasicNameValuePair("passwd", passwd));
 		httpPost.setEntity(new UrlEncodedFormEntity(nvpsList, HTTP.UTF_8));
-		response = getHttpClient().execute(httpPost);
+		response = client.execute(httpPost);
 		entity = response.getEntity();
 
 		if (entity != null) {
 			html = EntityUtils.toString(entity);
 			if (html.contains("状态：回复帖子成功")) {
-				return  ;
+				return;
 			}
 		}
 		throw new Exception("reply failed");
@@ -319,7 +358,7 @@ public class CC98ClientImpl implements ICC98Client {
 		nvpsList.add(new BasicNameValuePair("serType", String.valueOf(boardID)));
 
 		httpPost.setEntity(new UrlEncodedFormEntity(nvpsList, HTTP.UTF_8));
-		response = getHttpClient().execute(httpPost);
+		response = client.execute(httpPost);
 		entity = response.getEntity();
 
 		if (entity != null) {
@@ -346,7 +385,7 @@ public class CC98ClientImpl implements ICC98Client {
 		HttpGet get = new HttpGet(link);
 		Log.d(TAG, "get page: " + link);
 		HttpResponse rsp = null;
-		rsp = getHttpClient().execute(get);
+		rsp =client.execute(get);
 		int mCode = rsp.getStatusLine().getStatusCode();
 		if (mCode != 200) {
 			throw new IOException("服务器有误！");
@@ -370,7 +409,7 @@ public class CC98ClientImpl implements ICC98Client {
 		HttpURLConnection uc = (HttpURLConnection) url.openConnection();
 		// 上传图片的一些参数设置
 		String cookieString = "";
-		for (Cookie cookie : getHttpClient().getCookieStore().getCookies()) {
+		for (Cookie cookie : client.getCookieStore().getCookies()) {
 			cookieString += cookie.getName() + "=" + cookie.getValue() + "; ";
 		}
 		uc.setRequestProperty("Cookie", cookieString);
@@ -425,12 +464,7 @@ public class CC98ClientImpl implements ICC98Client {
 				.replace(",1", "");
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see tk.djcrazy.libCC98.ICC98Client#getInboxHtml(int)
-	 */
-	@Override
+ 	@Override
 	public String getInboxHtml(int pageNumber) throws ClientProtocolException,
 			ParseException, IOException {
 		return getPage(manager.getInboxUrl(pageNumber));
@@ -465,17 +499,7 @@ public class CC98ClientImpl implements ICC98Client {
 		}
 		return url;
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see tk.djcrazy.libCC98.ICC98Client#getPasswd()
-	 */
-	@Override
-	public String getPasswd() {
-		return passwd;
-	}
-
+ 
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -486,17 +510,7 @@ public class CC98ClientImpl implements ICC98Client {
 		return userName;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see tk.djcrazy.libCC98.ICC98Client#setPassword(java.lang.String)
-	 */
-	@Override
-	public void setPassword(String pwd) {
-		passwd = pwd;
-	}
-
-	/*
+ 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see tk.djcrazy.libCC98.ICC98Client#setUserName(java.lang.String)
@@ -524,7 +538,7 @@ public class CC98ClientImpl implements ICC98Client {
 		int flag = PM_SEND_FAIL;
 
 		post.setEntity(new UrlEncodedFormEntity(msgInfo, HTTP.UTF_8));
-		response = getHttpClient().execute(post);
+		response = client.execute(post);
 
 		HttpEntity entity = response.getEntity();
 
@@ -554,7 +568,7 @@ public class CC98ClientImpl implements ICC98Client {
 		nvpsList.add(new BasicNameValuePair("touser", userId));
 		nvpsList.add(new BasicNameValuePair("Submit", "保存"));
 		httpPost.setEntity(new UrlEncodedFormEntity(nvpsList, HTTP.UTF_8));
-		HttpResponse response = getHttpClient().execute(httpPost);
+		HttpResponse response = client.execute(httpPost);
 		if (response.getStatusLine().getStatusCode() != 200) {
 			throw new ConnectException("服务器返回错误！");
 		}
@@ -640,32 +654,25 @@ public class CC98ClientImpl implements ICC98Client {
 			userGender = "female";
 		}
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * tk.djcrazy.libCC98.ICC98Client#doHttpBasicAuthorization(java.lang.String,
-	 * java.lang.String)
-	 */
+ 
+	
 	@Override
-	public boolean doHttpBasicAuthorization(String authName, String authPassword)
-			throws ClientProtocolException, IOException, URISyntaxException {
+	public void doHttpBasicAuthorization(String authName, String authPassword)
+			throws ClientProtocolException, IOException, URISyntaxException,
+			AuthenticationException {
 		URI uri = null;
 		uri = new URI(manager.getClientUrl());
-		Log.d("doHttpBasicAuthorization", manager.getClientUrl());
-		getHttpClient().getCredentialsProvider().setCredentials(
+		client.getCredentialsProvider().setCredentials(
 				new AuthScope(uri.getHost(), uri.getPort(),
 						AuthScope.ANY_SCHEME),
 				new UsernamePasswordCredentials(authName, authPassword));
 
 		HttpGet request = new HttpGet(uri);
-
-		HttpResponse response = getHttpClient().execute(request);
+		HttpResponse response = client.execute(request);
 		if (response.getStatusLine().getStatusCode() == 200) {
-			return true;
+			return;
 		} else {
-			return false;
+			throw new AuthenticationException("登陆验证失败");
 		}
 	}
 
@@ -673,6 +680,7 @@ public class CC98ClientImpl implements ICC98Client {
 	public String getDomain() {
 		return manager.getClientUrl();
 	}
+
 	@Override
 	public void setUseProxy(boolean b) {
 		manager.setLifetoyVersion(b);

@@ -60,6 +60,5 @@ public class HotTopicFragment extends PagedPullToRefeshListFragment<HotTopicEnti
 
 	@Override
 	public void OnLoadMore(int currentPage, int pageSize) {
-		
 	}
 }

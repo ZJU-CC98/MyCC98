@@ -14,7 +14,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 public class HomeFragmentPagerAdapter extends FragmentPagerAdapter {
 	private FragmentManager mFragment;
 	private String[] pageTitle = {"我的版面","热门","列表","新帖","好友"};
-	private final int FRAGMENT_NUMBER = 5;
+	private final int FRAGMENT_NUMBER = 4;
 	private LoadingListener loadingListener;
 	public HomeFragmentPagerAdapter(FragmentManager fm) {
 		super(fm);

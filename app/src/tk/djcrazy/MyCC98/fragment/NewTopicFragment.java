@@ -51,7 +51,7 @@ public class NewTopicFragment extends PagedPullToRefeshListFragment<SearchResult
 		super.configureList(activity, listView);
 		listView.setPageSize(20);
 		listView.setTotalPageNumber(5);
-	}
+	} 
 	@Override
 	public Loader<List<SearchResultEntity>> onCreateLoader(int arg0, Bundle arg1) {
 		return new ThrowableLoader<List<SearchResultEntity>>(getActivity(), items) {

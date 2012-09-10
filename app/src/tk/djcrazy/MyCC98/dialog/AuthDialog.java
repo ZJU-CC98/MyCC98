@@ -27,8 +27,8 @@ public class AuthDialog extends Dialog implements OnClickListener {
 	private static final String AUTOLOGIN = "AUTOLOGIN";
 	private static final String REMEMBERPWD = "REMEMBERPWD";
 
-	ArrayAdapter<String> adapter;
-	MyAuthDialogListener listener;
+	private ArrayAdapter<String> adapter;
+	private MyAuthDialogListener listener;
 
 	public AuthDialog(Context context, MyAuthDialogListener listener,
 			SharedPreferences setting) {
@@ -39,7 +39,6 @@ public class AuthDialog extends Dialog implements OnClickListener {
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Log.d("Test", "Dialog created");
 		setContentView(R.layout.auth_dialog);
 		okButton = (Button) findViewById(R.id.okButton);
 		cancelButton = (Button) findViewById(R.id.cancelbutton);
@@ -52,9 +51,7 @@ public class AuthDialog extends Dialog implements OnClickListener {
 		if (setting.getBoolean(REMEMBERPWD, false)) {
 			userNameText.setText(setting.getString(USERNAME, ""));
 			passwordText.setText(setting.getString(PASSWORD, ""));
-			Log.d("authlog", setting.getString(USERNAME, ""));
-			Log.d("authlog", setting.getString(PASSWORD, ""));
-			rememberPassword.setChecked(true);
+ 			rememberPassword.setChecked(true);
 		}
 
 		setTitle("设置代理连接");

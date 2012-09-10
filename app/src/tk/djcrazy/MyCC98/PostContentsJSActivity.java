@@ -11,6 +11,7 @@ import org.apache.http.client.ClientProtocolException;
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
+import tk.djcrazy.MyCC98.application.MyApplication;
 import tk.djcrazy.MyCC98.helper.HtmlGenHelper;
 import tk.djcrazy.libCC98.ICC98Service;
 import tk.djcrazy.libCC98.data.Gender;
@@ -136,7 +137,7 @@ public class PostContentsJSActivity extends BaseActivity  implements OnClickList
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
- 		configureActionBar();
+  		configureActionBar();
   		setViews();
 		addListeners();
 		progressDialog = ProgressDialog.show(PostContentsJSActivity.this, "",
@@ -148,7 +149,7 @@ public class PostContentsJSActivity extends BaseActivity  implements OnClickList
 	private void configureActionBar() {
 		ActionBar actionBar = getSupportActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
-		actionBar.setLogo(new BitmapDrawable(service.getUserAvatar()));
+		actionBar.setLogo(new BitmapDrawable(((MyApplication)getApplication()).getUserAvatar()));
  	}
 	@Override
 	public boolean onCreateOptionsMenu(Menu optionMenu) {
@@ -238,6 +239,38 @@ public class PostContentsJSActivity extends BaseActivity  implements OnClickList
 		});
  	}
 
+	
+	@Override
+	protected void onDestroy() {
+		Log.d(TAG, "onDestroy");
+		super.onDestroy();
+	}
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		Log.d(TAG, "onSaveInstanceState");
+	}
+	@Override
+	public void onLowMemory() {
+		Log.d(TAG, "onLowMemory");
+		super.onLowMemory();
+	}
+	@Override
+	protected void onRestoreInstanceState(Bundle savedInstanceState) {
+		Log.d(TAG, "onRestoreInstanceState");
+		super.onRestoreInstanceState(savedInstanceState);
+	}
+	@Override
+	public void onStart() {
+		Log.d(TAG, "onStart");
+		super.onStart();
+	}
+	
+	@Override
+	public void onStop() {
+		Log.d(TAG, "onStop");
+		super.onStop();
+	}
 	/**
 	 * 
 	 */

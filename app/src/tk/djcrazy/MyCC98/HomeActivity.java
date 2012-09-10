@@ -98,8 +98,6 @@ public class HomeActivity extends RoboSherlockFragmentActivity implements
 
 	private ProgressDialog pBar;
 
-	private Bitmap bmUserImg;
-
 	private Handler handler = new Handler() {
 		@Override
 		public void handleMessage(android.os.Message msg) {
@@ -143,8 +141,28 @@ public class HomeActivity extends RoboSherlockFragmentActivity implements
 
 	@Override
 	public boolean onNavigationItemSelected(int itemPosition, long itemId) {
-		// mSelected.setText("Selected: " + mLocations[itemPosition]);
-		return true;
+		switch (itemPosition) {
+		case 0:
+			break;
+		case 1:
+			goSettings();
+			break;
+		case 2:
+			Intent profiIntent = new Intent();
+			profiIntent.setClass(HomeActivity.this, ProfileActivity.class);
+			profiIntent.putExtra("userName", service.getUserName());
+ 			startActivity(profiIntent);
+			overridePendingTransition(R.anim.forward_activity_move_in,
+					R.anim.forward_activity_move_out);
+			break;
+		case 3:
+			doSendFeedBack();
+			break;
+		case 4:
+			showAboutInfo();
+			break;
+ 		}
+		return false;
 	}
 
 	@Override
@@ -163,13 +181,15 @@ public class HomeActivity extends RoboSherlockFragmentActivity implements
 	 * 
 	 */
 	private void configureActionBar() {
+		ActionBar actionBar = getSupportActionBar();
 		HomeActionListAdapter list = new HomeActionListAdapter(this,
 				service.getUserName(), service.getUserAvatar());
-		getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-		getSupportActionBar().setListNavigationCallbacks(list, this);
-		getSupportActionBar().setDisplayShowTitleEnabled(false);
-		getSupportActionBar().setDisplayUseLogoEnabled(false);
-		getSupportActionBar().setDisplayShowHomeEnabled(false);
+		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+		actionBar.setListNavigationCallbacks(list, this);
+		actionBar.setDisplayShowTitleEnabled(false);
+		actionBar.setDisplayUseLogoEnabled(false);
+		actionBar.setDisplayShowHomeEnabled(false);
+		
 	}
 
 	@Override

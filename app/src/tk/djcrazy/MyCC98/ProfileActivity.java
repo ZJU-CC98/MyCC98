@@ -36,8 +36,6 @@ public class ProfileActivity extends BaseActivity {
 	public static final int ADD_FRIEND_SUCCESS = 2;
 	public static final int ADD_FRIEND_FAILED = 3;
 
-	public static final String USER_IMAGE="userImage";
-	
 	private TextView userName;
 	private ImageView userPortrait;
 	private TextView boardMasterInfo;
@@ -116,8 +114,7 @@ public class ProfileActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		mUserName = getIntent().getStringExtra("userName");
-		userImage = (Bitmap)getIntent().getParcelableExtra(USER_IMAGE);
-		setContentView(R.layout.user_profile);
+ 		setContentView(R.layout.user_profile);
 		findViews();
 		setViews();
 		setListeners();

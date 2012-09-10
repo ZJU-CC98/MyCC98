@@ -9,6 +9,7 @@ import java.util.regex.PatternSyntaxException;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.ParseException;
+import org.apache.http.auth.AuthenticationException;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.cookie.Cookie;
 
@@ -176,11 +177,8 @@ public interface ICC98Client {
 			throws ClientProtocolException, ParseException, IOException,
 			ParseContentException;
 
-	public String getPasswd();
-
+ 
 	public String getUserName();
-
-	public void setPassword(String pwd);
 
 	public void setUserName(String name);
 
@@ -226,8 +224,8 @@ public interface ICC98Client {
 	public Bitmap getUserImg(String userName) throws ClientProtocolException,
 			ParseException, IOException, ParseContentException;
 
-	public boolean doHttpBasicAuthorization(String authName, String authPassword)
-			throws ClientProtocolException, IOException, URISyntaxException;
+	public void doHttpBasicAuthorization(String authName, String authPassword)
+			throws ClientProtocolException, IOException, URISyntaxException, AuthenticationException;
 
 	void clearLoginInfo();
 	

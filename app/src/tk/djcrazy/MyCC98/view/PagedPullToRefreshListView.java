@@ -67,10 +67,10 @@ public class PagedPullToRefreshListView extends PullToRefreshListView {
 	@Override
 	public void onRefreshComplete() {
 		super.onRefreshComplete();
-		onLoadDone();
+		onLoadComplete();
 	}
 
-	public void onLoadDone() {
+	public void onLoadComplete() {
 		isLoading = false;
 		currentPage++;
 		if (currentPage >= totalPageNumber && getFooterViewsCount() > 0) {
