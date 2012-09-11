@@ -328,9 +328,9 @@ public class EditActivity extends BaseActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu optionMenu) {
 		optionMenu.add(android.view.Menu.NONE, MENU_REPLY_ID, 1, "确认")
+		.setIcon(R.drawable.sure_btn) 
 				.setShowAsAction(
-						MenuItem.SHOW_AS_ACTION_ALWAYS
-								| MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+						MenuItem.SHOW_AS_ACTION_ALWAYS );
 		return true;
 	}
 
@@ -339,9 +339,7 @@ public class EditActivity extends BaseActivity {
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			finish();
-			overridePendingTransition(R.anim.backward_activity_move_in,
-					R.anim.backward_activity_move_out);
-			return true;
+ 			return true;
 		case MENU_REPLY_ID:
 			ensure();
 			return true;
@@ -515,8 +513,7 @@ public class EditActivity extends BaseActivity {
 						PreviewActivity.class).putExtra(
 						PreviewActivity.CONTENT, replyContentEditText.getText()
 								.toString()));
-				overridePendingTransition(R.anim.forward_activity_move_in,
-						R.anim.forward_activity_move_out);
+				 
 			}
 		});
 
@@ -617,8 +614,7 @@ public class EditActivity extends BaseActivity {
 			intent.putExtra(MediaStore.EXTRA_OUTPUT,
 					Uri.fromFile(mCurrentPhotoFile));
 			startActivityForResult(intent, CAMERA_WITH_DATA);
-			overridePendingTransition(R.anim.forward_activity_move_in,
-					R.anim.forward_activity_move_out);
+			 
 		} catch (ActivityNotFoundException e) {
 			ToastUtils.show(this, "未找到目标！");
 		} catch (IOException e) {
@@ -631,8 +627,7 @@ public class EditActivity extends BaseActivity {
 			Intent intent = new Intent(Intent.ACTION_GET_CONTENT, null);
 			intent.setType("image/*");
 			startActivityForResult(intent, PHOTO_PICKED_WITH_DATA);
-			overridePendingTransition(R.anim.forward_activity_move_in,
-					R.anim.forward_activity_move_out);
+			 
 		} catch (ActivityNotFoundException e) {
 			Toast.makeText(this, " ", Toast.LENGTH_LONG).show();
 		}
@@ -785,8 +780,7 @@ public class EditActivity extends BaseActivity {
 			ToastUtils.show(mContext, "回复成功");
 			setResult(Activity.RESULT_OK);
 			mContext.finish();
-			overridePendingTransition(R.anim.backward_activity_move_in,
-					R.anim.backward_activity_move_out);
+			 
 		}
 
 		@Override
@@ -840,8 +834,7 @@ public class EditActivity extends BaseActivity {
 			ToastUtils.show(mContext, "发表成功");
 			setResult(Activity.RESULT_OK);
 			mContext.finish();
-			overridePendingTransition(R.anim.backward_activity_move_in,
-					R.anim.backward_activity_move_out);
+			 
 		}
 
 		@Override
@@ -893,9 +886,7 @@ public class EditActivity extends BaseActivity {
 			if (mod == MOD_PM) {
 				setResult(Activity.RESULT_OK);
 				mContext.finish();
-				overridePendingTransition(R.anim.backward_activity_move_in,
-						R.anim.backward_activity_move_out);
-			}
+ 			}
 		}
 
 		@Override

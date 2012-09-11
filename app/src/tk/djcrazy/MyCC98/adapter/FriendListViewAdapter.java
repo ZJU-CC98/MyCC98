@@ -84,7 +84,7 @@ public class FriendListViewAdapter extends BaseItemListAdapter<UserStatueEntity>
 				intent.putExtra("userName", items.get(clickPosition)
 						.getUserName());
  				context.startActivity(intent);
-				context.overridePendingTransition(R.anim.forward_activity_move_in, R.anim.forward_activity_move_out);
+				 
 			}
 		});
 		
@@ -101,6 +101,5 @@ public class FriendListViewAdapter extends BaseItemListAdapter<UserStatueEntity>
  		intent.putExtra(EditActivity.MOD, EditActivity.MOD_PM);
 		intent.putExtra(EditActivity.PM_TO_USER, target);
 		context.startActivity(intent);
-		context.overridePendingTransition(R.anim.forward_activity_move_in, R.anim.forward_activity_move_out);
-	}
+ 	}
 }

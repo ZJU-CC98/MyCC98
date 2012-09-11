@@ -70,8 +70,7 @@ public class PmListViewAdapter extends BaseItemListAdapter<PmInfo> {
 		intent.putExtra("SendTime", sendTime);
 		intent.putExtra("Topic", topic);
 		context.startActivity(intent);
-		context.overridePendingTransition(R.anim.forward_activity_move_in,
-				R.anim.forward_activity_move_out);
+		 
 
 	}
 

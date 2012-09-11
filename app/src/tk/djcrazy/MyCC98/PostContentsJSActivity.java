@@ -168,9 +168,7 @@ public class PostContentsJSActivity extends BaseActivity  implements OnClickList
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			finish();
-			overridePendingTransition(R.anim.backward_activity_move_in,
-					R.anim.backward_activity_move_out);
-			return true;
+ 			return true;
 		case MENU_REPLY_ID:
 			reply();
 			return true; 
@@ -299,9 +297,7 @@ public class PostContentsJSActivity extends BaseActivity  implements OnClickList
 				Intent i = new Intent(Intent.ACTION_VIEW);
 				i.setData(Uri.parse(url));
 				startActivity(i);
-				overridePendingTransition(R.anim.forward_activity_move_in,
-						R.anim.forward_activity_move_out);
-				return true;
+ 				return true;
 			}
 		});
 	}
@@ -603,9 +599,7 @@ public class PostContentsJSActivity extends BaseActivity  implements OnClickList
  		intent.putExtra(EditActivity.BOARD_ID, boardId);
  		intent.putExtra(EditActivity.BOARD_NAME, boardName);
 		startActivityForResult(intent, 1);
-		overridePendingTransition(R.anim.forward_activity_move_in,
-				R.anim.forward_activity_move_out);
-	}
+ 	}
 
 // 	@Override
 //	public boolean onCreateOptionsMenu(Menu menu) {
@@ -723,9 +717,7 @@ public class PostContentsJSActivity extends BaseActivity  implements OnClickList
 //		Intent intent = new Intent(this, EditActivity.class);
 //		intent.putExtra(EditActivity.BUNDLE, bundle);
 //		startActivity(intent);
-//		overridePendingTransition(R.anim.forward_activity_move_in,
-//				R.anim.forward_activity_move_out);
-//	}
+ //	}
 
 	private void addFriend(final String userName) {
 		new Thread(new Runnable() {
@@ -752,19 +744,14 @@ public class PostContentsJSActivity extends BaseActivity  implements OnClickList
 		Intent intent = new Intent(this, ProfileActivity.class);
 		intent.putExtra("userName", username);
  		startActivity(intent);
-		overridePendingTransition(
-				R.anim.forward_activity_move_in,
-				R.anim.forward_activity_move_out);
-	}
+ 	}
 
 	private void sendPm(String target) {
 		Intent intent = new Intent(getApplicationContext(),EditActivity.class);
 		intent.putExtra(EditActivity.MOD, EditActivity.MOD_PM);
 		intent.putExtra(EditActivity.PM_TO_USER, target);
   		startActivity(intent);
-		overridePendingTransition(R.anim.forward_activity_move_in,
-				R.anim.forward_activity_move_out);
-
+ 
  	}
 
 	private void dismissSearchDialog() {
@@ -787,9 +774,7 @@ public class PostContentsJSActivity extends BaseActivity  implements OnClickList
 		intent.putExtra(EditActivity.PAGE_NUMBER, pageNum);
 		intent.putExtra(EditActivity.MOD, EditActivity.MOD_QUOTE_REPLY);
 		startActivityForResult(intent, 1);
-		overridePendingTransition(R.anim.forward_activity_move_in,
-				R.anim.forward_activity_move_out);
-	}
+ 	}
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -813,9 +798,7 @@ public class PostContentsJSActivity extends BaseActivity  implements OnClickList
 				dismissSearchDialog();
 			} else {
 				finish();
-				overridePendingTransition(R.anim.backward_activity_move_in,
-						R.anim.backward_activity_move_out);
-			}
+ 			}
 		} else {
 			super.onKeyDown(keyCode, event);
 		}
@@ -831,7 +814,5 @@ public class PostContentsJSActivity extends BaseActivity  implements OnClickList
 		Intent intent = new Intent(this, PostContentsJSActivity.class);
 //		intent.putExtra(POST, bundle);
 		this.startActivity(intent);
-		overridePendingTransition(R.anim.forward_activity_move_in,
-				R.anim.forward_activity_move_out);
-	}
+ 	}
 }

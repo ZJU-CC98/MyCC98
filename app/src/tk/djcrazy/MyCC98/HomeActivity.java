@@ -141,6 +141,7 @@ public class HomeActivity extends RoboSherlockFragmentActivity implements
 
 	@Override
 	public boolean onNavigationItemSelected(int itemPosition, long itemId) {
+		getSupportActionBar().setSelectedNavigationItem(0);
 		switch (itemPosition) {
 		case 0:
 			break;
@@ -152,9 +153,7 @@ public class HomeActivity extends RoboSherlockFragmentActivity implements
 			profiIntent.setClass(HomeActivity.this, ProfileActivity.class);
 			profiIntent.putExtra("userName", service.getUserName());
  			startActivity(profiIntent);
-			overridePendingTransition(R.anim.forward_activity_move_in,
-					R.anim.forward_activity_move_out);
-			break;
+ 			break;
 		case 3:
 			doSendFeedBack();
 			break;
@@ -162,7 +161,7 @@ public class HomeActivity extends RoboSherlockFragmentActivity implements
 			showAboutInfo();
 			break;
  		}
-		return false;
+		return true;
 	}
 
 	@Override
@@ -204,11 +203,7 @@ public class HomeActivity extends RoboSherlockFragmentActivity implements
 
  	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
- 		// Handle item selection
- 		Log.d(TAG, "item id:"+item.getItemId());
- 		Log.d(TAG, "search id:"+R.id.menu_search);
- 		Log.d(TAG, "message id:"+R.id.menu_message);
- 		
+ 
  		switch (item.getItemId()) {
 		case R.id.menu_search:
 			  onSearchRequested();
@@ -216,42 +211,12 @@ public class HomeActivity extends RoboSherlockFragmentActivity implements
 		case R.id.menu_message:
 			Intent intent = new Intent(HomeActivity.this, PmActivity.class);
 			startActivity(intent);
-			overridePendingTransition(R.anim.forward_activity_move_in,
-					R.anim.forward_activity_move_out);
-			return true;
+ 			return true;
 		default:
 			break;
 		}
   		return false;
-//		switch (item.getItemId()) {
-// 		case R.id.settings:
-//			goSettings();
-//			return true;
-//		case R.id.log_out:
-//			logOut();
-//			return true;
-//		case R.id.check_personal_info:
-//			Intent profiIntent = new Intent();
-//			profiIntent.setClass(HomeActivity.this, ProfileActivity.class);
-//			profiIntent.putExtra("userName", service.getUserName());
-//			profiIntent.putExtra(ProfileActivity.USER_IMAGE, bmUserImg);
-//			startActivity(profiIntent);
-//			overridePendingTransition(R.anim.forward_activity_move_in,
-//					R.anim.forward_activity_move_out);
-//			return true;
-//		case R.id.about:
-//			showAboutInfo();
-//			return true;
-//		case R.id.feedback:
-//			doSendFeedBack();
-//			return true;
-//		case R.id.check_update:
-//			new Thread(checkUpateThread).start();
-//			return true;
-//		default:
-//			return super.onOptionsItemSelected(item);
-//		}
-	}
+ 	}
  	
  	@Override
  	public boolean onSearchRequested() {
@@ -265,9 +230,7 @@ public class HomeActivity extends RoboSherlockFragmentActivity implements
 	private void goSettings() {
 		Intent intent = new Intent(this, SettingsActivity.class);
 		startActivity(intent);
-		overridePendingTransition(R.anim.forward_activity_move_in,
-				R.anim.forward_activity_move_out);
-	}
+ 	}
 
 	/**
 	 * 
@@ -278,9 +241,7 @@ public class HomeActivity extends RoboSherlockFragmentActivity implements
 		intent.putExtra(EditActivity.PM_TO_USER, "MyCC.98");
 		intent.putExtra(EditActivity.PM_TITLE, "MyCC98软件反馈");
 		startActivity(intent);
-		overridePendingTransition(R.anim.forward_activity_move_in,
-				R.anim.forward_activity_move_out);
-	}
+ 	}
 
 	/**
 	 * 
@@ -291,9 +252,7 @@ public class HomeActivity extends RoboSherlockFragmentActivity implements
 		Intent intent = new Intent();
 		intent.setClass(HomeActivity.this, LoginActivity.class);
 		startActivity(intent);
-		overridePendingTransition(R.anim.forward_activity_move_in,
-				R.anim.forward_activity_move_out);
-		finish();
+ 		finish();
 	}
 
 	private void showAboutInfo() {
@@ -465,9 +424,7 @@ public class HomeActivity extends RoboSherlockFragmentActivity implements
 				.getExternalStorageDirectory(), "MyCC98_latest.apk")),
 				"application/vnd.android.package-archive");
 		startActivity(intent);
-		overridePendingTransition(R.anim.forward_activity_move_in,
-				R.anim.forward_activity_move_out);
-		finish();
+ 		finish();
 	}
 
 	@Override

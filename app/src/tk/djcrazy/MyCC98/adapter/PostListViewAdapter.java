@@ -119,9 +119,7 @@ public class PostListViewAdapter extends BaseItemListAdapter<PostEntity> {
 						.get(clickPosition).getPostName());
 				intent.putExtra(PostContentsJSActivity.PAGE_NUMBER, 1);
 				context.startActivity(intent);
-				context.overridePendingTransition(
-						R.anim.forward_activity_move_in,
-						R.anim.forward_activity_move_out);
+				 
 			}
 		});
 
@@ -144,9 +142,7 @@ public class PostListViewAdapter extends BaseItemListAdapter<PostEntity> {
 						intent.putExtra(PostContentsJSActivity.PAGE_NUMBER,
 								32767);
 						context.startActivity(intent);
-						context.overridePendingTransition(
-								R.anim.forward_activity_move_in,
-								R.anim.forward_activity_move_out);
+						 
 					}
 				});
 	}

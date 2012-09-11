@@ -73,9 +73,6 @@ public class MyApplication extends Application {
 		}
 	}
 
-	/**
-	 * 
-	 */
 	private void genNewClient() {
 		Log.d(TAG, "genNewClient");
 		HttpParams params = new BasicHttpParams();

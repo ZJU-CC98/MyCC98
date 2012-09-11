@@ -165,9 +165,7 @@ public class PostSearchActivity extends BaseActivity {
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			finish();
-			overridePendingTransition(R.anim.backward_activity_move_in,
-					R.anim.backward_activity_move_out);
-			return true;
+ 			return true;
 		case R.id.post_search_action:
 			onSearchRequested();
 			return true;
@@ -256,9 +254,7 @@ public class PostSearchActivity extends BaseActivity {
 				intent.putExtra(PostContentsJSActivity.POST_NAME,
 						mResList.get(arg2).getTitle());
 				startActivity(intent);
-				overridePendingTransition(R.anim.forward_activity_move_in,
-						R.anim.forward_activity_move_out);
-			}
+ 			}
 		});
 	}
 }

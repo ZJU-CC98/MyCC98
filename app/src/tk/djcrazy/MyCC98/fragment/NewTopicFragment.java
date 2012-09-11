@@ -40,10 +40,7 @@ public class NewTopicFragment extends PagedPullToRefeshListFragment<SearchResult
 		intent.putExtra(PostContentsJSActivity.POST_NAME, entity.getTitle());
 		intent.putExtra(PostContentsJSActivity.PAGE_NUMBER, 1);
 		getActivity().startActivity(intent);
-		getActivity().overridePendingTransition(
-				R.anim.forward_activity_move_in,
-				R.anim.forward_activity_move_out);
-	}
+ 	}
 
 	@Override
 	protected void configureList(Activity activity,

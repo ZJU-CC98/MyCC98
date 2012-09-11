@@ -49,12 +49,7 @@ public class CC98ParserImpl implements ICC98Parser {
 	@Inject
 	private ICC98UrlManager cc98UrlManager;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see tk.djcrazy.libCC98.ICC98Parser#getPostList(int, int)
-	 */
-	@Override
+ 	@Override
 	public List<PostEntity> getPostList(String boardId, int pageNum)
 			throws ClientProtocolException, ParseException, IOException,
 			ParseContentException, java.text.ParseException {
@@ -287,8 +282,12 @@ public class CC98ParserImpl implements ICC98Parser {
 			entity.setBoardName(getMatchedString(P_BOARD_NAME_REGEX, string));
 			entity.setBoardIntro(getMatchedString(P_BOARD_INTRO_REGEX, string));
 			entity.setBoardID(getMatchedString(P_BOARD_ID_REGEX, string));
-			entity.setBoardMaster(getMatchedString(P_BOARD_BOARD_MASTER_REGEX,
-					string));
+			try {
+				entity.setBoardMaster(getMatchedString(P_BOARD_BOARD_MASTER_REGEX,
+						string));
+			} catch (ParseContentException e) {
+				entity.setBoardMaster("暂无");
+			}
 			entity.setLastReplyAuthor(getMatchedString(
 					P_BOARD_LAST_REPLY_AUTHOR_REGEX, string));
 			entity.setLastReplyTime(DateFormatUtil

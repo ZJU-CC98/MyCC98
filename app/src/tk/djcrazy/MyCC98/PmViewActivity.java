@@ -209,9 +209,7 @@ public class PmViewActivity extends BaseActivity {
 						.append("[/quote]");
 				intent.putExtra(EditActivity.PM_CONTENT, tmp.toString());
 				startActivity(intent);
-				overridePendingTransition(R.anim.forward_activity_move_in,
-						R.anim.forward_activity_move_out);
-			}
+ 			}
 		});
 	}
 

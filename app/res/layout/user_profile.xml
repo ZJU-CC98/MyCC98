@@ -4,11 +4,6 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <tk.djcrazy.MyCC98.view.HeaderView
-        android:id="@+id/main_header"
-        android:layout_width="fill_parent"
-        android:layout_height="42dp" />
-
     <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
@@ -65,18 +60,7 @@
                         android:textColor="#000"
                         android:textSize="30sp" />
 
-                    <!-- 版主信息 -->
-
-                    <TextView
-                        android:id="@+id/profile_board_master"
-                        android:layout_width="wrap_content"
-                        android:layout_height="fill_parent"
-                        android:layout_alignParentLeft="true"
-                        android:layout_below="@id/profile_user_name"
-                        android:text="论坛职务："
-                        android:textColor="#444"
-                        android:textSize="15sp" />
-
+ 
                     <TextView
                         android:id="@+id/profile_online_statues"
                         android:layout_width="fill_parent"

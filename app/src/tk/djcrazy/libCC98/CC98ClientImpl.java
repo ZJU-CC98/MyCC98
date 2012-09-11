@@ -92,19 +92,18 @@ public class CC98ClientImpl implements ICC98Client {
 
 	private Bitmap userImg;
 	private String userName;
- 	private DefaultHttpClient client;
+ 	private DefaultHttpClient client = getHttpClient();
 	private MyApplication appContext;
 	private String passwd;
 	private String userGender;
 	public final String ID_PASSWD_ERROR_MSG = "用户名/密码错误";
 	public final String SERVER_ERROR = "CC98服务器异常！";
 
-	@Inject
-	public CC98ClientImpl(MyApplication application) {
-		Log.d(TAG, ""+(application==null));
-		appContext = application;
-		initUserData();
-	}
+//	@Inject
+//	public CC98ClientImpl(MyApplication application) {
+//		appContext = application;
+//		initUserData();
+//	}
 
 	private void initUserData() {
 		try {
@@ -175,29 +174,29 @@ public class CC98ClientImpl implements ICC98Client {
 		client.getCookieStore().clear();
 		client.getCredentialsProvider().clear();
 	}
-//
-//	private DefaultHttpClient getHttpClient() {
-//		if (client == null) {
-//			HttpParams params = new BasicHttpParams();
-//			HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
-//			HttpProtocolParams.setContentCharset(params,
-//					HTTP.DEFAULT_CONTENT_CHARSET);
-//			HttpProtocolParams.setUseExpectContinue(params, true);
-//			SchemeRegistry schReg = new SchemeRegistry();
-//			schReg.register(new Scheme("http", PlainSocketFactory
-//					.getSocketFactory(), 80));
-//			schReg.register(new Scheme("https", SSLSocketFactory
-//					.getSocketFactory(), 443));
-//			ClientConnectionManager conMgr = new ThreadSafeClientConnManager(
-//					params, schReg);
-//			client = new DefaultHttpClient(conMgr, params);
-//			client.getParams().setParameter(
-//					CoreConnectionPNames.CONNECTION_TIMEOUT, 15000);
-//			client.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT,
-//					15000);
-//		}
-//		return client;
-//	}
+
+	private DefaultHttpClient getHttpClient() {
+		if (client == null) {
+			HttpParams params = new BasicHttpParams();
+			HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
+			HttpProtocolParams.setContentCharset(params,
+					HTTP.DEFAULT_CONTENT_CHARSET);
+			HttpProtocolParams.setUseExpectContinue(params, true);
+			SchemeRegistry schReg = new SchemeRegistry();
+			schReg.register(new Scheme("http", PlainSocketFactory
+					.getSocketFactory(), 80));
+			schReg.register(new Scheme("https", SSLSocketFactory
+					.getSocketFactory(), 443));
+			ClientConnectionManager conMgr = new ThreadSafeClientConnManager(
+					params, schReg);
+			client = new DefaultHttpClient(conMgr, params);
+			client.getParams().setParameter(
+					CoreConnectionPNames.CONNECTION_TIMEOUT, 15000);
+			client.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT,
+					15000);
+		}
+		return client;
+	}
 
 	@Override
 	public void doLogin(String id, String pw) throws ClientProtocolException,
@@ -222,9 +221,7 @@ public class CC98ClientImpl implements ICC98Client {
 		if (sysMsg.contains("密码错误") || sysMsg.contains("论坛错误信息")) {
 			throw new IllegalAccessException(ID_PASSWD_ERROR_MSG);
 		}
-		appContext.setUserName(userName);
-		appContext.setUserAvatar(userImg);
-		storeUserInfo();
+ //		storeUserInfo();
 		userName = id;
 		passwd = pw;
 		getLoginUserImgAndGender();

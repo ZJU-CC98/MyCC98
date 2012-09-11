@@ -37,10 +37,7 @@ public class HotTopicFragment extends PagedPullToRefeshListFragment<HotTopicEnti
 		intent.putExtra(PostContentsJSActivity.POST_NAME, entity.getTopicName());
 		intent.putExtra(PostContentsJSActivity.PAGE_NUMBER, 1);
 		getActivity().startActivity(intent);
-		getActivity().overridePendingTransition(
-				R.anim.forward_activity_move_in,
-				R.anim.forward_activity_move_out);
-	}
+ 	}
 
 	@Override
 	public Loader<List<HotTopicEntity>> onCreateLoader(int arg0, Bundle arg1) {

@@ -223,9 +223,6 @@ public class SearchBoardFragment extends RoboSherlockFragment implements
 		intent.putExtra(PostListActivity.BOARD_NAME, currentResult.get(arg2)
 				.getBoardName());
  		getActivity().startActivity(intent);
-		getActivity().overridePendingTransition(
-				R.anim.forward_activity_move_in,
-				R.anim.forward_activity_move_out);
-	}
+ 	}
 
 }

@@ -2,31 +2,30 @@ package tk.djcrazy.MyCC98;
 
 import java.io.IOException;
 
-import tk.djcrazy.MyCC98.view.HeaderView;
-import tk.djcrazy.libCC98.CC98ClientImpl;
-import tk.djcrazy.libCC98.CC98ParserImpl;
+import roboguice.inject.ContentView;
+import roboguice.inject.InjectExtra;
 import tk.djcrazy.libCC98.ICC98Service;
 import tk.djcrazy.libCC98.data.UserProfileEntity;
 import tk.djcrazy.libCC98.exception.NoUserFoundException;
 import tk.djcrazy.libCC98.exception.ParseContentException;
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.ParseException;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.view.KeyEvent;
-import android.view.View;
-import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.flurry.android.FlurryAgent;
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import com.google.inject.Inject;
 
+@ContentView(R.layout.user_profile)
 public class ProfileActivity extends BaseActivity {
 
 	private static final int LOAD_PROFILE_SUCCESS = 1;
@@ -35,10 +34,11 @@ public class ProfileActivity extends BaseActivity {
 	private static final int LOAD_USER_AVARTAR_FAILED = 10;
 	public static final int ADD_FRIEND_SUCCESS = 2;
 	public static final int ADD_FRIEND_FAILED = 3;
+	private static final int MENU_SEND_MESSAGE_ID = 8790124;
+	private static final String USER_NAME = "userName";
 
 	private TextView userName;
 	private ImageView userPortrait;
-	private TextView boardMasterInfo;
 	private TextView loginStatues;
 	private TextView userNickName;
 	private TextView userLevel;
@@ -59,17 +59,17 @@ public class ProfileActivity extends BaseActivity {
 	private TextView userQQ;
 	private TextView userMSN;
 	private TextView userPage;
- 	private UserProfileEntity profileEntity;
+	private UserProfileEntity profileEntity;
+
+	@InjectExtra(USER_NAME)
 	private String mUserName;
 	private Bitmap userPortraitmBitmap;
 	private String url;
-	private HeaderView mHeaderView;
 	private ProgressDialog dialog;
-	private Bitmap userImage;
-	
+
 	@Inject
-	private ICC98Service service; 
-	
+	private ICC98Service service;
+
 	Thread profileThread = new Thread() {
 		// child thread
 		@Override
@@ -109,38 +109,48 @@ public class ProfileActivity extends BaseActivity {
 		}
 
 	};
- 	@Override
+
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		mUserName = getIntent().getStringExtra("userName");
- 		setContentView(R.layout.user_profile);
+		setContentView(R.layout.user_profile);
 		findViews();
-		setViews();
-		setListeners();
-		profileThread.start();
-
-		dialog.setCancelable(true);
-		dialog.show();
-
-	}
-
-	private void setViews() {
-		
-		mHeaderView.setTitle("用户资料");
-		mHeaderView.setButtonImageResource(R.drawable.write_message);
-		mHeaderView.setButtonPadding(2, 2, 2, 2);
-		mHeaderView.setUserImg(userImage);
 		dialog = ProgressDialog.show(ProfileActivity.this, "", "Loading...",
 				true);
-		
+		profileThread.start();
+		ActionBar actionBar = getSupportActionBar();
+		actionBar.setLogo(new BitmapDrawable(service.getUserAvatar()));
+		actionBar.setTitle("用户资料——" + mUserName);
+		actionBar.setDisplayHomeAsUpEnabled(true);
+		dialog.show();
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu optionMenu) {
+		optionMenu.add(android.view.Menu.NONE, MENU_SEND_MESSAGE_ID, 1, "站短")
+				.setIcon(R.drawable.sure_btn)
+				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			finish();
+			return true;
+		case MENU_SEND_MESSAGE_ID:
+			Intent intent = new Intent(ProfileActivity.this, EditActivity.class);
+			intent.putExtra(EditActivity.MOD, EditActivity.MOD_PM);
+			intent.putExtra(EditActivity.PM_TO_USER, mUserName);
+			startActivity(intent);
+		}
+		return true;
 	}
 
 	private void findViews() {
-
 		userName = (TextView) findViewById(R.id.profile_user_name);
 		userPortrait = (ImageView) findViewById(R.id.profile_image);
-		boardMasterInfo = (TextView) findViewById(R.id.profile_board_master);
 		loginStatues = (TextView) findViewById(R.id.profile_online_statues);
 		userNickName = (TextView) findViewById(R.id.profile_user_nick_name);
 		userLevel = (TextView) findViewById(R.id.profile_user_level);
@@ -159,21 +169,7 @@ public class ProfileActivity extends BaseActivity {
 		userConstellation = (TextView) findViewById(R.id.profile_user_constellation);
 		userQQ = (TextView) findViewById(R.id.profile_user_qq);
 		userMSN = (TextView) findViewById(R.id.profile_user_msn);
-		userPage = (TextView) findViewById(R.id.profile_user_page);		
- 		mHeaderView = (HeaderView) findViewById(R.id.main_header);
-	}
-
-	private void setListeners() {
-		mHeaderView.setButtonOnclickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(ProfileActivity.this, EditActivity.class);
- 				intent.putExtra(EditActivity.MOD, EditActivity.MOD_PM);
-				intent.putExtra(EditActivity.PM_TO_USER, mUserName);
-				startActivity(intent);
-				overridePendingTransition(R.anim.forward_activity_move_in, R.anim.forward_activity_move_out);
-			}
-		});
+		userPage = (TextView) findViewById(R.id.profile_user_page);
 	}
 
 	// handle the message
@@ -187,12 +183,12 @@ public class ProfileActivity extends BaseActivity {
 				headPortraitThread.start();
 				break;
 			case LOAD_PROFILE_FAILED:
-				Toast.makeText(ProfileActivity.this, "读取网页或解析出错！", Toast.LENGTH_SHORT)
-				.show();
+				Toast.makeText(ProfileActivity.this, "读取网页或解析出错！",
+						Toast.LENGTH_SHORT).show();
 				break;
 			case LOAD_USER_AVARTAR_FAILED:
-				Toast.makeText(ProfileActivity.this, "读取网页或解析出错！", Toast.LENGTH_SHORT)
-				.show();
+				Toast.makeText(ProfileActivity.this, "读取网页或解析出错！",
+						Toast.LENGTH_SHORT).show();
 				break;
 			case LOAD_USER_AVARTAR_SUCCESS:
 				userPortrait.setImageBitmap(userPortraitmBitmap);
@@ -202,9 +198,10 @@ public class ProfileActivity extends BaseActivity {
 			}
 		}
 	};
+
 	private void add_friend(final String userName) {
 		new Thread(new Runnable() {
-			
+
 			@Override
 			public void run() {
 				try {
@@ -222,15 +219,12 @@ public class ProfileActivity extends BaseActivity {
 				}
 			}
 		}).start();
-		
+
 	}
 
-
 	protected void setContents() {
-
 		url = profileEntity.getUserAvatarLink();
 		userName.setText(mUserName);
-		boardMasterInfo.setText(profileEntity.getBbsMasterInfo());
 		userNickName.setText(profileEntity.getUserNickName());
 		userLevel.setText(profileEntity.getUserLevel());
 		userGroup.setText(profileEntity.getUserGroup());

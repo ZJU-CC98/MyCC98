@@ -162,9 +162,7 @@ public class PmActivity extends BaseActivity implements OnRefreshListener {
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			finish();
-			overridePendingTransition(R.anim.backward_activity_move_in,
-					R.anim.backward_activity_move_out);
-			return true;
+ 			return true;
 		case MENU_SWITCH_BOX:
 			if (currentMod == INBOX) {
 				switchToMod(OUTBOX);
@@ -358,9 +356,7 @@ public class PmActivity extends BaseActivity implements OnRefreshListener {
 		Intent intent = new Intent(this, PmViewActivity.class);
 		intent.putExtra("PmId", -1);
 		startActivity(intent);
-		overridePendingTransition(R.anim.forward_activity_move_in,
-				R.anim.forward_activity_move_out);
-	}
+ 	}
 
 	public void jumpDialog() {
 		edtNum = new EditText(this);

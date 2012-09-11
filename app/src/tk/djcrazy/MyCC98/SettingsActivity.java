@@ -51,9 +51,7 @@ public class SettingsActivity extends RoboSherlockPreferenceActivity {
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
 			finish();
-			overridePendingTransition(R.anim.backward_activity_move_in,
-					R.anim.backward_activity_move_out);
-			return true;
+ 			return true;
 		}
 		return false;
 	}

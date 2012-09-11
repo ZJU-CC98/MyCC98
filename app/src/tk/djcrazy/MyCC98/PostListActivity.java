@@ -58,9 +58,7 @@ public class PostListActivity extends BaseActivity {
 		intent.putExtra(EditActivity.BOARD_ID, boardId);
 		intent.putExtra(EditActivity.BOARD_NAME, boardName);
 		startActivityForResult(intent, 0);
-		overridePendingTransition(R.anim.forward_activity_move_in,
-				R.anim.forward_activity_move_out);
-	}
+ 	}
 
 	@Override
 	public boolean onOptionsItemSelected(
@@ -68,9 +66,7 @@ public class PostListActivity extends BaseActivity {
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			finish();
-			overridePendingTransition(R.anim.backward_activity_move_in,
-					R.anim.backward_activity_move_out);
-			return true;
+ 			return true;
 		case R.id.post_list_menu_search:
 			onSearchRequested();
 			return true;

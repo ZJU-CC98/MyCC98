@@ -73,7 +73,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 	/**
 	 * configure version
 	 */
-	public static final boolean IS_LIFETOY_VERSION = false;
+	public static final boolean IS_LIFETOY_VERSION = true;
 
 	public static final String USERNAME = "USERNAME";
 	public static final String PASSWORD = "PASSWORD";
@@ -140,9 +140,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 	private void forwardToNextActivity() {
 		Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
 		startActivity(intent);
-		overridePendingTransition(R.anim.forward_activity_move_in,
-				R.anim.forward_activity_move_out);
-		finish();
+ 		finish();
 	}
 
 	private void showLoginField() {

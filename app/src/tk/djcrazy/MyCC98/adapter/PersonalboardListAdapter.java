@@ -107,9 +107,7 @@ public class PersonalboardListAdapter extends BaseItemListAdapter<BoardEntity> {
 						intent.putExtra(PostListActivity.BOARD_NAME,
 								items.get(clickPosition).getBoardName());
  						context.startActivity(intent);
-						context.overridePendingTransition(
-								R.anim.forward_activity_move_in,
-								R.anim.forward_activity_move_out);
+						 
 					}
 				});
 
@@ -129,9 +127,7 @@ public class PersonalboardListAdapter extends BaseItemListAdapter<BoardEntity> {
 						intent.putExtra(PostContentsJSActivity.BOARD_NAME,
 								items.get(clickPosition).getBoardName());
 						context.startActivity(intent);
-						context.overridePendingTransition(
-								R.anim.forward_activity_move_in,
-								R.anim.forward_activity_move_out);
+						 
 					}
 				});
 
@@ -153,9 +149,7 @@ public class PersonalboardListAdapter extends BaseItemListAdapter<BoardEntity> {
 						intent.putExtra(PostContentsJSActivity.BOARD_NAME,
 								items.get(clickPosition).getBoardName());
 						context.startActivity(intent);
-						context.overridePendingTransition(
-								R.anim.forward_activity_move_in,
-								R.anim.forward_activity_move_out);
+						 
 					}
 				});
 	}
