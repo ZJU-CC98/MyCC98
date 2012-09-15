@@ -25,11 +25,13 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
@@ -74,19 +76,7 @@ public class PostContentsJSActivity extends BaseActivity implements
 
 	@InjectView(R.id.post_contents)
 	private WebView webView;
-	@InjectView(R.id.search_text)
-	private EditText jumpEditText;
-	@InjectView(R.id.search_text)
-	private EditText searchEditText;
-	@InjectView(R.id.post_content_show_all_imgs)
-	private View showAllImageTextView;
-	@InjectView(R.id.find_next)
-	private View findNextButton;
-	@InjectView(R.id.find_prev)
-	private View findPrevButton;
-	@InjectView(R.id.search_done)
-	private View searchDoneButton;
-	@InjectView(R.id.but_post_next)
+ 	@InjectView(R.id.but_post_next)
 	private View vNext;
 	@InjectView(R.id.but_post_prev)
 	private View vPrev;
@@ -94,8 +84,6 @@ public class PostContentsJSActivity extends BaseActivity implements
 	private View vJump;
 	@InjectView(R.id.but_post_re)
 	private View vRe;
-	@InjectView(R.id.search_bar)
-	private RelativeLayout searchBar;
 
 	private int prevPageNum = 1;
 	private int totalPageNum = 1;
@@ -115,17 +103,12 @@ public class PostContentsJSActivity extends BaseActivity implements
 	private static PostContentsListPage nextPage = new PostContentsListPage();
 	private static PostContentsListPage prevPage = new PostContentsListPage();
 
-	private static final int MENU_REPLY_ID = 1325416345;
+	private static final int MENU_SHOW_IMG_ID = 266482903;
+	private static final int MENU_SHOW_REFRESH_ID = 496823;
 
 	private static final String ITEM_OPEN = "<div class=\"post\"><div class=\"post-content-wrapper\">";
 	private static final String ITEM_CLOSE = "</div>";
 	private static final String TAG = "PostContentsJS";
-	private static final int MNU_REFRESH = Menu.FIRST;
-	private static final int MNU_FIRST = Menu.FIRST + 1;
-	private static final int MNU_LAST = Menu.FIRST + 2;
-	private static final int MNU_PREV = Menu.FIRST + 3;
-	private static final int MNU_JUMP = Menu.FIRST + 4;
-	private static final int MNU_NEXT = Menu.FIRST + 5;
 	private boolean threadCancel = false;
 	private boolean searchMode = false;
 	private ProgressDialog progressDialog;
@@ -155,14 +138,10 @@ public class PostContentsJSActivity extends BaseActivity implements
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu optionMenu) {
-		optionMenu.add(android.view.Menu.NONE, MENU_REPLY_ID, 1, "回复")
-				.setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-		optionMenu.add(android.view.Menu.NONE, MENU_REPLY_ID + 1, 1, "跳转")
-				.setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-		optionMenu.add(android.view.Menu.NONE, MENU_REPLY_ID + 2, 1, "上一页")
-				.setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-		optionMenu.add(android.view.Menu.NONE, MENU_REPLY_ID + 3, 1, "下一页")
-				.setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+		optionMenu.add(android.view.Menu.NONE, MENU_SHOW_IMG_ID, 1, "显示图片")
+ 				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+		optionMenu.add(android.view.Menu.NONE, MENU_SHOW_REFRESH_ID, 1, "刷新")
+ 				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 		return true;
 	}
 
@@ -172,8 +151,11 @@ public class PostContentsJSActivity extends BaseActivity implements
 		case android.R.id.home:
 			finish();
 			return true;
-		case MENU_REPLY_ID:
-			reply();
+		case MENU_SHOW_REFRESH_ID:
+			refreshPage();
+			return true;
+		case MENU_SHOW_IMG_ID:
+			webView.loadUrl("javascript:showAllImages.fireEvent('click');");
 			return true;
 		default:
 			break;
@@ -184,15 +166,6 @@ public class PostContentsJSActivity extends BaseActivity implements
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-		case R.id.find_prev:
-			webView.findNext(false);
-			break;
-		case R.id.find_next:
-			webView.findNext(true);
-			break;
-		case R.id.search_done:
-			dismissSearchDialog();
-			break;
 		case R.id.but_post_jump:
 			jumpDialog();
 			break;
@@ -205,10 +178,7 @@ public class PostContentsJSActivity extends BaseActivity implements
 		case R.id.but_post_re:
 			reply();
 			break;
-		case R.id.post_content_show_all_imgs:
-			webView.loadUrl("javascript:showAllImages.fireEvent('click');");
-			break;
-		case R.id.post_content_header_title:
+ 		case R.id.post_content_header_title:
 			webView.scrollTo(0, 0);
 			break;
 		default:
@@ -217,78 +187,22 @@ public class PostContentsJSActivity extends BaseActivity implements
 	}
 
 	private void addListeners() {
-		findPrevButton.setOnClickListener(this);
-		findNextButton.setOnClickListener(this);
-		searchDoneButton.setOnClickListener(this);
 		vJump.setOnClickListener(this);
 		vPrev.setOnClickListener(this);
 		vNext.setOnClickListener(this);
 		vRe.setOnClickListener(this);
-		showAllImageTextView.setOnClickListener(this);
-		searchEditText.addTextChangedListener(new TextWatcher() {
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before,
-					int count) {
-				searchAndHilight(searchEditText.getText().toString());
-			}
+ 	}
 
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count,
-					int after) {
-			}
-
-			@Override
-			public void afterTextChanged(Editable s) {
-			}
-		});
-	}
-
-	@Override
-	protected void onDestroy() {
-		Log.d(TAG, "onDestroy");
-		super.onDestroy();
-	}
-
-	@Override
-	protected void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-		Log.d(TAG, "onSaveInstanceState");
-	}
-
-	@Override
-	public void onLowMemory() {
-		Log.d(TAG, "onLowMemory");
-		super.onLowMemory();
-	}
-
-	@Override
-	protected void onRestoreInstanceState(Bundle savedInstanceState) {
-		Log.d(TAG, "onRestoreInstanceState");
-		super.onRestoreInstanceState(savedInstanceState);
-	}
-
-	@Override
-	public void onStart() {
-		Log.d(TAG, "onStart");
-		super.onStart();
-	}
-
-	@Override
-	public void onStop() {
-		Log.d(TAG, "onStop");
-		super.onStop();
-	}
-
-	/**
-	 * 
-	 */
 	private void setViews() {
+		SharedPreferences sharedPref = PreferenceManager
+				.getDefaultSharedPreferences(this);
+		boolean enableCache = sharedPref.getBoolean(
+				SettingsActivity.ENABLE_CACHE, true);
 		WebSettings webSettings = webView.getSettings();
 		webSettings.setJavaScriptEnabled(true);
-		webSettings.setPluginsEnabled(true);
 		webSettings.setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
 		// 这里可以在设置中增加选项
-		webSettings.setAppCacheEnabled(true);
+		webSettings.setAppCacheEnabled(enableCache);
 		webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
 		webView.addJavascriptInterface(this, JS_INTERFACE);
 		webView.setWebViewClient(new WebViewClient() {
@@ -328,7 +242,6 @@ public class PostContentsJSActivity extends BaseActivity implements
 		if (currPageNum - 1 > 0) {
 			dispContents(currPageNum - 1);
 		}
-
 	}
 
 	public void refreshPage() {
@@ -343,7 +256,6 @@ public class PostContentsJSActivity extends BaseActivity implements
 
 	// handle the message
 	private Handler handler = new Handler() {
-
 		@Override
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
@@ -379,9 +291,7 @@ public class PostContentsJSActivity extends BaseActivity implements
 		new Thread() {
 			@Override
 			public void run() {
-				if (pageNum == currPageNum - 1 && prevPage.getList() != null) { // backward
-																				// one
-																				// step
+				if (pageNum == currPageNum - 1 && prevPage.getList() != null) {
 					nextPage.setList(currPage.getList());
 					nextPage.setString(currPage.getString());
 					currPage.setList(prevPage.getList());
@@ -392,7 +302,7 @@ public class PostContentsJSActivity extends BaseActivity implements
 					handler.sendEmptyMessage(FETCH_CONTENT_SUCCESS);
 
 				} else if (pageNum == currPageNum + 1
-						&& nextPage.getList() != null) { // forward one step
+						&& nextPage.getList() != null) {
 					prevPage.setList(currPage.getList());
 					prevPage.setString(currPage.getString());
 					currPage.setList(nextPage.getList());
@@ -569,11 +479,11 @@ public class PostContentsJSActivity extends BaseActivity implements
 	}
 
 	public void jumpDialog() {
-		jumpEditText = new EditText(this);
+		final EditText jumpEditText = new EditText(this);
 		jumpEditText.requestFocus();
 		jumpEditText.setFocusableInTouchMode(true);
 		// set numeric touch pad
-		jumpEditText.setInputType(InputType.TYPE_CLASS_PHONE);
+		jumpEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
 		new AlertDialog.Builder(this)
 				.setTitle(R.string.jump_dialog_title)
 				.setIcon(android.R.drawable.ic_dialog_info)
@@ -654,22 +564,6 @@ public class PostContentsJSActivity extends BaseActivity implements
 	// }
 	// return super.onOptionsItemSelected(item);
 	// }
-
-	private void searchDialog() {
-		searchMode = true;
-		searchEditText.setText("");
-		searchBar.setVisibility(View.VISIBLE);
-	}
-
-	private void searchAndHilight(String keyword) {
-		webView.findAll(keyword);
-		try {
-			Method m = WebView.class.getMethod("setFindIsUp", Boolean.TYPE);
-			m.invoke(webView, true);
-		} catch (Throwable ignored) {
-			Log.i("Error", ignored.toString());
-		}
-	}
 
 	public void showContentDialog(final int index, int which) {
 		Log.d(TAG, "showContentDialog: " + which);
@@ -772,12 +666,6 @@ public class PostContentsJSActivity extends BaseActivity implements
 
 	}
 
-	private void dismissSearchDialog() {
-		webView.clearMatches();
-		searchBar.setVisibility(View.GONE);
-		searchMode = false;
-	}
-
 	private void quoteReply(String sender, String postTime, String postContent,
 			int floorNum, int pageNum) {
 		Intent intent = new Intent(this, EditActivity.class);
@@ -803,24 +691,6 @@ public class PostContentsJSActivity extends BaseActivity implements
 		if (resultCode == Activity.RESULT_CANCELED) {
 
 		}
-	}
-
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-
-		if (keyCode == KeyEvent.KEYCODE_SEARCH && event.getRepeatCount() == 0) {
-			searchDialog();
-			return false;
-		} else if (keyCode == KeyEvent.KEYCODE_BACK) {
-			if (searchMode) {
-				dismissSearchDialog();
-			} else {
-				finish();
-			}
-		} else {
-			super.onKeyDown(keyCode, event);
-		}
-		return false;
 	}
 
 	public void open(String pageLink, int pageNum) {

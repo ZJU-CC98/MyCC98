@@ -2,37 +2,21 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical"
-    android:background="#ececec" >
-
-<!--     <include layout="@layout/post_content_header"/> -->
+    android:background="#ececec"
+    android:orientation="vertical" >
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_weight="1.0"
-        android:orientation="vertical"
-        android:background="#ececec" >
-
-        <TextView
-            android:id="@+id/post_content_show_all_imgs"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#ececec"
-            android:gravity="center"
-            android:paddingBottom="15dip"
-            android:paddingTop="15dip"
-            android:text="显示所有图片"
-            android:textColor="#AAA"
-            android:textSize="20sp"
-            android:typeface="monospace"
-            android:visibility="gone" />
-
+        android:background="#ececec"
+        android:orientation="vertical" >
+ 
         <WebView
             android:id="@+id/post_contents"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent" 
-            android:background="#ececec"/>
+            android:layout_height="fill_parent"
+            android:background="#ececec" />
     </LinearLayout>
 
     <LinearLayout
@@ -71,47 +55,5 @@
             android:layout_weight="1"
             android:text="下一页" />
     </LinearLayout>
-
-    <RelativeLayout
-        android:id="@+id/search_bar"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone" >
-
-        <LinearLayout
-            android:id="@+id/search_btns"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal" >
-
-            <TextView
-                android:id="@+id/search_done"
-                style="@style/button"
-                android:layout_weight="1"
-                android:text="完成" />
-
-            <TextView
-                android:id="@+id/find_prev"
-                style="@style/button"
-                android:layout_weight="1"
-                android:text="上一个" />
-
-            <TextView
-                android:id="@+id/find_next"
-                style="@style/button"
-                android:layout_weight="1"
-                android:text="下一个" />
-        </LinearLayout>
-
-        <EditText
-            android:id="@+id/search_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"
-            android:layout_below="@id/search_btns"
-            android:background="@drawable/input"
-            android:hint="关键词" />
-    </RelativeLayout>
 
 </LinearLayout>

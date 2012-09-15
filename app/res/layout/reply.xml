@@ -20,6 +20,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:hint="主题"
+            android:textColor="#444444"
             android:textSize="15sp" />
 
         <!-- 回帖心情 -->
@@ -35,6 +36,7 @@
             android:layout_weight="1"
             android:gravity="top"
             android:hint="内容"
+            android:textColor="#444444"
             android:textSize="15sp" />
 
         <!-- 快速添加表情 -->

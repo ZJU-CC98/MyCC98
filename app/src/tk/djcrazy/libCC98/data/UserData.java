@@ -8,6 +8,7 @@ import ch.boye.httpclientandroidlib.client.CookieStore;
 public class UserData implements Serializable{
  	private static final long serialVersionUID = 4709649440252644448L;
 	private String userName;
+	private String password;
  	private CookieStore cookieStore;
 
  	/**
@@ -33,5 +34,17 @@ public class UserData implements Serializable{
 	 */
 	public void setCookieStore(CookieStore cookieStore) {
 		this.cookieStore = cookieStore;
+	}
+	/**
+	 * @return the password
+	 */
+	public String getPassword() {
+		return password;
+	}
+	/**
+	 * @param password the password to set
+	 */
+	public void setPassword(String password) {
+		this.password = password;
 	}
 }

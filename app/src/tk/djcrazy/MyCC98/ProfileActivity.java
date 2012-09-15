@@ -119,8 +119,8 @@ public class ProfileActivity extends BaseActivity {
 				true);
 		profileThread.start();
 		ActionBar actionBar = getSupportActionBar();
-		actionBar.setLogo(new BitmapDrawable(service.getUserAvatar()));
-		actionBar.setTitle("用户资料——" + mUserName);
+		actionBar.setLogo(R.drawable.personal_profile_icon);
+		actionBar.setTitle("用户资料");
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		dialog.show();
 	}

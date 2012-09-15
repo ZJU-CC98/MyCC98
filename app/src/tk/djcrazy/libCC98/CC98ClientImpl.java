@@ -158,6 +158,7 @@ public class CC98ClientImpl implements ICC98Client {
 			throw new IllegalAccessException(ID_PASSWD_ERROR_MSG);
 		}
 		getUserData().setUserName(id);
+		getUserData().setPassword(pw);
 		getUserData().setCookieStore(getHttpClient().getCookieStore());
 		getLoginUserImgAndGender();
 		((MyApplication) application).storeUserInfo();
@@ -173,7 +174,7 @@ public class CC98ClientImpl implements ICC98Client {
 		String html = null;
 		httpPost.addHeader("Referer", manager.getPushNewPostReferer(boardID));
 		nvpsList.add(new BasicNameValuePair("username", getUserData().getUserName()));
-		nvpsList.add(new BasicNameValuePair("passwd", ""));
+		nvpsList.add(new BasicNameValuePair("passwd", getUserData().getPassword()));
 		httpPost.setEntity(new UrlEncodedFormEntity(nvpsList, HTTP.UTF_8));
 		response = getHttpClient().execute(httpPost);
 		entity = response.getEntity();
@@ -215,30 +216,21 @@ public class CC98ClientImpl implements ICC98Client {
 		httpPost.addHeader("Referer",
 				manager.getSubmitReplyReferer(boardID, rootID));
 		nvpsList.add(new BasicNameValuePair("username", getUserData().getUserName()));
-		nvpsList.add(new BasicNameValuePair("passwd", "e6084377cbe6c2c5"));
+		nvpsList.add(new BasicNameValuePair("passwd", getUserData().getPassword()));
 		httpPost.setEntity(new UrlEncodedFormEntity(nvpsList, HTTP.UTF_8));
-		Log.d(TAG, "request: "+EntityUtils.toString(httpPost.getEntity()));
+		//Log.d(TAG, "request: "+EntityUtils.toString(httpPost.getEntity()));
 		response = getHttpClient().execute(httpPost);
-		
 		entity = response.getEntity();
-
 		if (entity != null) {
 			html = EntityUtils.toString(entity);
-			Log.d(TAG, "submit reply: "+html);
-			if (html.contains("状态：回复帖子成功")) {
+ 			if (html.contains("状态：回复帖子成功")) {
 				return;
 			}
 		}
 		throw new Exception("reply failed");
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see tk.djcrazy.libCC98.ICC98Client#queryPosts(java.lang.String,
-	 * java.lang.String, java.lang.String, int, int)
-	 */
-	@Override
+ 	@Override
 	public String queryPosts(String keyWord, String sType, String searchDate,
 			int boardArea, String boardID) throws ParseException, IOException {
 		/*

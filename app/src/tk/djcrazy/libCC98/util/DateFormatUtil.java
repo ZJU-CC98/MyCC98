@@ -46,7 +46,7 @@ public class DateFormatUtil {
 	private static String useFriendlyTime(Date time) {
 		// 获取time距离当前的秒数
 		int ct = (int) ((System.currentTimeMillis() - time.getTime()) / 1000);
-		if (ct == 0) {
+		if (ct <= 0) {
 			return "刚刚";
 		}
 		if (ct > 0 && ct < 60) {
@@ -66,5 +66,4 @@ public class DateFormatUtil {
 		}
 		return ct / 31104000 + "年前";
 	}
-
 }

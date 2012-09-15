@@ -8,6 +8,8 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.cookie.Cookie;
 
 import roboguice.inject.ContentView;
+import roboguice.inject.InjectExtra;
+import roboguice.inject.InjectView;
 import tk.djcrazy.MyCC98.dialog.MoreEmotChooseDialog;
 import tk.djcrazy.MyCC98.dialog.MoreEmotChooseDialog.FaceExpressionChooseListener;
 import tk.djcrazy.MyCC98.helper.HtmlGenHelper;
@@ -19,6 +21,7 @@ import tk.djcrazy.libCC98.exception.ParseContentException;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -34,6 +37,9 @@ import android.webkit.WebSettings.LayoutAlgorithm;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import com.flurry.android.FlurryAgent;
 import com.google.inject.Inject;
 
@@ -45,18 +51,25 @@ import com.google.inject.Inject;
 @ContentView(R.layout.pm_reply)
 public class PmViewActivity extends BaseActivity {
 	private static String TAG = "PmReply";
+	private static final String PM_ID = "PmId";
+	private static final String TOPIC = "Topic";
+	private static final String SENDER = "Sender";
+	private static final String SEND_TIME = "SendTime";
+	private static final int MENU_REPLY_ID = 9237465;
+	@InjectView(R.id.pm_reply_view)
 	private WebView webView;
-
 	private String pageString;
+	@InjectExtra(TOPIC)
 	private String readTopic;
+	@InjectExtra(SENDER)
 	private String sender;
 	private String senderAvatarUrl;
+	@InjectExtra(SEND_TIME)
 	private String sendTime;
 	private String faceChoosedString;
 	private String pmContent;
-
-	private HeaderView headerView;
-
+	@InjectExtra(value = PM_ID, optional = true)
+	private int pmId = -1;
 	@Inject
 	private ICC98Service service;
 
@@ -64,50 +77,59 @@ public class PmViewActivity extends BaseActivity {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-
 		super.onCreate(savedInstanceState);
- 		Intent intent = getIntent();
-		int pmId = intent.getIntExtra("PmId", -1);
-		readTopic = intent.getStringExtra("Topic");
-		sender = intent.getStringExtra("Sender");
-		sendTime = intent.getStringExtra("SendTime");
-
- 		if (pmId == -1) {
-			setTitle("新消息");
-		} else {
-			setTitle(R.string.pm_reply);
-		}
-
-		findViews();
-
+		ActionBar actionBar = getSupportActionBar();
+		actionBar.setTitle("查看短消息");
+		actionBar.setDisplayHomeAsUpEnabled(true);
+		actionBar.setLogo(new BitmapDrawable(service.getUserAvatar()));
 		setViews();
-
-		setListeners();
-		// pageOpen = this.getString(R.string.pm_reply_html_header);
-		preparePage(pmId);
+ 		preparePage(pmId);
 	}
 
-	private void findViews() {
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		menu.add(android.view.Menu.NONE, MENU_REPLY_ID, 1, "回复")
+				.setIcon(R.drawable.sure_btn)
+				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+		return true;
+	}
 
-		if ((webView = (WebView) findViewById(R.id.pm_reply_view)) == null) {
-			Log.e(TAG, "webView load fail.");
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			finish();
+			return true;
+		case MENU_REPLY_ID:
+			doReply();
+			return true;
+		default:
+			break;
 		}
-
-		headerView = (HeaderView) findViewById(R.id.pm_reply_header);
+		return super.onOptionsItemSelected(item);
 	}
 
+ 	private void doReply() {
+		Intent intent = new Intent(getApplicationContext(),
+				EditActivity.class);
+		intent.putExtra(EditActivity.MOD, EditActivity.MOD_PM);
+		intent.putExtra(EditActivity.PM_TO_USER, sender);
+		intent.putExtra(EditActivity.PM_TITLE, readTopic);
+		StringBuilder tmp = new StringBuilder();
+		tmp.append("[quote][b]以下是引用").append(sender).append("在[i]")
+				.append(sendTime).append("[/i]时发送的短信：[/b]\n")
+				.append(pmContent.replaceAll("(<BR>|<br>)", "\n"))
+				.append("[/quote]");
+		intent.putExtra(EditActivity.PM_CONTENT, tmp.toString());
+		startActivity(intent);
+	}
 	/**
 	 * 
 	 */
 	private void setViews() {
-		// gets all cookies from the HttpClient's cookie jar
-		headerView.setUserImg(service.getUserAvatar());
-		headerView.setTitle("查看短消息");
-		headerView.setButtonImageResource(R.drawable.pm_reply);
 		WebSettings webSettings = webView.getSettings();
 		webSettings.setJavaScriptEnabled(true);
-		webSettings.setPluginsEnabled(true);
-		webSettings.setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
+ 		webSettings.setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
 		webSettings.setAppCacheEnabled(true);
 		webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
 		webView.setWebViewClient(new WebViewClient() {
@@ -191,28 +213,7 @@ public class PmViewActivity extends BaseActivity {
 		}.start();
 
 	}
-
-	private void setListeners() {
-
-		headerView.setButtonOnclickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(getApplicationContext(),
-						EditActivity.class);
-				intent.putExtra(EditActivity.MOD, EditActivity.MOD_PM);
-				intent.putExtra(EditActivity.PM_TO_USER, sender);
-				intent.putExtra(EditActivity.PM_TITLE, readTopic);
-				StringBuilder tmp = new StringBuilder();
-				tmp.append("[quote][b]以下是引用").append(sender).append("在[i]")
-						.append(sendTime).append("[/i]时发送的短信：[/b]\n")
-						.append(pmContent.replaceAll("(<BR>|<br>)", "\n"))
-						.append("[/quote]");
-				intent.putExtra(EditActivity.PM_CONTENT, tmp.toString());
-				startActivity(intent);
- 			}
-		});
-	}
-
+ 
 	public void preview(String content) {
 		Log.d(TAG, "preview clicked");
 		Intent intent = new Intent(this, PreviewActivity.class);

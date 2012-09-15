@@ -4,12 +4,8 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.regex.PatternSyntaxException;
-
-import org.apache.http.client.ClientProtocolException;
 
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectExtra;
@@ -18,16 +14,9 @@ import roboguice.util.RoboAsyncTask;
 import tk.djcrazy.MyCC98.dialog.MoreEmotChooseDialog;
 import tk.djcrazy.MyCC98.dialog.MoreEmotChooseDialog.FaceExpressionChooseListener;
 import tk.djcrazy.MyCC98.helper.TextHelper;
-import tk.djcrazy.MyCC98.task.GenericTask;
-import tk.djcrazy.MyCC98.task.TaskAdapter;
-import tk.djcrazy.MyCC98.task.TaskListener;
-import tk.djcrazy.MyCC98.task.TaskParams;
-import tk.djcrazy.MyCC98.task.TaskResult;
 import tk.djcrazy.MyCC98.util.ToastUtils;
-import tk.djcrazy.MyCC98.view.HeaderView;
 import tk.djcrazy.libCC98.ICC98Service;
 import tk.djcrazy.libCC98.ICC98UrlManager;
-import tk.djcrazy.libCC98.exception.ParseContentException;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -36,6 +25,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -46,20 +36,15 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
-import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.RadioGroup;
-import android.widget.TextView;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.Toast;
 
@@ -95,7 +80,9 @@ public class EditActivity extends BaseActivity {
 	public static final String IS_QUOTE_USER = "isQuoteUser";
 
 	public static final String TAIL = "\n\n[right][color=gray]From  "
-			+ Build.MODEL + " via MyCC98[/color][/right]";;
+			+ Build.MODEL + " via MyCC98[/color][/right]";
+	
+	private String appendTail = TAIL;
 
 	private static final String TAG = "EditActivity";
 	private static final int TITLE_MAX_LENGTH = 100;
@@ -167,7 +154,7 @@ public class EditActivity extends BaseActivity {
 	private String editContent;
 	private String editTopic;
 	private File mCurrentPhotoFile;
-	private String faceGroupChooseString;
+	private String faceGroupChooseString = "face7.gif";
 	private String picLink;
 	@Inject
 	private ICC98Service service;
@@ -301,7 +288,18 @@ public class EditActivity extends BaseActivity {
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		ActionBar actionBar = getSupportActionBar();
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+		boolean showTail = sharedPref.getBoolean(SettingsActivity.SHOW_TAIL, true);
+		boolean useCustomTail = sharedPref.getBoolean(SettingsActivity.USE_CUSTOM_TAIL, false);
+		String customTailContent =  sharedPref.getString(SettingsActivity.CUSTOM_TAIL_CONTENT, "");
+		if (!showTail) {
+			appendTail = "";
+		} else if (!useCustomTail) {
+			appendTail = TAIL;
+		} else {
+			appendTail = "\n\n[right][color=gray]"+customTailContent+"[/color][/right]";
+		}
+		ActionBar actionBar = getSupportActionBar(); 
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		actionBar.setLogo(new BitmapDrawable(service.getUserAvatar()));
 		if (mod == MOD_REPLY) {
@@ -328,9 +326,8 @@ public class EditActivity extends BaseActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu optionMenu) {
 		optionMenu.add(android.view.Menu.NONE, MENU_REPLY_ID, 1, "确认")
-		.setIcon(R.drawable.sure_btn) 
-				.setShowAsAction(
-						MenuItem.SHOW_AS_ACTION_ALWAYS );
+				.setIcon(R.drawable.sure_btn)
+				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 		return true;
 	}
 
@@ -339,7 +336,7 @@ public class EditActivity extends BaseActivity {
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			finish();
- 			return true;
+			return true;
 		case MENU_REPLY_ID:
 			ensure();
 			return true;
@@ -354,7 +351,7 @@ public class EditActivity extends BaseActivity {
 	 */
 	private void ensure() {
 		final String titleString = replyTitleEditText.getText().toString();
-		final String contentString = replyContentEditText.getText().toString();
+		final String contentString = replyContentEditText.getText().toString()+appendTail;
 		if (TextHelper.isEmpty(contentString)) {
 			ToastUtils.show(EditActivity.this, "内容不能为空");
 			return;
@@ -362,7 +359,6 @@ public class EditActivity extends BaseActivity {
 		if (!checkReplyContentLimit(titleString, contentString)) {
 			return;
 		}
-		;
 		if (mod == MOD_QUOTE_REPLY) {
 			setupRefDialog(titleString, contentString);
 		} else if (mod == MOD_REPLY) {
@@ -375,8 +371,7 @@ public class EditActivity extends BaseActivity {
 			task.execute();
 		} else if (mod == MOD_PM) {
 			new SendPMTask(EditActivity.this, pmReplyName, titleString,
-					contentString + (SettingsActivity.addTail ? TAIL : ""))
-					.execute();
+					contentString).execute();
 		} else if (mod == MOD_EDIT) {
 			// submitEdit(editLink, titleString, contentString);
 		}
@@ -393,8 +388,7 @@ public class EditActivity extends BaseActivity {
 				String pmTitle = "用户：" + service.getUserName() + " 在帖子中回复了你";
 				String pmContent = "详情请点击："
 						+ manager.getPostUrl(boardID, postId, quotePageNumber)
-						+ "#" + quoteFloorNumber
-						+ (SettingsActivity.addTail ? TAIL : "");
+						+ "#" + quoteFloorNumber;
 				new SendPMTask(EditActivity.this, pmReplyName, pmTitle,
 						pmContent).execute();
 				PushReplyTask task = new PushReplyTask(EditActivity.this,
@@ -428,10 +422,8 @@ public class EditActivity extends BaseActivity {
 	private void setupListeners() {
 		faceRadioGroup
 				.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-
 					@Override
 					public void onCheckedChanged(RadioGroup group, int checkedId) {
-
 						switch (checkedId) {
 						case R.id.face1:
 							faceGroupChooseString = "face1.gif";
@@ -513,7 +505,7 @@ public class EditActivity extends BaseActivity {
 						PreviewActivity.class).putExtra(
 						PreviewActivity.CONTENT, replyContentEditText.getText()
 								.toString()));
-				 
+
 			}
 		});
 
@@ -554,11 +546,10 @@ public class EditActivity extends BaseActivity {
 		final Context context = EditActivity.this;
 
 		// Wrap our context to inflate list items using correct theme
- 		String[] choices = { "拍照", "本地上传", "取消" };
+		String[] choices = { "拍照", "本地上传", "取消" };
 		final ListAdapter adapter = new ArrayAdapter<String>(context,
 				android.R.layout.simple_list_item_1, choices);
-		final AlertDialog.Builder builder = new AlertDialog.Builder(
-				context);
+		final AlertDialog.Builder builder = new AlertDialog.Builder(context);
 		builder.setSingleChoiceItems(adapter, -1,
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
@@ -579,8 +570,8 @@ public class EditActivity extends BaseActivity {
 							doPickPhotoFromGallery();
 							break;
 						case 2:
- 							break;
- 						default:
+							break;
+						default:
 							break;
 						}
 					}
@@ -600,7 +591,8 @@ public class EditActivity extends BaseActivity {
 		}
 		return true;
 	}
- 	private void doTakePhoto() {
+
+	private void doTakePhoto() {
 		try {
 			PHOTO_DIR.mkdirs();// 创建照片的存储目录
 			Log.d(TAG, "doTakePhoto");
@@ -614,7 +606,7 @@ public class EditActivity extends BaseActivity {
 			intent.putExtra(MediaStore.EXTRA_OUTPUT,
 					Uri.fromFile(mCurrentPhotoFile));
 			startActivityForResult(intent, CAMERA_WITH_DATA);
-			 
+
 		} catch (ActivityNotFoundException e) {
 			ToastUtils.show(this, "未找到目标！");
 		} catch (IOException e) {
@@ -627,7 +619,7 @@ public class EditActivity extends BaseActivity {
 			Intent intent = new Intent(Intent.ACTION_GET_CONTENT, null);
 			intent.setType("image/*");
 			startActivityForResult(intent, PHOTO_PICKED_WITH_DATA);
-			 
+
 		} catch (ActivityNotFoundException e) {
 			Toast.makeText(this, " ", Toast.LENGTH_LONG).show();
 		}
@@ -665,7 +657,7 @@ public class EditActivity extends BaseActivity {
 			}
 			break;
 		}
- 		default:
+		default:
 			break;
 		}
 	}
@@ -780,7 +772,7 @@ public class EditActivity extends BaseActivity {
 			ToastUtils.show(mContext, "回复成功");
 			setResult(Activity.RESULT_OK);
 			mContext.finish();
-			 
+
 		}
 
 		@Override
@@ -834,7 +826,7 @@ public class EditActivity extends BaseActivity {
 			ToastUtils.show(mContext, "发表成功");
 			setResult(Activity.RESULT_OK);
 			mContext.finish();
-			 
+
 		}
 
 		@Override
@@ -886,7 +878,7 @@ public class EditActivity extends BaseActivity {
 			if (mod == MOD_PM) {
 				setResult(Activity.RESULT_OK);
 				mContext.finish();
- 			}
+			}
 		}
 
 		@Override

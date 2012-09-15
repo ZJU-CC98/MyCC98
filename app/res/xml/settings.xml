@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+    <CheckBoxPreference 
+        android:key="enable_cache"
+        android:title="打开内容缓存"
+        android:summary="程序可以缓存一部分内容到本地，但是可能会占用一些空间"
+        android:defaultValue="false"/>
     <CheckBoxPreference
-        android:key="settings_tail"
+        android:key="show_tail"
         android:title="显示 MyCC98 签名"
         android:defaultValue="true" />
-<CheckBoxPreference
-        android:key="settings_dark"
-        android:title="使用暗色登录界面"
+    <CheckBoxPreference 
+        android:key="use_custom_tail"
+        android:title="使用自定义签名尾巴"
         android:defaultValue="false" />
+    <EditTextPreference 
+        android:key="custom_tail_content"
+        android:title="自定义尾巴内容" />
 </PreferenceScreen>

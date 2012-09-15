@@ -16,7 +16,6 @@
 package tk.djcrazy.MyCC98.fragment;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import tk.djcrazy.MyCC98.R;
@@ -25,7 +24,6 @@ import tk.djcrazy.MyCC98.util.ThrowableLoader;
 import tk.djcrazy.MyCC98.util.ToastUtils;
 import tk.djcrazy.MyCC98.util.ViewUtils;
 import tk.djcrazy.MyCC98.view.PagedPullToRefreshListView;
-import tk.djcrazy.MyCC98.view.PullToRefreshListView;
 import tk.djcrazy.MyCC98.view.PagedPullToRefreshListView.LoadMoreListener;
 import tk.djcrazy.MyCC98.view.PullToRefreshListView.OnRefreshListener;
 import android.app.Activity;
@@ -59,7 +57,7 @@ public abstract class PagedPullToRefeshListFragment<E> extends
 
 	private static final String TAG = "PullToRefeshListFragment";
 	
-	private boolean mIsRefreshing = false;
+	private boolean mIsLoadingMore = false;
 	/**
 	 * List items provided to {@link #onLoadFinished(Loader, List)}
 	 */
@@ -88,9 +86,11 @@ public abstract class PagedPullToRefeshListFragment<E> extends
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+		Log.d(TAG, "onActivityCreated");
 		if (!items.isEmpty())
 			setListShown(true, false);
-		getLoaderManager().initLoader(0, null, this);
+		else
+			getLoaderManager().initLoader(0, null, this);
 	}
 
 	@Override
@@ -143,19 +143,21 @@ public abstract class PagedPullToRefeshListFragment<E> extends
 
  	@Override
 	public void onLoadFinished(Loader<List<E>> loader, List<E> items) {
+ 		Log.d(TAG, "onLoadFinished:"+loader.getClass().getName());
 		Exception exception = getException(loader);
 		if (exception != null) {
 			showList();
 			return;
 		}
-		if (mIsRefreshing) {
-			this.items = items;
-			getListAdapter().setItems(this.items);
-			listView.onRefreshComplete();
-		} else {
+		if (mIsLoadingMore) { 
+			mIsLoadingMore = false;
 			this.items.addAll(items);
 			getListAdapter().setItems(this.items);
 			listView.onLoadComplete();
+		} else {
+			this.items = items;
+			getListAdapter().setItems(this.items);
+			listView.onRefreshComplete();
 		}
  		showList();
  	}
@@ -356,14 +358,14 @@ public abstract class PagedPullToRefeshListFragment<E> extends
 		if (getLoaderManager().hasRunningLoaders()) {
 			return;
 		}
-		mIsRefreshing = true;
+		mIsLoadingMore = false;
 		getListAdapter().notifyDataSetChanged();
 		getLoaderManager().restartLoader(0, null, this);
 	}
 
 	@Override
 	public void OnLoadMore(int currentPage, int pageSize) {
-		mIsRefreshing = false;
+		mIsLoadingMore = true;
 		if (getLoaderManager().hasRunningLoaders()) {
 			return;
 		}

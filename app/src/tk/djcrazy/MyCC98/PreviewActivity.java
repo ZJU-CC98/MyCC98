@@ -1,39 +1,31 @@
 package tk.djcrazy.MyCC98;
 
+import roboguice.inject.ContentView;
+import roboguice.inject.InjectExtra;
+import roboguice.inject.InjectView;
 import tk.djcrazy.MyCC98.helper.HtmlGenHelper;
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.webkit.WebSettings.LayoutAlgorithm;
 import android.webkit.WebView;
 
-import com.flurry.android.FlurryAgent;
-
+@ContentView(R.layout.preview)
 public class PreviewActivity extends BaseActivity {
 	
 	public static final String CONTENT = "content";
+	@InjectView(R.id.preview)
 	private WebView webView;
-	private String content = "";
+	@InjectExtra(CONTENT)
+	private String content;
 	private String tagedContent = "";
 	private HtmlGenHelper helper = new HtmlGenHelper();
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-
 		super.onCreate(savedInstanceState);
-		// Get Html header
-		Intent intent = getIntent();
-		content=intent.getStringExtra("content");
-
-		setContentView(R.layout.preview);
-		setTitle(R.string.pm_reply);
-
-		findViews();
-		
+ 		
 		setViews();
 		
 		loadPreview();
@@ -41,7 +33,6 @@ public class PreviewActivity extends BaseActivity {
 	
 	// handle the message
 		private Handler handler = new Handler() {
-
 			@Override
 			public void handleMessage(Message msg) {
 				switch (msg.what) {
@@ -69,14 +60,9 @@ public class PreviewActivity extends BaseActivity {
 				System.err.println(content);
 				handler.sendEmptyMessage(0);
 			}
-			
 		}.start();
 	}
-	
-	private void findViews(){
-		webView = (WebView) findViewById(R.id.preview);
-	}
-	
+ 
 	private void setViews() {
 		webView.getSettings().setJavaScriptEnabled(true);
 		webView.addJavascriptInterface(this, "PmReply");
