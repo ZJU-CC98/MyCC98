@@ -6,14 +6,7 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.PatternSyntaxException;
-
-import org.apache.http.NameValuePair;
-import org.apache.http.ParseException;
-import org.apache.http.auth.AuthenticationException;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.message.BasicNameValuePair;
 
 import tk.djcrazy.libCC98.data.BoardEntity;
 import tk.djcrazy.libCC98.data.BoardStatus;
@@ -29,78 +22,80 @@ import tk.djcrazy.libCC98.exception.NoUserFoundException;
 import tk.djcrazy.libCC98.exception.ParseContentException;
 import android.accounts.NetworkErrorException;
 import android.graphics.Bitmap;
+import ch.boye.httpclientandroidlib.NameValuePair;
+import ch.boye.httpclientandroidlib.ParseException;
+import ch.boye.httpclientandroidlib.auth.AuthenticationException;
+import ch.boye.httpclientandroidlib.client.ClientProtocolException;
+import ch.boye.httpclientandroidlib.message.BasicNameValuePair;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 @Singleton
 public class CC98ServiceImpl implements ICC98Service {
- 	@Inject
+	@Inject
 	private ICC98Client cc98Client;
 	@Inject
 	private ICC98Parser cc98Parser;
-	
+
 	@Override
-	public void doProxyAuthorization(String userName, String pwd) throws ClientProtocolException, IOException, URISyntaxException, AuthenticationException {
- 		cc98Client.doHttpBasicAuthorization(userName, pwd);
-   	}
+	public void doProxyAuthorization(String userName, String pwd)
+			throws ClientProtocolException, IOException, URISyntaxException,
+			AuthenticationException {
+		cc98Client.doHttpBasicAuthorization(userName, pwd);
+	}
 
 	@Override
 	public void setUseProxy(boolean b) {
- 			cc98Client.setUseProxy(b);
- 	}
- 
+		cc98Client.setUseProxy(b);
+	}
+
 	@Override
-	public void doLogin(String userName, String pwd) throws ClientProtocolException, IOException, IllegalAccessException, ParseException, ParseContentException, NetworkErrorException {
- 			cc98Client.doLogin(userName, pwd);
- 	}
+	public void doLogin(String userName, String pwd)
+			throws ClientProtocolException, IOException,
+			IllegalAccessException, ParseException, ParseContentException,
+			NetworkErrorException {
+		cc98Client.doLogin(userName, pwd);
+	}
 
 	@Override
 	public void logOut() {
- 			cc98Client.clearLoginInfo();
- 	}
+		cc98Client.clearLoginInfo();
+	}
 
 	@Override
 	public void clearProxy() {
- 			cc98Client.clearLoginInfo();
- 	}
-
-	@Override
-	public void addFriend(String friendName) throws ParseException, NoUserFoundException, IOException {
- 			cc98Client.addFriend(friendName);
- 	}
-
-	@Override
-	public String getUserName() {
- 		return cc98Client.getUserName();
+		cc98Client.clearLoginInfo();
 	}
 
 	@Override
-	public Bitmap getUserAvatar() {
-		return cc98Client.getLoginUserImg();
+	public void addFriend(String friendName) throws ParseException,
+			NoUserFoundException, IOException {
+		cc98Client.addFriend(friendName);
 	}
 
 	@Override
-	public String uploadFile(File file) throws PatternSyntaxException, MalformedURLException, IOException, ParseContentException {
- 			return cc98Client.uploadPictureToCC98(file);
- 	}
+	public String uploadFile(File file) throws PatternSyntaxException,
+			MalformedURLException, IOException, ParseContentException {
+		return cc98Client.uploadPictureToCC98(file);
+	}
 
 	@Override
 	public void pushNewPost(String boardId, String title, String faceString,
 			String content) throws ClientProtocolException, IOException {
- 			List<NameValuePair> nvpsList = new ArrayList<NameValuePair>();
-			nvpsList.add(new BasicNameValuePair("upfilername", ""));
-			nvpsList.add(new BasicNameValuePair("subject", title));
-			nvpsList.add(new BasicNameValuePair("Expression", faceString));
-			nvpsList.add(new BasicNameValuePair("Content", content));
-			nvpsList.add(new BasicNameValuePair("signflag", "yes"));
-			nvpsList.add(new BasicNameValuePair("Submit", "发 表"));
-			cc98Client.pushNewPost(nvpsList, boardId);
- 	}
+		List<NameValuePair> nvpsList = new ArrayList<NameValuePair>();
+		nvpsList.add(new BasicNameValuePair("upfilername", ""));
+		nvpsList.add(new BasicNameValuePair("subject", title));
+		nvpsList.add(new BasicNameValuePair("Expression", faceString));
+		nvpsList.add(new BasicNameValuePair("Content", content));
+		nvpsList.add(new BasicNameValuePair("signflag", "yes"));
+		nvpsList.add(new BasicNameValuePair("Submit", "发 表"));
+		cc98Client.pushNewPost(nvpsList, boardId);
+	}
 
 	@Override
-	public void reply(String boardId, String rootId, String title, String faceString,
-			String content) throws Exception {
+	public void reply(String boardId, String rootId, String title,
+			String faceString, String content) throws Exception {
 		List<NameValuePair> nvpsList = new ArrayList<NameValuePair>();
 		nvpsList.add(new BasicNameValuePair("upfilername", ""));
 		nvpsList.add(new BasicNameValuePair("followup", rootId));
@@ -111,37 +106,46 @@ public class CC98ServiceImpl implements ICC98Service {
 		nvpsList.add(new BasicNameValuePair("Expression", faceString));
 		nvpsList.add(new BasicNameValuePair("Content", content));
 		nvpsList.add(new BasicNameValuePair("signflag", "yes"));
-		cc98Client.submitReply(nvpsList,  boardId, rootId);
+		cc98Client.submitReply(nvpsList, boardId, rootId);
 	}
 
 	@Override
 	public List<SearchResultEntity> searchPost(String keyword, String boardid,
-			String sType, int page) throws ParseException, IOException, ParseContentException, java.text.ParseException {
-			return cc98Parser.searchPost(keyword, boardid, sType, page);
+			String sType, int page) throws ParseException, IOException,
+			ParseContentException, java.text.ParseException {
+		return cc98Parser.searchPost(keyword, boardid, sType, page);
 	}
 
 	@Override
-	public void sendPm(String toUser, String title, String content) throws ClientProtocolException, IOException {
+	public void sendPm(String toUser, String title, String content)
+			throws ClientProtocolException, IOException {
 		cc98Client.sendPm(toUser, title, content);
 	}
 
 	@Override
-	public List<HotTopicEntity> getHotTopicList() throws ClientProtocolException, ParseException, IOException, ParseContentException {
+	public List<HotTopicEntity> getHotTopicList()
+			throws ClientProtocolException, ParseException, IOException,
+			ParseContentException {
 		return cc98Parser.getHotTopicList();
 	}
 
 	@Override
-	public String getMsgContent(int pmId) throws ClientProtocolException, ParseException, IOException {
+	public String getMsgContent(int pmId) throws ClientProtocolException,
+			ParseException, IOException {
 		return cc98Parser.getMsgContent(pmId);
 	}
 
 	@Override
-	public List<SearchResultEntity> getNewPostList(int pageNum) throws ClientProtocolException, ParseException, IOException, ParseContentException, java.text.ParseException {
+	public List<SearchResultEntity> getNewPostList(int pageNum)
+			throws ClientProtocolException, ParseException, IOException,
+			ParseContentException, java.text.ParseException {
 		return cc98Parser.getNewPostList(pageNum);
 	}
 
 	@Override
-	public List<BoardEntity> getPersonalBoardList() throws ClientProtocolException, ParseException, IOException, ParseContentException, java.text.ParseException {
+	public List<BoardEntity> getPersonalBoardList()
+			throws ClientProtocolException, ParseException, IOException,
+			ParseContentException, java.text.ParseException {
 		return cc98Parser.getPersonalBoardList();
 	}
 
@@ -152,33 +156,45 @@ public class CC98ServiceImpl implements ICC98Service {
 	}
 
 	@Override
-	public List<PostContentEntity> getPostContentList(String boardId, String postId,
-			int pageNum) throws ClientProtocolException, ParseException, ParseContentException, java.text.ParseException, IOException {
+	public List<PostContentEntity> getPostContentList(String boardId,
+			String postId, int pageNum) throws ClientProtocolException,
+			ParseException, ParseContentException, java.text.ParseException,
+			IOException {
 		return cc98Parser.getPostContentList(boardId, postId, pageNum);
 	}
 
 	@Override
-	public List<PostEntity> getPostList(String boardId, int pageNum) throws ClientProtocolException, ParseException, IOException, ParseContentException, java.text.ParseException {
+	public List<PostEntity> getPostList(String boardId, int pageNum)
+			throws ClientProtocolException, ParseException, IOException,
+			ParseContentException, java.text.ParseException {
 		return cc98Parser.getPostList(boardId, pageNum);
 	}
 
 	@Override
-	public List<BoardStatus> getTodayBoardList() throws ClientProtocolException, ParseException, IOException, ParseContentException {
+	public List<BoardStatus> getTodayBoardList()
+			throws ClientProtocolException, ParseException, IOException,
+			ParseContentException {
 		return cc98Parser.getTodayBoardList();
 	}
 
 	@Override
-	public List<UserStatueEntity> getFriendList() throws ClientProtocolException, ParseException, IOException, ParseContentException {
+	public List<UserStatueEntity> getFriendList()
+			throws ClientProtocolException, ParseException, IOException,
+			ParseContentException {
 		return cc98Parser.getUserFriendList();
 	}
 
 	@Override
-	public UserProfileEntity getUserProfile(String userName) throws ParseException, NoUserFoundException, IOException, ParseContentException {
+	public UserProfileEntity getUserProfile(String userName)
+			throws ParseException, NoUserFoundException, IOException,
+			ParseContentException {
 		return cc98Parser.getUserProfile(userName);
 	}
 
 	@Override
-	public String getUserImgUrl(String userName) throws ClientProtocolException, ParseException, IOException, ParseContentException {
+	public String getUserImgUrl(String userName)
+			throws ClientProtocolException, ParseException, IOException,
+			ParseContentException {
 		cc98Client.getUserImgUrl(userName);
 		return null;
 	}
@@ -196,6 +212,16 @@ public class CC98ServiceImpl implements ICC98Service {
 	@Override
 	public boolean isUseProxy() {
 		return false;
+	}
+
+	@Override
+	public String getUserName() {
+		return cc98Client.getUserData().getUserName();
+	}
+ 
+	@Override
+	public Bitmap getUserAvatar() {
+		return cc98Client.getUserAvatar(); 
 	}
 
 }

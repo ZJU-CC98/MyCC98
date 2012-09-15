@@ -7,22 +7,18 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.regex.PatternSyntaxException;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.ParseException;
-import org.apache.http.auth.AuthenticationException;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.cookie.Cookie;
-
+import tk.djcrazy.libCC98.data.UserData;
 import tk.djcrazy.libCC98.exception.NoUserFoundException;
 import tk.djcrazy.libCC98.exception.ParseContentException;
 import android.accounts.NetworkErrorException;
 import android.graphics.Bitmap;
+import ch.boye.httpclientandroidlib.NameValuePair;
+import ch.boye.httpclientandroidlib.ParseException;
+import ch.boye.httpclientandroidlib.auth.AuthenticationException;
+import ch.boye.httpclientandroidlib.client.ClientProtocolException;
 
 public interface ICC98Client {
-
-	public Bitmap getLoginUserImg();
-
-	public void setLoginUserImg(Bitmap bitmap);
+	public UserData getUserData();
 
 	/**
 	 * Login method
@@ -33,26 +29,14 @@ public interface ICC98Client {
 	 * @throws IOException
 	 * @throws ClientProtocolException
 	 * @throws IllegalAccessException
-	 * @throws ParseContentException 
-	 * @throws ParseException 
-	 * @throws NetworkErrorException 
+	 * @throws ParseContentException
+	 * @throws ParseException
+	 * @throws NetworkErrorException
 	 */
 	public void doLogin(String id, String pw) throws ClientProtocolException,
 			IOException, IllegalAccessException, ParseException,
 			ParseContentException, NetworkErrorException;
 
-	/**
-	 * @author zsy
-	 * @param ip
-	 * @param port
-	 */
-	public void setProxy(String ip, int port);
-
-	/**
-	 * @author zsy
-	 */
-	public void rmProxy();
- 
 	/**
 	 * Reply ?
 	 * 
@@ -87,10 +71,11 @@ public interface ICC98Client {
 	 * @return ?
 	 * @throws IOException
 	 * @throws ClientProtocolException
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public void submitReply(List<NameValuePair> nvpsList, String boardID,
-			String rootID) throws ClientProtocolException, IOException, Exception;
+			String rootID) throws ClientProtocolException, IOException,
+			Exception;
 
 	/**
 	 * @author zsy
@@ -177,11 +162,6 @@ public interface ICC98Client {
 			throws ClientProtocolException, ParseException, IOException,
 			ParseContentException;
 
- 
-	public String getUserName();
-
-	public void setUserName(String name);
-
 	/**
 	 * @author zsy
 	 * @param touser
@@ -225,12 +205,15 @@ public interface ICC98Client {
 			ParseException, IOException, ParseContentException;
 
 	public void doHttpBasicAuthorization(String authName, String authPassword)
-			throws ClientProtocolException, IOException, URISyntaxException, AuthenticationException;
+			throws ClientProtocolException, IOException, URISyntaxException,
+			AuthenticationException;
 
 	void clearLoginInfo();
-	
+
 	public String getDomain();
 
-	void setUseProxy(boolean b);
+	public void setUseProxy(boolean b);
+
+	public Bitmap getUserAvatar();
 
 }

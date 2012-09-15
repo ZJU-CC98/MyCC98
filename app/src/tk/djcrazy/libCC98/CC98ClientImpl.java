@@ -4,12 +4,9 @@ import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.ConnectException;
 import java.net.HttpURLConnection;
@@ -23,48 +20,43 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.PatternSyntaxException;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpHost;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpVersion;
-import org.apache.http.NameValuePair;
-import org.apache.http.ParseException;
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.AuthenticationException;
-import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.conn.ClientConnectionManager;
-import org.apache.http.conn.params.ConnRouteParams;
-import org.apache.http.conn.scheme.PlainSocketFactory;
-import org.apache.http.conn.scheme.Scheme;
-import org.apache.http.conn.scheme.SchemeRegistry;
-import org.apache.http.conn.ssl.SSLSocketFactory;
-import org.apache.http.cookie.Cookie;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.CoreConnectionPNames;
-import org.apache.http.params.HttpParams;
-import org.apache.http.params.HttpProtocolParams;
-import org.apache.http.protocol.HTTP;
-import org.apache.http.util.EntityUtils;
-
 import tk.djcrazy.MyCC98.application.MyApplication;
+import tk.djcrazy.libCC98.data.UserData;
 import tk.djcrazy.libCC98.exception.NoUserFoundException;
 import tk.djcrazy.libCC98.exception.ParseContentException;
 import tk.djcrazy.libCC98.util.RegexUtil;
 import android.accounts.NetworkErrorException;
-import android.app.Activity;
 import android.app.Application;
-import android.content.Context;
-import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
+import ch.boye.httpclientandroidlib.HttpEntity;
+import ch.boye.httpclientandroidlib.HttpResponse;
+import ch.boye.httpclientandroidlib.HttpVersion;
+import ch.boye.httpclientandroidlib.NameValuePair;
+import ch.boye.httpclientandroidlib.ParseException;
+import ch.boye.httpclientandroidlib.auth.AuthScope;
+import ch.boye.httpclientandroidlib.auth.AuthenticationException;
+import ch.boye.httpclientandroidlib.auth.UsernamePasswordCredentials;
+import ch.boye.httpclientandroidlib.client.ClientProtocolException;
+import ch.boye.httpclientandroidlib.client.entity.UrlEncodedFormEntity;
+import ch.boye.httpclientandroidlib.client.methods.HttpGet;
+import ch.boye.httpclientandroidlib.client.methods.HttpPost;
+import ch.boye.httpclientandroidlib.conn.ClientConnectionManager;
+import ch.boye.httpclientandroidlib.conn.scheme.PlainSocketFactory;
+import ch.boye.httpclientandroidlib.conn.scheme.Scheme;
+import ch.boye.httpclientandroidlib.conn.scheme.SchemeRegistry;
+import ch.boye.httpclientandroidlib.conn.ssl.SSLSocketFactory;
+import ch.boye.httpclientandroidlib.cookie.Cookie;
+import ch.boye.httpclientandroidlib.impl.client.DefaultHttpClient;
+import ch.boye.httpclientandroidlib.impl.conn.tsccm.ThreadSafeClientConnManager;
+import ch.boye.httpclientandroidlib.message.BasicNameValuePair;
+import ch.boye.httpclientandroidlib.params.BasicHttpParams;
+import ch.boye.httpclientandroidlib.params.CoreConnectionPNames;
+import ch.boye.httpclientandroidlib.params.HttpParams;
+import ch.boye.httpclientandroidlib.params.HttpProtocolParams;
+import ch.boye.httpclientandroidlib.protocol.HTTP;
+import ch.boye.httpclientandroidlib.util.EntityUtils;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -78,8 +70,8 @@ import com.google.inject.Singleton;
 public class CC98ClientImpl implements ICC98Client {
 
 	public static final String TAG = "CC98ClientImpl";
-	
- 	public static final String HTTP_CLIENT = "httpClient";
+
+	public static final String HTTP_CLIENT = "httpClient";
 	public static final String USER_AVATAR = "userAvatar";
 	public static final String USER_NAME_STORE = "userNameStore";
 	public static final String USER_NAME = "userName";
@@ -90,97 +82,33 @@ public class CC98ClientImpl implements ICC98Client {
 	public final int PM_SEND_FAIL = -1;
 	public final int PM_SEND_SUCC = 0;
 
-	private Bitmap userImg;
-	private String userName;
- 	private DefaultHttpClient client = getHttpClient();
-	private MyApplication appContext;
-	private String passwd;
-	private String userGender;
 	public final String ID_PASSWD_ERROR_MSG = "用户名/密码错误";
 	public final String SERVER_ERROR = "CC98服务器异常！";
 
-//	@Inject
-//	public CC98ClientImpl(MyApplication application) {
-//		appContext = application;
-//		initUserData();
-//	}
+	@Inject
+	private Application application;
+	private UserData userData;
+	private DefaultHttpClient client;
 
-	private void initUserData() {
-		try {
-			FileInputStream clientIn = appContext.openFileInput(HTTP_CLIENT);
-			ObjectInputStream ois = new ObjectInputStream(clientIn);
-			client = (DefaultHttpClient) ois.readObject();
-		} catch (FileNotFoundException e1) {
-			e1.printStackTrace();
-			genNewClient();
-			return;
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.exit(0);
+	@Override
+	public UserData getUserData() {
+		if (userData == null) {
+			userData = ((MyApplication) application).getUserData();
 		}
-		try {
-			FileInputStream avatarIn = appContext.openFileInput(USER_AVATAR);
-			userImg = (Bitmap) new ObjectInputStream(avatarIn).readObject();
-			userName = appContext.getSharedPreferences(USER_NAME_STORE,
-					Context.MODE_PRIVATE).getString(USER_NAME, "");
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.exit(0);
-		}
-	}
-
-	/**
-	 * 
-	 */
-	private void genNewClient() {
-		Log.d(TAG, "genNewClient");
-		HttpParams params = new BasicHttpParams();
-		HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
-		HttpProtocolParams.setContentCharset(params,
-				HTTP.DEFAULT_CONTENT_CHARSET);
-		HttpProtocolParams.setUseExpectContinue(params, true);
-		SchemeRegistry schReg = new SchemeRegistry();
-		schReg.register(new Scheme("http", PlainSocketFactory
-				.getSocketFactory(), 80));
-		schReg.register(new Scheme("https",
-				SSLSocketFactory.getSocketFactory(), 443));
-		ClientConnectionManager conMgr = new ThreadSafeClientConnManager(
-				params, schReg);
-		client = new DefaultHttpClient(conMgr, params);
-		client.getParams().setParameter(
-				CoreConnectionPNames.CONNECTION_TIMEOUT, 15000);
-		client.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, 15000);
+		return userData;
 	}
 
 	@Override
-	public Bitmap getLoginUserImg() {
-		return userImg;
+	public Bitmap getUserAvatar() {
+		return ((MyApplication)application).getUserAvatar();
 	}
-
-	/**
-	 * @return the userGender
-	 */
-	public String getUserGender() {
-		return userGender;
-	}
-
-	@Override
-	public void setLoginUserImg(Bitmap bitmap) {
-		userImg = bitmap;
-	}
-
-	@Override
-	public void clearLoginInfo() {
-		client.getCookieStore().clear();
-		client.getCredentialsProvider().clear();
-	}
-
+	
 	private DefaultHttpClient getHttpClient() {
-		if (client == null) {
+		Log.d(TAG, "getHttpClient");
+		if (client == null) { 
 			HttpParams params = new BasicHttpParams();
 			HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
-			HttpProtocolParams.setContentCharset(params,
-					HTTP.DEFAULT_CONTENT_CHARSET);
+			HttpProtocolParams.setContentCharset(params, HTTP.UTF_8);
 			HttpProtocolParams.setUseExpectContinue(params, true);
 			SchemeRegistry schReg = new SchemeRegistry();
 			schReg.register(new Scheme("http", PlainSocketFactory
@@ -194,8 +122,17 @@ public class CC98ClientImpl implements ICC98Client {
 					CoreConnectionPNames.CONNECTION_TIMEOUT, 15000);
 			client.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT,
 					15000);
+			if (getUserData().getCookieStore() != null) {
+				client.setCookieStore(getUserData().getCookieStore());
+			}
 		}
 		return client;
+	}
+
+	@Override
+	public void clearLoginInfo() {
+		getHttpClient().getCookieStore().clear();
+		getHttpClient().getCredentialsProvider().clear();
 	}
 
 	@Override
@@ -212,8 +149,7 @@ public class CC98ClientImpl implements ICC98Client {
 		nvps.add(new BasicNameValuePair("loginaction", "login"));
 		nvps.add(new BasicNameValuePair("userhidden", "2"));
 		httpost.setEntity(new UrlEncodedFormEntity(nvps, HTTP.UTF_8));
-
-		response = client.execute(httpost);
+		response = getHttpClient().execute(httpost);
 		if (response.getStatusLine().getStatusCode() != 200) {
 			throw new NetworkErrorException(SERVER_ERROR);
 		}
@@ -221,43 +157,13 @@ public class CC98ClientImpl implements ICC98Client {
 		if (sysMsg.contains("密码错误") || sysMsg.contains("论坛错误信息")) {
 			throw new IllegalAccessException(ID_PASSWD_ERROR_MSG);
 		}
- //		storeUserInfo();
-		userName = id;
-		passwd = pw;
+		getUserData().setUserName(id);
+		getUserData().setCookieStore(getHttpClient().getCookieStore());
 		getLoginUserImgAndGender();
-	}
-
-	private void storeUserInfo() throws FileNotFoundException, IOException {
-		new ObjectOutputStream(appContext.openFileOutput(
-				MyApplication.HTTP_CLIENT, Context.MODE_PRIVATE))
-				.writeObject(client);
-		new ObjectOutputStream(appContext.openFileOutput(
-				MyApplication.USER_AVATAR, Context.MODE_PRIVATE))
-				.writeObject(userImg);
-		Editor editor = appContext.getSharedPreferences(MyApplication.USER_NAME_STORE, Context.MODE_PRIVATE).edit();
-		editor.putString(MyApplication.USER_NAME, userName);
-		editor.commit();
+		((MyApplication) application).storeUserInfo();
 	}
 
 	@Override
-	public void setProxy(String ip, int port) {
-		HttpHost proxy = new HttpHost(ip, port);
-		client.getParams().setParameter(ConnRouteParams.DEFAULT_PROXY,
-				proxy);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see tk.djcrazy.libCC98.ICC98Client#rmProxy()
-	 */
-	@Override
-	public void rmProxy() {
-		client.getParams().removeParameter(
-				ConnRouteParams.DEFAULT_PROXY);
-	}
-
- 	@Override
 	public boolean pushNewPost(List<NameValuePair> nvpsList, String boardID)
 			throws ClientProtocolException, IOException {
 		System.out.println("" + boardID);
@@ -266,11 +172,10 @@ public class CC98ClientImpl implements ICC98Client {
 		HttpResponse response = null;
 		String html = null;
 		httpPost.addHeader("Referer", manager.getPushNewPostReferer(boardID));
-		nvpsList.add(new BasicNameValuePair("username", userName));
-		nvpsList.add(new BasicNameValuePair("passwd", passwd));
-		// System.err.println("User Info:" + username + " " + passwd);
+		nvpsList.add(new BasicNameValuePair("username", getUserData().getUserName()));
+		nvpsList.add(new BasicNameValuePair("passwd", ""));
 		httpPost.setEntity(new UrlEncodedFormEntity(nvpsList, HTTP.UTF_8));
-		response = client.execute(httpPost);
+		response = getHttpClient().execute(httpPost);
 		entity = response.getEntity();
 		if (entity != null) {
 			html = EntityUtils.toString(entity);
@@ -281,18 +186,17 @@ public class CC98ClientImpl implements ICC98Client {
 		return false;
 	}
 
- 	@Override
+	@Override
 	public boolean editPost(List<NameValuePair> nvpsList, String link)
 			throws ClientProtocolException, IOException {
 		HttpEntity entity;
 		HttpPost httpPost = new HttpPost(link);
 		httpPost.setEntity(new UrlEncodedFormEntity(nvpsList, HTTP.UTF_8));
-		HttpResponse response = client.execute(httpPost);
+		HttpResponse response = getHttpClient().execute(httpPost);
 		entity = response.getEntity();
 		if (entity != null) {
 			String html = EntityUtils.toString(entity);
 			// System.err.println("Reply Html:" + link + html.toLowerCase());
-
 			if (html.contains("编辑帖子成功")) {
 				return true;
 			}
@@ -300,7 +204,7 @@ public class CC98ClientImpl implements ICC98Client {
 		return false;
 	}
 
- 	@Override
+	@Override
 	public void submitReply(List<NameValuePair> nvpsList, String boardID,
 			String rootID) throws Exception {
 		HttpEntity entity;
@@ -310,14 +214,17 @@ public class CC98ClientImpl implements ICC98Client {
 
 		httpPost.addHeader("Referer",
 				manager.getSubmitReplyReferer(boardID, rootID));
-		nvpsList.add(new BasicNameValuePair("username", userName));
-		nvpsList.add(new BasicNameValuePair("passwd", passwd));
+		nvpsList.add(new BasicNameValuePair("username", getUserData().getUserName()));
+		nvpsList.add(new BasicNameValuePair("passwd", "e6084377cbe6c2c5"));
 		httpPost.setEntity(new UrlEncodedFormEntity(nvpsList, HTTP.UTF_8));
-		response = client.execute(httpPost);
+		Log.d(TAG, "request: "+EntityUtils.toString(httpPost.getEntity()));
+		response = getHttpClient().execute(httpPost);
+		
 		entity = response.getEntity();
 
 		if (entity != null) {
 			html = EntityUtils.toString(entity);
+			Log.d(TAG, "submit reply: "+html);
 			if (html.contains("状态：回复帖子成功")) {
 				return;
 			}
@@ -355,7 +262,7 @@ public class CC98ClientImpl implements ICC98Client {
 		nvpsList.add(new BasicNameValuePair("serType", String.valueOf(boardID)));
 
 		httpPost.setEntity(new UrlEncodedFormEntity(nvpsList, HTTP.UTF_8));
-		response = client.execute(httpPost);
+		response = getHttpClient().execute(httpPost);
 		entity = response.getEntity();
 
 		if (entity != null) {
@@ -382,7 +289,7 @@ public class CC98ClientImpl implements ICC98Client {
 		HttpGet get = new HttpGet(link);
 		Log.d(TAG, "get page: " + link);
 		HttpResponse rsp = null;
-		rsp =client.execute(get);
+		rsp = getHttpClient().execute(get);
 		int mCode = rsp.getStatusLine().getStatusCode();
 		if (mCode != 200) {
 			throw new IOException("服务器有误！");
@@ -406,7 +313,7 @@ public class CC98ClientImpl implements ICC98Client {
 		HttpURLConnection uc = (HttpURLConnection) url.openConnection();
 		// 上传图片的一些参数设置
 		String cookieString = "";
-		for (Cookie cookie : client.getCookieStore().getCookies()) {
+		for (Cookie cookie : getHttpClient().getCookieStore().getCookies()) {
 			cookieString += cookie.getName() + "=" + cookie.getValue() + "; ";
 		}
 		uc.setRequestProperty("Cookie", cookieString);
@@ -461,7 +368,7 @@ public class CC98ClientImpl implements ICC98Client {
 				.replace(",1", "");
 	}
 
- 	@Override
+	@Override
 	public String getInboxHtml(int pageNumber) throws ClientProtocolException,
 			ParseException, IOException {
 		return getPage(manager.getInboxUrl(pageNumber));
@@ -496,33 +403,7 @@ public class CC98ClientImpl implements ICC98Client {
 		}
 		return url;
 	}
- 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see tk.djcrazy.libCC98.ICC98Client#getUserName()
-	 */
-	@Override
-	public String getUserName() {
-		return userName;
-	}
 
- 	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see tk.djcrazy.libCC98.ICC98Client#setUserName(java.lang.String)
-	 */
-	@Override
-	public void setUserName(String name) {
-		userName = name;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see tk.djcrazy.libCC98.ICC98Client#sendPm(java.lang.String,
-	 * java.lang.String, java.lang.String)
-	 */
 	@Override
 	public int sendPm(String touser, String title, String message)
 			throws ClientProtocolException, IOException {
@@ -535,7 +416,7 @@ public class CC98ClientImpl implements ICC98Client {
 		int flag = PM_SEND_FAIL;
 
 		post.setEntity(new UrlEncodedFormEntity(msgInfo, HTTP.UTF_8));
-		response = client.execute(post);
+		response = getHttpClient().execute(post);
 
 		HttpEntity entity = response.getEntity();
 
@@ -565,7 +446,7 @@ public class CC98ClientImpl implements ICC98Client {
 		nvpsList.add(new BasicNameValuePair("touser", userId));
 		nvpsList.add(new BasicNameValuePair("Submit", "保存"));
 		httpPost.setEntity(new UrlEncodedFormEntity(nvpsList, HTTP.UTF_8));
-		HttpResponse response = client.execute(httpPost);
+		HttpResponse response = getHttpClient().execute(httpPost);
 		if (response.getStatusLine().getStatusCode() != 200) {
 			throw new ConnectException("服务器返回错误！");
 		}
@@ -633,39 +514,34 @@ public class CC98ClientImpl implements ICC98Client {
 
 	private void getLoginUserImgAndGender() throws ClientProtocolException,
 			ParseException, IOException, ParseContentException {
-		String html = getPage(manager.getUserProfileUrl(userName));
+		String html = getPage(manager.getUserProfileUrl(getUserData()
+				.getUserName()));
 		try {
 			String url = RegexUtil.getMatchedString(
 					CC98ParseRepository.USER_PROFILE_AVATAR_REGEX, html);
 			if (!url.startsWith("http") && !url.startsWith("ftp")) {
 				url = manager.getClientUrl() + url;
 			}
-			userImg = getBitmapFromUrl(url);
+			((MyApplication) application).setUserAvatar(getBitmapFromUrl(url));
 		} catch (ParseContentException e) {
-			userImg = BitmapFactory
-					.decodeFile("file:///android_asset/pic/no_avatar.jpg");
-		}
-		if (html.contains("男")) {
-			userGender = "male";
-		} else {
-			userGender = "female";
+			((MyApplication) application).setUserAvatar(BitmapFactory
+					.decodeFile("file:///android_asset/pic/no_avatar.jpg"));
 		}
 	}
- 
-	
+
 	@Override
 	public void doHttpBasicAuthorization(String authName, String authPassword)
 			throws ClientProtocolException, IOException, URISyntaxException,
 			AuthenticationException {
 		URI uri = null;
 		uri = new URI(manager.getClientUrl());
-		client.getCredentialsProvider().setCredentials(
+		getHttpClient().getCredentialsProvider().setCredentials(
 				new AuthScope(uri.getHost(), uri.getPort(),
 						AuthScope.ANY_SCHEME),
 				new UsernamePasswordCredentials(authName, authPassword));
 
 		HttpGet request = new HttpGet(uri);
-		HttpResponse response = client.execute(request);
+		HttpResponse response = getHttpClient().execute(request);
 		if (response.getStatusLine().getStatusCode() == 200) {
 			return;
 		} else {
@@ -682,4 +558,5 @@ public class CC98ClientImpl implements ICC98Client {
 	public void setUseProxy(boolean b) {
 		manager.setLifetoyVersion(b);
 	}
+
 }

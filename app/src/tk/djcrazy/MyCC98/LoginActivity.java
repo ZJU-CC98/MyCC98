@@ -73,7 +73,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 	/**
 	 * configure version
 	 */
-	public static final boolean IS_LIFETOY_VERSION = true;
+	public static final boolean IS_LIFETOY_VERSION = false;
 
 	public static final String USERNAME = "USERNAME";
 	public static final String PASSWORD = "PASSWORD";
@@ -303,10 +303,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 					.putBoolean(REMEMBERPWD, false);
 		}
 		editor.commit();
-		((MyApplication) getApplication()).setUserName(service.getUserName());
-		((MyApplication) getApplication()).setUserAvatar(service
-				.getUserAvatar());
-		forwardToNextActivity();
+ 		forwardToNextActivity();
 	}
 	
 	private class AuthTask extends ProgressRoboAsyncTask<String> {

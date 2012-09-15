@@ -56,7 +56,8 @@ import com.google.inject.Inject;
  * 
  */
 @ContentView(R.layout.post_contents)
-public class PostContentsJSActivity extends BaseActivity  implements OnClickListener{
+public class PostContentsJSActivity extends BaseActivity implements
+		OnClickListener {
 	private static final String JS_INTERFACE = "PostContentsJSActivity";
 
 	private static final int FETCH_CONTENT_SUCCESS = 1;
@@ -69,8 +70,8 @@ public class PostContentsJSActivity extends BaseActivity  implements OnClickList
 	public static final String BOARD_NAME = "boardName";
 	public static final String POST_NAME = "postName";
 	public static final String PAGE_NUMBER = "pageNumber";
- 	public static final int LAST_PAGE = 32767;
- 
+	public static final int LAST_PAGE = 32767;
+
 	@InjectView(R.id.post_contents)
 	private WebView webView;
 	@InjectView(R.id.search_text)
@@ -94,28 +95,28 @@ public class PostContentsJSActivity extends BaseActivity  implements OnClickList
 	@InjectView(R.id.but_post_re)
 	private View vRe;
 	@InjectView(R.id.search_bar)
- 	private RelativeLayout searchBar;
- 	
+	private RelativeLayout searchBar;
+
 	private int prevPageNum = 1;
 	private int totalPageNum = 1;
-	
-	@InjectExtra(value = BOARD_NAME, optional=true)
-	private String boardName="";
+
+	@InjectExtra(value = BOARD_NAME, optional = true)
+	private String boardName = "";
 	@InjectExtra(POST_ID)
 	private String postId;
 	@InjectExtra(BOARD_ID)
 	private String boardId;
 	@InjectExtra(POST_NAME)
 	private String postName;
-	@InjectExtra(value=PAGE_NUMBER, optional=true)
- 	private int currPageNum = 1;
+	@InjectExtra(value = PAGE_NUMBER, optional = true)
+	private int currPageNum = 1;
 
- 	private static PostContentsListPage currPage = new PostContentsListPage();
+	private static PostContentsListPage currPage = new PostContentsListPage();
 	private static PostContentsListPage nextPage = new PostContentsListPage();
 	private static PostContentsListPage prevPage = new PostContentsListPage();
 
 	private static final int MENU_REPLY_ID = 1325416345;
-	
+
 	private static final String ITEM_OPEN = "<div class=\"post\"><div class=\"post-content-wrapper\">";
 	private static final String ITEM_CLOSE = "</div>";
 	private static final String TAG = "PostContentsJS";
@@ -131,54 +132,57 @@ public class PostContentsJSActivity extends BaseActivity  implements OnClickList
 
 	@Inject
 	private ICC98Service service;
-	
+
 	private HtmlGenHelper helper = new HtmlGenHelper();
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-  		configureActionBar();
-  		setViews();
+		configureActionBar();
+		setViews();
 		addListeners();
 		progressDialog = ProgressDialog.show(PostContentsJSActivity.this, "",
 				this.getText(R.string.connectting));
 		progressDialog.show();
 		dispContents(currPageNum);
-	} 
+	}
 
 	private void configureActionBar() {
 		ActionBar actionBar = getSupportActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
-		actionBar.setLogo(new BitmapDrawable(((MyApplication)getApplication()).getUserAvatar()));
- 	}
+		actionBar.setLogo(new BitmapDrawable(service.getUserAvatar()));
+	}
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu optionMenu) {
-		optionMenu.add(android.view.Menu.NONE, MENU_REPLY_ID, 1, "回复") 
-		.setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-		optionMenu.add(android.view.Menu.NONE, MENU_REPLY_ID+1, 1, "跳转") 
-		.setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-		optionMenu.add(android.view.Menu.NONE, MENU_REPLY_ID+2, 1, "上一页") 
-		.setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-		optionMenu.add(android.view.Menu.NONE, MENU_REPLY_ID+3, 1, "下一页") 
-		.setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
- 		return true;
+		optionMenu.add(android.view.Menu.NONE, MENU_REPLY_ID, 1, "回复")
+				.setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+		optionMenu.add(android.view.Menu.NONE, MENU_REPLY_ID + 1, 1, "跳转")
+				.setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+		optionMenu.add(android.view.Menu.NONE, MENU_REPLY_ID + 2, 1, "上一页")
+				.setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+		optionMenu.add(android.view.Menu.NONE, MENU_REPLY_ID + 3, 1, "下一页")
+				.setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+		return true;
 	}
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			finish();
- 			return true;
+			return true;
 		case MENU_REPLY_ID:
 			reply();
-			return true; 
+			return true;
 		default:
 			break;
 		}
 		return false;
 	}
+
 	@Override
-	public void onClick(View v) { 
+	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.find_prev:
 			webView.findNext(false);
@@ -213,71 +217,77 @@ public class PostContentsJSActivity extends BaseActivity  implements OnClickList
 	}
 
 	private void addListeners() {
- 		findPrevButton.setOnClickListener(this);
- 		findNextButton.setOnClickListener(this);
- 		searchDoneButton.setOnClickListener(this);
- 		vJump.setOnClickListener(this);
- 		vPrev.setOnClickListener(this);
- 		vNext.setOnClickListener(this);
- 		vRe.setOnClickListener(this);
- 		showAllImageTextView.setOnClickListener(this);
- 		searchEditText.addTextChangedListener(new TextWatcher() {
+		findPrevButton.setOnClickListener(this);
+		findNextButton.setOnClickListener(this);
+		searchDoneButton.setOnClickListener(this);
+		vJump.setOnClickListener(this);
+		vPrev.setOnClickListener(this);
+		vNext.setOnClickListener(this);
+		vRe.setOnClickListener(this);
+		showAllImageTextView.setOnClickListener(this);
+		searchEditText.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before,
 					int count) {
 				searchAndHilight(searchEditText.getText().toString());
 			}
+
 			@Override
 			public void beforeTextChanged(CharSequence s, int start, int count,
 					int after) {
 			}
+
 			@Override
 			public void afterTextChanged(Editable s) {
 			}
 		});
- 	}
+	}
 
-	
 	@Override
 	protected void onDestroy() {
 		Log.d(TAG, "onDestroy");
 		super.onDestroy();
 	}
+
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		Log.d(TAG, "onSaveInstanceState");
 	}
+
 	@Override
 	public void onLowMemory() {
 		Log.d(TAG, "onLowMemory");
 		super.onLowMemory();
 	}
+
 	@Override
 	protected void onRestoreInstanceState(Bundle savedInstanceState) {
 		Log.d(TAG, "onRestoreInstanceState");
 		super.onRestoreInstanceState(savedInstanceState);
 	}
+
 	@Override
 	public void onStart() {
 		Log.d(TAG, "onStart");
 		super.onStart();
 	}
-	
+
 	@Override
 	public void onStop() {
 		Log.d(TAG, "onStop");
 		super.onStop();
 	}
+
 	/**
 	 * 
 	 */
 	private void setViews() {
- 		WebSettings webSettings = webView.getSettings();
+		WebSettings webSettings = webView.getSettings();
 		webSettings.setJavaScriptEnabled(true);
 		webSettings.setPluginsEnabled(true);
 		webSettings.setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
-		//这里可以在设置中增加选项
+		// 这里可以在设置中增加选项
 		webSettings.setAppCacheEnabled(true);
 		webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
 		webView.addJavascriptInterface(this, JS_INTERFACE);
@@ -297,27 +307,27 @@ public class PostContentsJSActivity extends BaseActivity  implements OnClickList
 				Intent i = new Intent(Intent.ACTION_VIEW);
 				i.setData(Uri.parse(url));
 				startActivity(i);
- 				return true;
+				return true;
 			}
 		});
 	}
 
 	private void onLoadDone() {
 		// progressDialog.dismiss();
- 		progressDialog.dismiss();
+		progressDialog.dismiss();
 		vPrev.setVisibility(currPageNum == 1 ? View.GONE : View.VISIBLE);
 		vNext.setVisibility(currPageNum == totalPageNum ? View.GONE
 				: View.VISIBLE);
 	}
- 
+
 	public void jumpTo(int pageNum) {
 		dispContents(pageNum);
- 	}
+	}
 
 	public void prevPage() {
 		if (currPageNum - 1 > 0) {
 			dispContents(currPageNum - 1);
- 		}
+		}
 
 	}
 
@@ -328,7 +338,7 @@ public class PostContentsJSActivity extends BaseActivity  implements OnClickList
 	public void nextPage() {
 		if (currPageNum + 1 <= totalPageNum) {
 			dispContents(currPageNum + 1);
- 		}
+		}
 	}
 
 	// handle the message
@@ -341,7 +351,8 @@ public class PostContentsJSActivity extends BaseActivity  implements OnClickList
 				webView.loadDataWithBaseURL(null, currPage.getString(),
 						"text/html", "utf-8", null);
 				getSupportActionBar().setTitle(postName);
-				getSupportActionBar().setSubtitle("第"+currPageNum+"页 | "+"共"+totalPageNum+"页");
+				getSupportActionBar().setSubtitle(
+						"第" + currPageNum + "页 | " + "共" + totalPageNum + "页");
 				prefetch();
 				break;
 			case FETCH_CONTENT_FAILED:
@@ -364,18 +375,18 @@ public class PostContentsJSActivity extends BaseActivity  implements OnClickList
 	};
 
 	private void dispContents(final int pageNum) {
- 		webView.getSettings().setBlockNetworkImage(true);
+		webView.getSettings().setBlockNetworkImage(true);
 		new Thread() {
 			@Override
 			public void run() {
- 				if (pageNum == currPageNum - 1 && prevPage.getList() != null) { // backward
+				if (pageNum == currPageNum - 1 && prevPage.getList() != null) { // backward
 																				// one
 																				// step
 					nextPage.setList(currPage.getList());
 					nextPage.setString(currPage.getString());
 					currPage.setList(prevPage.getList());
 					currPage.setString(prevPage.getString());
- 					prevPageNum = currPageNum;
+					prevPageNum = currPageNum;
 					currPageNum = (pageNum == LAST_PAGE) ? totalPageNum
 							: pageNum;
 					handler.sendEmptyMessage(FETCH_CONTENT_SUCCESS);
@@ -395,7 +406,7 @@ public class PostContentsJSActivity extends BaseActivity  implements OnClickList
 				} else {
 					try {
 						currPage.setString(fetchContents(currPage, pageNum));
- 						prevPageNum = currPageNum;
+						prevPageNum = currPageNum;
 						currPageNum = (pageNum == LAST_PAGE) ? totalPageNum
 								: pageNum;
 						handler.sendEmptyMessage(FETCH_CONTENT_SUCCESS);
@@ -415,7 +426,8 @@ public class PostContentsJSActivity extends BaseActivity  implements OnClickList
 	}
 
 	private String fetchContents(PostContentsListPage page, final int pageNum)
-			throws ClientProtocolException, ParseException, IOException, ParseContentException, java.text.ParseException {
+			throws ClientProtocolException, ParseException, IOException,
+			ParseContentException, java.text.ParseException {
 		Log.d(TAG, postId);
 		if (threadCancel) {
 			threadCancel = false;
@@ -437,8 +449,8 @@ public class PostContentsJSActivity extends BaseActivity  implements OnClickList
 		for (int i = 1; i < contentList.size() && !threadCancel; ++i) {
 			PostContentEntity item = contentList.get(i);
 			String author = item.getUserName();
-//			String content = helper.parseInnerLink(
-//					item.getPostContent(), JS_INTERFACE);
+			// String content = helper.parseInnerLink(
+			// item.getPostContent(), JS_INTERFACE);
 			String content = item.getPostContent();
 			String avatar = item.getUserAvatarLink();
 			Gender gender = item.getGender();
@@ -455,8 +467,8 @@ public class PostContentsJSActivity extends BaseActivity  implements OnClickList
 			}
 			StringBuilder mBuilder = new StringBuilder(300);
 			mBuilder.append(ITEM_OPEN)
-					.append(helper.addPostInfo(postTitle, avatarUrl,
-							author, gender.getName(), floorNum,
+					.append(helper.addPostInfo(postTitle, avatarUrl, author,
+							gender.getName(), floorNum,
 							DateFormatUtil.convertDateToString(postTime, true),
 							i))
 					.append("<img class=\"post-face\" src=\"file:///android_asset/pic/")
@@ -562,81 +574,86 @@ public class PostContentsJSActivity extends BaseActivity  implements OnClickList
 		jumpEditText.setFocusableInTouchMode(true);
 		// set numeric touch pad
 		jumpEditText.setInputType(InputType.TYPE_CLASS_PHONE);
-		new AlertDialog.Builder(this).setTitle(R.string.jump_dialog_title)
+		new AlertDialog.Builder(this)
+				.setTitle(R.string.jump_dialog_title)
 				.setIcon(android.R.drawable.ic_dialog_info)
 				.setView(jumpEditText)
-				.setPositiveButton(R.string.jump_button, new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						int jumpNum = 1;
-						try {
-							jumpNum = Integer.parseInt(jumpEditText.getText()
-									.toString());
-							if (jumpNum <= 0 || jumpNum > totalPageNum) {
-								Toast.makeText(PostContentsJSActivity.this,
-										R.string.search_input_error,
-										Toast.LENGTH_SHORT).show();
-							} else {
-								dispContents(jumpNum);
-							}
-						} catch (NumberFormatException e) {
-							Log.e(PostContentsJSActivity.TAG, e.toString());
-							Toast.makeText(PostContentsJSActivity.this,
-									R.string.search_input_error,
-									Toast.LENGTH_SHORT).show();
-						}
+				.setPositiveButton(R.string.jump_button,
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								int jumpNum = 1;
+								try {
+									jumpNum = Integer.parseInt(jumpEditText
+											.getText().toString());
+									if (jumpNum <= 0 || jumpNum > totalPageNum) {
+										Toast.makeText(
+												PostContentsJSActivity.this,
+												R.string.search_input_error,
+												Toast.LENGTH_SHORT).show();
+									} else {
+										dispContents(jumpNum);
+									}
+								} catch (NumberFormatException e) {
+									Log.e(PostContentsJSActivity.TAG,
+											e.toString());
+									Toast.makeText(PostContentsJSActivity.this,
+											R.string.search_input_error,
+											Toast.LENGTH_SHORT).show();
+								}
 
-					}
-				}).setNegativeButton(R.string.go_back, null).show();
+							}
+						}).setNegativeButton(R.string.go_back, null).show();
 	}
- 
+
 	public void reply() {
 		Intent intent = new Intent(PostContentsJSActivity.this,
 				EditActivity.class);
-  		intent.putExtra(EditActivity.MOD, EditActivity.MOD_REPLY);
- 		intent.putExtra(EditActivity.POST_Id, postId);
- 		intent.putExtra(EditActivity.POST_NAME, postName);
- 		intent.putExtra(EditActivity.BOARD_ID, boardId);
- 		intent.putExtra(EditActivity.BOARD_NAME, boardName);
+		intent.putExtra(EditActivity.MOD, EditActivity.MOD_REPLY);
+		intent.putExtra(EditActivity.POST_Id, postId);
+		intent.putExtra(EditActivity.POST_NAME, postName);
+		intent.putExtra(EditActivity.BOARD_ID, boardId);
+		intent.putExtra(EditActivity.BOARD_NAME, boardName);
 		startActivityForResult(intent, 1);
- 	}
+	}
 
-// 	@Override
-//	public boolean onCreateOptionsMenu(Menu menu) {
-//		menu.add(0, MNU_REFRESH, 0, R.string.refresh);
-//		menu.add(0, MNU_FIRST, 1, R.string.first_page);
-//		menu.add(0, MNU_LAST, 2, R.string.last_page);
-//		menu.add(0, MNU_PREV, 3, R.string.pre_page);
-//		menu.add(0, MNU_JUMP, 4, R.string.jump_dialog_title);
-//		menu.add(0, MNU_NEXT, 5, R.string.next_page);
-//		return super.onCreateOptionsMenu(menu);
-//
-//	}
-//
-//	@Override
-//	public boolean onOptionsItemSelected(MenuItem item) {
-//		switch (item.getItemId()) {
-//		case MNU_REFRESH:
-//			refreshPage();
-//			break;
-//		case MNU_PREV:
-//			prevPage();
-//			break;
-//		case MNU_JUMP:
-//			jumpDialog();
-//			break;
-//		case MNU_FIRST:
-//			jumpTo(1);
-//			break;
-//		case MNU_NEXT:
-//			nextPage();
-//			break;
-//		case MNU_LAST:
-//			jumpTo(totalPageNum);
-//			break;
-//		}
-//		return super.onOptionsItemSelected(item);
-//	}
+	// @Override
+	// public boolean onCreateOptionsMenu(Menu menu) {
+	// menu.add(0, MNU_REFRESH, 0, R.string.refresh);
+	// menu.add(0, MNU_FIRST, 1, R.string.first_page);
+	// menu.add(0, MNU_LAST, 2, R.string.last_page);
+	// menu.add(0, MNU_PREV, 3, R.string.pre_page);
+	// menu.add(0, MNU_JUMP, 4, R.string.jump_dialog_title);
+	// menu.add(0, MNU_NEXT, 5, R.string.next_page);
+	// return super.onCreateOptionsMenu(menu);
+	//
+	// }
+	//
+	// @Override
+	// public boolean onOptionsItemSelected(MenuItem item) {
+	// switch (item.getItemId()) {
+	// case MNU_REFRESH:
+	// refreshPage();
+	// break;
+	// case MNU_PREV:
+	// prevPage();
+	// break;
+	// case MNU_JUMP:
+	// jumpDialog();
+	// break;
+	// case MNU_FIRST:
+	// jumpTo(1);
+	// break;
+	// case MNU_NEXT:
+	// nextPage();
+	// break;
+	// case MNU_LAST:
+	// jumpTo(totalPageNum);
+	// break;
+	// }
+	// return super.onOptionsItemSelected(item);
+	// }
 
 	private void searchDialog() {
 		searchMode = true;
@@ -655,15 +672,14 @@ public class PostContentsJSActivity extends BaseActivity  implements OnClickList
 	}
 
 	public void showContentDialog(final int index, int which) {
-		Log.d(TAG, "showContentDialog: "+which);
+		Log.d(TAG, "showContentDialog: " + which);
 		final PostContentEntity item = currPage.getList().get(index);
 		switch (which) {
 		case 0: {
 			// quote & reply
 			String tmp = item.getPostContent().replaceAll("(<br>|<BR>)", "\n");
-			quoteReply(item.getUserName(),
-					DateFormatUtil.convertDateToString(item.getPostTime(),
-							false), tmp, index, currPageNum);
+			quoteReply(item.getUserName(), DateFormatUtil.convertDateToString(
+					item.getPostTime(), false), tmp, index, currPageNum);
 		}
 			break;
 		case 1:
@@ -675,49 +691,51 @@ public class PostContentsJSActivity extends BaseActivity  implements OnClickList
 					PostContentsJSActivity.this);
 			builder.setTitle("提示");
 			builder.setMessage("确认添加 " + item.getUserName() + " 为好友？");
-			builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+			builder.setPositiveButton("确定",
+					new DialogInterface.OnClickListener() {
 
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					addFriend(item.getUserName());
-				}
-			});
-			builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-				}
-			});
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							addFriend(item.getUserName());
+						}
+					});
+			builder.setNegativeButton("取消",
+					new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+						}
+					});
 			builder.create().show();
 			break;
 		case 3:
 			// view user info
 			viewUserInfo(item.getUserName());
 			break;
-//		case 4:
-//			if (item.getUserName().equals(service.getUserName())) {
-//				String tmp = item.getPostContent().replaceAll("(<br>|<BR>)",
-//						"\n");
-//				String topic = item.getPostTitle();
-//				editPost(item.getEditPostLink(), tmp, topic);
-//			}
-//			break;
+		// case 4:
+		// if (item.getUserName().equals(service.getUserName())) {
+		// String tmp = item.getPostContent().replaceAll("(<br>|<BR>)",
+		// "\n");
+		// String topic = item.getPostTitle();
+		// editPost(item.getEditPostLink(), tmp, topic);
+		// }
+		// break;
 		case 5:
 			// cancel
 			break;
 		}
 	}
 
-//	private void editPost(String link, String content, String topic) {
-//		Bundle bundle = new Bundle();
-//		bundle.putString(EditActivity.EDIT_CONTENT,
-//				content.replaceAll("<.*?>|searchubb.*?;", ""));
-//		bundle.putString(EditActivity.EDIT_TOPIC, topic);
-//		bundle.putString(EditActivity.EDIT_LINK, link);
-//		bundle.putInt(EditActivity.MOD, EditActivity.MOD_EDIT);
-//		Intent intent = new Intent(this, EditActivity.class);
-//		intent.putExtra(EditActivity.BUNDLE, bundle);
-//		startActivity(intent);
- //	}
+	// private void editPost(String link, String content, String topic) {
+	// Bundle bundle = new Bundle();
+	// bundle.putString(EditActivity.EDIT_CONTENT,
+	// content.replaceAll("<.*?>|searchubb.*?;", ""));
+	// bundle.putString(EditActivity.EDIT_TOPIC, topic);
+	// bundle.putString(EditActivity.EDIT_LINK, link);
+	// bundle.putInt(EditActivity.MOD, EditActivity.MOD_EDIT);
+	// Intent intent = new Intent(this, EditActivity.class);
+	// intent.putExtra(EditActivity.BUNDLE, bundle);
+	// startActivity(intent);
+	// }
 
 	private void addFriend(final String userName) {
 		new Thread(new Runnable() {
@@ -743,16 +761,16 @@ public class PostContentsJSActivity extends BaseActivity  implements OnClickList
 	private void viewUserInfo(String username) {
 		Intent intent = new Intent(this, ProfileActivity.class);
 		intent.putExtra("userName", username);
- 		startActivity(intent);
- 	}
+		startActivity(intent);
+	}
 
 	private void sendPm(String target) {
-		Intent intent = new Intent(getApplicationContext(),EditActivity.class);
+		Intent intent = new Intent(getApplicationContext(), EditActivity.class);
 		intent.putExtra(EditActivity.MOD, EditActivity.MOD_PM);
 		intent.putExtra(EditActivity.PM_TO_USER, target);
-  		startActivity(intent);
- 
- 	}
+		startActivity(intent);
+
+	}
 
 	private void dismissSearchDialog() {
 		webView.clearMatches();
@@ -760,10 +778,10 @@ public class PostContentsJSActivity extends BaseActivity  implements OnClickList
 		searchMode = false;
 	}
 
-	private void quoteReply(String sender,
-			String postTime, String postContent, int floorNum, int pageNum) {
+	private void quoteReply(String sender, String postTime, String postContent,
+			int floorNum, int pageNum) {
 		Intent intent = new Intent(this, EditActivity.class);
- 		intent.putExtra(EditActivity.BOARD_ID, boardId);
+		intent.putExtra(EditActivity.BOARD_ID, boardId);
 		intent.putExtra(EditActivity.BOARD_NAME, boardName);
 		intent.putExtra(EditActivity.POST_Id, postId);
 		intent.putExtra(EditActivity.POST_NAME, postName);
@@ -774,7 +792,7 @@ public class PostContentsJSActivity extends BaseActivity  implements OnClickList
 		intent.putExtra(EditActivity.PAGE_NUMBER, pageNum);
 		intent.putExtra(EditActivity.MOD, EditActivity.MOD_QUOTE_REPLY);
 		startActivityForResult(intent, 1);
- 	}
+	}
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -798,7 +816,7 @@ public class PostContentsJSActivity extends BaseActivity  implements OnClickList
 				dismissSearchDialog();
 			} else {
 				finish();
- 			}
+			}
 		} else {
 			super.onKeyDown(keyCode, event);
 		}
@@ -812,7 +830,7 @@ public class PostContentsJSActivity extends BaseActivity  implements OnClickList
 		bundle.putInt(PAGE_NUMBER, pageNum);
 		bundle.putString(POST_NAME, "");
 		Intent intent = new Intent(this, PostContentsJSActivity.class);
-//		intent.putExtra(POST, bundle);
+		// intent.putExtra(POST, bundle);
 		this.startActivity(intent);
- 	}
+	}
 }
