@@ -14,15 +14,19 @@
         <TextView
             android:id="@+id/post_title"
             style="@style/post_title_style"
+            android:gravity="left|center_vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="2dp"
             android:layout_weight="1.0"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
             android:background="@drawable/listview_selector"
-            android:paddingBottom="7dp"
-            android:paddingTop="7dp"
-            android:text="Test post topic, 要长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长" />
-
+             android:text="Test post topic, 要长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长" />
+            <Button android:layout_height="0.1dp"
+                android:layout_width="0.1dp" 
+                android:alpha="0"/>
+        
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" 
@@ -71,7 +75,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/listview_selector"
-            android:padding="5dp" >
+            android:padding="8dp" >
 
             <TextView
                 android:layout_width="wrap_content"

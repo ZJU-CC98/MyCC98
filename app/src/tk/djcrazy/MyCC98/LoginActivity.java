@@ -73,7 +73,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 	/**
 	 * configure version
 	 */
-	public static final boolean IS_LIFETOY_VERSION = false;
+	public static final boolean IS_LIFETOY_VERSION = true;
 
 	public static final String USERNAME = "USERNAME";
 	public static final String PASSWORD = "PASSWORD";
@@ -205,6 +205,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 					@Override
 					public void onClick(DialogInterface arg0, int arg1) {
 						service.setUseProxy(true);
+						((MyApplication)getApplication()).getUserData().setLifeToyVersion(true);
 						authDialog.show();
 					}
 				});

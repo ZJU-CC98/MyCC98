@@ -92,24 +92,12 @@ public interface ICC98UrlManager {
 
 	public String getSendPmUrl();
 
-	/**
-	 * @return the pushNewPostReferer
-	 */
-	public String getPushNewPostReferer(String boardID);
+ 	public String getPushNewPostReferer(String boardID);
 
-	/**
-	 * @return the pushNewPostUrl
-	 */
-	public String getPushNewPostUrl(String boardId);
+ 	public String getPushNewPostUrl(String boardId);
 
-	/**
-	 * @return the submitReplyUrl
-	 */
-	public String getSubmitReplyUrl(String boardID);
+ 	public String getSubmitReplyUrl(String boardID);
 
-	/**
-	 * @return the submitReplyReferer
-	 */
-	public String getSubmitReplyReferer(String boardID, String rootID);
-
+ 	public String getSubmitReplyReferer(String boardID, String rootID);
+ 
 }

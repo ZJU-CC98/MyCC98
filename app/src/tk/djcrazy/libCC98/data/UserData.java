@@ -2,13 +2,15 @@ package tk.djcrazy.libCC98.data;
 
 import java.io.Serializable;
 
-import android.graphics.Bitmap;
 import ch.boye.httpclientandroidlib.client.CookieStore;
 
 public class UserData implements Serializable{
+	
  	private static final long serialVersionUID = 4709649440252644448L;
 	private String userName;
 	private String password;
+	
+	private boolean lifeToyVersion;
  	private CookieStore cookieStore;
 
  	/**
@@ -46,5 +48,17 @@ public class UserData implements Serializable{
 	 */
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	/**
+	 * @return the lifeToyVersion
+	 */
+	public boolean isLifeToyVersion() {
+		return lifeToyVersion;
+	}
+	/**
+	 * @param lifeToyVersion the lifeToyVersion to set
+	 */
+	public void setLifeToyVersion(boolean lifeToyVersion) {
+		this.lifeToyVersion = lifeToyVersion;
 	}
 }
