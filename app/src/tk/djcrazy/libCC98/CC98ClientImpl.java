@@ -142,6 +142,7 @@ public class CC98ClientImpl implements ICC98Client {
 
 		HttpResponse response;
 		HttpPost httpost = new HttpPost(manager.getLoginUrl());
+		Log.d(TAG, "doLogin: "+manager.getLoginUrl());
 		List<NameValuePair> nvps = new ArrayList<NameValuePair>();
 		nvps.add(new BasicNameValuePair("username", id));
 		nvps.add(new BasicNameValuePair("password", pw));

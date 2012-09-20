@@ -70,10 +70,7 @@ import com.google.inject.Inject;
 public class LoginActivity extends BaseActivity implements OnClickListener {
 	private static final String TAG = "MyCC98";
 
-	/**
-	 * configure version
-	 */
-	public static final boolean IS_LIFETOY_VERSION = true;
+ 	public static final boolean IS_LIFETOY_VERSION = false;
 
 	public static final String USERNAME = "USERNAME";
 	public static final String PASSWORD = "PASSWORD";

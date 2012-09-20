@@ -110,8 +110,7 @@ public class PostContentsJSActivity extends BaseActivity implements
 	private static final String ITEM_CLOSE = "</div>";
 	private static final String TAG = "PostContentsJS";
 	private boolean threadCancel = false;
-	private boolean searchMode = false;
-	private ProgressDialog progressDialog;
+ 	private ProgressDialog progressDialog;
 
 	@Inject
 	private ICC98Service service;
@@ -178,10 +177,7 @@ public class PostContentsJSActivity extends BaseActivity implements
 		case R.id.but_post_re:
 			reply();
 			break;
- 		case R.id.post_content_header_title:
-			webView.scrollTo(0, 0);
-			break;
-		default:
+ 		default:
 			break;
 		}
 	}
@@ -227,7 +223,6 @@ public class PostContentsJSActivity extends BaseActivity implements
 	}
 
 	private void onLoadDone() {
-		// progressDialog.dismiss();
 		progressDialog.dismiss();
 		vPrev.setVisibility(currPageNum == 1 ? View.GONE : View.VISIBLE);
 		vNext.setVisibility(currPageNum == totalPageNum ? View.GONE
@@ -287,6 +282,7 @@ public class PostContentsJSActivity extends BaseActivity implements
 	};
 
 	private void dispContents(final int pageNum) {
+		progressDialog.show();
 		webView.getSettings().setBlockNetworkImage(true);
 		new Thread() {
 			@Override
@@ -338,12 +334,7 @@ public class PostContentsJSActivity extends BaseActivity implements
 	private String fetchContents(PostContentsListPage page, final int pageNum)
 			throws ClientProtocolException, ParseException, IOException,
 			ParseContentException, java.text.ParseException {
-		Log.d(TAG, postId);
-		if (threadCancel) {
-			threadCancel = false;
-			return "";
-		}
-		List<PostContentEntity> contentList = service.getPostContentList(
+ 		List<PostContentEntity> contentList = service.getPostContentList(
 				boardId, postId, pageNum);
 		page.setList(contentList);
 
@@ -404,28 +395,17 @@ public class PostContentsJSActivity extends BaseActivity implements
 							+ i + "," + 2 + ");\">加好友</a>").append("</div>")
 					.append(ITEM_CLOSE);
 			builder.append(mBuilder.toString());
-			Log.d("post content", mBuilder.toString());
 		}
-		if (threadCancel) {
-			threadCancel = false;
-			return "";
-		}
-		builder.append(helper.PAGE_CLOSE);
+ 		builder.append(helper.PAGE_CLOSE);
 		return builder.toString();
 	}
 
 	private void prefetch() {
-		if (threadCancel) {
-			threadCancel = false;
-			return;
-		}
-
-		if (currPageNum - 1 > 0) {
+ 		if (currPageNum - 1 > 0) {
 			if (currPageNum != prevPageNum + 1) { // not forward one step
 				new Thread() {
 					@Override
 					public void run() {
-
 						try {
 							prevPage.setString(fetchContents(prevPage,
 									currPageNum - 1));
@@ -447,11 +427,7 @@ public class PostContentsJSActivity extends BaseActivity implements
 		} else {
 			prevPage.setList(null).setString(null);
 		}
-		if (threadCancel) {
-			threadCancel = false;
-			return;
-		}
-		if (currPageNum + 1 <= totalPageNum) {
+ 		if (currPageNum + 1 <= totalPageNum) {
 			if (currPageNum != prevPageNum - 1) { // not backward one step
 				new Thread() {
 					@Override
