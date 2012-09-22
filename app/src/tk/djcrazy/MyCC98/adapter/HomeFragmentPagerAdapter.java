@@ -15,8 +15,7 @@ public class HomeFragmentPagerAdapter extends FragmentPagerAdapter {
 	private FragmentManager mFragment;
 	private String[] pageTitle = {"我的版面","热门","列表","新帖","好友"};
 	private final int FRAGMENT_NUMBER = 4;
-	private LoadingListener loadingListener;
-	public HomeFragmentPagerAdapter(FragmentManager fm) {
+ 	public HomeFragmentPagerAdapter(FragmentManager fm) {
 		super(fm);
 		mFragment = fm;
  	}
@@ -26,10 +25,7 @@ public class HomeFragmentPagerAdapter extends FragmentPagerAdapter {
 	}
 	@Override
 	public Fragment getItem(int position) {
-		if (loadingListener==null) {
-			throw new IllegalStateException("You must set loadinglistener first.");
-		}
- 		switch (position) {
+  		switch (position) {
 		case 0:
 			PersonalBoardFragment pFragment = new PersonalBoardFragment();
  			return pFragment;
@@ -37,8 +33,7 @@ public class HomeFragmentPagerAdapter extends FragmentPagerAdapter {
 			return new HotTopicFragment();
 		case 2:
 			SearchBoardFragment sFragment =  new SearchBoardFragment();
-			sFragment.setLoadingListener(loadingListener);
-			sFragment.setPosition(position);
+ 			sFragment.setPosition(position);
 			return sFragment;
 		case 3:
 			return new NewTopicFragment();
@@ -51,8 +46,7 @@ public class HomeFragmentPagerAdapter extends FragmentPagerAdapter {
 	}
 
 	public void setLoadingListener( LoadingListener listener) {
-		loadingListener = listener;
-	}
+ 	}
 	@Override
 	public int getCount() {
 		return FRAGMENT_NUMBER;

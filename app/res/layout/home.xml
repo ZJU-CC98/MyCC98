@@ -7,8 +7,7 @@
     android:background="#e3e3e3"
     android:orientation="vertical" >
 
-    <include layout="@layout/home_header" />
-
+ 
     <com.viewpagerindicator.TitlePageIndicator
         android:id="@+id/main_titles"
         android:layout_width="match_parent"

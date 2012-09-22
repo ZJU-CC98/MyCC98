@@ -8,27 +8,10 @@ package tk.djcrazy.MyCC98;
 
 import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
 
-import java.io.BufferedInputStream;
-import java.io.DataInputStream;
-import java.io.File;
 import java.io.IOException;
-import java.io.RandomAccessFile;
-import java.net.HttpURLConnection;
-import java.net.URISyntaxException;
-import java.net.URL;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.CoreConnectionPNames;
-import org.apache.http.util.EntityUtils;
-
-import roboguice.inject.ContentView;
 import roboguice.inject.InjectView;
-import roboguice.util.RoboAsyncTask;
 import tk.djcrazy.MyCC98.application.MyApplication;
-import tk.djcrazy.MyCC98.db.BoardInfoDbAdapter;
 import tk.djcrazy.MyCC98.dialog.AuthDialog;
 import tk.djcrazy.MyCC98.dialog.AuthDialog.MyAuthDialogListener;
 import tk.djcrazy.MyCC98.task.ProgressRoboAsyncTask;
@@ -37,6 +20,7 @@ import tk.djcrazy.libCC98.ICC98Service;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Application;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -44,19 +28,13 @@ import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.text.InputType;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -113,6 +91,9 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 
 	@Inject
 	private ICC98Service service;
+	
+	@Inject
+	private Application application;
 
 	private AlertDialog.Builder authBuilder;
 
@@ -188,11 +169,8 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 		setupRememberedLoginInfo();
 		initAuthInfo();
 	}
-
-	/**
-	 * 
-	 */
-	private void initAuthInfo() {
+ 
+ 	private void initAuthInfo() {
 		SharedPreferences setting = getSharedPreferences(AUTHINFO, 0);
 		authDialog = new AuthDialog(this, listener, setting);
 		authBuilder = new AlertDialog.Builder(this);
@@ -255,7 +233,10 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 			rememberPassword.setChecked(true);
 			if (setting.getBoolean(AUTOLOGIN, false)) {
 				autoLoginBox.setChecked(true);
-				doLogin();
+				if (((MyApplication)application).getUserData()!=null) {
+					startActivity(new Intent(this, HomeActivity.class));
+					finish();
+				}
 			}
 		}
 	}

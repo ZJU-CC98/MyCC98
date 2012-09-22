@@ -1,42 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:background="@color/body_background"
+    xmlns:app="http://schemas.android.com/apk/res/tk.djcrazy.MyCC98"
+    android:id="@+id/home_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#e3e3e3"
     android:orientation="vertical" >
 
-    <tk.djcrazy.MyCC98.view.PullToRefreshListView
-        android:id="@+id/pm_listview"
-        style="@style/listview"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_weight="1"
-        android:background="@color/body_background"/>
-
-    <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="fill_parent"
+ 
+    <com.viewpagerindicator.TitlePageIndicator
+        android:id="@+id/pm_main_titles"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="0dp" >
+        android:background="@drawable/pager_title_background"
+        android:textColor="@color/pager_title_text"
+        android:textSize="12sp"/>
+<!--         app:clipPadding="5dp" -->
+<!--         app:footerColor="@color/pager_footer" -->
+<!--         app:footerIndicatorHeight="5dp" -->
+<!--         app:footerIndicatorStyle="underline" -->
+<!--         app:footerLineHeight="2dp" -->
+<!--         app:selectedBold="true" -->
+<!--         app:selectedColor="@color/pager_title_selected_text" -->
+<!--         app:titlePadding="5dp" /> -->
 
-        <TextView
-            android:id="@+id/pm_tv_prev"
-            style="@style/button"
-            android:layout_weight="1"
-            android:text="上一页" />
-
-        <TextView
-            android:id="@+id/pm_tv_next"
-            android:layout_weight="1"
-            style="@style/button"
-            android:text="下一页" />
-
-        <TextView
-            android:id="@+id/pm_tv_jump"
-            style="@style/button"
-            android:layout_weight="1"
-            android:text="跳转" />
-    </LinearLayout>
+    <android.support.v4.view.ViewPager
+        android:id="@+id/pm_main_pages"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#e3e3e3" />
 
 </LinearLayout>

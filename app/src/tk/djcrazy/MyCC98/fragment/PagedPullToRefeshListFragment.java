@@ -62,7 +62,7 @@ public abstract class PagedPullToRefeshListFragment<E> extends
 	 * List items provided to {@link #onLoadFinished(Loader, List)}
 	 */
 	protected List<E> items = new ArrayList<E>();
-
+	
 	/**
 	 * List view
 	 */
@@ -83,6 +83,8 @@ public abstract class PagedPullToRefeshListFragment<E> extends
 	 */
 	protected boolean listShown;
 
+	protected boolean isClearData;
+	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
@@ -145,17 +147,19 @@ public abstract class PagedPullToRefeshListFragment<E> extends
 	public void onLoadFinished(Loader<List<E>> loader, List<E> items) {
  		Log.d(TAG, "onLoadFinished:"+loader.getClass().getName());
 		Exception exception = getException(loader);
+		isClearData =false;
+		this.items = items;
 		if (exception != null) {
 			showList();
 			return;
-		}
+		} 
 		if (mIsLoadingMore) { 
 			mIsLoadingMore = false;
-			this.items.addAll(items);
+			//this.items.addAll(items);
 			getListAdapter().setItems(this.items);
 			listView.onLoadComplete();
 		} else {
-			this.items = items;
+			//this.items = items;
 			getListAdapter().setItems(this.items);
 			listView.onRefreshComplete();
 		}
@@ -164,7 +168,6 @@ public abstract class PagedPullToRefeshListFragment<E> extends
 
 	@Override
 	public void onLoaderReset(Loader<List<E>> loader) {
-		// Intentionally left blank
 	}
 
 	/**
@@ -356,8 +359,10 @@ public abstract class PagedPullToRefeshListFragment<E> extends
  	@Override
 	public void onRefresh() {
 		if (getLoaderManager().hasRunningLoaders()) {
+			listView.onLoadComplete();
 			return;
 		}
+		isClearData = true;
 		mIsLoadingMore = false;
 		getListAdapter().notifyDataSetChanged();
 		getLoaderManager().restartLoader(0, null, this);

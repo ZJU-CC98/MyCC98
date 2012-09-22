@@ -66,6 +66,8 @@ public class HomeActivity extends RoboSherlockFragmentActivity implements
 		case 4:
 			showAboutInfo();
 			break;
+		case 5:
+			logOut();
 		}
 		return true;
 	}
@@ -152,10 +154,7 @@ public class HomeActivity extends RoboSherlockFragmentActivity implements
 		startActivity(intent);
 	}
 
-	/**
-	 * 
-	 */
-	private void logOut() {
+ 	private void logOut() {
 		getSharedPreferences(USERINFO, 0).edit().putBoolean(AUTOLOGIN, false)
 				.commit();
 		Intent intent = new Intent();

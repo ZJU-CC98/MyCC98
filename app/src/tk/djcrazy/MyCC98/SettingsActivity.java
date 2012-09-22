@@ -31,21 +31,9 @@ public class SettingsActivity extends RoboSherlockPreferenceActivity {
  	private CheckBoxPreference useCustomPreference;
  	private EditTextPreference customTailContentPreference;
  	
-//	@Override
-//	public void onStart() {
-//		super.onStart();
-//		FlurryAgent.onStartSession(this, "5EXV7SIGMTTDKYNXTKR4");
-//	}
-//
-//	@Override
-//	public void onStop() {
-//		super.onStop();
-//		FlurryAgent.onEndSession(this);
-//	}
-
-	@Override
+ 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		setTheme(com.actionbarsherlock.R.style.Sherlock___Theme);
+		setTheme(com.actionbarsherlock.R.style.Theme_Sherlock);
 		super.onCreate(savedInstanceState);
 		ActionBar actionBar = getSupportActionBar();
 		actionBar.setLogo(R.drawable.setting_btn);

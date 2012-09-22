@@ -6,16 +6,13 @@ package tk.djcrazy.MyCC98;
 
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectExtra;
-import roboguice.inject.InjectView;
 import tk.djcrazy.MyCC98.fragment.PostListFragment;
 import tk.djcrazy.libCC98.ICC98Service;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.view.View;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
@@ -39,10 +36,13 @@ public class PostListActivity extends BaseActivity {
 	@Override
 	public void onCreate(Bundle SavedInstanceState) {
 		super.onCreate(SavedInstanceState);
-		configureActionBar();
-		getSupportFragmentManager().beginTransaction().add(
-				R.id.post_list_fragment_container,
-				PostListFragment.createInstance(boardId, boardName)).commit();
+		configureActionBar(); 
+		Log.d(TAG, "onCreate");
+		if (SavedInstanceState==null) {
+			getSupportFragmentManager().beginTransaction().add(
+					R.id.post_list_fragment_container,
+					PostListFragment.createInstance(boardId, boardName)).commit();
+		}
 	}
 
 	private void configureActionBar() {
@@ -93,4 +93,9 @@ public class PostListActivity extends BaseActivity {
 		return true;
 	}
 	
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		Log.d(TAG, "onConfigurationChanged");
+		super.onConfigurationChanged(newConfig);
+	}
 }

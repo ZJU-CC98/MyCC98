@@ -54,7 +54,13 @@ public class NewTopicFragment extends PagedPullToRefeshListFragment<SearchResult
 		return new ThrowableLoader<List<SearchResultEntity>>(getActivity(), items) {
 			@Override
 			public List<SearchResultEntity> loadData() throws Exception {
-				return service.getNewPostList(getListView().getCurrentPage()+1) ;
+				List<SearchResultEntity> list = service.getNewPostList(getListView().getCurrentPage()+1) ;
+				if (isClearData) {
+					items = list;
+				} else {
+					items.addAll(list);
+				}
+				return items;
 			}
 		};
 	}

@@ -47,6 +47,8 @@ public class SearchBoardFragment extends RoboSherlockFragment implements
 	private ListView lvResultList;
 	@InjectView(R.id.search_board_loading_bar)
 	private ProgressBar progressBar;
+	@InjectView(R.id.search_board_search_area)
+	private View mSearchArea;
 
 	@Inject
 	private ICC98Service service;
@@ -55,30 +57,24 @@ public class SearchBoardFragment extends RoboSherlockFragment implements
 	private static final int FETCH_SUCC = 0;
 	private static final int FETCH_FAIL = 1;
 
- 	private LoadingListener loadingListener;
-
+ 
 	private Handler handler = new Handler() {
 		@Override
 		public void handleMessage(android.os.Message msg) {
-			if (loadingListener == null) {
-				throw new IllegalStateException(
-						"You must set the LoadingListener first.");
-			}
-			setListeners();
+ 			setListeners();
 			switch (msg.what) {
 			case FETCH_SUCC:
 				searchContent.setText("");
 				ViewUtils.setGone(progressBar, true);
+				ViewUtils.setGone(mSearchArea, false);
 				ViewUtils.setGone(lvResultList, false);
 				lvResultList.startAnimation(AnimationUtils.loadAnimation(
 						getActivity(), android.R.anim.fade_in));
-				loadingListener.onLoadComplete(position);
-				break;
+ 				break;
 			case FETCH_FAIL:
 				ViewUtils.setGone(progressBar, true);
 				ViewUtils.setGone(lvResultList, true);
-				loadingListener.onLoadFailure(position);
-				break;
+ 				break;
 			default:
 				break;
 			}
@@ -116,14 +112,16 @@ public class SearchBoardFragment extends RoboSherlockFragment implements
 		if (boardList != null) {
 			ViewUtils.setGone(progressBar, true);
 			ViewUtils.setGone(lvResultList, false);
+			ViewUtils.setGone(mSearchArea, false);
 			lvResultList.setAdapter(listAdapter);
 			listAdapter.notifyDataSetChanged();
 			lvResultList.invalidate();
 			setListeners();
 
 		} else {
-			ViewUtils.setGone(progressBar, true);
-			ViewUtils.setGone(lvResultList, false);
+			ViewUtils.setGone(progressBar, false);
+			ViewUtils.setGone(lvResultList, true);
+			ViewUtils.setGone(mSearchArea, true);
 			fetchBoardlist();
 		}
 	}
@@ -191,15 +189,7 @@ public class SearchBoardFragment extends RoboSherlockFragment implements
 		listAdapter.notifyDataSetChanged();
 		lvResultList.invalidate();
 	}
-
-	/**
-	 * @param loadingListener
-	 *            the loadingListener to set
-	 */
-	public void setLoadingListener(LoadingListener loadingListener) {
-		this.loadingListener = loadingListener;
-	}
-
+ 
 	/**
 	 * @return the position
 	 */

@@ -108,10 +108,9 @@ public class PostListViewAdapter extends BaseItemListAdapter<PostEntity> {
 		listItemView.postName.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-
 				Intent intent = new Intent(context,
 						PostContentsJSActivity.class);
-				intent.putExtra(PostContentsJSActivity.BOARD_ID, mBoardId);
+				intent.putExtra(PostContentsJSActivity.BOARD_ID, items.get(clickPosition).getBoardId());
 				intent.putExtra(PostContentsJSActivity.BOARD_NAME, mBoardName);
 				intent.putExtra(PostContentsJSActivity.POST_ID,
 						items.get(clickPosition).getPostId());

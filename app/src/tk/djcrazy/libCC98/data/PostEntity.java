@@ -100,9 +100,22 @@ public class PostEntity {
 	public void setLastReplyAuthor(String lastReplyAuthor) {
 		this.lastReplyAuthor = lastReplyAuthor;
 	}
+	/**
+	 * @return the boardId
+	 */
+	public String getBoardId() {
+		return boardId;
+	}
+	/**
+	 * @param boardId the boardId to set
+	 */
+	public void setBoardId(String boardId) {
+		this.boardId = boardId;
+	}
 	private String postType= "";
 	private String postName= "";
 	private String postId= "";
+	private String boardId = "";
 	private int postPageNumber=0;
 	private String postAuthorName= "";
 	private String replyNumber= "";

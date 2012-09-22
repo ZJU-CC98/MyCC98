@@ -14,8 +14,10 @@ import tk.djcrazy.libCC98.data.HotTopicEntity;
 import tk.djcrazy.libCC98.data.PostEntity;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.content.Loader;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +27,9 @@ import com.google.inject.Inject;
 
 public class PostListFragment extends PagedPullToRefeshListFragment<PostEntity> {
 	private static final String TAG = "PostListFragment";
+	private static final String BOARD_ID = "boardId";
+	private static final String BOARD_NAME = "boardName";
+	
 	@Inject
 	private ICC98Service service;
 	private String boardId; 
@@ -38,6 +43,15 @@ public class PostListFragment extends PagedPullToRefeshListFragment<PostEntity> 
 	}
 
 	@Override
+	public void onViewCreated(View view, Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+		Log.d(TAG, "onViewCreated");
+		if (savedInstanceState!=null) {
+			boardId = savedInstanceState.getString(BOARD_ID);
+			boardName = savedInstanceState.getString(BOARD_NAME);
+		}
+	}
+	@Override
 	protected void configureList(Activity activity,
 			PagedPullToRefreshListView listView) {
 		super.configureList(activity, listView);
@@ -48,8 +62,14 @@ public class PostListFragment extends PagedPullToRefeshListFragment<PostEntity> 
 		return new ThrowableLoader<List<PostEntity>>(getActivity(), items) {
 			@Override
 			public List<PostEntity> loadData() throws Exception {
-				return service.getPostList(boardId, getListView().getCurrentPage()+1);
-			}
+				List<PostEntity> list =  service.getPostList(boardId, getListView().getCurrentPage()+1) ;
+				if (isClearData) {
+					 items = list;
+				} else {
+					items.addAll(service.getPostList(boardId, getListView().getCurrentPage()+1));
+				}
+				return items;
+ 			}
 		};
 	}
 
@@ -58,4 +78,19 @@ public class PostListFragment extends PagedPullToRefeshListFragment<PostEntity> 
 			List<PostEntity> items) {
 		return new PostListViewAdapter(getActivity(), items, boardId, boardName);
 	}
-}
+	
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		Log.d(TAG, "onSaveInstanceState");
+		outState.putString(BOARD_ID, boardId);
+		outState.putString(BOARD_NAME, boardName);
+	}
+	
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		Log.d(TAG, "onConfigurationChanged");
+		super.onConfigurationChanged(newConfig);
+	}
+	
+ }

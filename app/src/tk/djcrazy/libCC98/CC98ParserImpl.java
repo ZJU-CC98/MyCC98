@@ -258,6 +258,7 @@ public class CC98ParserImpl implements ICC98Parser {
 					.convertStringToDateInPostList(getMatchedString(
 							POST_LIST_LAST_REPLY_TIME_REGEX, post)));
 			entity.setPostId(getMatchedString(POST_LIST_POST_ID_REGEX, post));
+			entity.setBoardId(getMatchedString(POST_LIST_POST_BOARD_ID_REGEX, post));
 			list.add(entity);
 		}
 		return list;
@@ -485,14 +486,7 @@ public class CC98ParserImpl implements ICC98Parser {
 		}
 		return m.group();
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see tk.djcrazy.libCC98.ICC98Parser#getPmData(int,
-	 * tk.djcrazy.libCC98.data.InboxInfo, int)
-	 */
-
+ 
 	@Override
 	public List<PmInfo> getPmData(int page_num, InboxInfo inboxInfo, int type)
 			throws ClientProtocolException, ParseException, IOException {

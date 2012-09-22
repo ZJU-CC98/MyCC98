@@ -1,6 +1,7 @@
 package tk.djcrazy.MyCC98;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Date;
 import java.util.List;
@@ -26,6 +27,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -39,6 +41,8 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
+import android.view.WindowManager;
 import android.webkit.WebSettings;
 import android.webkit.WebSettings.LayoutAlgorithm;
 import android.webkit.WebView;
@@ -50,15 +54,10 @@ import android.widget.Toast;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockActivity;
 import com.google.inject.Inject;
 
-/**
- * 
- * @author zsy
- * 
- */
-@ContentView(R.layout.post_contents)
-public class PostContentsJSActivity extends BaseActivity implements
+public class PostContentsJSActivity extends RoboSherlockActivity implements
 		OnClickListener {
 	private static final String JS_INTERFACE = "PostContentsJSActivity";
 
@@ -76,7 +75,7 @@ public class PostContentsJSActivity extends BaseActivity implements
 
 	@InjectView(R.id.post_contents)
 	private WebView webView;
- 	@InjectView(R.id.but_post_next)
+	@InjectView(R.id.but_post_next)
 	private View vNext;
 	@InjectView(R.id.but_post_prev)
 	private View vPrev;
@@ -110,7 +109,7 @@ public class PostContentsJSActivity extends BaseActivity implements
 	private static final String ITEM_CLOSE = "</div>";
 	private static final String TAG = "PostContentsJS";
 	private boolean threadCancel = false;
- 	private ProgressDialog progressDialog;
+	private ProgressDialog progressDialog;
 
 	@Inject
 	private ICC98Service service;
@@ -120,6 +119,8 @@ public class PostContentsJSActivity extends BaseActivity implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setTheme(com.actionbarsherlock.R.style.Theme_Sherlock);
+		setContentView(R.layout.post_contents);
 		configureActionBar();
 		setViews();
 		addListeners();
@@ -127,6 +128,34 @@ public class PostContentsJSActivity extends BaseActivity implements
 				this.getText(R.string.connectting));
 		progressDialog.show();
 		dispContents(currPageNum);
+	}
+
+	public void onPause() {
+		super.onPause();
+		this.callHiddenWebViewMethod("onPause");
+	}
+
+	public void onResume() {
+		super.onResume();
+		this.callHiddenWebViewMethod("onResume");
+	}
+
+	private void callHiddenWebViewMethod(String name) {
+		if (webView != null) {
+			try {
+				Method method = WebView.class.getMethod(name);
+				method.invoke(webView);
+			} catch (NoSuchMethodException e) {
+				e.printStackTrace();
+				Log.e("No such method: " + name, e.getMessage());
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+				Log.e("Illegal Access: " + name, e.getMessage());
+			} catch (InvocationTargetException e) {
+				e.printStackTrace();
+				Log.e("Invocation Target Exception: " + name, e.getMessage());
+			}
+		}
 	}
 
 	private void configureActionBar() {
@@ -138,9 +167,9 @@ public class PostContentsJSActivity extends BaseActivity implements
 	@Override
 	public boolean onCreateOptionsMenu(Menu optionMenu) {
 		optionMenu.add(android.view.Menu.NONE, MENU_SHOW_IMG_ID, 1, "显示图片")
- 				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 		optionMenu.add(android.view.Menu.NONE, MENU_SHOW_REFRESH_ID, 1, "刷新")
- 				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 		return true;
 	}
 
@@ -177,7 +206,7 @@ public class PostContentsJSActivity extends BaseActivity implements
 		case R.id.but_post_re:
 			reply();
 			break;
- 		default:
+		default:
 			break;
 		}
 	}
@@ -187,7 +216,7 @@ public class PostContentsJSActivity extends BaseActivity implements
 		vPrev.setOnClickListener(this);
 		vNext.setOnClickListener(this);
 		vRe.setOnClickListener(this);
- 	}
+	}
 
 	private void setViews() {
 		SharedPreferences sharedPref = PreferenceManager
@@ -196,6 +225,7 @@ public class PostContentsJSActivity extends BaseActivity implements
 				SettingsActivity.ENABLE_CACHE, true);
 		WebSettings webSettings = webView.getSettings();
 		webSettings.setJavaScriptEnabled(true);
+		webSettings.setPluginsEnabled(true);
 		webSettings.setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
 		// 这里可以在设置中增加选项
 		webSettings.setAppCacheEnabled(enableCache);
@@ -334,7 +364,7 @@ public class PostContentsJSActivity extends BaseActivity implements
 	private String fetchContents(PostContentsListPage page, final int pageNum)
 			throws ClientProtocolException, ParseException, IOException,
 			ParseContentException, java.text.ParseException {
- 		List<PostContentEntity> contentList = service.getPostContentList(
+		List<PostContentEntity> contentList = service.getPostContentList(
 				boardId, postId, pageNum);
 		page.setList(contentList);
 
@@ -396,12 +426,12 @@ public class PostContentsJSActivity extends BaseActivity implements
 					.append(ITEM_CLOSE);
 			builder.append(mBuilder.toString());
 		}
- 		builder.append(helper.PAGE_CLOSE);
+		builder.append(helper.PAGE_CLOSE);
 		return builder.toString();
 	}
 
 	private void prefetch() {
- 		if (currPageNum - 1 > 0) {
+		if (currPageNum - 1 > 0) {
 			if (currPageNum != prevPageNum + 1) { // not forward one step
 				new Thread() {
 					@Override
@@ -427,7 +457,7 @@ public class PostContentsJSActivity extends BaseActivity implements
 		} else {
 			prevPage.setList(null).setString(null);
 		}
- 		if (currPageNum + 1 <= totalPageNum) {
+		if (currPageNum + 1 <= totalPageNum) {
 			if (currPageNum != prevPageNum - 1) { // not backward one step
 				new Thread() {
 					@Override
