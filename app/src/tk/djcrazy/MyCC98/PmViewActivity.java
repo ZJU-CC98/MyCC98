@@ -1,11 +1,9 @@
 package tk.djcrazy.MyCC98;
 
 import java.io.IOException;
-import java.util.List;
 
 import org.apache.http.ParseException;
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.cookie.Cookie;
 
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectExtra;
@@ -13,12 +11,8 @@ import roboguice.inject.InjectView;
 import tk.djcrazy.MyCC98.dialog.MoreEmotChooseDialog;
 import tk.djcrazy.MyCC98.dialog.MoreEmotChooseDialog.FaceExpressionChooseListener;
 import tk.djcrazy.MyCC98.helper.HtmlGenHelper;
-import tk.djcrazy.MyCC98.view.HeaderView;
-import tk.djcrazy.libCC98.CC98ClientImpl;
-import tk.djcrazy.libCC98.CC98ParserImpl;
 import tk.djcrazy.libCC98.ICC98Service;
 import tk.djcrazy.libCC98.exception.ParseContentException;
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
@@ -27,11 +21,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-import android.view.KeyEvent;
-import android.view.View;
-import android.view.Window;
-import android.webkit.CookieManager;
-import android.webkit.CookieSyncManager;
 import android.webkit.WebSettings;
 import android.webkit.WebSettings.LayoutAlgorithm;
 import android.webkit.WebView;
@@ -40,7 +29,6 @@ import android.webkit.WebViewClient;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-import com.flurry.android.FlurryAgent;
 import com.google.inject.Inject;
 
 /**
@@ -58,14 +46,14 @@ public class PmViewActivity extends BaseActivity {
 	private static final int MENU_REPLY_ID = 9237465;
 	@InjectView(R.id.pm_reply_view)
 	private WebView webView;
-	private String pageString;
 	@InjectExtra(TOPIC)
 	private String readTopic;
 	@InjectExtra(SENDER)
 	private String sender;
-	private String senderAvatarUrl;
 	@InjectExtra(SEND_TIME)
 	private String sendTime;
+	private String pageString;
+	private String senderAvatarUrl;
 	private String faceChoosedString;
 	private String pmContent;
 	@InjectExtra(value = PM_ID, optional = true)

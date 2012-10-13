@@ -39,10 +39,8 @@ public class CC98ServiceImpl implements ICC98Service {
 	private ICC98Parser cc98Parser;
 
 	@Override
-	public void doProxyAuthorization(String userName, String pwd)
-			throws ClientProtocolException, IOException, URISyntaxException,
-			AuthenticationException {
-		cc98Client.doHttpBasicAuthorization(userName, pwd);
+	public void addProxyAuthorization(String userName, String pwd) {
+		cc98Client.addHttpBasicAuthorization(userName, pwd);
 	}
 
 	@Override

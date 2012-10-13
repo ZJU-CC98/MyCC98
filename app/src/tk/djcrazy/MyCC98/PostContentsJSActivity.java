@@ -9,10 +9,8 @@ import java.util.List;
 import org.apache.http.ParseException;
 import org.apache.http.client.ClientProtocolException;
 
-import roboguice.inject.ContentView;
 import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
-import tk.djcrazy.MyCC98.application.MyApplication;
 import tk.djcrazy.MyCC98.helper.HtmlGenHelper;
 import tk.djcrazy.libCC98.ICC98Service;
 import tk.djcrazy.libCC98.data.Gender;
@@ -27,28 +25,21 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
-import android.text.Editable;
 import android.text.InputType;
-import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.Window;
-import android.view.WindowManager;
 import android.webkit.WebSettings;
 import android.webkit.WebSettings.LayoutAlgorithm;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -59,6 +50,7 @@ import com.google.inject.Inject;
 
 public class PostContentsJSActivity extends RoboSherlockActivity implements
 		OnClickListener {
+	private static final String TAG = "PostContentsJSActivity";
 	private static final String JS_INTERFACE = "PostContentsJSActivity";
 
 	private static final int FETCH_CONTENT_SUCCESS = 1;
@@ -107,7 +99,6 @@ public class PostContentsJSActivity extends RoboSherlockActivity implements
 
 	private static final String ITEM_OPEN = "<div class=\"post\"><div class=\"post-content-wrapper\">";
 	private static final String ITEM_CLOSE = "</div>";
-	private static final String TAG = "PostContentsJS";
 	private boolean threadCancel = false;
 	private ProgressDialog progressDialog;
 
@@ -223,11 +214,13 @@ public class PostContentsJSActivity extends RoboSherlockActivity implements
 				.getDefaultSharedPreferences(this);
 		boolean enableCache = sharedPref.getBoolean(
 				SettingsActivity.ENABLE_CACHE, true);
+		boolean showImage = sharedPref.getBoolean(SettingsActivity.SHOW_IMAGE, true);
 		WebSettings webSettings = webView.getSettings();
 		webSettings.setJavaScriptEnabled(true);
 		webSettings.setPluginsEnabled(true);
+		webSettings.setDefaultFontSize(14);
+ 		webSettings.setLoadsImagesAutomatically(showImage);
 		webSettings.setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
-		// 这里可以在设置中增加选项
 		webSettings.setAppCacheEnabled(enableCache);
 		webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
 		webView.addJavascriptInterface(this, JS_INTERFACE);

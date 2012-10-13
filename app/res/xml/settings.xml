@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
     <CheckBoxPreference 
+        android:key="enable_load_image"
+        android:title="加载图片"
+        android:defaultValue="true"/>
+    <CheckBoxPreference 
         android:key="enable_cache"
         android:title="打开内容缓存"
         android:summary="程序可以缓存一部分内容到本地，但是可能会占用一些空间"
-        android:defaultValue="false"/>
+        android:defaultValue="true"/>
     <CheckBoxPreference
         android:key="show_tail"
         android:title="显示 MyCC98 签名"

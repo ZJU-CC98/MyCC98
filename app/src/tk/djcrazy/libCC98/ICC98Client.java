@@ -204,9 +204,7 @@ public interface ICC98Client {
 	public Bitmap getUserImg(String userName) throws ClientProtocolException,
 			ParseException, IOException, ParseContentException;
 
-	public void doHttpBasicAuthorization(String authName, String authPassword)
-			throws ClientProtocolException, IOException, URISyntaxException,
-			AuthenticationException;
+	public void addHttpBasicAuthorization(String authName, String authPassword) ;
 
 	void clearLoginInfo();
 

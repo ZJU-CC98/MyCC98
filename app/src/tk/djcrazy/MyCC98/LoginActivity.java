@@ -48,27 +48,20 @@ import com.google.inject.Inject;
 public class LoginActivity extends BaseActivity implements OnClickListener {
 	private static final String TAG = "MyCC98";
 
- 	public static final boolean IS_LIFETOY_VERSION = false;
+	public static final boolean IS_LIFETOY_VERSION = false;
 
 	public static final String USERNAME = "USERNAME";
 	public static final String PASSWORD = "PASSWORD";
 	public static final String USERINFO = "USERINFO";
 	public static final String AUTOLOGIN = "AUTOLOGIN";
 	public static final String REMEMBERPWD = "REMEMBERPWD";
-	public static final int LOGIN_FAILED_WITH_SERVER_ERROR = 0;
-	public static final int LOGIN_FAILED_WITH_WRONG_USERNAME_OR_PASSWORD = 1;
-	public static final int LOGIN_FAILED_WITH_UNKOWN_ERROR = 2;
-	public static final int LOGIN_SUCCESS = 3;
-	public static final int LOGIN_INFO_ERROR = 4;
-	public static final int LOGIN_FAILED_WITH_IO_ERROR = 5;
-	public static final int LOGIN_FAILED_WITH_CP_ERROR = 6;
-
+ 
 	@InjectView(R.id.username)
 	private EditText mUsernameEdit;
 	@InjectView(R.id.password)
 	private EditText mPasswordEdit;
 	@InjectView(R.id.login)
-	private Button mSigninButton;
+	private Button mSignInButton;
 	@InjectView(R.id.remember_password)
 	private CheckBox rememberPassword;
 	@InjectView(R.id.auto_login)
@@ -80,22 +73,15 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 	private String authUserName = "";
 	private String authPassword = "";
 	private Boolean authRememberPwd = false;
-	private String arlarmTitle = "";
-	private ProgressDialog progressDialog;
 	private AuthDialog authDialog;
 
 	private static final String AUTHINFO = "AUTHINFO";
-	private static final int LIFETOY_AUTHORIZE_FAILED = 0;
-	private static final int LIFETOY_AUTHORIZE_SUCCESS = 1;
-	private static final int LIFETOY_AUTHORIZE_FAILED_WITH_EXCEPTION = 2;
 
 	@Inject
 	private ICC98Service service;
-	
+
 	@Inject
 	private Application application;
-
-	private AlertDialog.Builder authBuilder;
 
 	MyAuthDialogListener listener = new MyAuthDialogListener() {
 		@Override
@@ -105,7 +91,9 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 			authPassword = password;
 			authRememberPwd = rememberPwd;
 			service.setUseProxy(true);
-			new AuthTask(LoginActivity.this, authUserName, authPassword).execute();
+			service.addProxyAuthorization(userName, password);
+			saveAuthInfo();
+			setupRememberedLoginInfo();
 		}
 
 		@Override
@@ -114,11 +102,11 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 			showLoginField();
 		}
 	};
- 
+
 	private void forwardToNextActivity() {
 		Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
 		startActivity(intent);
- 		finish();
+		finish();
 	}
 
 	private void showLoginField() {
@@ -128,59 +116,27 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 		animate(loginImg).setDuration(600).translationY(0).start();
 	}
 
-	// handle the message
-	@SuppressLint("HandlerLeak")
-	private Handler authHandler = new Handler() {
-		@Override
-		public void handleMessage(Message msg) {
-			switch (msg.what) {
-			case LIFETOY_AUTHORIZE_FAILED:
-				progressDialog.dismiss();
-				Toast.makeText(LoginActivity.this, "lifetoy认证失败",
-						Toast.LENGTH_SHORT).show();
-				finish();
-				break;
-			case LIFETOY_AUTHORIZE_SUCCESS:
-				progressDialog.dismiss();
-				Toast.makeText(LoginActivity.this, "成功通过lifetoy认证",
-						Toast.LENGTH_SHORT).show();
-				saveAuthInfo();
-				showLoginField();
-				break;
-			case LIFETOY_AUTHORIZE_FAILED_WITH_EXCEPTION:
-				progressDialog.dismiss();
-				Toast.makeText(LoginActivity.this, "网络错误", Toast.LENGTH_SHORT)
-						.show();
-				finish();
-				break;
-			default:
-				break;
-			}
-		}
-	};
-
- 	@Override
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.login);
-		mSigninButton.setOnClickListener(this);
-		checkNetworkInfo();
-		setupRememberedLoginInfo();
+		mSignInButton.setOnClickListener(this);
 		initAuthInfo();
 	}
- 
- 	private void initAuthInfo() {
+
+	private void initAuthInfo() {
 		SharedPreferences setting = getSharedPreferences(AUTHINFO, 0);
 		authDialog = new AuthDialog(this, listener, setting);
-		authBuilder = new AlertDialog.Builder(this);
-		authBuilder.setTitle(arlarmTitle);
+		AlertDialog.Builder authBuilder = new AlertDialog.Builder(this);
+		authBuilder.setTitle("是否启用代理？");
 		authBuilder.setPositiveButton("启用",
 				new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface arg0, int arg1) {
 						service.setUseProxy(true);
-						((MyApplication)getApplication()).getUserData().setLifeToyVersion(true);
+						((MyApplication) getApplication()).getUserData()
+								.setProxyVersion(true);
 						authDialog.show();
 					}
 				});
@@ -189,7 +145,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 					@Override
 					public void onClick(DialogInterface arg0, int arg1) {
 						service.setUseProxy(false);
-						showLoginField();
+						setupRememberedLoginInfo();
 					}
 				});
 		if (IS_LIFETOY_VERSION) {
@@ -198,10 +154,9 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 			showLoginField();
 		}
 	}
-	
+
 	private void saveAuthInfo() {
 		Editor editor = getSharedPreferences(AUTHINFO, 0).edit();
-		// save info
 		if (authRememberPwd) {
 			editor.putString(USERNAME, authUserName)
 					.putString(PASSWORD, authPassword)
@@ -213,18 +168,6 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 		editor.commit();
 	}
 
-	private void checkNetworkInfo() {
-		ConnectivityManager conMan = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-		NetworkInfo networkInfo = conMan.getActiveNetworkInfo();
-		if (networkInfo == null) {
-			arlarmTitle = "您没有连接到任何网络！";
-		} else if (networkInfo.getTypeName().equals("WIFI")) {
-			arlarmTitle = "您已连接到wifi网络，是否仍然启用lifetoy代理？";
-		} else {
-			arlarmTitle = "您没有链接到wifi网络，是否启用lifetoy代理？";
-		}
-	}
-
 	private void setupRememberedLoginInfo() {
 		SharedPreferences setting = getSharedPreferences(USERINFO, 0);
 		if (setting.getBoolean(REMEMBERPWD, false)) {
@@ -233,31 +176,29 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 			rememberPassword.setChecked(true);
 			if (setting.getBoolean(AUTOLOGIN, false)) {
 				autoLoginBox.setChecked(true);
-				if (((MyApplication)application).getUserData()!=null) {
-					startActivity(new Intent(this, HomeActivity.class));
-					finish();
+				if (((MyApplication) application).getUserData() != null) {
+					forwardToNextActivity();
+					return;
 				}
 			}
 		}
+		showLoginField();
 	}
 
-	/**
-	 * Click event driven, callback function
-	 * 
-	 */
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.login:
 			doLogin();
 			break;
 		case R.id.proxy_setting:
+			ToastUtils.show(this, "这个按钮目前没用...");
 			break;
- 		}
+		}
 	}
 
 	private void doLogin() {
 		mUsername = mUsernameEdit.getText().toString().trim();
-		mPassword  = mPasswordEdit.getText().toString().trim();
+		mPassword = mPasswordEdit.getText().toString().trim();
 		if (mUsername.equals("")) {
 			ToastUtils.show(this, "用户名不能为空");
 		} else if (mPassword.length() <= 0) {
@@ -268,11 +209,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 
 	private void onLoginSuccess() {
 		Editor editor = getSharedPreferences(USERINFO, 0).edit();
-		// save info
-		if (autoLoginBox.isChecked())
-			editor.putBoolean(AUTOLOGIN, true);
-		else
-			editor.putBoolean(AUTOLOGIN, false);
+		editor.putBoolean(AUTOLOGIN, autoLoginBox.isChecked());
 		if (rememberPassword.isChecked()) {
 			editor.putString(USERNAME, mUsername)
 					.putString(PASSWORD, mPassword)
@@ -282,52 +219,18 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 					.putBoolean(REMEMBERPWD, false);
 		}
 		editor.commit();
- 		forwardToNextActivity();
+		forwardToNextActivity();
 	}
-	
-	private class AuthTask extends ProgressRoboAsyncTask<String> {
+ 
+	private class LoginTask extends ProgressRoboAsyncTask<String> {
 		private String userName;
 		private String password;
 
-		public AuthTask(Activity context,String userName, String password) {
-			super(context);
-			this.userName = userName;
-			this.password = password;
-			dialog.setMessage("正在验证...");
-			dialog.setOnCancelListener(new OnCancelListener() {
-				@Override
-				public void onCancel(DialogInterface dialog) {
-					AuthTask.this.cancel(true);
-				}
-			});
-		}
-
-		@Override
-		public String call() throws Exception {
-			service.doProxyAuthorization(userName, password);
-			return null;
-		}
-		@Override
-		protected void onSuccess(String t) throws Exception {
-			super.onSuccess(t);
-			saveAuthInfo();
-			showLoginField();
-		}
-		@Override
-		protected void onException(Exception e) throws RuntimeException {
-			
-		}
-	}
-
-	private class LoginTask extends ProgressRoboAsyncTask<String> {
- 		private String userName;
-		private String password;
- 
 		protected LoginTask(Activity context, String userName, String password) {
 			super(context);
 			this.userName = userName;
 			this.password = password;
- 			dialog.setMessage("正在登录...");
+			dialog.setMessage("正在登录...");
 			dialog.setOnCancelListener(new OnCancelListener() {
 				@Override
 				public void onCancel(DialogInterface dialog) {
@@ -336,7 +239,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 			});
 		}
 
- 		@Override
+		@Override
 		public String call() throws Exception {
 			service.doLogin(userName, password);
 			return null;
@@ -344,12 +247,12 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 
 		@Override
 		protected void onSuccess(String t) throws Exception {
- 			onLoginSuccess();
+			onLoginSuccess();
 		}
 
 		@Override
 		protected void onException(Exception e) throws RuntimeException {
- 			e.printStackTrace();
+			e.printStackTrace();
 			if (e.getClass() == IllegalAccessException.class) {
 				ToastUtils.show(context, "用户名或密码错误");
 			} else if (e.getClass() == IOException.class) {

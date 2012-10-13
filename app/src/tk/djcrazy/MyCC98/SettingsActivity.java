@@ -26,6 +26,7 @@ public class SettingsActivity extends RoboSherlockPreferenceActivity {
 	public static final String ENABLE_CACHE = "enable_cache";
 	public static final String USE_CUSTOM_TAIL = "use_custom_tail";
 	public static final String CUSTOM_TAIL_CONTENT = "custom_tail_content";
+	public static final String SHOW_IMAGE = "enable_load_image";
 	
  	private CheckBoxPreference showTailPreference;
  	private CheckBoxPreference useCustomPreference;

@@ -18,15 +18,15 @@ public class CC98UrlManagerImpl implements ICC98UrlManager {
 	private Application application;
  
 	private String getClient() {
-		if (isLifetoyVersion()) {
+		if (isProxyVersion()) {
 			return LIFETOY;
 		} else {
 			return CC98;
 		}
 	}
 
-	public boolean isLifetoyVersion() {
-		return ((MyApplication) application).getUserData().isLifeToyVersion();
+	private boolean isProxyVersion() {
+		return ((MyApplication) application).getUserData().isProxyVersion();
 	}
 
 	@Override
@@ -146,15 +146,7 @@ public class CC98UrlManagerImpl implements ICC98UrlManager {
 		return getClient() + "login.asp?action=chk";
 	}
 
-	public CC98UrlManagerImpl() {
- 	}
-
-	@Override
-	public void setLifetoyVersion(boolean b) {
-		((MyApplication) application).getUserData().setLifeToyVersion(b);
-	}
-
- 
+  
 	@Override
 	public String getSendPmUrl() {
 		return getClient() + "messanger.asp?action=send";

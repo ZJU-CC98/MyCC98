@@ -12,10 +12,10 @@ public class CC98ParseRepository {
 			"(?<=>\\[).{0,10}?(?=\\]</a></span></td>)";
 	public static final String POST_CONTENT_USERNAME_REGEX = "(?<=<font color=#.{6}(\\s|)><.>).*?(?=</.></font>)";
 	public static final String POST_CONTENT_WHOLE_REGEX="(?<=valign=middle style=).*?(?=align=absmiddle></a>)";
-	public static final String POST_CONTENT_POST_CONTENT_REGEX = "(?<=</b><br>)<span id=.*?</script>";
+	public static final String POST_CONTENT_POST_CONTENT_REGEX = "(?<=</b><br>).*?</script>";
 	public static final String POST_CONTENT_USER_AVATAR_LINK_REGEX = "(?<= ><img src=).*?(?= )|(?<=&nbsp;<img src=\").*?(?=\" border=0 ><br>)";
-	public static final String POST_CONTENT_POST_TITLE_REGEX = "(?<=alt=\"发贴心情\">&nbsp;<b>).*?(?=</b><br><span id)";
-	public static final String POST_CONTENT_POST_FACE_REGEX = "(?<=<img src=face/)face.*?.gif(?= border=0)";
+	public static final String POST_CONTENT_POST_TITLE_REGEX = "(?<=alt=\"发贴心情\">&nbsp;<b>).*?(?=</b><br>)";
+	public static final String POST_CONTENT_POST_FACE_REGEX = "(?<=<img src=\"face/)face.*?.gif";
 	public static final String POST_CONTENT_POST_TIME_REGEX = "(?<=\"></a>).{10,25}?(PM|AM)";
 	public static final String POST_CONTENT_GENDER_REGEX = "(?<=<img src=pic/).*?Male(?=\\.gif)";
  	public static final String POST_CONTENT_REPLY_ID_REGEX = "";

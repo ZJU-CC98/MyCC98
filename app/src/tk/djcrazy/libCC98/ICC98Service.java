@@ -26,9 +26,7 @@ import ch.boye.httpclientandroidlib.auth.AuthenticationException;
 import ch.boye.httpclientandroidlib.client.ClientProtocolException;
 
 public interface ICC98Service {
-	public void doProxyAuthorization(String userName, String pwd)
-			throws ClientProtocolException, IOException, URISyntaxException,
-			AuthenticationException;
+	public void addProxyAuthorization(String userName, String pwd) ;
 
 	public void setUseProxy(boolean b);
 

@@ -5,60 +5,49 @@ import java.io.Serializable;
 import ch.boye.httpclientandroidlib.client.CookieStore;
 
 public class UserData implements Serializable{
-	
- 	private static final long serialVersionUID = 4709649440252644448L;
+ 	private static final long serialVersionUID = 5656863335203265871L;
 	private String userName;
 	private String password;
 	
-	private boolean lifeToyVersion;
+	private String proxyUserName;
+	private String proxyPassword;
+	private boolean proxyVersion;
  	private CookieStore cookieStore;
 
- 	/**
-	 * @return the userName
-	 */
-	public String getUserName() {
+ 	public String getUserName() {
 		return userName;
 	}
-	/**
-	 * @param userName the userName to set
-	 */
-	public void setUserName(String userName) {
+ 	public void setUserName(String userName) {
 		this.userName = userName;
 	}
- 	/**
-	 * @return the cookieStore
-	 */
-	public CookieStore getCookieStore() {
+ 	public CookieStore getCookieStore() {
 		return cookieStore;
 	}
-	/**
-	 * @param cookieStore the cookieStore to set
-	 */
-	public void setCookieStore(CookieStore cookieStore) {
+ 	public void setCookieStore(CookieStore cookieStore) {
 		this.cookieStore = cookieStore;
 	}
-	/**
-	 * @return the password
-	 */
-	public String getPassword() {
+ 	public String getPassword() {
 		return password;
 	}
-	/**
-	 * @param password the password to set
-	 */
-	public void setPassword(String password) {
+ 	public void setPassword(String password) {
 		this.password = password;
 	}
-	/**
-	 * @return the lifeToyVersion
-	 */
-	public boolean isLifeToyVersion() {
-		return lifeToyVersion;
+ 	public boolean isProxyVersion() {
+		return proxyVersion;
 	}
-	/**
-	 * @param lifeToyVersion the lifeToyVersion to set
-	 */
-	public void setLifeToyVersion(boolean lifeToyVersion) {
-		this.lifeToyVersion = lifeToyVersion;
+ 	public void setProxyVersion(boolean proxyVersion) {
+		this.proxyVersion = proxyVersion;
+	}
+ 	public String getProxyUserName() {
+		return proxyUserName;
+	}
+ 	public void setProxyUserName(String proxyUserName) {
+		this.proxyUserName = proxyUserName;
+	}
+ 	public String getProxyPassword() {
+		return proxyPassword;
+	}
+ 	public void setProxyPassword(String proxyPassword) {
+		this.proxyPassword = proxyPassword;
 	}
 }

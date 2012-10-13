@@ -131,7 +131,7 @@ public class PostListViewAdapter extends BaseItemListAdapter<PostEntity> {
 						Intent intent = new Intent(context,
 								PostContentsJSActivity.class);
 						intent.putExtra(PostContentsJSActivity.BOARD_ID,
-								mBoardId);
+								items.get(clickPosition).getBoardId());
 						intent.putExtra(PostContentsJSActivity.BOARD_NAME,
 								mBoardName);
 						intent.putExtra(PostContentsJSActivity.POST_ID,

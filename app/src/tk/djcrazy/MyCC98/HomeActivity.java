@@ -175,7 +175,6 @@ public class HomeActivity extends RoboSherlockFragmentActivity implements
 
 	@Override
 	public void onLoadFailure(int position) {
-
 	}
 
 	private static Boolean isExit = false;

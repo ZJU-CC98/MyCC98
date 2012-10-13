@@ -133,7 +133,6 @@ public class PersonalboardListAdapter extends BaseItemListAdapter<BoardEntity> {
 
 		listItemView.lastReplyTimeClickable
 				.setOnClickListener(new View.OnClickListener() {
-
 					@Override
 					public void onClick(View v) {
 						Intent intent = new Intent(context,
@@ -149,7 +148,6 @@ public class PersonalboardListAdapter extends BaseItemListAdapter<BoardEntity> {
 						intent.putExtra(PostContentsJSActivity.BOARD_NAME,
 								items.get(clickPosition).getBoardName());
 						context.startActivity(intent);
-						 
 					}
 				});
 	}

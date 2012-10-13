@@ -87,17 +87,11 @@ public class EditActivity extends BaseActivity {
 	private static final String TAG = "EditActivity";
 	private static final int TITLE_MAX_LENGTH = 100;
 	private static final int CONTENT_MAX_LENGTH = 16240;
-	/* 用来标识请求照相功能的activity */
 	private static final int CAMERA_WITH_DATA = 3023;
-	/* 用来标识请求gallery的activity */
 	private static final int PHOTO_PICKED_WITH_DATA = 3021;
-	/* 照片最大尺寸不能超过500KB */
+	/* image upload 500KB limited */
 	private static final long MAX_IMAGE_SIZE_IN_BYTE = 500 * 1024;
-	/**
-	 * get image from sketch
-	 */
-	public static final int GET_SKETCH = 3022;
-
+ 
 	/* 拍照的照片存储位置 */
 	private static final File PHOTO_DIR = new File(
 			Environment.getExternalStorageDirectory() + "/Camera");
@@ -169,7 +163,6 @@ public class EditActivity extends BaseActivity {
 		}
 	};
 	private OnCheckedChangeListener emotChangeListener = new OnCheckedChangeListener() {
-
 		@Override
 		public void onCheckedChanged(RadioGroup group, int checkedId) {
 			switch (checkedId) {
@@ -544,9 +537,7 @@ public class EditActivity extends BaseActivity {
 
 	private void doPickPhotoAction() {
 		final Context context = EditActivity.this;
-
-		// Wrap our context to inflate list items using correct theme
-		String[] choices = { "拍照", "本地上传", "取消" };
+ 		String[] choices = { "拍照", "本地上传", "取消" };
 		final ListAdapter adapter = new ArrayAdapter<String>(context,
 				android.R.layout.simple_list_item_1, choices);
 		final AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -582,7 +573,7 @@ public class EditActivity extends BaseActivity {
 
 	private boolean checkReplyContentLimit(String title, String content) {
 		if (title.getBytes().length > TITLE_MAX_LENGTH) {
-			ToastUtils.show(this, "标题长度超过，请修改");
+			ToastUtils.show(this, "标题长度超过限制，请修改");
 			return false;
 		}
 		if (content.getBytes().length > CONTENT_MAX_LENGTH) {
@@ -595,7 +586,6 @@ public class EditActivity extends BaseActivity {
 	private void doTakePhoto() {
 		try {
 			PHOTO_DIR.mkdirs();// 创建照片的存储目录
-			Log.d(TAG, "doTakePhoto");
 			Date date = new Date(System.currentTimeMillis());
 			SimpleDateFormat dateFormat = new SimpleDateFormat(
 					"'IMG'_yyyy-MM-dd HH-mm-ss");
@@ -621,19 +611,17 @@ public class EditActivity extends BaseActivity {
 			startActivityForResult(intent, PHOTO_PICKED_WITH_DATA);
 
 		} catch (ActivityNotFoundException e) {
-			Toast.makeText(this, " ", Toast.LENGTH_LONG).show();
+			ToastUtils.show(this, "未找到目标！");
 		}
 	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode != RESULT_OK) {
-			Log.d(TAG, resultCode + "");
-			// ToastUtils.show(this, "程序返回错误");
-			return;
+ 			return;
 		}
 		switch (requestCode) {
-		case PHOTO_PICKED_WITH_DATA: {// 调用Gallery返回的
+		case PHOTO_PICKED_WITH_DATA: { 
 			Uri uri = data.getData();
 			ContentResolver cr = this.getContentResolver();
 			Cursor cursor = cr.query(uri, null, null, null, null);
@@ -642,17 +630,14 @@ public class EditActivity extends BaseActivity {
 			doUploadPicture(new File(picURI));
 			break;
 		}
-		case CAMERA_WITH_DATA: {// 照相机程序返回的
-			Log.d(TAG, "Returned from camera.");
+		case CAMERA_WITH_DATA: { 
 			try {
 				while (mCurrentPhotoFile.length() > MAX_IMAGE_SIZE_IN_BYTE) {
 					doCompressPhoto();
 				}
 				doUploadPicture(mCurrentPhotoFile);
 			} catch (IOException e) {
-				Toast.makeText(getApplicationContext(), "照片处理失败Q_Q",
-						Toast.LENGTH_SHORT).show();
-				ToastUtils.show(this, "照片处理失败");
+ 				ToastUtils.show(this, "照片处理失败");
 				e.printStackTrace();
 			}
 			break;
@@ -663,11 +648,7 @@ public class EditActivity extends BaseActivity {
 	}
 
 	private void doCompressPhoto() throws IOException {
-		Log.d(TAG, "doCompress");
-		Log.d(TAG, "FilePath: " + mCurrentPhotoFile.getPath());
-		Log.d(TAG, mCurrentPhotoFile.getPath());
-		Log.d(TAG, mCurrentPhotoFile.length() + "");
-		BitmapFactory.Options options = new BitmapFactory.Options();
+ 		BitmapFactory.Options options = new BitmapFactory.Options();
 		options.inJustDecodeBounds = true;
 		Bitmap bmp = BitmapFactory.decodeFile(mCurrentPhotoFile.getPath(),
 				options);
@@ -683,7 +664,6 @@ public class EditActivity extends BaseActivity {
 	}
 
 	private void doUploadPicture(File photo) {
-		Log.d(TAG, "doUploadPicture");
 		upLoadPictureTask upTask = new upLoadPictureTask(this, photo);
 		upTask.execute();
 	}

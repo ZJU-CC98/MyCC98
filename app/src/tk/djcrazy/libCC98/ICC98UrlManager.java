@@ -86,10 +86,6 @@ public interface ICC98UrlManager {
 	 */
 	public String getLoginUrl();
 
-	public void setLifetoyVersion(boolean b);
-
-	public boolean isLifetoyVersion();
-
 	public String getSendPmUrl();
 
  	public String getPushNewPostReferer(String boardID);
