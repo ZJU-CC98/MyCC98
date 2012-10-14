@@ -22,7 +22,7 @@ public class HtmlGenHelper {
             + "<script type=\"text/javascript\" src=\"file:///android_asset/tools.js\"></script>"
             // +
             // "<script type=\"text/javascript\" src=\"file:///android_asset/mootools.more.js\"></script>"
-            + "<script type=\"text/javascript\" src=\"file:///android_asset/clientubb_proxy.js\"></script>"
+            + "<script type=\"text/javascript\" src=\"file:///android_asset/clientubb.js\"></script>"
             + "<meta name=\"viewport\" content=\"width=device-width, user-scalable=no\" />"
             + "</head><body>"
              + "<div  class=\"bg-wrapper\">";
