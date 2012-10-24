@@ -151,7 +151,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 		if (IS_LIFETOY_VERSION) {
 			authBuilder.show();
 		} else {
-			showLoginField();
+			setupRememberedLoginInfo();
 		}
 	}
 

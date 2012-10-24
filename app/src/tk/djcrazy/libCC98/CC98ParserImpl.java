@@ -49,7 +49,7 @@ public class CC98ParserImpl implements ICC98Parser {
 	@Inject
 	private ICC98UrlManager cc98UrlManager;
 
- 	@Override
+	@Override
 	public List<PostEntity> getPostList(String boardId, int pageNum)
 			throws ClientProtocolException, ParseException, IOException,
 			ParseContentException, java.text.ParseException {
@@ -188,8 +188,12 @@ public class CC98ParserImpl implements ICC98Parser {
 				POST_CONTENT_WHOLE_REGEX, html, -1);
 		for (String reply : contentHtml) {
 			PostContentEntity entity = new PostContentEntity();
+			try {
 			entity.setUserName(getMatchedString(POST_CONTENT_USERNAME_REGEX,
 					reply));
+			} catch(ParseContentException e) {
+				entity.setUserName("匿名");
+			}
 			entity.setPostContent(getMatchedString(
 					POST_CONTENT_POST_CONTENT_REGEX, reply));
 			entity.setPostTitle(getMatchedString(POST_CONTENT_POST_TITLE_REGEX,
@@ -198,7 +202,7 @@ public class CC98ParserImpl implements ICC98Parser {
 					reply));
 			entity.setPostTime(convertStringToDateInPostContent(getMatchedString(
 					POST_CONTENT_POST_TIME_REGEX, reply)));
-			 
+
 			try {
 				String avatarLink = getMatchedString(
 						POST_CONTENT_USER_AVATAR_LINK_REGEX, reply);
@@ -208,9 +212,9 @@ public class CC98ParserImpl implements ICC98Parser {
 				entity.setUserAvatarLink(avatarLink);
 
 			} catch (ParseContentException e) {
-					entity.setUserAvatarLink("file:///android_asset/pic/no_avatar.jpg");
+				entity.setUserAvatarLink("file:///android_asset/pic/no_avatar.jpg");
 			}
- 			{
+			{
 				String sex = getMatchedString(POST_CONTENT_GENDER_REGEX, reply);
 				if ("Male".equals(sex)) {
 					entity.setGender(Gender.MALE);
@@ -258,7 +262,8 @@ public class CC98ParserImpl implements ICC98Parser {
 					.convertStringToDateInPostList(getMatchedString(
 							POST_LIST_LAST_REPLY_TIME_REGEX, post)));
 			entity.setPostId(getMatchedString(POST_LIST_POST_ID_REGEX, post));
-			entity.setBoardId(getMatchedString(POST_LIST_POST_BOARD_ID_REGEX, post));
+			entity.setBoardId(getMatchedString(POST_LIST_POST_BOARD_ID_REGEX,
+					post));
 			list.add(entity);
 		}
 		return list;
@@ -284,8 +289,8 @@ public class CC98ParserImpl implements ICC98Parser {
 			entity.setBoardIntro(getMatchedString(P_BOARD_INTRO_REGEX, string));
 			entity.setBoardID(getMatchedString(P_BOARD_ID_REGEX, string));
 			try {
-				entity.setBoardMaster(getMatchedString(P_BOARD_BOARD_MASTER_REGEX,
-						string));
+				entity.setBoardMaster(getMatchedString(
+						P_BOARD_BOARD_MASTER_REGEX, string));
 			} catch (ParseContentException e) {
 				entity.setBoardMaster("暂无");
 			}
@@ -402,10 +407,15 @@ public class CC98ParserImpl implements ICC98Parser {
 			}
 			// board name, author
 			{
-				List<String> bList = getMatchedStringList(
-						HOT_TOPIC_BOARD_NAME_WITH_AUTHOR_REGEX, topic, 2);
-				entity.setBoardName(bList.get(0));
-				entity.setPostAuthor(bList.get(1));
+				try {
+					List<String> bList = getMatchedStringList(
+							HOT_TOPIC_BOARD_NAME_WITH_AUTHOR_REGEX, topic, 2);
+					entity.setBoardName(bList.get(0));
+					entity.setPostAuthor(bList.get(1));
+				} catch (ParseContentException e) {
+					entity.setBoardName("心灵之约");
+					entity.setPostAuthor("匿名");
+				}
 			}
 			list.add(entity);
 		}
@@ -486,7 +496,7 @@ public class CC98ParserImpl implements ICC98Parser {
 		}
 		return m.group();
 	}
- 
+
 	@Override
 	public List<PmInfo> getPmData(int page_num, InboxInfo inboxInfo, int type)
 			throws ClientProtocolException, ParseException, IOException {
@@ -547,7 +557,7 @@ public class CC98ParserImpl implements ICC98Parser {
 		try {
 			totalPost = getMatchedString(NEW_TOPIC_TOTAL_POST, html);
 		} catch (Exception e) {
-			totalPost="0";
+			totalPost = "0";
 			return list;
 		}
 		List<String> entityList = getMatchedStringList(NEW_TOPIC_WRAPPER_REGEX,
@@ -557,8 +567,12 @@ public class CC98ParserImpl implements ICC98Parser {
 			SearchResultEntity entity = new SearchResultEntity();
 			entity.setTitle(StringUtil.filterHtmlDecode(getMatchedString(
 					NEW_TOPIC_TITLE_REGEX, string)));
+			try {
 			entity.setAuthorName(getMatchedString(NEW_TOPIC_AUTHOR_REGEX,
 					string));
+			} catch (ParseContentException e) {
+				entity.setAuthorName("匿名");
+			}
 			entity.setBoardId(getMatchedString(NEW_TOPIC_BOARD_ID, string));
 			entity.setFaceId(getMatchedString(NEW_TOPIC_FACE_REGEX, string));
 			entity.setPostTime(DateFormatUtil
@@ -568,7 +582,7 @@ public class CC98ParserImpl implements ICC98Parser {
 			entity.setTotalResult(totalPost);
 			entity.setPostId(getMatchedString(NEW_TOPIC_ID_REGEX, string));
 			list.add(entity);
- 		}
+		}
 		return list;
 	}
 
