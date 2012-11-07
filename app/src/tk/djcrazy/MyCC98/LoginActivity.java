@@ -14,6 +14,7 @@ import roboguice.inject.InjectView;
 import tk.djcrazy.MyCC98.application.MyApplication;
 import tk.djcrazy.MyCC98.dialog.AuthDialog;
 import tk.djcrazy.MyCC98.dialog.AuthDialog.MyAuthDialogListener;
+import tk.djcrazy.MyCC98.security.Md5;
 import tk.djcrazy.MyCC98.task.ProgressRoboAsyncTask;
 import tk.djcrazy.MyCC98.util.ToastUtils;
 import tk.djcrazy.libCC98.ICC98Service;
@@ -204,6 +205,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 		} else if (mPassword.length() <= 0) {
 			ToastUtils.show(this, "密码不能为空");
 		}
+		mPassword = Md5.MyMD5(mPassword);
 		new LoginTask(this, mUsername, mPassword).execute();
 	}
 

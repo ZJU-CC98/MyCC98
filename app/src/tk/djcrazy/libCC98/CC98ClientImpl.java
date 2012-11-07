@@ -147,7 +147,7 @@ public class CC98ClientImpl implements ICC98Client {
 		List<NameValuePair> nvps = new ArrayList<NameValuePair>();
 		nvps.add(new BasicNameValuePair("a", "i"));
 		nvps.add(new BasicNameValuePair("u", id));
-		nvps.add(new BasicNameValuePair("p", Md5.MyMD5(pw)));
+		nvps.add(new BasicNameValuePair("p", pw));
 		nvps.add(new BasicNameValuePair("userhidden", "2"));
 		httpost.setEntity(new UrlEncodedFormEntity(nvps, HTTP.UTF_8));
 		HttpResponse response = getHttpClient().execute(httpost);
