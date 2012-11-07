@@ -143,7 +143,7 @@ public class CC98UrlManagerImpl implements ICC98UrlManager {
 
 	@Override
 	public String getLoginUrl() {
-		return getClient() + "login.asp?action=chk";
+		return getClient() + "sign.asp";
 	}
 
   

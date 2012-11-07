@@ -15,12 +15,14 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.net.UnknownServiceException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.PatternSyntaxException;
 
 import tk.djcrazy.MyCC98.application.MyApplication;
+import tk.djcrazy.MyCC98.security.Md5;
 import tk.djcrazy.libCC98.data.UserData;
 import tk.djcrazy.libCC98.exception.NoUserFoundException;
 import tk.djcrazy.libCC98.exception.ParseContentException;
@@ -120,7 +122,8 @@ public class CC98ClientImpl implements ICC98Client {
 			if (getUserData().getCookieStore() != null) {
 				client.setCookieStore(getUserData().getCookieStore());
 			}
-			if (getUserData().isProxyVersion()&&(getUserData().getProxyUserName()!=null)) {
+			if (getUserData().isProxyVersion()
+					&& (getUserData().getProxyUserName() != null)) {
 				addHttpBasicAuthorization(getUserData().getProxyUserName(),
 						getUserData().getProxyPassword());
 			}
@@ -142,10 +145,9 @@ public class CC98ClientImpl implements ICC98Client {
 		HttpPost httpost = new HttpPost(manager.getLoginUrl());
 		Log.d(TAG, "doLogin: " + manager.getLoginUrl());
 		List<NameValuePair> nvps = new ArrayList<NameValuePair>();
-		nvps.add(new BasicNameValuePair("username", id));
-		nvps.add(new BasicNameValuePair("password", pw));
-		nvps.add(new BasicNameValuePair("CookieDate", "3"));
-		nvps.add(new BasicNameValuePair("loginaction", "login"));
+		nvps.add(new BasicNameValuePair("a", "i"));
+		nvps.add(new BasicNameValuePair("u", id));
+		nvps.add(new BasicNameValuePair("p", pw));
 		nvps.add(new BasicNameValuePair("userhidden", "2"));
 		httpost.setEntity(new UrlEncodedFormEntity(nvps, HTTP.UTF_8));
 		HttpResponse response = getHttpClient().execute(httpost);
@@ -273,7 +275,7 @@ public class CC98ClientImpl implements ICC98Client {
 		return null;
 	}
 
- 	@Override
+	@Override
 	public String getPage(String link) throws ClientProtocolException,
 			IOException, ParseException {
 		HttpGet get = new HttpGet(link);
@@ -289,7 +291,7 @@ public class CC98ClientImpl implements ICC98Client {
 		return content;
 	}
 
- 	@Override
+	@Override
 	public String uploadPictureToCC98(File picFile)
 			throws PatternSyntaxException, MalformedURLException, IOException,
 			ParseContentException {
@@ -358,13 +360,14 @@ public class CC98ClientImpl implements ICC98Client {
 			ParseException, IOException {
 		return getPage(manager.getInboxUrl(pageNumber));
 	}
- 	@Override
+
+	@Override
 	public String getOutboxHtml(int pageNumber) throws ClientProtocolException,
 			ParseException, IOException {
 		return getPage(manager.getOutboxUrl(pageNumber));
 	}
 
- 	@Override
+	@Override
 	public String getUserImgUrl(String userName)
 			throws ClientProtocolException, ParseException, IOException,
 			ParseContentException {
@@ -402,7 +405,7 @@ public class CC98ClientImpl implements ICC98Client {
 		return flag;
 	}
 
- 	@Override
+	@Override
 	public void addFriend(String userId) throws ParseException,
 			NoUserFoundException, IOException {
 		if (userId == null) {
@@ -434,7 +437,7 @@ public class CC98ClientImpl implements ICC98Client {
 		}
 	}
 
- 	@Override
+	@Override
 	public String getUserProfileHtml(String userName)
 			throws NoUserFoundException, IOException {
 		String mString = getPage(manager.getUserProfileUrl(userName));
@@ -447,7 +450,7 @@ public class CC98ClientImpl implements ICC98Client {
 		}
 	}
 
- 	@Override
+	@Override
 	public Bitmap getBitmapFromUrl(String url) throws IOException {
 		BufferedInputStream bis = null;
 		URL img_url = new URL(url);
@@ -459,7 +462,7 @@ public class CC98ClientImpl implements ICC98Client {
 		return BitmapFactory.decodeStream(bis);
 	}
 
- 	@Override
+	@Override
 	public Bitmap getUserImg(String userName) throws ClientProtocolException,
 			ParseException, IOException, ParseContentException {
 		return getBitmapFromUrl(getUserImgUrl(userName));
@@ -494,7 +497,7 @@ public class CC98ClientImpl implements ICC98Client {
 			getUserData().setProxyPassword(authPassword);
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
-			 throw new Error("Very bad error:(", e); 
+			throw new Error("Very bad error:(", e);
 		}
 	}
 
