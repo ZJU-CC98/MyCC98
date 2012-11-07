@@ -32,7 +32,7 @@ public interface ICC98Service {
 
 	public boolean isUseProxy();
 
-	public void doLogin(String userName, String pwd)
+	public void doLogin(String userName, String pwd32, String pw16)
 			throws ClientProtocolException, IOException,
 			IllegalAccessException, ParseException, ParseContentException,
 			NetworkErrorException;

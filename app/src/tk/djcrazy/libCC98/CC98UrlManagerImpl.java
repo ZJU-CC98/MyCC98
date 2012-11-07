@@ -8,11 +8,16 @@ import android.app.Application;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
+/**
+ * Thank flankerhqd for the rvpn access.
+ *
+ */
 @Singleton
 public class CC98UrlManagerImpl implements ICC98UrlManager {
 	private final String CC98 = "http://www.cc98.org/";
 	private final String LIFETOY = "http://hz.cc98.lifetoy.org/";
+	private final String ZJU_RVPN_HOST = "https://61.175.193.50/";
+	
 
 	@Inject
 	private Application application;

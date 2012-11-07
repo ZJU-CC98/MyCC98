@@ -15,7 +15,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.net.URLEncoder;
 import java.net.UnknownServiceException;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +37,6 @@ import ch.boye.httpclientandroidlib.HttpVersion;
 import ch.boye.httpclientandroidlib.NameValuePair;
 import ch.boye.httpclientandroidlib.ParseException;
 import ch.boye.httpclientandroidlib.auth.AuthScope;
-import ch.boye.httpclientandroidlib.auth.AuthenticationException;
 import ch.boye.httpclientandroidlib.auth.UsernamePasswordCredentials;
 import ch.boye.httpclientandroidlib.client.ClientProtocolException;
 import ch.boye.httpclientandroidlib.client.entity.UrlEncodedFormEntity;
@@ -138,7 +136,7 @@ public class CC98ClientImpl implements ICC98Client {
 	}
 
 	@Override
-	public void doLogin(String id, String pw) throws ClientProtocolException,
+	public void doLogin(String id, String pw32, String pw16) throws ClientProtocolException,
 			IOException, IllegalAccessException, ParseException,
 			ParseContentException, NetworkErrorException {
 
@@ -147,7 +145,7 @@ public class CC98ClientImpl implements ICC98Client {
 		List<NameValuePair> nvps = new ArrayList<NameValuePair>();
 		nvps.add(new BasicNameValuePair("a", "i"));
 		nvps.add(new BasicNameValuePair("u", id));
-		nvps.add(new BasicNameValuePair("p", pw));
+		nvps.add(new BasicNameValuePair("p", pw32));
 		nvps.add(new BasicNameValuePair("userhidden", "2"));
 		httpost.setEntity(new UrlEncodedFormEntity(nvps, HTTP.UTF_8));
 		HttpResponse response = getHttpClient().execute(httpost);
@@ -159,7 +157,8 @@ public class CC98ClientImpl implements ICC98Client {
 			throw new IllegalAccessException(ID_PASSWD_ERROR_MSG);
 		}
 		getUserData().setUserName(id);
-		getUserData().setPassword(Md5.MyMD5(pw));
+		getUserData().setPassword16(pw16);
+		getUserData().setPassword32(pw32);
 		getUserData().setCookieStore(getHttpClient().getCookieStore());
 		getLoginUserImgAndGender();
 		((MyApplication) application).storeUserInfo();
@@ -177,7 +176,7 @@ public class CC98ClientImpl implements ICC98Client {
 		nvpsList.add(new BasicNameValuePair("username", getUserData()
 				.getUserName()));
 		nvpsList.add(new BasicNameValuePair("passwd", getUserData()
-				.getPassword()));
+				.getPassword16()));
 		httpPost.setEntity(new UrlEncodedFormEntity(nvpsList, HTTP.UTF_8));
 		response = getHttpClient().execute(httpPost);
 		entity = response.getEntity();
@@ -221,9 +220,9 @@ public class CC98ClientImpl implements ICC98Client {
 		nvpsList.add(new BasicNameValuePair("username", getUserData()
 				.getUserName()));
 		nvpsList.add(new BasicNameValuePair("passwd", getUserData()
-				.getPassword()));
+				.getPassword16()));
 		httpPost.setEntity(new UrlEncodedFormEntity(nvpsList, HTTP.UTF_8));
-		// Log.d(TAG, "request: "+EntityUtils.toString(httpPost.getEntity()));
+		Log.d(TAG, "request: "+EntityUtils.toString(httpPost.getEntity()));
 		response = getHttpClient().execute(httpPost);
 		entity = response.getEntity();
 		if (entity != null) {

@@ -33,7 +33,7 @@ public interface ICC98Client {
 	 * @throws ParseException
 	 * @throws NetworkErrorException
 	 */
-	public void doLogin(String id, String pw) throws ClientProtocolException,
+	public void doLogin(String id, String pw32, String pw16) throws ClientProtocolException,
 			IOException, IllegalAccessException, ParseException,
 			ParseContentException, NetworkErrorException;
 
