@@ -35,7 +35,6 @@ public class Md5{
        if (stmp.length()==1) hs=hs+"0"+stmp;
        else hs=hs+stmp;
       }
-     hs=hs.substring(8, 24);
      return hs.toLowerCase();
     }
 }
