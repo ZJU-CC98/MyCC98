@@ -188,12 +188,8 @@ public class CC98ParserImpl implements ICC98Parser {
 				POST_CONTENT_WHOLE_REGEX, html, -1);
 		for (String reply : contentHtml) {
 			PostContentEntity entity = new PostContentEntity();
-			try {
 			entity.setUserName(getMatchedString(POST_CONTENT_USERNAME_REGEX,
 					reply));
-			} catch(ParseContentException e) {
-				entity.setUserName("匿名");
-			}
 			entity.setPostContent(getMatchedString(
 					POST_CONTENT_POST_CONTENT_REGEX, reply));
 			entity.setPostTitle(getMatchedString(POST_CONTENT_POST_TITLE_REGEX,
@@ -407,14 +403,13 @@ public class CC98ParserImpl implements ICC98Parser {
 			}
 			// board name, author
 			{
-				try {
-					List<String> bList = getMatchedStringList(
-							HOT_TOPIC_BOARD_NAME_WITH_AUTHOR_REGEX, topic, 2);
-					entity.setBoardName(bList.get(0));
-					entity.setPostAuthor(bList.get(1));
-				} catch (ParseContentException e) {
-					entity.setBoardName("心灵之约");
+				List<String> bList = getMatchedStringList(
+						HOT_TOPIC_BOARD_NAME_WITH_AUTHOR_REGEX, topic, -1);
+				entity.setBoardName(bList.get(0));
+				if (bList.size() < 2) {
 					entity.setPostAuthor("匿名");
+				} else {
+					entity.setPostAuthor(bList.get(1));
 				}
 			}
 			list.add(entity);
@@ -557,7 +552,7 @@ public class CC98ParserImpl implements ICC98Parser {
 		try {
 			totalPost = getMatchedString(NEW_TOPIC_TOTAL_POST, html);
 		} catch (Exception e) {
-			totalPost = "0";
+			totalPost="0";
 			return list;
 		}
 		List<String> entityList = getMatchedStringList(NEW_TOPIC_WRAPPER_REGEX,
@@ -568,9 +563,9 @@ public class CC98ParserImpl implements ICC98Parser {
 			entity.setTitle(StringUtil.filterHtmlDecode(getMatchedString(
 					NEW_TOPIC_TITLE_REGEX, string)));
 			try {
-			entity.setAuthorName(getMatchedString(NEW_TOPIC_AUTHOR_REGEX,
+				entity.setAuthorName(getMatchedString(NEW_TOPIC_AUTHOR_REGEX,
 					string));
-			} catch (ParseContentException e) {
+			} catch (Exception e) {
 				entity.setAuthorName("匿名");
 			}
 			entity.setBoardId(getMatchedString(NEW_TOPIC_BOARD_ID, string));
@@ -582,7 +577,7 @@ public class CC98ParserImpl implements ICC98Parser {
 			entity.setTotalResult(totalPost);
 			entity.setPostId(getMatchedString(NEW_TOPIC_ID_REGEX, string));
 			list.add(entity);
-		}
+ 		}
 		return list;
 	}
 

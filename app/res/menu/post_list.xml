@@ -19,12 +19,12 @@
 
     <item
         android:id="@+id/post_list_menu_new_post"
-        android:icon="@drawable/feedback_icon"
+        android:icon="@drawable/ic_action_compose"
         android:showAsAction="ifRoom"
         android:title="@string/new_post" />
     <item
         android:id="@+id/post_list_menu_search"
-        android:icon="@drawable/search_icon"
+        android:icon="@drawable/ic_action_search"
         android:showAsAction="always"
         android:title="@string/search_for_post"/>
 </menu>

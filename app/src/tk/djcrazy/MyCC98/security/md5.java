@@ -16,7 +16,6 @@ public class Md5 {
 		try {
 			mDigest = MessageDigest.getInstance("MD5");
 		} catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		mDigest.update(password.getBytes());

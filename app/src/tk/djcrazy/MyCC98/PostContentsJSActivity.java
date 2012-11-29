@@ -165,6 +165,7 @@ public class PostContentsJSActivity extends RoboSherlockActivity implements
 		optionMenu.add(android.view.Menu.NONE, MENU_SHOW_IMG_ID, 1, "显示图片")
 				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 		optionMenu.add(android.view.Menu.NONE, MENU_SHOW_REFRESH_ID, 1, "刷新")
+				.setIcon(R.drawable.ic_action_refresh)
 				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 		return true;
 	}
@@ -176,7 +177,7 @@ public class PostContentsJSActivity extends RoboSherlockActivity implements
 			finish();
 			return true;
 		case MENU_SHOW_REFRESH_ID:
- 			refreshPage();
+			refreshPage();
 			return true;
 		case MENU_SHOW_IMG_ID:
 			webView.loadUrl("javascript:showAllImages.fireEvent('click');");
@@ -219,17 +220,18 @@ public class PostContentsJSActivity extends RoboSherlockActivity implements
 				.getDefaultSharedPreferences(this);
 		boolean enableCache = sharedPref.getBoolean(
 				SettingsActivity.ENABLE_CACHE, true);
-		boolean showImage = sharedPref.getBoolean(SettingsActivity.SHOW_IMAGE, true);
+		boolean showImage = sharedPref.getBoolean(SettingsActivity.SHOW_IMAGE,
+				true);
 		WebSettings webSettings = webView.getSettings();
 		webSettings.setJavaScriptEnabled(true);
 		webSettings.setPluginsEnabled(true);
 		webSettings.setDefaultFontSize(14);
- 		webSettings.setLoadsImagesAutomatically(showImage);
+		webSettings.setLoadsImagesAutomatically(showImage);
 		webSettings.setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
 		webSettings.setAppCacheEnabled(enableCache);
 		webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
 		webView.addJavascriptInterface(this, JS_INTERFACE);
-  		webView.setWebViewClient(new WebViewClient() {
+		webView.setWebViewClient(new WebViewClient() {
 			@Override
 			public void onPageFinished(WebView view, String url) {
 				webView.getSettings().setBlockNetworkImage(false);
