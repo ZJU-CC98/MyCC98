@@ -19,12 +19,12 @@
 
     <item
         android:id="@+id/menu_message"
-        android:icon="@drawable/message_box"
+        android:icon="@drawable/ic_action_social_stream"
         android:showAsAction="ifRoom"
         android:title="@string/pm_activity_title" />
     <item
         android:id="@+id/menu_search"
-        android:icon="@drawable/search_icon"
+        android:icon="@drawable/ic_action_search"
         android:showAsAction="always"
         android:title="@string/search_for_post"/>
 

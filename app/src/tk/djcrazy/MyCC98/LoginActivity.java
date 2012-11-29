@@ -14,6 +14,7 @@ import roboguice.inject.InjectView;
 import tk.djcrazy.MyCC98.application.MyApplication;
 import tk.djcrazy.MyCC98.dialog.AuthDialog;
 import tk.djcrazy.MyCC98.dialog.AuthDialog.MyAuthDialogListener;
+import tk.djcrazy.MyCC98.security.Md5;
 import tk.djcrazy.MyCC98.task.ProgressRoboAsyncTask;
 import tk.djcrazy.MyCC98.util.ToastUtils;
 import tk.djcrazy.libCC98.ICC98Service;
@@ -51,11 +52,13 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 	public static final boolean IS_LIFETOY_VERSION = false;
 
 	public static final String USERNAME = "USERNAME";
+	public static final String PASSWORD32 = "PASSWORD32";
+	public static final String PASSWORD16 = "PASSWORD16";
 	public static final String PASSWORD = "PASSWORD";
 	public static final String USERINFO = "USERINFO";
 	public static final String AUTOLOGIN = "AUTOLOGIN";
 	public static final String REMEMBERPWD = "REMEMBERPWD";
- 
+
 	@InjectView(R.id.username)
 	private EditText mUsernameEdit;
 	@InjectView(R.id.password)
@@ -67,8 +70,10 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 	@InjectView(R.id.auto_login)
 	private CheckBox autoLoginBox;
 
-	private String mUsername;
-	private String mPassword;
+	private String mUsername = "";
+	private String mPassword = "";
+	private String mPWD32 = "";
+	private String mPWD16 = "";
 
 	private String authUserName = "";
 	private String authPassword = "";
@@ -151,7 +156,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 		if (IS_LIFETOY_VERSION) {
 			authBuilder.show();
 		} else {
-			showLoginField();
+			setupRememberedLoginInfo();
 		}
 	}
 
@@ -172,7 +177,9 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 		SharedPreferences setting = getSharedPreferences(USERINFO, 0);
 		if (setting.getBoolean(REMEMBERPWD, false)) {
 			mUsernameEdit.setText(setting.getString(USERNAME, ""));
-			mPasswordEdit.setText(setting.getString(PASSWORD, ""));
+			mPasswordEdit.setText(setting.getString(PASSWORD32, ""));
+			mPWD32 = setting.getString(PASSWORD32, "");
+			mPWD16 = setting.getString(PASSWORD16, "");
 			rememberPassword.setChecked(true);
 			if (setting.getBoolean(AUTOLOGIN, false)) {
 				autoLoginBox.setChecked(true);
@@ -204,7 +211,9 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 		} else if (mPassword.length() <= 0) {
 			ToastUtils.show(this, "密码不能为空");
 		}
-		new LoginTask(this, mUsername, mPassword).execute();
+		mPWD16 = mPWD16.equals("") ? Md5.MyMD5(mPassword, Md5.T16) : mPWD16;
+		mPWD32 = mPWD32.equals("") ? Md5.MyMD5(mPassword, Md5.T32) : mPWD32;
+		new LoginTask(this, mUsername, mPWD32, mPWD16).execute();
 	}
 
 	private void onLoginSuccess() {
@@ -212,24 +221,28 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 		editor.putBoolean(AUTOLOGIN, autoLoginBox.isChecked());
 		if (rememberPassword.isChecked()) {
 			editor.putString(USERNAME, mUsername)
-					.putString(PASSWORD, mPassword)
+					.putString(PASSWORD32, mPWD32)
+					.putString(PASSWORD16, mPWD16)
 					.putBoolean(REMEMBERPWD, true);
 		} else {
-			editor.putString(USERNAME, "").putString(PASSWORD, "")
-					.putBoolean(REMEMBERPWD, false);
+			editor.putString(USERNAME, "").putString(PASSWORD32, "")
+					.putString(PASSWORD16, "").putBoolean(REMEMBERPWD, false);
 		}
 		editor.commit();
 		forwardToNextActivity();
 	}
- 
+
 	private class LoginTask extends ProgressRoboAsyncTask<String> {
 		private String userName;
-		private String password;
+		private String password32;
+		private String password16;
 
-		protected LoginTask(Activity context, String userName, String password) {
+		protected LoginTask(Activity context, String userName,
+				String password32, String password16) {
 			super(context);
 			this.userName = userName;
-			this.password = password;
+			this.password32 = password32;
+			this.password16 = password16;
 			dialog.setMessage("正在登录...");
 			dialog.setOnCancelListener(new OnCancelListener() {
 				@Override
@@ -241,7 +254,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 
 		@Override
 		public String call() throws Exception {
-			service.doLogin(userName, password);
+			service.doLogin(userName, password32, password16);
 			return null;
 		}
 

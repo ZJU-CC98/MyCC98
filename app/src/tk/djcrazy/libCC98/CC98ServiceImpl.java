@@ -49,11 +49,11 @@ public class CC98ServiceImpl implements ICC98Service {
 	}
 
 	@Override
-	public void doLogin(String userName, String pwd)
+	public void doLogin(String userName, String pwd32, String pwd16)
 			throws ClientProtocolException, IOException,
 			IllegalAccessException, ParseException, ParseContentException,
 			NetworkErrorException {
-		cc98Client.doLogin(userName, pwd);
+		cc98Client.doLogin(userName, pwd32, pwd16);
 	}
 
 	@Override

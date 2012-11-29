@@ -8,16 +8,12 @@
 # Java class files
 *.class
 *.jar
-
 # generated files
 bin/
 gen/
 
 # Local configuration file (sdk path, etc)
 local.properties
-project.properties
-org.eclipse.jdt.core.prefs
 
 .project
 .classpath
-.settings
