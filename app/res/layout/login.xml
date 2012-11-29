@@ -14,7 +14,7 @@
         <ImageView
             android:id="@+id/login_img"
             android:layout_width="wrap_content"
-            android:layout_height="200dp"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
             android:layout_marginTop="5dp"
@@ -30,12 +30,12 @@
              android:layout_marginLeft="20dip"
             android:layout_marginRight="20dip"
             android:orientation="vertical"
-            android:alpha="0"
+            android:alpha="1"
             android:padding="10dip"  >
 
             <LinearLayout
                 android:layout_width="fill_parent"
-                android:layout_height="96.0dip"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="31.0dip"
                 android:background="@color/qt_border"
                 android:orientation="vertical"
@@ -49,19 +49,19 @@
 
                     <ImageView
                         android:layout_width="wrap_content"
-                        android:layout_height="47.0dip"
+                        android:layout_height="wrap_content"
                         android:scaleType="fitStart"
                         android:src="@drawable/userid_signin_icon" />
 
                     <EditText
                         android:id="@+id/username"
                         android:layout_width="fill_parent"
-                        android:layout_height="47.0dip"
+                        android:layout_height="match_parent"
                         android:background="@color/white"
                         android:hint="用户名"
                         android:singleLine="true"
                         android:textColor="@color/login_text_color"
-                        android:textSize="20sp" />
+                        android:textSize="15sp" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -77,20 +77,20 @@
 
                     <ImageView
                         android:layout_width="wrap_content"
-                        android:layout_height="47.0dip"
+                        android:layout_height="wrap_content"
                         android:scaleType="fitStart"
                         android:src="@drawable/password_signin_icon" />
 
                     <EditText
                         android:id="@+id/password"
                         android:layout_width="fill_parent"
-                        android:layout_height="47.0dip"
+                        android:layout_height="match_parent"
                         android:background="@color/white"
                         android:hint="密码"
                         android:password="true"
                         android:singleLine="true"
                         android:textColor="@color/login_text_color"
-                        android:textSize="20sp" />
+                        android:textSize="15sp" />
                 </LinearLayout>
             </LinearLayout>
 

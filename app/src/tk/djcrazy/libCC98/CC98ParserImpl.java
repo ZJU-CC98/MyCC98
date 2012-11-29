@@ -403,9 +403,13 @@ public class CC98ParserImpl implements ICC98Parser {
 			// board name, author
 			{
 				List<String> bList = getMatchedStringList(
-						HOT_TOPIC_BOARD_NAME_WITH_AUTHOR_REGEX, topic, 2);
+						HOT_TOPIC_BOARD_NAME_WITH_AUTHOR_REGEX, topic, -1);
 				entity.setBoardName(bList.get(0));
-				entity.setPostAuthor(bList.get(1));
+				if (bList.size()<2) {
+					entity.setPostAuthor("匿名");
+				} else {
+					entity.setPostAuthor(bList.get(1));
+				}	
 			}
 			list.add(entity);
 		}

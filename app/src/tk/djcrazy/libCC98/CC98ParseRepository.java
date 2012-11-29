@@ -14,7 +14,7 @@ public class CC98ParseRepository {
 	public static final String POST_CONTENT_WHOLE_REGEX="(?<=valign=middle style=).*?(?=align=absmiddle></a>)";
 	public static final String POST_CONTENT_POST_CONTENT_REGEX = "(?<=</b><br>).*?</script>";
 	public static final String POST_CONTENT_USER_AVATAR_LINK_REGEX = "(?<= ><img src=).*?(?= )|(?<=&nbsp;<img src=\").*?(?=\" border=0 ><br>)";
-	public static final String POST_CONTENT_POST_TITLE_REGEX = "(?<=alt=\"发贴心情\">&nbsp;<b>).*?(?=</b><br>)";
+	public static final String POST_CONTENT_POST_TITLE_REGEX = "(?<=title=\"发贴心情\">&nbsp;<b>).*?(?=</b><br>)";
 	public static final String POST_CONTENT_POST_FACE_REGEX = "(?<=<img src=\"face/)face.*?.gif";
 	public static final String POST_CONTENT_POST_TIME_REGEX = "(?<=\"></a>).{10,25}?(PM|AM)";
 	public static final String POST_CONTENT_GENDER_REGEX = "(?<=<img src=pic/).*?Male(?=\\.gif)";
@@ -73,11 +73,11 @@ public class CC98ParseRepository {
  	public static final String TODAY_BOARD_TOPIC_NUM_REGEX = "(?<=align=center>)\\d{0,10}?(?=</td>)";
 
  	public static final String NEW_TOPIC_WRAPPER_REGEX = "(?<=<img src='face/face).*?(?=<!--<font color=\"#FF0000\">)";
- 	public static final String NEW_TOPIC_TITLE_REGEX = "(?<=blank>).*?(?=</a>)";
+ 	public static final String NEW_TOPIC_TITLE_REGEX = "(?<=blank\">).*?(?=</a>)";
  	public static final String NEW_TOPIC_FACE_REGEX = "\\d{0,3}?(?=\\.gif)";
- 	public static final String NEW_TOPIC_AUTHOR_REGEX = "(?<=\"  target=_blank>).{0,12}?(?=</a>)";
+ 	public static final String NEW_TOPIC_AUTHOR_REGEX = "(?<=\" target=\"_blank\">).{1,12}?(?=</a>)";
  	public static final String NEW_TOPIC_ID_REGEX = "(?<=&ID=)\\d{0,10}?(?=' )";
  	public static final String NEW_TOPIC_BOARD_ID = "(?<=boardID=)\\d{0,10}?(?=&ID)";	
- 	public static final String NEW_TOPIC_TOTAL_POST = "(?<=<font color=#FF0000>)\\d{0,10}?(?=</font>)";
- 	public static final String NEW_TOPIC_TIME = "(?<=195>).*&nbsp;";
+ 	public static final String NEW_TOPIC_TOTAL_POST = "(?<=<font color=\"#FF0000\">)\\d{0,10}?(?=</font>)";
+ 	public static final String NEW_TOPIC_TIME = "(?<=195\">).*&nbsp;";
 }	
