@@ -12,6 +12,7 @@ import org.apache.http.client.ClientProtocolException;
 import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
 import tk.djcrazy.MyCC98.helper.HtmlGenHelper;
+import tk.djcrazy.MyCC98.view.MyWebView;
 import tk.djcrazy.libCC98.ICC98Service;
 import tk.djcrazy.libCC98.data.Gender;
 import tk.djcrazy.libCC98.data.PostContentEntity;
@@ -33,8 +34,12 @@ import android.os.Message;
 import android.preference.PreferenceManager;
 import android.text.InputType;
 import android.util.Log;
+import android.view.DragEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnDragListener;
+import android.view.View.OnTouchListener;
 import android.webkit.WebSettings;
 import android.webkit.WebSettings.LayoutAlgorithm;
 import android.webkit.WebView;
@@ -171,7 +176,7 @@ public class PostContentsJSActivity extends RoboSherlockActivity implements
 			finish();
 			return true;
 		case MENU_SHOW_REFRESH_ID:
-			refreshPage();
+ 			refreshPage();
 			return true;
 		case MENU_SHOW_IMG_ID:
 			webView.loadUrl("javascript:showAllImages.fireEvent('click');");
@@ -224,7 +229,7 @@ public class PostContentsJSActivity extends RoboSherlockActivity implements
 		webSettings.setAppCacheEnabled(enableCache);
 		webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
 		webView.addJavascriptInterface(this, JS_INTERFACE);
-		webView.setWebViewClient(new WebViewClient() {
+  		webView.setWebViewClient(new WebViewClient() {
 			@Override
 			public void onPageFinished(WebView view, String url) {
 				webView.getSettings().setBlockNetworkImage(false);
