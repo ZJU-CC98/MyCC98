@@ -1,9 +1,8 @@
 package tk.djcrazy.MyCC98.task;
 
+import roboguice.util.RoboAsyncTask;
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
-import roboguice.util.RoboAsyncTask;
 
 public abstract class ProgressRoboAsyncTask<ResultT> extends RoboAsyncTask<ResultT> {
 

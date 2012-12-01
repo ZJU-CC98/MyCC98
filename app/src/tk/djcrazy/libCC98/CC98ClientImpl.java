@@ -199,7 +199,6 @@ public class CC98ClientImpl implements ICC98Client {
 		entity = response.getEntity();
 		if (entity != null) {
 			String html = EntityUtils.toString(entity);
-			// System.err.println("Reply Html:" + link + html.toLowerCase());
 			if (html.contains("编辑帖子成功")) {
 				return true;
 			}
