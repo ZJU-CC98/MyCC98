@@ -17,6 +17,7 @@ gen/
 local.properties
 project.properties
 org.eclipse.jdt.core.prefs
+org.eclipse.jdt.ui.prefs
 
 .project
 .classpath
