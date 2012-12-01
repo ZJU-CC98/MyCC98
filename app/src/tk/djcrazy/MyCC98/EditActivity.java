@@ -54,6 +54,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
@@ -130,6 +131,12 @@ public class EditActivity extends BaseActivity implements OnClickListener {
 	private int quotePageNumber;
 	@InjectExtra(value = IS_QUOTE_USER, optional = true)
 	private boolean isQuoteUser;
+	@InjectExtra(value = PM_TO_USER, optional = true)
+	private String pmReplyName;
+	@InjectExtra(value = PM_TITLE, optional = true)
+	private String pmReplyTopic;
+	@InjectExtra(value = PM_CONTENT, optional = true)
+	private String pmReplyContent;
 
 	@InjectView(R.id.reply_title_edit)
 	private EditText replyTitleEditText;
@@ -149,13 +156,8 @@ public class EditActivity extends BaseActivity implements OnClickListener {
 	private Button mSubmitBtn;
 	@InjectView(R.id.edit_emotion_grid)
 	private GridView mEmotionGrid;
-
-	@InjectExtra(value = PM_TO_USER, optional = true)
-	private String pmReplyName;
-	@InjectExtra(value = PM_TITLE, optional = true)
-	private String pmReplyTopic;
-	@InjectExtra(value = PM_CONTENT, optional = true)
-	private String pmReplyContent;
+	@InjectView(R.id.reply_container)
+	private View mContainer;
 
 	private String editContent;
 	private String editTopic;
@@ -205,6 +207,27 @@ public class EditActivity extends BaseActivity implements OnClickListener {
 			replyTitleEditText.setText(editTopic);
 		}
 	}
+
+
+	  private void lockContainerHeight(int paramInt)
+	  {
+	    LinearLayout.LayoutParams localLayoutParams = (LinearLayout.LayoutParams)this.mContainer.getLayoutParams();
+	    localLayoutParams.height = paramInt;
+	    localLayoutParams.weight = 0.0F;
+	    unlockContainerHeightDelayed();
+ 	  }
+
+	  public void unlockContainerHeightDelayed()
+	  {
+	    this.mEmotionGrid.postDelayed(new Runnable()
+	    {
+	      public void run()
+	      {
+	        ((LinearLayout.LayoutParams)mContainer.getLayoutParams()).weight = 1.0F;
+	      }
+	    }
+	    , 200L);
+	  }
 
 	/**
 	 * 
@@ -335,32 +358,38 @@ public class EditActivity extends BaseActivity implements OnClickListener {
 		mEmotionBtn.setOnClickListener(this);
 		mPhotoBtn.setOnClickListener(this);
 		mSubmitBtn.setOnClickListener(this);
+		replyTitleEditText.setOnClickListener(this);
+		replyContentEditText.setOnClickListener(this);
 		mEmotionGrid.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				int cursor = replyContentEditText.getSelectionStart();
-				if (position<10) {
-					replyContentEditText.getText().insert(cursor, "[em0"+position+"]");
+				if (position < 10) {
+					replyContentEditText.getText().insert(cursor,
+							"[em0" + position + "]");
 				} else {
-					replyContentEditText.getText().insert(cursor, "[em"+position+"]");
+					replyContentEditText.getText().insert(cursor,
+							"[em" + position + "]");
 				}
 			}
 		});
- 		replyContentEditText
-				.setOnFocusChangeListener(new OnFocusChangeListener() {
-					@Override
-					public void onFocusChange(View v, boolean hasFocus) {
-						if (hasFocus) {
-							getSupportActionBar().hide();
-							ViewUtils.setGone(mEmotionGrid, true);
-						} else {
-							if (!(EditActivity.this.getCurrentFocus()==mEmotionBtn)) {
-								getSupportActionBar().show();
-							}
-						}
-					}
-				});
+//		replyContentEditText
+//				.setOnFocusChangeListener(new OnFocusChangeListener() {
+//					@Override
+//					public void onFocusChange(View v, boolean hasFocus) {
+//						if (hasFocus) {
+//							getSupportActionBar().hide();
+//							// ViewUtils.setGone(mEmotionGrid, true);
+//						} else {
+//							// if
+//							// (!(EditActivity.this.getCurrentFocus()==mEmotionBtn))
+//							// {
+//							getSupportActionBar().show();
+//							// }
+//						}
+//					}
+//				});
 
 		faceRadioGroup
 				.setOnCheckedChangeListener(new OnCheckedChangeListener() {
@@ -442,6 +471,13 @@ public class EditActivity extends BaseActivity implements OnClickListener {
 	}
 
 	@Override
+	protected void onPause() {
+		super.onPause();
+		Log.d(TAG, "onPause");
+		ViewUtils.setGone(mEmotionGrid, true);
+	}
+
+	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.edit_btn_camera:
@@ -458,19 +494,39 @@ public class EditActivity extends BaseActivity implements OnClickListener {
 			replyContentEditText.getText().insert(cursor, "@");
 			break;
 		case R.id.edit_btn_emotion:
+			getSupportActionBar().hide();
 			if (mEmotionGrid.getVisibility() == View.GONE) {
-				InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-				inputMethodManager.hideSoftInputFromWindow(this
-						.getCurrentFocus().getWindowToken(),
-						InputMethodManager.HIDE_NOT_ALWAYS);
-				ViewUtils.setGone(mEmotionGrid, false);
+				hideKeyBoard();
+				mEmotionBtn.postDelayed((new Runnable() {
+					@Override
+					public void run() {
+						ViewUtils.setGone(mEmotionGrid, false);
+					}
+				}), 200L);
+				
 			} else {
 				ViewUtils.setGone(mEmotionGrid, true);
+				showKeyBoard();
 			}
+			break;
+		case R.id.reply_content:
+		case R.id.reply_title_edit:
+ 			ViewUtils.setGone(mEmotionGrid, true);
 			break;
 		default:
 			break;
 		}
+	}
+
+ 	private void hideKeyBoard() {
+		InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+		inputMethodManager.hideSoftInputFromWindow(this
+				.getCurrentFocus().getWindowToken(),
+				InputMethodManager.HIDE_NOT_ALWAYS);
+	}
+ 	private void showKeyBoard() {
+		InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+		inputMethodManager.showSoftInput(getCurrentFocus(), 0);
 	}
 
 	private boolean checkReplyContentLimit(String title, String content) {
@@ -520,7 +576,7 @@ public class EditActivity extends BaseActivity implements OnClickListener {
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			if (mEmotionGrid.getVisibility()==View.VISIBLE) {
+			if (mEmotionGrid.getVisibility() == View.VISIBLE) {
 				ViewUtils.setGone(mEmotionGrid, true);
 				return true;
 			}
