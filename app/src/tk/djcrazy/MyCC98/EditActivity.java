@@ -10,10 +10,7 @@ import java.util.Date;
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
-import roboguice.util.RoboAsyncTask;
 import tk.djcrazy.MyCC98.adapter.EmotionGridViewAdapter;
-import tk.djcrazy.MyCC98.dialog.MoreEmotChooseDialog;
-import tk.djcrazy.MyCC98.dialog.MoreEmotChooseDialog.FaceExpressionChooseListener;
 import tk.djcrazy.MyCC98.helper.TextHelper;
 import tk.djcrazy.MyCC98.task.ProgressRoboAsyncTask;
 import tk.djcrazy.MyCC98.util.ToastUtils;
@@ -22,7 +19,6 @@ import tk.djcrazy.libCC98.ICC98Service;
 import tk.djcrazy.libCC98.ICC98UrlManager;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -37,28 +33,22 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
-import android.os.Message;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnFocusChangeListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListAdapter;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
-import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
@@ -158,7 +148,8 @@ public class EditActivity extends BaseActivity implements OnClickListener {
 	private GridView mEmotionGrid;
 	@InjectView(R.id.reply_container)
 	private View mContainer;
-
+	@InjectView(R.id.edit_btn_delete)
+	private Button mDeleteBtn;
 	private String editContent;
 	private String editTopic;
 	private File mCurrentPhotoFile;
@@ -208,26 +199,21 @@ public class EditActivity extends BaseActivity implements OnClickListener {
 		}
 	}
 
+	private void lockContainerHeight(int paramInt) {
+		LinearLayout.LayoutParams localLayoutParams = (LinearLayout.LayoutParams) this.mContainer
+				.getLayoutParams();
+		localLayoutParams.height = paramInt;
+		localLayoutParams.weight = 0.0F;
+		unlockContainerHeightDelayed();
+	}
 
-	  private void lockContainerHeight(int paramInt)
-	  {
-	    LinearLayout.LayoutParams localLayoutParams = (LinearLayout.LayoutParams)this.mContainer.getLayoutParams();
-	    localLayoutParams.height = paramInt;
-	    localLayoutParams.weight = 0.0F;
-	    unlockContainerHeightDelayed();
- 	  }
-
-	  public void unlockContainerHeightDelayed()
-	  {
-	    this.mEmotionGrid.postDelayed(new Runnable()
-	    {
-	      public void run()
-	      {
-	        ((LinearLayout.LayoutParams)mContainer.getLayoutParams()).weight = 1.0F;
-	      }
-	    }
-	    , 200L);
-	  }
+	public void unlockContainerHeightDelayed() {
+		this.mEmotionGrid.postDelayed(new Runnable() {
+			public void run() {
+				((LinearLayout.LayoutParams) mContainer.getLayoutParams()).weight = 1.0F;
+			}
+		}, 200L);
+	}
 
 	/**
 	 * 
@@ -359,6 +345,7 @@ public class EditActivity extends BaseActivity implements OnClickListener {
 		mPhotoBtn.setOnClickListener(this);
 		mSubmitBtn.setOnClickListener(this);
 		replyTitleEditText.setOnClickListener(this);
+		mDeleteBtn.setOnClickListener(this);
 		replyContentEditText.setOnClickListener(this);
 		mEmotionGrid.setOnItemClickListener(new OnItemClickListener() {
 			@Override
@@ -374,22 +361,22 @@ public class EditActivity extends BaseActivity implements OnClickListener {
 				}
 			}
 		});
-//		replyContentEditText
-//				.setOnFocusChangeListener(new OnFocusChangeListener() {
-//					@Override
-//					public void onFocusChange(View v, boolean hasFocus) {
-//						if (hasFocus) {
-//							getSupportActionBar().hide();
-//							// ViewUtils.setGone(mEmotionGrid, true);
-//						} else {
-//							// if
-//							// (!(EditActivity.this.getCurrentFocus()==mEmotionBtn))
-//							// {
-//							getSupportActionBar().show();
-//							// }
-//						}
-//					}
-//				});
+		// replyContentEditText
+		// .setOnFocusChangeListener(new OnFocusChangeListener() {
+		// @Override
+		// public void onFocusChange(View v, boolean hasFocus) {
+		// if (hasFocus) {
+		// getSupportActionBar().hide();
+		// // ViewUtils.setGone(mEmotionGrid, true);
+		// } else {
+		// // if
+		// // (!(EditActivity.this.getCurrentFocus()==mEmotionBtn))
+		// // {
+		// getSupportActionBar().show();
+		// // }
+		// }
+		// }
+		// });
 
 		faceRadioGroup
 				.setOnCheckedChangeListener(new OnCheckedChangeListener() {
@@ -503,7 +490,7 @@ public class EditActivity extends BaseActivity implements OnClickListener {
 						ViewUtils.setGone(mEmotionGrid, false);
 					}
 				}), 200L);
-				
+
 			} else {
 				ViewUtils.setGone(mEmotionGrid, true);
 				showKeyBoard();
@@ -511,20 +498,26 @@ public class EditActivity extends BaseActivity implements OnClickListener {
 			break;
 		case R.id.reply_content:
 		case R.id.reply_title_edit:
- 			ViewUtils.setGone(mEmotionGrid, true);
+			ViewUtils.setGone(mEmotionGrid, true);
 			break;
+		case R.id.edit_btn_delete:
+			if (replyContentEditText.getText().length()>0) {
+				replyContentEditText.getText().delete(
+						replyContentEditText.getText().length() - 1,
+						replyContentEditText.getText().length());
+			}
 		default:
 			break;
 		}
 	}
 
- 	private void hideKeyBoard() {
+	private void hideKeyBoard() {
 		InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-		inputMethodManager.hideSoftInputFromWindow(this
-				.getCurrentFocus().getWindowToken(),
-				InputMethodManager.HIDE_NOT_ALWAYS);
+		inputMethodManager.hideSoftInputFromWindow(this.getCurrentFocus()
+				.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 	}
- 	private void showKeyBoard() {
+
+	private void showKeyBoard() {
 		InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 		inputMethodManager.showSoftInput(getCurrentFocus(), 0);
 	}
@@ -581,7 +574,7 @@ public class EditActivity extends BaseActivity implements OnClickListener {
 				return true;
 			}
 		}
-		return false;
+		return super.onKeyDown(keyCode, event);
 	}
 
 	@Override

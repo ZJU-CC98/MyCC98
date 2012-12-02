@@ -8,8 +8,6 @@ import org.apache.http.client.ClientProtocolException;
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
-import tk.djcrazy.MyCC98.dialog.MoreEmotChooseDialog;
-import tk.djcrazy.MyCC98.dialog.MoreEmotChooseDialog.FaceExpressionChooseListener;
 import tk.djcrazy.MyCC98.helper.HtmlGenHelper;
 import tk.djcrazy.libCC98.ICC98Service;
 import tk.djcrazy.libCC98.exception.ParseContentException;
@@ -208,27 +206,7 @@ public class PmViewActivity extends BaseActivity {
 		intent.putExtra("content", content);
 		startActivity(intent);
 	}
-
-	public void moreEmot() {
-		FaceExpressionChooseListener faceListener = new FaceExpressionChooseListener() {
-
-			@Override
-			public void onOkClick() {
-
-			}
-
-			@Override
-			public void onFaceExpressionClick(String faceExpression) {
-
-				faceChoosedString = faceExpression;
-				handler.sendEmptyMessage(1);
-			}
-		};
-		MoreEmotChooseDialog dialog = new MoreEmotChooseDialog(
-				PmViewActivity.this, faceListener);
-		dialog.show();
-	}
-
+ 
 	public void open(String pageLink, int pageNum) {
 		Log.d("MyCC98", "open new post:" + pageNum);
 		Bundle bundle = new Bundle();
