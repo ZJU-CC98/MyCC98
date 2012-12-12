@@ -12,7 +12,6 @@ import org.apache.http.client.ClientProtocolException;
 import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
 import tk.djcrazy.MyCC98.helper.HtmlGenHelper;
-import tk.djcrazy.MyCC98.view.MyWebView;
 import tk.djcrazy.libCC98.ICC98Service;
 import tk.djcrazy.libCC98.data.Gender;
 import tk.djcrazy.libCC98.data.PostContentEntity;
@@ -34,12 +33,8 @@ import android.os.Message;
 import android.preference.PreferenceManager;
 import android.text.InputType;
 import android.util.Log;
-import android.view.DragEvent;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnDragListener;
-import android.view.View.OnTouchListener;
 import android.webkit.WebSettings;
 import android.webkit.WebSettings.LayoutAlgorithm;
 import android.webkit.WebView;
@@ -397,33 +392,26 @@ public class PostContentsJSActivity extends RoboSherlockActivity implements
 				avatarUrl = service.getDomain() + "face/deaduser.gif";
 			}
 			StringBuilder mBuilder = new StringBuilder(300);
-			mBuilder.append(ITEM_OPEN)
-					.append(helper.addPostInfo(postTitle, avatarUrl, author,
-							gender.getName(), floorNum,
-							DateFormatUtil.convertDateToString(postTime, true),
-							i))
-					.append("<img class=\"post-face\" src=\"file:///android_asset/pic/")
-					.append(postFace)
-					.append("\" /><br />")
-					.append("<div class=\"post-content\">")
-					.append("<span id=\"ubbcode")
-					.append(i)
-					.append("\">")
-					.append(content)
-					.append("</span><script>searchubb('ubbcode")
-					.append(i)
-					.append("',1,'tablebody2');</script></div>")
-					.append("</div>")
-					.append("<div class=\"btn-group\">")
-					.append("<a class=\"btn\" onclick=\"PostContentsJSActivity.showContentDialog("
-							+ i + "," + 0 + ");\">吐槽</a>")
-					.append("<a class=\"btn\" onclick=\"PostContentsJSActivity.showContentDialog("
-							+ i + "," + 1 + ");\">站短</a>")
-					.append("<a class=\"btn\" onclick=\"PostContentsJSActivity.showContentDialog("
-							+ i + "," + 3 + ");\">查看</a>")
-					.append("<a class=\"btn\" onclick=\"PostContentsJSActivity.showContentDialog("
-							+ i + "," + 2 + ");\">加好友</a>").append("</div>")
-					.append(ITEM_CLOSE);
+			mBuilder.append(ITEM_OPEN);
+			HtmlGenHelper.postInfo(mBuilder, postTitle, avatarUrl, author,
+					gender.getName(), floorNum,
+					DateFormatUtil.convertDateToString(postTime, true), i);
+			HtmlGenHelper.postContent(mBuilder, postFace, content, i);
+			HtmlGenHelper.btnsBegin(mBuilder);
+			HtmlGenHelper.jsBtn(mBuilder, "吐槽",
+					"PostContentsJSActivity.showContentDialog",
+					String.valueOf(i), "0");
+			HtmlGenHelper.jsBtn(mBuilder, "站短",
+					"PostContentsJSActivity.showContentDialog",
+					String.valueOf(i), "1");
+			HtmlGenHelper.jsBtn(mBuilder, "查看",
+					"PostContentsJSActivity.showContentDialog",
+					String.valueOf(i), "3");
+			HtmlGenHelper.jsBtn(mBuilder, "加好友",
+					"PostContentsJSActivity.showContentDialog",
+					String.valueOf(i), "2");
+			HtmlGenHelper.btnsEnd(mBuilder);
+			mBuilder.append(ITEM_CLOSE);
 			builder.append(mBuilder.toString());
 		}
 		builder.append(helper.PAGE_CLOSE);
