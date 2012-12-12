@@ -14,6 +14,8 @@ import android.util.Log;
 public class HtmlGenHelper {
 	@Inject
 	private ICC98Service service;
+	public static final String ITEM_OPEN = "<div class=\"post\"><div class=\"post-content-wrapper\">";
+	public static final String ITEM_CLOSE = "</div>";
 
 	public final String PAGE_OPEN = "<!DOCTYPE html><html class=\"ui-mobile\">" // min-width-320px
 																				// min-width-480px

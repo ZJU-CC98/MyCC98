@@ -188,8 +188,12 @@ public class CC98ParserImpl implements ICC98Parser {
 				POST_CONTENT_WHOLE_REGEX, html, -1);
 		for (String reply : contentHtml) {
 			PostContentEntity entity = new PostContentEntity();
-			entity.setUserName(getMatchedString(POST_CONTENT_USERNAME_REGEX,
-					reply));
+			try {
+				entity.setUserName(getMatchedString(POST_CONTENT_USERNAME_REGEX,
+						reply));
+			} catch (Exception e) {
+				entity.setUserName("匿名");
+			}
 			entity.setPostContent(getMatchedString(
 					POST_CONTENT_POST_CONTENT_REGEX, reply));
 			entity.setPostTitle(getMatchedString(POST_CONTENT_POST_TITLE_REGEX,

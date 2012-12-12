@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/show_all_image"
+        android:title="显示图片"
+        android:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/refresh"
+        android:title="@string/refresh"
+        android:showAsAction="always"
+        android:icon="@drawable/ic_action_refresh"/>
+ 
+</menu>
