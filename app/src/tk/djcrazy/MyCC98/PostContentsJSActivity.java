@@ -1,13 +1,9 @@
 package tk.djcrazy.MyCC98;
 
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Date;
 import java.util.List;
-
-import org.apache.http.ParseException;
-import org.apache.http.client.ClientProtocolException;
 
 import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
@@ -20,22 +16,15 @@ import tk.djcrazy.MyCC98.util.ToastUtils;
 import tk.djcrazy.libCC98.ICC98Service;
 import tk.djcrazy.libCC98.data.Gender;
 import tk.djcrazy.libCC98.data.PostContentEntity;
-import tk.djcrazy.libCC98.data.PostContentsListPage;
-import tk.djcrazy.libCC98.data.UserData;
-import tk.djcrazy.libCC98.exception.NoUserFoundException;
-import tk.djcrazy.libCC98.exception.ParseContentException;
 import tk.djcrazy.libCC98.util.DateFormatUtil;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.preference.PreferenceManager;
 import android.text.InputType;
 import android.util.Log;
@@ -54,11 +43,10 @@ import com.actionbarsherlock.view.MenuItem;
 import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockActivity;
 import com.google.inject.Inject;
 
-public class PostContentsJSActivity extends RoboSherlockActivity implements
-		OnClickListener {
+public class PostContentsJSActivity extends RoboSherlockActivity {
 	private static final String TAG = "PostContentsJSActivity";
 	private static final String JS_INTERFACE = "PostContentsJSActivity";
- 
+
 	public static final String POST_ID = "postId";
 	public static final String BOARD_ID = "boardId";
 	public static final String BOARD_NAME = "boardName";
@@ -68,14 +56,6 @@ public class PostContentsJSActivity extends RoboSherlockActivity implements
 
 	@InjectView(R.id.post_contents)
 	private WebView webView;
-	@InjectView(R.id.but_post_next)
-	private View vNext;
-	@InjectView(R.id.but_post_prev)
-	private View vPrev;
-	@InjectView(R.id.but_post_jump)
-	private View vJump;
-	@InjectView(R.id.but_post_re)
-	private View vRe;
 
 	@InjectExtra(value = BOARD_NAME, optional = true)
 	private String boardName = "";
@@ -87,9 +67,9 @@ public class PostContentsJSActivity extends RoboSherlockActivity implements
 	private String postName;
 	@InjectExtra(value = PAGE_NUMBER, optional = true)
 	private int currPageNum = 1;
- 	private int totalPageNum = 1;
- 
- 	private List<PostContentEntity> mContentEntities;
+	private int totalPageNum = 1;
+
+	private List<PostContentEntity> mContentEntities;
 	@Inject
 	private ICC98Service service;
 
@@ -113,14 +93,11 @@ public class PostContentsJSActivity extends RoboSherlockActivity implements
 		setContentView(R.layout.post_contents);
 		configureActionBar();
 		configureWebView();
-		vJump.setOnClickListener(this);
-		vPrev.setOnClickListener(this);
-		vNext.setOnClickListener(this);
-		vRe.setOnClickListener(this);
-		vRe.postDelayed(new Runnable() {
+		webView.postDelayed(new Runnable() {
 			@Override
 			public void run() {
-				new GetPostContentTask(PostContentsJSActivity.this, boardId, postId, currPageNum).execute();
+				new GetPostContentTask(PostContentsJSActivity.this, boardId,
+						postId, currPageNum).execute();
 			}
 		}, 50);
 	}
@@ -223,7 +200,7 @@ public class PostContentsJSActivity extends RoboSherlockActivity implements
 	public boolean onCreateOptionsMenu(Menu optionMenu) {
 		this.mOptionsMenu = optionMenu;
 		getSupportMenuInflater().inflate(R.menu.menu_post_content, optionMenu);
- 		return super.onCreateOptionsMenu(optionMenu);
+		return super.onCreateOptionsMenu(optionMenu);
 	}
 
 	@Override
@@ -231,37 +208,29 @@ public class PostContentsJSActivity extends RoboSherlockActivity implements
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			finish();
-			return true;
+			break;
+		case R.id.menu_jump:
+			jumpDialog();
+			break;
+		case R.id.menu_next_page:
+			nextPage();
+			break;
+		case R.id.menu_pre_page:
+			prevPage();
+			break;
+		case R.id.menu_reply:
+			reply();
+			break;
 		case R.id.refresh:
 			refreshPage();
-			return true;
+			break;
 		case R.id.show_all_image:
 			webView.loadUrl("javascript:showAllImages.fireEvent('click');");
-			return true;
+			break;
 		default:
 			break;
 		}
 		return false;
-	}
-
-	@Override
-	public void onClick(View v) {
-		switch (v.getId()) {
-		case R.id.but_post_jump:
-			jumpDialog();
-			break;
-		case R.id.but_post_next:
-			nextPage();
-			break;
-		case R.id.but_post_prev:
-			prevPage();
-			break;
-		case R.id.but_post_re:
-			reply();
-			break;
-		default:
-			break;
-		}
 	}
 
 	private void configureWebView() {
@@ -302,9 +271,9 @@ public class PostContentsJSActivity extends RoboSherlockActivity implements
 	}
 
 	private void onLoadDone() {
-		vPrev.setVisibility(currPageNum == 1 ? View.GONE : View.VISIBLE);
-		vNext.setVisibility(currPageNum == totalPageNum ? View.GONE
-				: View.VISIBLE);
+		mOptionsMenu.findItem(R.id.menu_pre_page).setEnabled(currPageNum != 1);
+		mOptionsMenu.findItem(R.id.menu_next_page).setEnabled(
+				currPageNum != totalPageNum);
 	}
 
 	public void jumpTo(int pageNum) {
@@ -333,10 +302,6 @@ public class PostContentsJSActivity extends RoboSherlockActivity implements
 		}
 	}
 
- 
- 
- 
- 
 	public void jumpDialog() {
 		final EditText jumpEditText = new EditText(this);
 		jumpEditText.requestFocus();
@@ -545,22 +510,22 @@ public class PostContentsJSActivity extends RoboSherlockActivity implements
 		// intent.putExtra(POST, bundle);
 		this.startActivity(intent);
 	}
-	
-    private void setRefreshActionButtonState(boolean refreshing) {
-        if (mOptionsMenu == null) {
-            return;
-        }
 
-        final MenuItem refreshItem = mOptionsMenu.findItem(R.id.refresh);
-        if (refreshItem != null) {
-            if (refreshing) {
-                refreshItem.setActionView(R.layout.actionbar_indeterminate_progress);
-            } else {
-                refreshItem.setActionView(null);
-            }
-        }
-    }
+	private void setRefreshActionButtonState(boolean refreshing) {
+		if (mOptionsMenu == null) {
+			return;
+		}
 
+		final MenuItem refreshItem = mOptionsMenu.findItem(R.id.refresh);
+		if (refreshItem != null) {
+			if (refreshing) {
+				refreshItem
+						.setActionView(R.layout.actionbar_indeterminate_progress);
+			} else {
+				refreshItem.setActionView(null);
+			}
+		}
+	}
 
 	private class GetPostContentTask extends
 			RoboAsyncTask<List<PostContentEntity>> {
@@ -583,6 +548,7 @@ public class PostContentsJSActivity extends RoboSherlockActivity implements
 			super.onPreExecute();
 			setRefreshActionButtonState(true);
 		}
+
 		@Override
 		public List<PostContentEntity> call() throws Exception {
 			return service.getPostContentList(aBoardId, aPostId, aPageNum);
@@ -608,8 +574,7 @@ public class PostContentsJSActivity extends RoboSherlockActivity implements
 			getSupportActionBar().setSubtitle(
 					"第" + currPageNum + "页 | " + "共" + totalPageNum + "页");
 		}
-		
-		
+
 		@Override
 		protected void onFinally() throws RuntimeException {
 			super.onFinally();

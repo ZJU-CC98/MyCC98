@@ -61,6 +61,7 @@
         </activity>
         <activity
             android:name=".PostContentsJSActivity"
+             android:uiOptions="splitActionBarWhenNarrow"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:launchMode="singleTop" >
             <intent-filter>
