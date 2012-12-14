@@ -13,6 +13,7 @@ import roboguice.inject.InjectView;
 import tk.djcrazy.MyCC98.adapter.EmotionGridViewAdapter;
 import tk.djcrazy.MyCC98.helper.TextHelper;
 import tk.djcrazy.MyCC98.task.ProgressRoboAsyncTask;
+import tk.djcrazy.MyCC98.util.Intents;
 import tk.djcrazy.MyCC98.util.ToastUtils;
 import tk.djcrazy.MyCC98.util.ViewUtils;
 import tk.djcrazy.libCC98.ICC98Service;
@@ -58,29 +59,13 @@ import com.google.inject.Inject;
 @ContentView(R.layout.reply)
 public class EditActivity extends BaseActivity implements OnClickListener {
 
-	public static final int MOD_REPLY = 0;
-	public static final int MOD_QUOTE_REPLY = 1;
-	public static final int MOD_NEW_POST = 2;
-	public static final int MOD_PM = 3;
-	public static final int MOD_EDIT = 4;
-	public static final String MOD = "mod";
-	public static final String BOARD_ID = "boardID";
-	public static final String BOARD_NAME = "boardName";
-	public static final String POST_Id = "postId";
-	public static final String POST_NAME = "postName";
-	public static final String REPLY_USER_NAME = "replyUserName";
-	public static final String REPLY_USER_POST_TIME = "replyUserPostTime";
-	public static final String REPLY_CONTENT = "replyContent";
-	public static final String FLOOR_NUMBER = "floorNumber";
-	public static final String PAGE_NUMBER = "pageNumber";
-	public static final String PM_TO_USER = "touser";
-	public static final String PM_CONTENT = "pmcontent";
-	public static final String PM_TITLE = "pmtitle";
-	public static final String EDIT_LINK = "editlink";
-	public static final String EDIT_CONTENT = "editcontent";
-	public static final String EDIT_TOPIC = "edittopic";
-	public static final String IS_QUOTE_USER = "isQuoteUser";
-
+	public static final int REQUEST_REPLY = 0;
+	public static final int REQUEST_QUOTE_REPLY = 1;
+	public static final int REQUEST_NEW_POST = 2;
+	public static final int REQUEST_PM = 3;
+	public static final int REQUEST_EDIT = 4;  
+	
+ 
 	public static final String TAIL = "\n\n[right][color=gray]From  "
 			+ Build.MODEL + " via MyCC98[/color][/right]";
 
@@ -99,33 +84,33 @@ public class EditActivity extends BaseActivity implements OnClickListener {
 			Environment.getExternalStorageDirectory() + "/Camera");
 	private static final int MENU_REPLY_ID = 87356;
 
-	@InjectExtra(MOD)
-	private int mod;
-	@InjectExtra(value = BOARD_ID, optional = true)
+	@InjectExtra(Intents.EXTRA_REQUEST_TYPE)
+	private int requestType; 
+	@InjectExtra(value =Intents.EXTRA_BOARD_ID, optional = true)
 	private String boardID;
-	@InjectExtra(value = BOARD_NAME, optional = true)
+	@InjectExtra(value = Intents.EXTRA_BOARD_NAME, optional = true)
 	private String boardName;
-	@InjectExtra(value = POST_Id, optional = true)
+	@InjectExtra(value = Intents.EXTRA_POST_ID, optional = true)
 	private String postId;
-	@InjectExtra(value = POST_NAME, optional = true)
+	@InjectExtra(value = Intents.EXTRA_POST_NAME, optional = true)
 	private String postName;
-	@InjectExtra(value = REPLY_USER_NAME, optional = true)
+	@InjectExtra(value = Intents.EXTRA_REPLY_USER_NAME, optional = true)
 	private String replyUserName;
-	@InjectExtra(value = REPLY_USER_POST_TIME, optional = true)
+	@InjectExtra(value = Intents.EXTRA_REPLY_USER_POST_TIME, optional = true)
 	private String replyUserPostTime;
-	@InjectExtra(value = REPLY_CONTENT, optional = true)
+	@InjectExtra(value = Intents.EXTRA_REPLY_CONTENT, optional = true)
 	private String replyUserPostContent;
-	@InjectExtra(value = FLOOR_NUMBER, optional = true)
+	@InjectExtra(value = Intents.EXTRA_FLOOR_NUMBER, optional = true)
 	private int quoteFloorNumber;
-	@InjectExtra(value = PAGE_NUMBER, optional = true)
+	@InjectExtra(value = Intents.EXTRA_PAGE_NUMBER, optional = true)
 	private int quotePageNumber;
-	@InjectExtra(value = IS_QUOTE_USER, optional = true)
+	@InjectExtra(value = Intents.EXTRA_IS_QUOTE_USER, optional = true)
 	private boolean isQuoteUser;
-	@InjectExtra(value = PM_TO_USER, optional = true)
+	@InjectExtra(value = Intents.EXTRA_PM_TO_USER, optional = true)
 	private String pmReplyName;
-	@InjectExtra(value = PM_TITLE, optional = true)
+	@InjectExtra(value = Intents.EXTRA_PM_TITLE, optional = true)
 	private String pmReplyTopic;
-	@InjectExtra(value = PM_CONTENT, optional = true)
+	@InjectExtra(value = Intents.EXTRA_PM_CONTENT, optional = true)
 	private String pmReplyContent;
 
 	@InjectView(R.id.reply_title_edit)
@@ -160,10 +145,7 @@ public class EditActivity extends BaseActivity implements OnClickListener {
 	@Inject
 	private ICC98UrlManager manager;
 
-	// group.clearCheck();
-	// int cursor = replyContentEditText.getSelectionStart();
-	// replyContentEditText.getText().insert(cursor, emotChooseString);
-
+ 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setupTailContent();
@@ -172,28 +154,25 @@ public class EditActivity extends BaseActivity implements OnClickListener {
 		mEmotionGrid.setAdapter(new EmotionGridViewAdapter(this));
 	}
 
-	/**
-	 * 
-	 */
-	private void configureActionBar() {
+ 	private void configureActionBar() {
 		ActionBar actionBar = getSupportActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		actionBar.setLogo(new BitmapDrawable(service.getUserAvatar()));
-		if (mod == MOD_REPLY) {
+		if (requestType == REQUEST_REPLY) {
 			actionBar.setTitle("回复：" + postName);
-		} else if (mod == MOD_QUOTE_REPLY) {
+		} else if (requestType == REQUEST_QUOTE_REPLY) {
 			actionBar.setTitle("回复：" + postName);
 			replyUserPostContent = replyUserPostContent.replaceAll(
 					"<.*?>|searchubb.*?;", "");
 			replyContentEditText.setText(generateQuoteContent());
-		} else if (mod == MOD_NEW_POST) {
+		} else if (requestType == REQUEST_NEW_POST) {
 			actionBar.setTitle("发表新话题：" + boardName);
-		} else if (mod == MOD_PM) {
+		} else if (requestType == REQUEST_PM) {
 			actionBar.setTitle("站短：" + pmReplyName);
 			pmReplyTopic = pmReplyTopic == null ? "" : "回复: " + pmReplyTopic;
 			replyContentEditText.setText(pmReplyContent);
 			replyTitleEditText.setText(pmReplyTopic);
-		} else if (mod == MOD_EDIT) {
+		} else if (requestType == REQUEST_EDIT) {
 			replyContentEditText.setText(editContent);
 			replyTitleEditText.setText(editTopic);
 		}
@@ -276,22 +255,22 @@ public class EditActivity extends BaseActivity implements OnClickListener {
 		if (!checkReplyContentLimit(titleString, contentString)) {
 			return;
 		}
-		if (mod == MOD_QUOTE_REPLY) {
+		if (requestType == REQUEST_QUOTE_REPLY) {
 			setupRefDialog(titleString, contentString);
-		} else if (mod == MOD_REPLY) {
+		} else if (requestType == REQUEST_REPLY) {
 			PushReplyTask task = new PushReplyTask(EditActivity.this, postId,
 					boardID, contentString, titleString, faceGroupChooseString,
 					false);
 			task.execute();
-		} else if (mod == MOD_NEW_POST) {
+		} else if (requestType == REQUEST_NEW_POST) {
 			PushReplyTask task = new PushReplyTask(EditActivity.this, null,
 					boardID, contentString, titleString, faceGroupChooseString,
 					true);
 			task.execute();
-		} else if (mod == MOD_PM) {
+		} else if (requestType == REQUEST_PM) {
 			new SendPMTask(EditActivity.this, pmReplyName, titleString,
 					contentString).execute();
-		} else if (mod == MOD_EDIT) {
+		} else if (requestType == REQUEST_EDIT) {
 			// submitEdit(editLink, titleString, contentString);
 		}
 	}
@@ -758,7 +737,7 @@ public class EditActivity extends BaseActivity implements OnClickListener {
 		protected void onSuccess(Void v) throws Exception {
 			super.onSuccess(v);
 			ToastUtils.show(context, "发送站短成功");
-			if (mod == MOD_PM) {
+			if (requestType == REQUEST_PM) {
 				setResult(Activity.RESULT_OK);
 				context.finish();
 			}

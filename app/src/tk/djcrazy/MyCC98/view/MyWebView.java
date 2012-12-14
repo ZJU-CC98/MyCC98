@@ -2,7 +2,9 @@ package tk.djcrazy.MyCC98.view;
 
 import java.util.Map;
 
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.webkit.WebView;
 
@@ -25,11 +27,8 @@ public class MyWebView extends WebView {
      public MyWebView(Context context, AttributeSet attrs, int defStyle) {
     	 super(context, attrs, defStyle);
      }
-     public MyWebView(Context context, AttributeSet attrs, int defStyle,
-            boolean privateBrowsing) {
-    	 super(context, attrs, defStyle, privateBrowsing);
-     }
-
+     
+ 
      @Override
     public void onScrollChanged(int l, int t, int oldl, int oldt) {
     	// TODO Auto-generated method stub

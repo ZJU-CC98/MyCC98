@@ -13,7 +13,7 @@ public class CC98ParseRepository {
 	public static final String POST_CONTENT_USERNAME_REGEX = "(?<=<font color=#.{6}(\\s|)><.>).*?(?=</.></font>)";
 	public static final String POST_CONTENT_WHOLE_REGEX="(?<=<table cellpadding=).*?(?=align=absmiddle></a>)";
 	public static final String POST_CONTENT_POST_CONTENT_REGEX = "(?<=</b><br>).*?</script>";
-	public static final String POST_CONTENT_USER_AVATAR_LINK_REGEX = "(?<= ><img src=).*?(?= )|(?<=&nbsp;<img src=\").*?(?=\" border=0 ><br>)";
+	public static final String POST_CONTENT_USER_AVATAR_LINK_REGEX = "(?<= ><img src=).*?(?= )|(?<=&nbsp;<img src=\").*?(?=\" border=\"0\"><br>)";
 	public static final String POST_CONTENT_POST_TITLE_REGEX = "(?<=title=\"发贴心情\">&nbsp;<b>).*?(?=</b><br>)";
 	public static final String POST_CONTENT_POST_FACE_REGEX = "(?<=<img src=\"face/)face.*?.gif";
 	public static final String POST_CONTENT_POST_TIME_REGEX = "(?<=\"></a>).{10,25}?(PM|AM)";

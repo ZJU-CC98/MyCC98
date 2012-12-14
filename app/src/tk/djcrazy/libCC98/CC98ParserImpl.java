@@ -345,7 +345,7 @@ public class CC98ParserImpl implements ICC98Parser {
 			entity.setLastLoginTime(details[10]);
 		}
 		// personal profile
-		{
+		try {
 			String info = getMatchedString(USER_PROFILE_PERSON_PROFILE_REGEX,
 					html);
 			String[] details = info.split("<br>");
@@ -371,6 +371,8 @@ public class CC98ParserImpl implements ICC98Parser {
 			entity.setUserMSN(details[5]);
 			entity.setUserPage(details[6]);
 
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		// bbs master info
 		{

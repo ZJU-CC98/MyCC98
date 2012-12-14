@@ -9,6 +9,8 @@ import tk.djcrazy.MyCC98.adapter.HomeActionListAdapter;
 import tk.djcrazy.MyCC98.adapter.HomeFragmentPagerAdapter;
 import tk.djcrazy.MyCC98.dialog.AboutDialog;
 import tk.djcrazy.MyCC98.listener.LoadingListener;
+import tk.djcrazy.MyCC98.util.Intents;
+import tk.djcrazy.MyCC98.util.Intents.Builder;
 import tk.djcrazy.libCC98.ICC98Service;
 import android.content.Intent;
 import android.os.Bundle;
@@ -29,12 +31,7 @@ public class HomeActivity extends RoboSherlockFragmentActivity implements
 		LoadingListener, ActionBar.OnNavigationListener {
 
 	private static final String TAG = "HomeActivity";
-	public static final int V_PERSONAL_BOARD = 0;
-	public static final int V_BOARD_SEARCH = 1;
-	public static final int V_HOT = 2;
-	public static final int V_NEW = 3;
-	public static final int V_FRIEND = 4;
-	public static final String USERINFO = "USERINFO";
+ 	public static final String USERINFO = "USERINFO";
 	public static final String AUTOLOGIN = "AUTOLOGIN";
 
 	@InjectView(R.id.main_pages)
@@ -74,8 +71,7 @@ public class HomeActivity extends RoboSherlockFragmentActivity implements
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		setTheme(com.actionbarsherlock.R.style.Theme_Sherlock);
-		super.onCreate(savedInstanceState);
+ 		super.onCreate(savedInstanceState);
 		PreferenceManager.setDefaultValues(this, R.xml.settings,
 				false);
 		configureActionBar();
@@ -142,16 +138,12 @@ public class HomeActivity extends RoboSherlockFragmentActivity implements
 		Intent intent = new Intent(this, SettingsActivity.class);
 		startActivity(intent);
 	}
-
-	/**
-	 * 
-	 */
+ 
 	private void doSendFeedBack() {
-		Intent intent = new Intent(getApplicationContext(), EditActivity.class);
-		intent.putExtra(EditActivity.MOD, EditActivity.MOD_PM);
-		intent.putExtra(EditActivity.PM_TO_USER, "MyCC.98");
-		intent.putExtra(EditActivity.PM_TITLE, "MyCC98软件反馈");
-		startActivity(intent);
+		Builder builder = new Intents.Builder(this, EditActivity.class);
+		Intent intent = builder.requestType(EditActivity.REQUEST_PM)
+		.pmToUser("MyCC.98").pmTitle("MyCC98软件反馈").toIntent();
+ 		startActivity(intent);
 	}
 
  	private void logOut() {

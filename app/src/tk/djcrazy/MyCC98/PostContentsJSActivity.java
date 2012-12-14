@@ -89,8 +89,7 @@ public class PostContentsJSActivity extends RoboSherlockActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setTheme(com.actionbarsherlock.R.style.Theme_Sherlock);
-		setContentView(R.layout.post_contents);
+ 		setContentView(R.layout.post_contents);
 		configureActionBar();
 		configureWebView();
 		webView.postDelayed(new Runnable() {
@@ -342,52 +341,12 @@ public class PostContentsJSActivity extends RoboSherlockActivity {
 	}
 
 	public void reply() {
-		Intent intent = new Intent(PostContentsJSActivity.this,
-				EditActivity.class);
-		intent.putExtra(EditActivity.MOD, EditActivity.MOD_REPLY);
-		intent.putExtra(EditActivity.POST_Id, postId);
-		intent.putExtra(EditActivity.POST_NAME, postName);
-		intent.putExtra(EditActivity.BOARD_ID, boardId);
-		intent.putExtra(EditActivity.BOARD_NAME, boardName);
+  		Intents.Builder builder = new Intents.Builder(this, EditActivity.class);
+		Intent intent = builder.requestType(EditActivity.REQUEST_REPLY)
+				.postId(postId).postName(postName).boardId(boardId)
+				.boardName(boardName).toIntent();
 		startActivityForResult(intent, 1);
 	}
-
-	// @Override
-	// public boolean onCreateOptionsMenu(Menu menu) {
-	// menu.add(0, MNU_REFRESH, 0, R.string.refresh);
-	// menu.add(0, MNU_FIRST, 1, R.string.first_page);
-	// menu.add(0, MNU_LAST, 2, R.string.last_page);
-	// menu.add(0, MNU_PREV, 3, R.string.pre_page);
-	// menu.add(0, MNU_JUMP, 4, R.string.jump_dialog_title);
-	// menu.add(0, MNU_NEXT, 5, R.string.next_page);
-	// return super.onCreateOptionsMenu(menu);
-	//
-	// }
-	//
-	// @Override
-	// public boolean onOptionsItemSelected(MenuItem item) {
-	// switch (item.getItemId()) {
-	// case MNU_REFRESH:
-	// refreshPage();
-	// break;
-	// case MNU_PREV:
-	// prevPage();
-	// break;
-	// case MNU_JUMP:
-	// jumpDialog();
-	// break;
-	// case MNU_FIRST:
-	// jumpTo(1);
-	// break;
-	// case MNU_NEXT:
-	// nextPage();
-	// break;
-	// case MNU_LAST:
-	// jumpTo(totalPageNum);
-	// break;
-	// }
-	// return super.onOptionsItemSelected(item);
-	// }
 
 	public void showContentDialog(final int index, int which) {
 		Log.d(TAG, "showContentDialog: " + which);
@@ -466,26 +425,17 @@ public class PostContentsJSActivity extends RoboSherlockActivity {
 	}
 
 	private void sendPm(String target) {
-		Intent intent = new Intent(getApplicationContext(), EditActivity.class);
-		intent.putExtra(EditActivity.MOD, EditActivity.MOD_PM);
-		intent.putExtra(EditActivity.PM_TO_USER, target);
+		Intents.Builder builder = new Builder(this, EditActivity.class);
+		Intent intent = builder.requestType(EditActivity.REQUEST_PM).pmToUser(target).toIntent();
 		startActivity(intent);
-
 	}
 
 	private void quoteReply(String sender, String postTime, String postContent,
 			int floorNum, int pageNum) {
-		Intent intent = new Intent(this, EditActivity.class);
-		intent.putExtra(EditActivity.BOARD_ID, boardId);
-		intent.putExtra(EditActivity.BOARD_NAME, boardName);
-		intent.putExtra(EditActivity.POST_Id, postId);
-		intent.putExtra(EditActivity.POST_NAME, postName);
-		intent.putExtra(EditActivity.REPLY_USER_NAME, sender);
-		intent.putExtra(EditActivity.REPLY_USER_POST_TIME, postTime);
-		intent.putExtra(EditActivity.REPLY_CONTENT, postContent);
-		intent.putExtra(EditActivity.FLOOR_NUMBER, floorNum);
-		intent.putExtra(EditActivity.PAGE_NUMBER, pageNum);
-		intent.putExtra(EditActivity.MOD, EditActivity.MOD_QUOTE_REPLY);
+ 		Intents.Builder builder = new Builder(this, EditActivity.class);
+		Intent intent = builder.requestType(EditActivity.REQUEST_QUOTE_REPLY).boardId(boardId).boardName(boardName)
+				.postId(postId).postName(postName).replyUserName(sender).replyUserPostTime(postTime).replyContent(postContent)
+				.floorNumber(floorNum).pageNumber(pageNum).toIntent();
 		startActivityForResult(intent, 1);
 	}
 

@@ -1,193 +1,194 @@
 <?xml version="1.0" encoding="utf-8"?>
-    <HorizontalScrollView 
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-     android:scrollbars="none">
-     <RadioGroup
-     	android:id="@+id/face_choose_radio_group"
-    	android:layout_width="fill_parent"
-    	android:layout_height="wrap_content"
-    	android:orientation="horizontal"
-    	android:checkedButton="@+id/face7"
-    	android:minHeight="20dip" >
-    <RadioButton 
-     android:button="@null"
-     android:id="@+id/face17"
-     android:layout_width="20dip"
-     android:layout_height="20dip"
-     android:background="@drawable/face17_selector"
-     android:layout_margin="5dip"
-    />
-    <RadioButton 
-     android:button="@null"
-     android:id="@+id/face18"
-     android:width="20dip"
-     android:background="@drawable/face18_selector"
-      android:layout_margin="5dip"
-    />
-    <RadioButton 
-     android:button="@null"
-     android:id="@+id/face19"
-     android:layout_width="20dip"
-     android:layout_height="20dip"
-     android:background="@drawable/face19_selector"
-      android:layout_margin="5dip"
-    />
-    <RadioButton 
-     android:button="@null"
-     android:id="@+id/face20"
-     android:layout_width="20dip"
-     android:layout_height="20dip"
-     android:background="@drawable/face20_selector"
-      android:layout_margin="5dip"/>
-      
-     <RadioButton 
-     android:button="@null"
-     android:id="@+id/face21"
-     android:layout_width="20dip"
-     android:layout_height="20dip"
-     android:background="@drawable/face21_selector"
-      android:layout_margin="5dip"/>
-      
-      <RadioButton 
-     android:button="@null"
-     android:id="@+id/face22"
-     android:layout_width="20dip"
-     android:layout_height="20dip"
-     android:background="@drawable/face22_selector"
-      android:layout_margin="5dip"/>
-    <!--默认选中face7-->
-    <RadioButton 
-    android:button="@null" 
-    android:id="@+id/face7" 
-     android:layout_width="20dip"
-     android:layout_height="20dip"
-    android:background="@drawable/face7_selector"
-    android:layout_margin="5dip"
-   
-    />
-      
-    <RadioButton 
-     android:button="@null"
-     android:id="@+id/face8"
-     android:layout_width="20dip"
-     android:layout_height="20dip"
-     android:background="@drawable/face8_selector"
-      android:layout_margin="5dip"
-    />
-    <RadioButton 
-     android:button="@null"
-     android:id="@+id/face9"
-     android:layout_width="20dip"
-     android:layout_height="20dip"
-     android:background="@drawable/face9_selector"
-      android:layout_margin="5dip"
-    />
-    <RadioButton 
-     android:button="@null"
-     android:id="@+id/face10"
-     android:layout_width="20dip"
-     android:layout_height="20dip"
-     android:background="@drawable/face10_selector"
-      android:layout_margin="5dip"
-    />
-    <RadioButton 
-     android:button="@null"
-     android:id="@+id/face11"
-     android:layout_width="20dip"
-     android:layout_height="20dip"
-     android:background="@drawable/face11_selector"
-      android:layout_margin="5dip"
-    />
-    <RadioButton 
-     android:button="@null"
-     android:id="@+id/face12"
-     android:layout_width="20dip"
-     android:layout_height="20dip"
-     android:background="@drawable/face12_selector"
-      android:layout_margin="5dip"
-    />
-    <RadioButton 
-     android:button="@null"
-     android:id="@+id/face13"
-     android:layout_width="20dip"
-     android:layout_height="20dip"
-     android:background="@drawable/face13_selector"
-      android:layout_margin="5dip"
-    />
-    <RadioButton 
-     android:button="@null"
-     android:id="@+id/face14"
-     android:layout_width="20dip"
-     android:layout_height="20dip"
-     android:background="@drawable/face14_selector"
-      android:layout_margin="5dip"
-    />
-    <RadioButton 
-     android:button="@null"
-     android:id="@+id/face15"
-     android:layout_width="20dip"
-     android:layout_height="20dip"
-     android:background="@drawable/face15_selector"
-      android:layout_margin="5dip"
-    />
-    <RadioButton 
-     android:button="@null"
-     android:id="@+id/face16"
-     android:layout_width="20dip"
-     android:layout_height="20dip"
-     android:background="@drawable/face16_selector"
-      android:layout_margin="5dip"
-    />
-    
-  <RadioButton 
-     android:button="@null"
-     android:id="@+id/face1"
-     android:layout_width="20dip"
-     android:layout_height="20dip"
-     android:background="@drawable/face1_selector"
-     android:layout_margin="5dip"
-    />
-  <RadioButton 
-     android:button="@null"
-     android:id="@+id/face2"
-     android:layout_width="20dip"
-     android:layout_height="20dip"
-     android:background="@drawable/face2_selector"
-     android:layout_margin="5dip"
-    />
-     <RadioButton 
-     android:button="@null"
-     android:id="@+id/face3"
-     android:layout_width="20dip"
-     android:layout_height="20dip"
-     android:background="@drawable/face3_selector"
-      android:layout_margin="5dip"
-    />
-    <RadioButton 
-     android:button="@null"
-     android:id="@+id/face4"
-     android:layout_width="20dip"
-     android:layout_height="20dip"
-     android:background="@drawable/face4_selector"
-      android:layout_margin="5dip"
-    />
-    <RadioButton 
-     android:button="@null"
-     android:id="@+id/face5"
-     android:layout_width="20dip"
-     android:layout_height="20dip"
-     android:background="@drawable/face5_selector"
-      android:layout_margin="5dip"
-    />
-    <RadioButton 
-     android:button="@null"
-     android:id="@+id/face6"
-     android:layout_width="20dip"
-     android:layout_height="20dip"
-     android:background="@drawable/face6_selector"
-      android:layout_margin="5dip"
-    />
-		</RadioGroup>
-		</HorizontalScrollView> 
+    android:scrollbars="none" >
+
+    <RadioGroup
+        android:id="@+id/face_choose_radio_group"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:checkedButton="@+id/face7"
+        android:minHeight="20dip"
+        android:orientation="horizontal" >
+
+        <RadioButton
+            android:id="@+id/face17"
+            android:layout_width="20dip"
+            android:layout_height="20dip"
+            android:layout_margin="5dip"
+            android:background="@drawable/face17_selector"
+            android:button="@null" />
+
+        <RadioButton
+            android:id="@+id/face18"
+            android:layout_width="20dip"
+            android:layout_height="20dip"
+            android:layout_margin="5dip"
+            android:background="@drawable/face18_selector"
+            android:button="@null"
+            android:width="20dip" />
+
+        <RadioButton
+            android:id="@+id/face19"
+            android:layout_width="20dip"
+            android:layout_height="20dip"
+            android:layout_margin="5dip"
+            android:background="@drawable/face19_selector"
+            android:button="@null" />
+
+        <RadioButton
+            android:id="@+id/face20"
+            android:layout_width="20dip"
+            android:layout_height="20dip"
+            android:layout_margin="5dip"
+            android:background="@drawable/face20_selector"
+            android:button="@null" />
+
+        <RadioButton
+            android:id="@+id/face21"
+            android:layout_width="20dip"
+            android:layout_height="20dip"
+            android:layout_margin="5dip"
+            android:background="@drawable/face21_selector"
+            android:button="@null" />
+
+        <RadioButton
+            android:id="@+id/face22"
+            android:layout_width="20dip"
+            android:layout_height="20dip"
+            android:layout_margin="5dip"
+            android:background="@drawable/face22_selector"
+            android:button="@null" />
+        <!-- 默认选中face7 -->
+
+        <RadioButton
+            android:id="@+id/face7"
+            android:layout_width="20dip"
+            android:layout_height="20dip"
+            android:layout_margin="5dip"
+            android:background="@drawable/face7_selector"
+            android:button="@null" />
+
+        <RadioButton
+            android:id="@+id/face8"
+            android:layout_width="20dip"
+            android:layout_height="20dip"
+            android:layout_margin="5dip"
+            android:background="@drawable/face8_selector"
+            android:button="@null" />
+
+        <RadioButton
+            android:id="@+id/face9"
+            android:layout_width="20dip"
+            android:layout_height="20dip"
+            android:layout_margin="5dip"
+            android:background="@drawable/face9_selector"
+            android:button="@null" />
+
+        <RadioButton
+            android:id="@+id/face10"
+            android:layout_width="20dip"
+            android:layout_height="20dip"
+            android:layout_margin="5dip"
+            android:background="@drawable/face10_selector"
+            android:button="@null" />
+
+        <RadioButton
+            android:id="@+id/face11"
+            android:layout_width="20dip"
+            android:layout_height="20dip"
+            android:layout_margin="5dip"
+            android:background="@drawable/face11_selector"
+            android:button="@null" />
+
+        <RadioButton
+            android:id="@+id/face12"
+            android:layout_width="20dip"
+            android:layout_height="20dip"
+            android:layout_margin="5dip"
+            android:background="@drawable/face12_selector"
+            android:button="@null" />
+
+        <RadioButton
+            android:id="@+id/face13"
+            android:layout_width="20dip"
+            android:layout_height="20dip"
+            android:layout_margin="5dip"
+            android:background="@drawable/face13_selector"
+            android:button="@null" />
+
+        <RadioButton
+            android:id="@+id/face14"
+            android:layout_width="20dip"
+            android:layout_height="20dip"
+            android:layout_margin="5dip"
+            android:background="@drawable/face14_selector"
+            android:button="@null" />
+
+        <RadioButton
+            android:id="@+id/face15"
+            android:layout_width="20dip"
+            android:layout_height="20dip"
+            android:layout_margin="5dip"
+            android:background="@drawable/face15_selector"
+            android:button="@null" />
+
+        <RadioButton
+            android:id="@+id/face16"
+            android:layout_width="20dip"
+            android:layout_height="20dip"
+            android:layout_margin="5dip"
+            android:background="@drawable/face16_selector"
+            android:button="@null" />
+
+        <RadioButton
+            android:id="@+id/face1"
+            android:layout_width="20dip"
+            android:layout_height="20dip"
+            android:layout_margin="5dip"
+            android:background="@drawable/face1_selector"
+            android:button="@null" />
+
+        <RadioButton
+            android:id="@+id/face2"
+            android:layout_width="20dip"
+            android:layout_height="20dip"
+            android:layout_margin="5dip"
+            android:background="@drawable/face2_selector"
+            android:button="@null" />
+
+        <RadioButton
+            android:id="@+id/face3"
+            android:layout_width="20dip"
+            android:layout_height="20dip"
+            android:layout_margin="5dip"
+            android:background="@drawable/face3_selector"
+            android:button="@null" />
+
+        <RadioButton
+            android:id="@+id/face4"
+            android:layout_width="20dip"
+            android:layout_height="20dip"
+            android:layout_margin="5dip"
+            android:background="@drawable/face4_selector"
+            android:button="@null" />
+
+        <RadioButton
+            android:id="@+id/face5"
+            android:layout_width="20dip"
+            android:layout_height="20dip"
+            android:layout_margin="5dip"
+            android:background="@drawable/face5_selector"
+            android:button="@null" />
+
+        <RadioButton
+            android:id="@+id/face6"
+            android:layout_width="20dip"
+            android:layout_height="20dip"
+            android:layout_margin="5dip"
+            android:background="@drawable/face6_selector"
+            android:button="@null" />
+    </RadioGroup>
+
+</HorizontalScrollView>

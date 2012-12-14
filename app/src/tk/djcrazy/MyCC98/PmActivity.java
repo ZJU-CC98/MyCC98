@@ -28,8 +28,7 @@ public class PmActivity extends RoboSherlockFragmentActivity {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		setTheme(com.actionbarsherlock.R.style.Theme_Sherlock);
-		super.onCreate(savedInstanceState);
+ 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.pm);
 		configureActionBar();
 		InboxFragmentPagerAdapter adapter = new InboxFragmentPagerAdapter(

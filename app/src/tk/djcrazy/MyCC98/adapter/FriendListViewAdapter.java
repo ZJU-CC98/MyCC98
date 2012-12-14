@@ -7,6 +7,8 @@ import org.apache.http.ParseException;
 import tk.djcrazy.MyCC98.EditActivity;
 import tk.djcrazy.MyCC98.ProfileActivity;
 import tk.djcrazy.MyCC98.R;
+import tk.djcrazy.MyCC98.util.Intents;
+import tk.djcrazy.MyCC98.util.Intents.Builder;
 import tk.djcrazy.libCC98.data.UserStatue;
 import tk.djcrazy.libCC98.data.UserStatueEntity;
 import android.annotation.SuppressLint;
@@ -97,9 +99,8 @@ public class FriendListViewAdapter extends BaseItemListAdapter<UserStatueEntity>
 		return convertView;
 	}
 	private void sendPm(String target) {
-		Intent intent = new Intent(context, EditActivity.class);
- 		intent.putExtra(EditActivity.MOD, EditActivity.MOD_PM);
-		intent.putExtra(EditActivity.PM_TO_USER, target);
+		Intents.Builder builder = new Builder(context, EditActivity.class);
+		Intent intent = builder.requestType(EditActivity.REQUEST_PM).pmToUser(target).toIntent();
 		context.startActivity(intent);
  	}
 }
