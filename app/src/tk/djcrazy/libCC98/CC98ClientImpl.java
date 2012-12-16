@@ -98,7 +98,7 @@ public class CC98ClientImpl implements ICC98Client {
 		return ((MyApplication) application).getUserAvatar();
 	}
 
-	private DefaultHttpClient getHttpClient() {
+	public DefaultHttpClient getHttpClient() {
 		Log.d(TAG, "getHttpClient");
 		if (client == null) {
 			HttpParams params = new BasicHttpParams();

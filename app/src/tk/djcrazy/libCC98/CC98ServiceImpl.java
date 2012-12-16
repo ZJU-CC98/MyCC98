@@ -26,6 +26,7 @@ import ch.boye.httpclientandroidlib.NameValuePair;
 import ch.boye.httpclientandroidlib.ParseException;
 import ch.boye.httpclientandroidlib.auth.AuthenticationException;
 import ch.boye.httpclientandroidlib.client.ClientProtocolException;
+import ch.boye.httpclientandroidlib.client.HttpClient;
 import ch.boye.httpclientandroidlib.message.BasicNameValuePair;
 
 import com.google.inject.Inject;
@@ -220,6 +221,11 @@ public class CC98ServiceImpl implements ICC98Service {
 	@Override
 	public Bitmap getUserAvatar() {
 		return cc98Client.getUserAvatar(); 
+	}
+
+	@Override
+	public ICC98Client getCC98Client() {
+		return cc98Client;
 	}
 
 }

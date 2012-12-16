@@ -16,6 +16,7 @@ import ch.boye.httpclientandroidlib.NameValuePair;
 import ch.boye.httpclientandroidlib.ParseException;
 import ch.boye.httpclientandroidlib.auth.AuthenticationException;
 import ch.boye.httpclientandroidlib.client.ClientProtocolException;
+import ch.boye.httpclientandroidlib.client.HttpClient;
 
 public interface ICC98Client {
 	public UserData getUserData();
@@ -213,5 +214,6 @@ public interface ICC98Client {
 	public void setUseProxy(boolean b);
 
 	public Bitmap getUserAvatar();
-
+	
+	public HttpClient getHttpClient();
 }
