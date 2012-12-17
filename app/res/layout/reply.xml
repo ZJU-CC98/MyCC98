@@ -42,11 +42,10 @@
                 android:layout_weight="1"
                 android:gravity="top"
                 android:hint="@string/moto_of_zju"
+                android:inputType="textMultiLine"
                 android:textColor="#444444"
-                android:textSize="15sp" 
-                android:inputType="textMultiLine"/>
-
-         </LinearLayout>
+                android:textSize="15sp" />
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -66,28 +65,32 @@
                 android:id="@+id/edit_btn_camera"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="7dp"
+                android:paddingLeft="4dp"
+                android:paddingRight="4dp"
                 android:src="@drawable/edit_btn_camera_selector" />
 
             <ImageView
                 android:id="@+id/edit_btn_photo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="7dp"
+                android:paddingLeft="4dp"
+                android:paddingRight="4dp"
                 android:src="@drawable/edit_btn_photo_selector" />
 
             <ImageView
                 android:id="@+id/edit_btn_emotion"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="7dp"
+                android:paddingLeft="4dp"
+                android:paddingRight="4dp"
                 android:src="@drawable/edit_btn_emotion_selector" />
 
             <ImageView
                 android:id="@+id/edit_btn_at"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="7dp"
+                android:paddingLeft="4dp"
+                android:paddingRight="4dp"
                 android:src="@drawable/edit_btn_at_selector" />
         </LinearLayout>
 
@@ -96,14 +99,14 @@
             android:layout_height="wrap_content"
             android:background="@color/bottombar_black" >
 
-            
-            <Button 
+            <Button
                 android:id="@+id/edit_btn_delete"
-                android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
-                android:background="@drawable/edit_btn_delete_selector"
+                android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
-                android:layout_marginLeft="10dp"/>
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/edit_btn_delete_selector" />
+
             <Button
                 android:id="@+id/edit_btn_sure"
                 android:layout_width="wrap_content"

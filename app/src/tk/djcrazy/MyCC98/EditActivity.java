@@ -40,6 +40,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnFocusChangeListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -160,8 +161,10 @@ public class EditActivity extends BaseActivity implements OnClickListener {
 		actionBar.setLogo(new BitmapDrawable(service.getUserAvatar()));
 		if (requestType == REQUEST_REPLY) {
 			actionBar.setTitle("回复：" + postName);
+			replyContentEditText.requestFocus();
 		} else if (requestType == REQUEST_QUOTE_REPLY) {
 			actionBar.setTitle("回复：" + postName);
+			replyContentEditText.requestFocus();
 			replyUserPostContent = replyUserPostContent.replaceAll(
 					"<.*?>|searchubb.*?;", "");
 			replyContentEditText.setText(generateQuoteContent());
@@ -325,6 +328,18 @@ public class EditActivity extends BaseActivity implements OnClickListener {
 		mSubmitBtn.setOnClickListener(this);
 		replyTitleEditText.setOnClickListener(this);
 		mDeleteBtn.setOnClickListener(this);
+		replyContentEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+					ViewUtils.setGone(mEmotionGrid, true);
+			}
+		});
+		replyTitleEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+				ViewUtils.setGone(mEmotionGrid, true);
+			}
+		});
 		replyContentEditText.setOnClickListener(this);
 		mEmotionGrid.setOnItemClickListener(new OnItemClickListener() {
 			@Override

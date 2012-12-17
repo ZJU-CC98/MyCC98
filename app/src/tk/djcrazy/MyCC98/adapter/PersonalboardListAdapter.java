@@ -7,6 +7,7 @@ import com.google.inject.Inject;
 import tk.djcrazy.MyCC98.PostContentsJSActivity;
 import tk.djcrazy.MyCC98.PostListActivity;
 import tk.djcrazy.MyCC98.R;
+import tk.djcrazy.MyCC98.util.ViewUtils;
 import tk.djcrazy.libCC98.CC98ClientImpl;
 import tk.djcrazy.libCC98.ICC98Service;
 import tk.djcrazy.libCC98.data.BoardEntity;
@@ -54,15 +55,29 @@ public class PersonalboardListAdapter extends BaseItemListAdapter<BoardEntity> {
 			listItemView = (ListItemView) convertView.getTag();
 		}
 		listItemView.boardName.setText(items.get(position).getBoardName());
-		listItemView.lastReplyTopicName.setText(items.get(position)
-				.getLastReplyTopicName());
-		listItemView.lastReplyAuthor.setText(items.get(position)
-				.getLastReplyAuthor());
-		listItemView.lastReplyTime.setText(DateFormatUtil.convertDateToString(
-				items.get(position).getLastReplyTime(), true));
 		listItemView.postNumberToday.setText(String.valueOf(+items
 				.get(position).getPostNumberToday()));
-		setListeners(position, listItemView);
+		if (items.get(position).getLastReplyTime() == null) {
+			ViewUtils.setGone(listItemView.lastReplyAuthor, true);
+			ViewUtils.setGone(listItemView.lastReplyTime, true);
+			listItemView.lastReplyTopicName.setText("认证论坛，请认证用户进入浏览");
+			setListeners(position, listItemView);
+			listItemView.lastReplyTopicName.setClickable(false);
+			listItemView.lastReplyTimeClickable.setClickable(false);
+		} else {
+			listItemView.lastReplyTopicName.setClickable(true);
+			listItemView.lastReplyTimeClickable.setClickable(true);
+			ViewUtils.setGone(listItemView.lastReplyAuthor, false);
+			ViewUtils.setGone(listItemView.lastReplyTime, false);
+			listItemView.lastReplyTopicName.setText(items.get(position)
+					.getLastReplyTopicName());
+			listItemView.lastReplyAuthor.setText(items.get(position)
+					.getLastReplyAuthor());
+			listItemView.lastReplyTime.setText(DateFormatUtil
+					.convertDateToString(
+							items.get(position).getLastReplyTime(), true));
+			setListeners(position, listItemView);
+		}
 		return convertView;
 	}
 
@@ -106,8 +121,8 @@ public class PersonalboardListAdapter extends BaseItemListAdapter<BoardEntity> {
 								items.get(clickPosition).getBoardID());
 						intent.putExtra(PostListActivity.BOARD_NAME,
 								items.get(clickPosition).getBoardName());
- 						context.startActivity(intent);
-						 
+						context.startActivity(intent);
+
 					}
 				});
 
@@ -127,7 +142,7 @@ public class PersonalboardListAdapter extends BaseItemListAdapter<BoardEntity> {
 						intent.putExtra(PostContentsJSActivity.BOARD_NAME,
 								items.get(clickPosition).getBoardName());
 						context.startActivity(intent);
-						 
+
 					}
 				});
 
