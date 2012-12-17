@@ -3,80 +3,130 @@
     android:id="@+id/layout_root"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@color/board_info_background"
+    android:background="@drawable/global_bg"
     android:orientation="vertical" >
 
     <LinearLayout
+        android:id="@+id/reply_container"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_weight="1"
-        android:background="@color/light_transparent"
+        android:layout_height="match_parent"
+        android:layout_weight="1.0"
         android:orientation="vertical" >
 
-        <!-- 回复标题 -->
-
-        <EditText
-            android:id="@+id/reply_title_edit"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:hint="主题"
-            android:textColor="#444444"
-            android:textSize="15sp" />
-
-        <!-- 回帖心情 -->
-
-        <include layout="@layout/face_choose" />
-
-        <!-- 回复内容 -->
-
-        <EditText
-            android:id="@+id/reply_content"
+        <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_weight="1"
-            android:gravity="top"
-            android:hint="内容"
-            android:textColor="#444444"
-            android:textSize="15sp" />
+            android:orientation="vertical" >
 
-        <!-- 快速添加表情 -->
+            <!-- 回复标题 -->
 
-        <include layout="@layout/quick_emot_insert" />
-    </LinearLayout>
+            <EditText
+                android:id="@+id/reply_title_edit"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:hint="主题"
+                android:textColor="#444444"
+                android:textSize="15sp" />
 
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+            <!-- 回帖心情 -->
 
-        <TextView
-            android:id="@+id/insert_expression_button"
-            style="@style/button"
-            android:layout_weight="1"
-            android:text="@string/insert_expression" />
+            <include layout="@layout/face_choose" />
 
-        <!-- 选择附件 -->
+            <!-- 回复内容 -->
 
-        <TextView
-            android:id="@+id/upload_image_button"
-            style="@style/button"
-            android:layout_weight="1"
-            android:text="@string/upload_image" />
+            <tk.djcrazy.MyCC98.view.MyEditText
+                android:id="@+id/reply_content"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:gravity="top"
+                android:hint="@string/moto_of_zju"
+                android:textColor="#444444"
+                android:textSize="15sp" 
+                android:inputType="textMultiLine"/>
 
-        <TextView
-            android:id="@+id/preview_reply"
-            style="@style/button"
-            android:layout_weight="1"
-            android:text="@string/preview_reply" />
+         </LinearLayout>
 
-        <TextView
-            android:id="@+id/chars_word"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/simple_button_selector"
-            android:gravity="right"
-            android:text="@string/reply_you_can_type"
-            android:visibility="gone" />
+            android:gravity="center_vertical"
+            android:padding="1dp" >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.0"
+                android:text="来自 MyCC98.Android"
+                android:textColor="#555"
+                android:textSize="13dp" />
+
+            <ImageView
+                android:id="@+id/edit_btn_camera"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="7dp"
+                android:src="@drawable/edit_btn_camera_selector" />
+
+            <ImageView
+                android:id="@+id/edit_btn_photo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="7dp"
+                android:src="@drawable/edit_btn_photo_selector" />
+
+            <ImageView
+                android:id="@+id/edit_btn_emotion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="7dp"
+                android:src="@drawable/edit_btn_emotion_selector" />
+
+            <ImageView
+                android:id="@+id/edit_btn_at"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="7dp"
+                android:src="@drawable/edit_btn_at_selector" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/bottombar_black" >
+
+            
+            <Button 
+                android:id="@+id/edit_btn_delete"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:background="@drawable/edit_btn_delete_selector"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="10dp"/>
+            <Button
+                android:id="@+id/edit_btn_sure"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/edit_btn_send_selector"
+                android:paddingRight="10dp"
+                android:text="回复"
+                android:textColor="#666"
+                android:textSize="15sp" />
+        </RelativeLayout>
+
+        <GridView
+            android:id="@+id/edit_emotion_grid"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:columnWidth="32.0dip"
+            android:gravity="center"
+            android:horizontalSpacing="0.5dip"
+            android:numColumns="8"
+            android:scrollbars="none"
+            android:visibility="gone" >
+        </GridView>
     </LinearLayout>
 
 </LinearLayout>

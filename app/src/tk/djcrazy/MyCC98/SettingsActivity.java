@@ -34,8 +34,7 @@ public class SettingsActivity extends RoboSherlockPreferenceActivity {
  	
  	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		setTheme(com.actionbarsherlock.R.style.Theme_Sherlock);
-		super.onCreate(savedInstanceState);
+ 		super.onCreate(savedInstanceState);
 		ActionBar actionBar = getSupportActionBar();
 		actionBar.setLogo(R.drawable.setting_btn);
 		actionBar.setTitle("设置");

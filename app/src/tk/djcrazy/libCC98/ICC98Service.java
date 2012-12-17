@@ -24,6 +24,7 @@ import android.graphics.Bitmap;
 import ch.boye.httpclientandroidlib.ParseException;
 import ch.boye.httpclientandroidlib.auth.AuthenticationException;
 import ch.boye.httpclientandroidlib.client.ClientProtocolException;
+import ch.boye.httpclientandroidlib.client.HttpClient;
 
 public interface ICC98Service {
 	public void addProxyAuthorization(String userName, String pwd) ;
@@ -110,4 +111,6 @@ public interface ICC98Service {
 	public String getDomain();
 
 	public Bitmap getBitmapFromUrl(String url) throws IOException;
+	
+	public ICC98Client getCC98Client();
 }

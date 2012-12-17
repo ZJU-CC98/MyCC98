@@ -52,4 +52,5 @@
     <color name="pager_footer">#FFFFFF</color>
     <color name="list_divider_top">#E2E2E2</color>
     <color name="list_divider_bottom">#FFFFFF</color>
+     <color name="bottombar_black">#ff212121</color>
 </resources>

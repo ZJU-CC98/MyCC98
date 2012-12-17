@@ -20,7 +20,7 @@ public class BaseActivity extends RoboSherlockFragmentActivity {
 	}
 
 	public void onCreate(Bundle savedInstanceState) {
-		setTheme(com.actionbarsherlock.R.style.Theme_Sherlock);
+//		setTheme(com.actionbarsherlock.R.style.Theme_Sherlock);
 		super.onCreate(savedInstanceState);
 	}
 }

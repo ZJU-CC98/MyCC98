@@ -25,9 +25,7 @@ public class PreviewActivity extends BaseActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
- 		
 		setViews();
-		
 		loadPreview();
 	}
 	

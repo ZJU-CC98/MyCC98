@@ -7,6 +7,8 @@ package tk.djcrazy.MyCC98;
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectExtra;
 import tk.djcrazy.MyCC98.fragment.PostListFragment;
+import tk.djcrazy.MyCC98.util.Intents;
+import tk.djcrazy.MyCC98.util.Intents.Builder;
 import tk.djcrazy.libCC98.ICC98Service;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -30,18 +32,20 @@ public class PostListActivity extends BaseActivity {
 	@InjectExtra(BOARD_ID)
 	private String boardId;
 
- 	@Inject
+	@Inject
 	private ICC98Service service;
 
 	@Override
 	public void onCreate(Bundle SavedInstanceState) {
 		super.onCreate(SavedInstanceState);
-		configureActionBar(); 
+		configureActionBar();
 		Log.d(TAG, "onCreate");
-		if (SavedInstanceState==null) {
-			getSupportFragmentManager().beginTransaction().add(
-					R.id.post_list_fragment_container,
-					PostListFragment.createInstance(boardId, boardName)).commit();
+		if (SavedInstanceState == null) {
+			getSupportFragmentManager()
+					.beginTransaction()
+					.add(R.id.post_list_fragment_container,
+							PostListFragment.createInstance(boardId, boardName))
+					.commit();
 		}
 	}
 
@@ -53,12 +57,11 @@ public class PostListActivity extends BaseActivity {
 	}
 
 	private void sendNewPost() {
-		Intent intent = new Intent(PostListActivity.this, EditActivity.class);
-		intent.putExtra(EditActivity.MOD, EditActivity.MOD_NEW_POST);
-		intent.putExtra(EditActivity.BOARD_ID, boardId);
-		intent.putExtra(EditActivity.BOARD_NAME, boardName);
+		Intents.Builder builder = new Builder(this, EditActivity.class);
+		Intent intent = builder.requestType(EditActivity.REQUEST_NEW_POST)
+				.boardId(boardId).boardName(boardName).toIntent();
 		startActivityForResult(intent, 0);
- 	}
+	}
 
 	@Override
 	public boolean onOptionsItemSelected(
@@ -66,7 +69,7 @@ public class PostListActivity extends BaseActivity {
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			finish();
- 			return true;
+			return true;
 		case R.id.post_list_menu_search:
 			onSearchRequested();
 			return true;
@@ -92,7 +95,7 @@ public class PostListActivity extends BaseActivity {
 		startSearch(null, false, appData, false);
 		return true;
 	}
-	
+
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		Log.d(TAG, "onConfigurationChanged");

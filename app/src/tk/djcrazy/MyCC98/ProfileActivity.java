@@ -4,11 +4,18 @@ import java.io.IOException;
 
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectExtra;
+import roboguice.util.RoboAsyncTask;
+import tk.djcrazy.MyCC98.task.ProgressRoboAsyncTask;
+import tk.djcrazy.MyCC98.util.Intents;
+import tk.djcrazy.MyCC98.util.Intents.Builder;
+import tk.djcrazy.MyCC98.util.ToastUtils;
 import tk.djcrazy.libCC98.ICC98Service;
 import tk.djcrazy.libCC98.data.UserProfileEntity;
 import tk.djcrazy.libCC98.exception.NoUserFoundException;
 import tk.djcrazy.libCC98.exception.ParseContentException;
+import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -28,12 +35,6 @@ import com.google.inject.Inject;
 @ContentView(R.layout.user_profile)
 public class ProfileActivity extends BaseActivity {
 
-	private static final int LOAD_PROFILE_SUCCESS = 1;
-	private static final int LOAD_PROFILE_FAILED = 0;
-	private static final int LOAD_USER_AVARTAR_SUCCESS = 11;
-	private static final int LOAD_USER_AVARTAR_FAILED = 10;
-	public static final int ADD_FRIEND_SUCCESS = 2;
-	public static final int ADD_FRIEND_FAILED = 3;
 	private static final int MENU_SEND_MESSAGE_ID = 8790124;
 	private static final String USER_NAME = "userName";
 
@@ -63,66 +64,20 @@ public class ProfileActivity extends BaseActivity {
 
 	@InjectExtra(USER_NAME)
 	private String mUserName;
-	private Bitmap userPortraitmBitmap;
-	private String url;
-	private ProgressDialog dialog;
 
 	@Inject
 	private ICC98Service service;
-
-	Thread profileThread = new Thread() {
-		// child thread
-		@Override
-		public void run() {
-			try {
-				profileEntity = service.getUserProfile(mUserName);
-				handler.sendEmptyMessage(LOAD_PROFILE_SUCCESS);
-
-			} catch (NoUserFoundException e) {
-				handler.sendEmptyMessage(LOAD_PROFILE_FAILED);
-				e.printStackTrace();
-			} catch (IOException e) {
-				handler.sendEmptyMessage(LOAD_PROFILE_FAILED);
-				e.printStackTrace();
-			} catch (org.apache.http.ParseException e) {
-				handler.sendEmptyMessage(LOAD_PROFILE_FAILED);
-				e.printStackTrace();
-			} catch (ParseContentException e) {
-				handler.sendEmptyMessage(LOAD_PROFILE_FAILED);
-				e.printStackTrace();
-			}
-		}
-	};
-
-	Thread headPortraitThread = new Thread() {
-		// child thread
-		@Override
-		public void run() {
-			try {
-				userPortraitmBitmap = service.getBitmapFromUrl(url);
-				handler.sendEmptyMessage(LOAD_USER_AVARTAR_SUCCESS);
-			} catch (IOException e) {
-				handler.sendEmptyMessage(LOAD_USER_AVARTAR_FAILED);
-				e.printStackTrace();
-			}
-
-		}
-
-	};
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.user_profile);
 		findViews();
-		dialog = ProgressDialog.show(ProfileActivity.this, "", "Loading...",
-				true);
-		profileThread.start();
+		new GetProfileTask(this).execute();
 		ActionBar actionBar = getSupportActionBar();
 		actionBar.setLogo(R.drawable.personal_profile_icon);
 		actionBar.setTitle("用户资料");
 		actionBar.setDisplayHomeAsUpEnabled(true);
-		dialog.show();
 	}
 
 	@Override
@@ -140,9 +95,9 @@ public class ProfileActivity extends BaseActivity {
 			finish();
 			return true;
 		case MENU_SEND_MESSAGE_ID:
-			Intent intent = new Intent(ProfileActivity.this, EditActivity.class);
-			intent.putExtra(EditActivity.MOD, EditActivity.MOD_PM);
-			intent.putExtra(EditActivity.PM_TO_USER, mUserName);
+			Intents.Builder builder = new Builder();
+			Intent intent = builder.requestType(EditActivity.REQUEST_PM)
+					.pmToUser(mUserName).toIntent();
 			startActivity(intent);
 		}
 		return true;
@@ -172,58 +127,7 @@ public class ProfileActivity extends BaseActivity {
 		userPage = (TextView) findViewById(R.id.profile_user_page);
 	}
 
-	// handle the message
-	private Handler handler = new Handler() {
-		@Override
-		public void handleMessage(Message msg) {
-			switch (msg.what) {
-			case LOAD_PROFILE_SUCCESS:
-				setContents();
-				dialog.dismiss();
-				headPortraitThread.start();
-				break;
-			case LOAD_PROFILE_FAILED:
-				Toast.makeText(ProfileActivity.this, "读取网页或解析出错！",
-						Toast.LENGTH_SHORT).show();
-				break;
-			case LOAD_USER_AVARTAR_FAILED:
-				Toast.makeText(ProfileActivity.this, "读取网页或解析出错！",
-						Toast.LENGTH_SHORT).show();
-				break;
-			case LOAD_USER_AVARTAR_SUCCESS:
-				userPortrait.setImageBitmap(userPortraitmBitmap);
-				break;
-			default:
-				break;
-			}
-		}
-	};
-
-	private void add_friend(final String userName) {
-		new Thread(new Runnable() {
-
-			@Override
-			public void run() {
-				try {
-					service.addFriend(userName);
-					handler.sendEmptyMessage(ADD_FRIEND_SUCCESS);
-				} catch (ParseException e) {
-					handler.sendEmptyMessage(ADD_FRIEND_FAILED);
-					e.printStackTrace();
-				} catch (NoUserFoundException e) {
-					handler.sendEmptyMessage(ADD_FRIEND_FAILED);
-					e.printStackTrace();
-				} catch (IOException e) {
-					handler.sendEmptyMessage(ADD_FRIEND_FAILED);
-					e.printStackTrace();
-				}
-			}
-		}).start();
-
-	}
-
 	protected void setContents() {
-		url = profileEntity.getUserAvatarLink();
 		userName.setText(mUserName);
 		userNickName.setText(profileEntity.getUserNickName());
 		userLevel.setText(profileEntity.getUserLevel());
@@ -244,5 +148,52 @@ public class ProfileActivity extends BaseActivity {
 		userMSN.setText(profileEntity.getUserMSN());
 		userPage.setText(profileEntity.getUserPage());
 		loginStatues.setText(profileEntity.getOnlineTime());
+	}
+
+	private class GetProfileTask extends
+			ProgressRoboAsyncTask<UserProfileEntity> {
+
+		protected GetProfileTask(Activity context) {
+			super(context);
+		}
+
+		@Override
+		public UserProfileEntity call() throws Exception {
+			return service.getUserProfile(mUserName);
+		}
+
+		@Override
+		protected void onException(Exception e) throws RuntimeException {
+			super.onException(e);
+			ToastUtils.show(context, "读取网页或解析出错！");
+		}
+
+		@Override
+		protected void onSuccess(UserProfileEntity t) throws Exception {
+			super.onSuccess(t);
+			profileEntity = t;
+			setContents();
+			new GetAvatarTask(context, t.getUserAvatarLink()).execute();
+		}
+	}
+
+	private class GetAvatarTask extends RoboAsyncTask<Bitmap> {
+		private String aUrl;
+
+		protected GetAvatarTask(Context context, String url) {
+			super(context);
+			aUrl = url;
+		}
+
+		@Override
+		public Bitmap call() throws Exception {
+			return service.getBitmapFromUrl(aUrl);
+		}
+
+		@Override
+		protected void onSuccess(Bitmap t) throws Exception {
+			super.onSuccess(t);
+			userPortrait.setImageBitmap(t);
+		}
 	}
 }

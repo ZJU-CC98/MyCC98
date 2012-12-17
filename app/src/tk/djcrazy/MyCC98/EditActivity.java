@@ -10,16 +10,16 @@ import java.util.Date;
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
-import roboguice.util.RoboAsyncTask;
-import tk.djcrazy.MyCC98.dialog.MoreEmotChooseDialog;
-import tk.djcrazy.MyCC98.dialog.MoreEmotChooseDialog.FaceExpressionChooseListener;
+import tk.djcrazy.MyCC98.adapter.EmotionGridViewAdapter;
 import tk.djcrazy.MyCC98.helper.TextHelper;
+import tk.djcrazy.MyCC98.task.ProgressRoboAsyncTask;
+import tk.djcrazy.MyCC98.util.Intents;
 import tk.djcrazy.MyCC98.util.ToastUtils;
+import tk.djcrazy.MyCC98.util.ViewUtils;
 import tk.djcrazy.libCC98.ICC98Service;
 import tk.djcrazy.libCC98.ICC98UrlManager;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -34,19 +34,22 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
-import android.os.Message;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ArrayAdapter;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListAdapter;
+import android.widget.GridView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
-import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
@@ -54,34 +57,18 @@ import com.actionbarsherlock.view.MenuItem;
 import com.google.inject.Inject;
 
 @ContentView(R.layout.reply)
-public class EditActivity extends BaseActivity {
+public class EditActivity extends BaseActivity implements OnClickListener {
 
-	public static final int MOD_REPLY = 0;
-	public static final int MOD_QUOTE_REPLY = 1;
-	public static final int MOD_NEW_POST = 2;
-	public static final int MOD_PM = 3;
-	public static final int MOD_EDIT = 4;
-	public static final String MOD = "mod";
-	public static final String BOARD_ID = "boardID";
-	public static final String BOARD_NAME = "boardName";
-	public static final String POST_Id = "postId";
-	public static final String POST_NAME = "postName";
-	public static final String REPLY_USER_NAME = "replyUserName";
-	public static final String REPLY_USER_POST_TIME = "replyUserPostTime";
-	public static final String REPLY_CONTENT = "replyContent";
-	public static final String FLOOR_NUMBER = "floorNumber";
-	public static final String PAGE_NUMBER = "pageNumber";
-	public static final String PM_TO_USER = "touser";
-	public static final String PM_CONTENT = "pmcontent";
-	public static final String PM_TITLE = "pmtitle";
-	public static final String EDIT_LINK = "editlink";
-	public static final String EDIT_CONTENT = "editcontent";
-	public static final String EDIT_TOPIC = "edittopic";
-	public static final String IS_QUOTE_USER = "isQuoteUser";
-
+	public static final int REQUEST_REPLY = 0;
+	public static final int REQUEST_QUOTE_REPLY = 1;
+	public static final int REQUEST_NEW_POST = 2;
+	public static final int REQUEST_PM = 3;
+	public static final int REQUEST_EDIT = 4;  
+	
+ 
 	public static final String TAIL = "\n\n[right][color=gray]From  "
 			+ Build.MODEL + " via MyCC98[/color][/right]";
-	
+
 	private String appendTail = TAIL;
 
 	private static final String TAG = "EditActivity";
@@ -91,60 +78,63 @@ public class EditActivity extends BaseActivity {
 	private static final int PHOTO_PICKED_WITH_DATA = 3021;
 	/* image upload 500KB limited */
 	private static final long MAX_IMAGE_SIZE_IN_BYTE = 500 * 1024;
- 
+
 	/* 拍照的照片存储位置 */
 	private static final File PHOTO_DIR = new File(
 			Environment.getExternalStorageDirectory() + "/Camera");
 	private static final int MENU_REPLY_ID = 87356;
 
-	@InjectExtra(MOD)
-	private int mod;
-	@InjectExtra(value = BOARD_ID, optional = true)
+	@InjectExtra(Intents.EXTRA_REQUEST_TYPE)
+	private int requestType; 
+	@InjectExtra(value =Intents.EXTRA_BOARD_ID, optional = true)
 	private String boardID;
-	@InjectExtra(value = BOARD_NAME, optional = true)
+	@InjectExtra(value = Intents.EXTRA_BOARD_NAME, optional = true)
 	private String boardName;
-	@InjectExtra(value = POST_Id, optional = true)
+	@InjectExtra(value = Intents.EXTRA_POST_ID, optional = true)
 	private String postId;
-	@InjectExtra(value = POST_NAME, optional = true)
+	@InjectExtra(value = Intents.EXTRA_POST_NAME, optional = true)
 	private String postName;
-	@InjectExtra(value = REPLY_USER_NAME, optional = true)
+	@InjectExtra(value = Intents.EXTRA_REPLY_USER_NAME, optional = true)
 	private String replyUserName;
-	@InjectExtra(value = REPLY_USER_POST_TIME, optional = true)
+	@InjectExtra(value = Intents.EXTRA_REPLY_USER_POST_TIME, optional = true)
 	private String replyUserPostTime;
-	@InjectExtra(value = REPLY_CONTENT, optional = true)
+	@InjectExtra(value = Intents.EXTRA_REPLY_CONTENT, optional = true)
 	private String replyUserPostContent;
-	@InjectExtra(value = FLOOR_NUMBER, optional = true)
+	@InjectExtra(value = Intents.EXTRA_FLOOR_NUMBER, optional = true)
 	private int quoteFloorNumber;
-	@InjectExtra(value = PAGE_NUMBER, optional = true)
+	@InjectExtra(value = Intents.EXTRA_PAGE_NUMBER, optional = true)
 	private int quotePageNumber;
-	@InjectExtra(value = IS_QUOTE_USER, optional = true)
+	@InjectExtra(value = Intents.EXTRA_IS_QUOTE_USER, optional = true)
 	private boolean isQuoteUser;
+	@InjectExtra(value = Intents.EXTRA_PM_TO_USER, optional = true)
+	private String pmReplyName;
+	@InjectExtra(value = Intents.EXTRA_PM_TITLE, optional = true)
+	private String pmReplyTopic;
+	@InjectExtra(value = Intents.EXTRA_PM_CONTENT, optional = true)
+	private String pmReplyContent;
 
-	@InjectView(R.id.insert_expression_button)
-	private View insertFaceExpression;
-	@InjectView(R.id.upload_image_button)
-	private View upLoadButton;
 	@InjectView(R.id.reply_title_edit)
 	private EditText replyTitleEditText;
 	@InjectView(R.id.reply_content)
 	private EditText replyContentEditText;
-	@InjectView(R.id.preview_reply)
-	private View previewButton;
 	@InjectView(R.id.face_choose_radio_group)
 	private RadioGroup faceRadioGroup;
-	@InjectView(R.id.quick_emot_group_one)
-	private RadioGroup quickEmotGroupOne;
-	@InjectView(R.id.quick_emot_group_two)
-	private RadioGroup quickEmotGroupTwo;
-
-	private String emotChooseString;
-	@InjectExtra(value = PM_TO_USER, optional = true)
-	private String pmReplyName;
-	@InjectExtra(value = PM_TITLE, optional = true)
-	private String pmReplyTopic;
-	@InjectExtra(value = PM_CONTENT, optional = true)
-	private String pmReplyContent;
-
+	@InjectView(R.id.edit_btn_photo)
+	private ImageView mPhotoBtn;
+	@InjectView(R.id.edit_btn_camera)
+	private ImageView mCameraBtn;
+	@InjectView(R.id.edit_btn_emotion)
+	private ImageView mEmotionBtn;
+	@InjectView(R.id.edit_btn_at)
+	private ImageView mAtBtn;
+	@InjectView(R.id.edit_btn_sure)
+	private Button mSubmitBtn;
+	@InjectView(R.id.edit_emotion_grid)
+	private GridView mEmotionGrid;
+	@InjectView(R.id.reply_container)
+	private View mContainer;
+	@InjectView(R.id.edit_btn_delete)
+	private Button mDeleteBtn;
 	private String editContent;
 	private String editTopic;
 	private File mCurrentPhotoFile;
@@ -155,171 +145,80 @@ public class EditActivity extends BaseActivity {
 	@Inject
 	private ICC98UrlManager manager;
 
-	private Handler handler = new Handler() {
-		@Override
-		public void handleMessage(Message msg) {
-			int cursor = replyContentEditText.getSelectionStart();
-			replyContentEditText.getText().insert(cursor, emotChooseString);
-		}
-	};
-	private OnCheckedChangeListener emotChangeListener = new OnCheckedChangeListener() {
-		@Override
-		public void onCheckedChanged(RadioGroup group, int checkedId) {
-			switch (checkedId) {
-			case R.id.quick_insert_em00:
-				emotChooseString = "[em00]";
-				break;
-			case R.id.quick_insert_em01:
-				emotChooseString = "[em01]";
-				break;
-			case R.id.quick_insert_em02:
-				emotChooseString = "[em02]";
-				break;
-			case R.id.quick_insert_em03:
-				emotChooseString = "[em03]";
-				break;
-			case R.id.quick_insert_em04:
-				emotChooseString = "[em04]";
-				break;
-			case R.id.quick_insert_em05:
-				emotChooseString = "[em05]";
-				break;
-			case R.id.quick_insert_em06:
-				emotChooseString = "[em06]";
-				break;
-			case R.id.quick_insert_em07:
-				emotChooseString = "[em07]";
-				break;
-			case R.id.quick_insert_em08:
-				emotChooseString = "[em08]";
-				break;
-			case R.id.quick_insert_em09:
-				emotChooseString = "[em09]";
-				break;
-			case R.id.quick_insert_em10:
-				emotChooseString = "[em10]";
-				break;
-			case R.id.quick_insert_em11:
-				emotChooseString = "[em11]";
-				break;
-			case R.id.quick_insert_em12:
-				emotChooseString = "[em12]";
-				break;
-			case R.id.quick_insert_em72:
-				emotChooseString = "[em12]";
-				break;
-			case R.id.quick_insert_em73:
-				emotChooseString = "[em73]";
-				break;
-			case R.id.quick_insert_em74:
-				emotChooseString = "[em74]";
-				break;
-			case R.id.quick_insert_em75:
-				emotChooseString = "[em75]";
-				break;
-			case R.id.quick_insert_em76:
-				emotChooseString = "[em76]";
-				break;
-			case R.id.quick_insert_em77:
-				emotChooseString = "[em77]";
-				break;
-			case R.id.quick_insert_em78:
-				emotChooseString = "[em78]";
-				break;
-			case R.id.quick_insert_em79:
-				emotChooseString = "[em79]";
-				break;
-			case R.id.quick_insert_em80:
-				emotChooseString = "[em80]";
-				break;
-			case R.id.quick_insert_em81:
-				emotChooseString = "[em81]";
-				break;
-			case R.id.quick_insert_em82:
-				emotChooseString = "[em82]";
-				break;
-			case R.id.quick_insert_em83:
-				emotChooseString = "[em83]";
-				break;
-			case R.id.quick_insert_em84:
-				emotChooseString = "[em84]";
-				break;
-			case R.id.quick_insert_em85:
-				emotChooseString = "[em85]";
-				break;
-			case R.id.quick_insert_em86:
-				emotChooseString = "[em86]";
-				break;
-			case R.id.quick_insert_em87:
-				emotChooseString = "[em87]";
-				break;
-			case R.id.quick_insert_em88:
-				emotChooseString = "[em88]";
-				break;
-			case R.id.quick_insert_em89:
-				emotChooseString = "[em89]";
-				break;
-			case R.id.quick_insert_em90:
-				emotChooseString = "[em90]";
-				break;
-			case R.id.quick_insert_em91:
-				emotChooseString = "[em91]";
-				break;
-
-			default:
-				return;
-
-			}
-
-			group.clearCheck();
-			int cursor = replyContentEditText.getSelectionStart();
-			replyContentEditText.getText().insert(cursor, emotChooseString);
-		}
-	};
-
-	private FaceExpressionChooseListener faceListener;
-
+ 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-		boolean showTail = sharedPref.getBoolean(SettingsActivity.SHOW_TAIL, true);
-		boolean useCustomTail = sharedPref.getBoolean(SettingsActivity.USE_CUSTOM_TAIL, false);
-		String customTailContent =  sharedPref.getString(SettingsActivity.CUSTOM_TAIL_CONTENT, "");
+		setupTailContent();
+		configureActionBar();
+		setupListeners();
+		mEmotionGrid.setAdapter(new EmotionGridViewAdapter(this));
+	}
+
+ 	private void configureActionBar() {
+		ActionBar actionBar = getSupportActionBar();
+		actionBar.setDisplayHomeAsUpEnabled(true);
+		actionBar.setLogo(new BitmapDrawable(service.getUserAvatar()));
+		if (requestType == REQUEST_REPLY) {
+			actionBar.setTitle("回复：" + postName);
+		} else if (requestType == REQUEST_QUOTE_REPLY) {
+			actionBar.setTitle("回复：" + postName);
+			replyUserPostContent = replyUserPostContent.replaceAll(
+					"<.*?>|searchubb.*?;", "");
+			replyContentEditText.setText(generateQuoteContent());
+		} else if (requestType == REQUEST_NEW_POST) {
+			actionBar.setTitle("发表新话题：" + boardName);
+		} else if (requestType == REQUEST_PM) {
+			actionBar.setTitle("站短：" + pmReplyName);
+			pmReplyTopic = pmReplyTopic == null ? "" : "回复: " + pmReplyTopic;
+			replyContentEditText.setText(pmReplyContent);
+			replyTitleEditText.setText(pmReplyTopic);
+		} else if (requestType == REQUEST_EDIT) {
+			replyContentEditText.setText(editContent);
+			replyTitleEditText.setText(editTopic);
+		}
+	}
+
+	private void lockContainerHeight(int paramInt) {
+		LinearLayout.LayoutParams localLayoutParams = (LinearLayout.LayoutParams) this.mContainer
+				.getLayoutParams();
+		localLayoutParams.height = paramInt;
+		localLayoutParams.weight = 0.0F;
+		unlockContainerHeightDelayed();
+	}
+
+	public void unlockContainerHeightDelayed() {
+		this.mEmotionGrid.postDelayed(new Runnable() {
+			public void run() {
+				((LinearLayout.LayoutParams) mContainer.getLayoutParams()).weight = 1.0F;
+			}
+		}, 200L);
+	}
+
+	/**
+	 * 
+	 */
+	private void setupTailContent() {
+		SharedPreferences sharedPref = PreferenceManager
+				.getDefaultSharedPreferences(this);
+		boolean showTail = sharedPref.getBoolean(SettingsActivity.SHOW_TAIL,
+				true);
+		boolean useCustomTail = sharedPref.getBoolean(
+				SettingsActivity.USE_CUSTOM_TAIL, false);
+		String customTailContent = sharedPref.getString(
+				SettingsActivity.CUSTOM_TAIL_CONTENT, "");
 		if (!showTail) {
 			appendTail = "";
 		} else if (!useCustomTail) {
 			appendTail = TAIL;
 		} else {
-			appendTail = "\n\n[right][color=gray]"+customTailContent+"[/color][/right]";
+			appendTail = "\n\n[right][color=gray]" + customTailContent
+					+ "[/color][/right]";
 		}
-		ActionBar actionBar = getSupportActionBar(); 
-		actionBar.setDisplayHomeAsUpEnabled(true);
-		actionBar.setLogo(new BitmapDrawable(service.getUserAvatar()));
-		if (mod == MOD_REPLY) {
-			actionBar.setTitle("回复：" + postName);
-		} else if (mod == MOD_QUOTE_REPLY) {
-			actionBar.setTitle("回复：" + postName);
-			replyUserPostContent = replyUserPostContent.replaceAll(
-					"<.*?>|searchubb.*?;", "");
-			replyContentEditText.setText(generateQuoteContent());
-		} else if (mod == MOD_NEW_POST) {
-			actionBar.setTitle("发表新话题：" + boardName);
-		} else if (mod == MOD_PM) {
-			actionBar.setTitle("站短：" + pmReplyName);
-			pmReplyTopic = pmReplyTopic == null ? "" : "回复: " + pmReplyTopic;
-			replyContentEditText.setText(pmReplyContent);
-			replyTitleEditText.setText(pmReplyTopic);
-		} else if (mod == MOD_EDIT) {
-			replyContentEditText.setText(editContent);
-			replyTitleEditText.setText(editTopic);
-		}
-		setupListeners();
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu optionMenu) {
-		optionMenu.add(android.view.Menu.NONE, MENU_REPLY_ID, 1, "确认")
-				.setIcon(R.drawable.sure_btn)
+		optionMenu.add(android.view.Menu.NONE, MENU_REPLY_ID, 1, "预览")
 				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 		return true;
 	}
@@ -331,7 +230,10 @@ public class EditActivity extends BaseActivity {
 			finish();
 			return true;
 		case MENU_REPLY_ID:
-			ensure();
+			startActivity(new Intent(EditActivity.this, PreviewActivity.class)
+					.putExtra(PreviewActivity.CONTENT, replyContentEditText
+							.getText().toString()));
+			// ensure();
 			return true;
 		default:
 			break;
@@ -344,7 +246,8 @@ public class EditActivity extends BaseActivity {
 	 */
 	private void ensure() {
 		final String titleString = replyTitleEditText.getText().toString();
-		final String contentString = replyContentEditText.getText().toString()+appendTail;
+		final String contentString = replyContentEditText.getText().toString()
+				+ appendTail;
 		if (TextHelper.isEmpty(contentString)) {
 			ToastUtils.show(EditActivity.this, "内容不能为空");
 			return;
@@ -352,20 +255,22 @@ public class EditActivity extends BaseActivity {
 		if (!checkReplyContentLimit(titleString, contentString)) {
 			return;
 		}
-		if (mod == MOD_QUOTE_REPLY) {
+		if (requestType == REQUEST_QUOTE_REPLY) {
 			setupRefDialog(titleString, contentString);
-		} else if (mod == MOD_REPLY) {
+		} else if (requestType == REQUEST_REPLY) {
 			PushReplyTask task = new PushReplyTask(EditActivity.this, postId,
-					boardID, contentString, titleString, faceGroupChooseString);
+					boardID, contentString, titleString, faceGroupChooseString,
+					false);
 			task.execute();
-		} else if (mod == MOD_NEW_POST) {
-			PushNewPostTask task = new PushNewPostTask(EditActivity.this,
-					boardID, contentString, titleString, faceGroupChooseString);
+		} else if (requestType == REQUEST_NEW_POST) {
+			PushReplyTask task = new PushReplyTask(EditActivity.this, null,
+					boardID, contentString, titleString, faceGroupChooseString,
+					true);
 			task.execute();
-		} else if (mod == MOD_PM) {
+		} else if (requestType == REQUEST_PM) {
 			new SendPMTask(EditActivity.this, pmReplyName, titleString,
 					contentString).execute();
-		} else if (mod == MOD_EDIT) {
+		} else if (requestType == REQUEST_EDIT) {
 			// submitEdit(editLink, titleString, contentString);
 		}
 	}
@@ -386,7 +291,7 @@ public class EditActivity extends BaseActivity {
 						pmContent).execute();
 				PushReplyTask task = new PushReplyTask(EditActivity.this,
 						postId, boardID, contentString, titleString,
-						faceGroupChooseString);
+						faceGroupChooseString, false);
 				task.execute();
 			}
 		});
@@ -395,7 +300,7 @@ public class EditActivity extends BaseActivity {
 			public void onClick(DialogInterface dialog, int which) {
 				PushReplyTask task = new PushReplyTask(EditActivity.this,
 						postId, boardID, contentString, titleString,
-						faceGroupChooseString);
+						faceGroupChooseString, false);
 				task.execute();
 			}
 		});
@@ -413,6 +318,45 @@ public class EditActivity extends BaseActivity {
 	}
 
 	private void setupListeners() {
+		mAtBtn.setOnClickListener(this);
+		mCameraBtn.setOnClickListener(this);
+		mEmotionBtn.setOnClickListener(this);
+		mPhotoBtn.setOnClickListener(this);
+		mSubmitBtn.setOnClickListener(this);
+		replyTitleEditText.setOnClickListener(this);
+		mDeleteBtn.setOnClickListener(this);
+		replyContentEditText.setOnClickListener(this);
+		mEmotionGrid.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				int cursor = replyContentEditText.getSelectionStart();
+				if (position < 10) {
+					replyContentEditText.getText().insert(cursor,
+							"[em0" + position + "]");
+				} else {
+					replyContentEditText.getText().insert(cursor,
+							"[em" + position + "]");
+				}
+			}
+		});
+		// replyContentEditText
+		// .setOnFocusChangeListener(new OnFocusChangeListener() {
+		// @Override
+		// public void onFocusChange(View v, boolean hasFocus) {
+		// if (hasFocus) {
+		// getSupportActionBar().hide();
+		// // ViewUtils.setGone(mEmotionGrid, true);
+		// } else {
+		// // if
+		// // (!(EditActivity.this.getCurrentFocus()==mEmotionBtn))
+		// // {
+		// getSupportActionBar().show();
+		// // }
+		// }
+		// }
+		// });
+
 		faceRadioGroup
 				.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 					@Override
@@ -490,85 +434,71 @@ public class EditActivity extends BaseActivity {
 						}
 					}
 				});
-
-		previewButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				startActivity(new Intent(EditActivity.this,
-						PreviewActivity.class).putExtra(
-						PreviewActivity.CONTENT, replyContentEditText.getText()
-								.toString()));
-
-			}
-		});
-
-		insertFaceExpression.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-
-				MoreEmotChooseDialog dialog = new MoreEmotChooseDialog(
-						EditActivity.this, faceListener);
-				dialog.show();
-			}
-		});
-
-		faceListener = new FaceExpressionChooseListener() {
-			@Override
-			public void onOkClick() {
-			}
-
-			@Override
-			public void onFaceExpressionClick(String faceExpression) {
-				emotChooseString = faceExpression;
-				handler.sendEmptyMessage(0);
-			}
-		};
-		upLoadButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				doPickPhotoAction();
-			}
-		});
-
-		quickEmotGroupOne.setOnCheckedChangeListener(emotChangeListener);
-		quickEmotGroupTwo.setOnCheckedChangeListener(emotChangeListener);
 	}
 
-	private void doPickPhotoAction() {
-		final Context context = EditActivity.this;
- 		String[] choices = { "拍照", "本地上传", "取消" };
-		final ListAdapter adapter = new ArrayAdapter<String>(context,
-				android.R.layout.simple_list_item_1, choices);
-		final AlertDialog.Builder builder = new AlertDialog.Builder(context);
-		builder.setSingleChoiceItems(adapter, -1,
-				new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int which) {
-						dialog.dismiss();
-						switch (which) {
-						case 0: {
-							String status = Environment
-									.getExternalStorageState();
-							if (status.equals(Environment.MEDIA_MOUNTED)) {
-								doTakePhoto();
-							} else {
-								ToastUtils
-										.show(EditActivity.this, "您的设备没有SD卡！");
-							}
-							break;
-						}
-						case 1:
-							doPickPhotoFromGallery();
-							break;
-						case 2:
-							break;
-						default:
-							break;
-						}
-					}
+	@Override
+	protected void onPause() {
+		super.onPause();
+		Log.d(TAG, "onPause");
+		ViewUtils.setGone(mEmotionGrid, true);
+	}
 
-				});
-		builder.create().show();
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+		case R.id.edit_btn_camera:
+			doTakePhoto();
+			break;
+		case R.id.edit_btn_photo:
+			doPickPhotoFromGallery();
+			break;
+		case R.id.edit_btn_sure:
+			ensure();
+			break;
+		case R.id.edit_btn_at:
+			int cursor = replyContentEditText.getSelectionStart();
+			replyContentEditText.getText().insert(cursor, "@");
+			break;
+		case R.id.edit_btn_emotion:
+			getSupportActionBar().hide();
+			if (mEmotionGrid.getVisibility() == View.GONE) {
+				hideKeyBoard();
+				mEmotionBtn.postDelayed((new Runnable() {
+					@Override
+					public void run() {
+						ViewUtils.setGone(mEmotionGrid, false);
+					}
+				}), 200L);
+
+			} else {
+				ViewUtils.setGone(mEmotionGrid, true);
+				showKeyBoard();
+			}
+			break;
+		case R.id.reply_content:
+		case R.id.reply_title_edit:
+			ViewUtils.setGone(mEmotionGrid, true);
+			break;
+		case R.id.edit_btn_delete:
+			if (replyContentEditText.getText().length()>0) {
+				replyContentEditText.getText().delete(
+						replyContentEditText.getText().length() - 1,
+						replyContentEditText.getText().length());
+			}
+		default:
+			break;
+		}
+	}
+
+	private void hideKeyBoard() {
+		InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+		inputMethodManager.hideSoftInputFromWindow(this.getCurrentFocus()
+				.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+	}
+
+	private void showKeyBoard() {
+		InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+		inputMethodManager.showSoftInput(getCurrentFocus(), 0);
 	}
 
 	private boolean checkReplyContentLimit(String title, String content) {
@@ -616,39 +546,58 @@ public class EditActivity extends BaseActivity {
 	}
 
 	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			if (mEmotionGrid.getVisibility() == View.VISIBLE) {
+				ViewUtils.setGone(mEmotionGrid, true);
+				return true;
+			}
+		}
+		return super.onKeyDown(keyCode, event);
+	}
+
+	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode != RESULT_OK) {
- 			return;
+			return;
 		}
 		switch (requestCode) {
-		case PHOTO_PICKED_WITH_DATA: { 
+		case PHOTO_PICKED_WITH_DATA:
 			Uri uri = data.getData();
 			ContentResolver cr = this.getContentResolver();
 			Cursor cursor = cr.query(uri, null, null, null, null);
 			cursor.moveToFirst();
 			String picURI = cursor.getString(cursor.getColumnIndex("_data"));
-			doUploadPicture(new File(picURI));
-			break;
-		}
-		case CAMERA_WITH_DATA: { 
+			// doUploadPicture(new File(picURI));
+			mCurrentPhotoFile = new File(picURI);
 			try {
 				while (mCurrentPhotoFile.length() > MAX_IMAGE_SIZE_IN_BYTE) {
 					doCompressPhoto();
 				}
 				doUploadPicture(mCurrentPhotoFile);
 			} catch (IOException e) {
- 				ToastUtils.show(this, "照片处理失败");
+				ToastUtils.show(this, "照片处理失败");
 				e.printStackTrace();
 			}
 			break;
-		}
+		case CAMERA_WITH_DATA:
+			try {
+				while (mCurrentPhotoFile.length() > MAX_IMAGE_SIZE_IN_BYTE) {
+					doCompressPhoto();
+				}
+				doUploadPicture(mCurrentPhotoFile);
+			} catch (IOException e) {
+				ToastUtils.show(this, "照片处理失败");
+				e.printStackTrace();
+			}
+			break;
 		default:
 			break;
 		}
 	}
 
 	private void doCompressPhoto() throws IOException {
- 		BitmapFactory.Options options = new BitmapFactory.Options();
+		BitmapFactory.Options options = new BitmapFactory.Options();
 		options.inJustDecodeBounds = true;
 		Bitmap bmp = BitmapFactory.decodeFile(mCurrentPhotoFile.getPath(),
 				options);
@@ -664,28 +613,24 @@ public class EditActivity extends BaseActivity {
 	}
 
 	private void doUploadPicture(File photo) {
-		upLoadPictureTask upTask = new upLoadPictureTask(this, photo);
+		UpLoadPictureTask upTask = new UpLoadPictureTask(this, photo);
 		upTask.execute();
 	}
 
-	private class upLoadPictureTask extends RoboAsyncTask<String> {
-		private Activity mContext;
+	private class UpLoadPictureTask extends ProgressRoboAsyncTask<String> {
 		private File mUploadFile;
-		private ProgressDialog mDialog;
 		@Inject
 		private ICC98Service mService;
 
-		protected upLoadPictureTask(Activity context, File file) {
+		protected UpLoadPictureTask(Activity context, File file) {
 			super(context);
-			mContext = context;
 			mUploadFile = file;
 		}
 
 		@Override
-		protected void onPreExecute() {
-			mDialog = new ProgressDialog(mContext);
-			mDialog.setMessage("正在上传...");
-			mDialog.show();
+		protected void onPreExecute() throws Exception {
+			dialog.setMessage("正在上传...");
+			super.onPreExecute();
 		}
 
 		@Override
@@ -702,131 +647,69 @@ public class EditActivity extends BaseActivity {
 
 		@Override
 		protected void onException(Exception e) {
-			ToastUtils.show(mContext, "上传图片失败，请检查网络或图片");
-		}
-
-		@Override
-		protected void onFinally() {
-			if (mDialog.isShowing())
-				mDialog.dismiss();
+			super.onException(e);
+			ToastUtils.show(context, "上传图片失败，请检查网络或图片");
 		}
 	}
 
-	private class PushReplyTask extends RoboAsyncTask<Void> {
-		private Activity mContext;
+	private class PushReplyTask extends ProgressRoboAsyncTask<Void> {
 		private String mPostId;
 		private String mBoardID;
 		private String mContent;
 		private String mTitle;
 		private String mFaceExpression;
-		private ProgressDialog mDialog;
+		private boolean mIsNewPost;
 		@Inject
 		private ICC98Service mService;
 
 		protected PushReplyTask(Activity context, String postId,
-				String boardId, String content, String title, String face) {
+				String boardId, String content, String title, String face,
+				boolean isNewPost) {
 			super(context);
-			mContext = context;
 			mPostId = postId;
 			mBoardID = boardId;
 			mContent = content;
 			mTitle = title;
 			mFaceExpression = face;
+			mIsNewPost = isNewPost;
 		}
 
 		@Override
-		protected void onPreExecute() {
-			mDialog = new ProgressDialog(mContext);
-			mDialog.setMessage("正在回复...");
-			mDialog.show();
+		protected void onPreExecute() throws Exception {
+			super.onPreExecute();
+			dialog.setMessage("正在发表...");
 		}
 
 		@Override
 		public Void call() throws Exception {
-			mService.reply(mBoardID, mPostId, mTitle, mFaceExpression, mContent);
+			if (mIsNewPost) {
+				mService.pushNewPost(mBoardID, mTitle, mFaceExpression,
+						mContent);
+			} else {
+				mService.reply(mBoardID, mPostId, mTitle, mFaceExpression,
+						mContent);
+			}
 			return null;
 		}
 
 		@Override
 		protected void onSuccess(Void v) {
-			ToastUtils.show(mContext, "回复成功");
+			ToastUtils.show(context, "发表成功");
 			setResult(Activity.RESULT_OK);
-			mContext.finish();
-
+			context.finish();
 		}
 
 		@Override
 		protected void onException(Exception e) {
-			ToastUtils.show(mContext, "请求失败，请检查网络或连接");
-		}
-
-		@Override
-		protected void onFinally() {
-			if (mDialog.isShowing())
-				mDialog.dismiss();
+			ToastUtils.show(context, "请求失败，请检查网络或连接");
 		}
 
 	}
 
-	private class PushNewPostTask extends RoboAsyncTask<Void> {
-		private Activity mContext;
-		private String mBoardID;
-		private String mContent;
-		private String mTitle;
-		private String mFaceExpression;
-		private ProgressDialog mDialog;
-		@Inject
-		private ICC98Service mService;
-
-		protected PushNewPostTask(Activity context, String boardId,
-				String content, String title, String face) {
-			super(context);
-			mContext = context;
-			mBoardID = boardId;
-			mContent = content;
-			mTitle = title;
-			mFaceExpression = face;
-		}
-
-		@Override
-		protected void onPreExecute() {
-			mDialog = new ProgressDialog(mContext);
-			mDialog.setMessage("正在发表主题...");
-			mDialog.show();
-		}
-
-		@Override
-		public Void call() throws Exception {
-			mService.pushNewPost(mBoardID, mTitle, mFaceExpression, mContent);
-			return null;
-		}
-
-		@Override
-		protected void onSuccess(Void v) {
-			ToastUtils.show(mContext, "发表成功");
-			setResult(Activity.RESULT_OK);
-			mContext.finish();
-
-		}
-
-		@Override
-		protected void onException(Exception e) {
-			ToastUtils.show(mContext, "请求失败，请检查网络连接");
-		}
-
-		@Override
-		protected void onFinally() {
-			if (mDialog.isShowing())
-				mDialog.dismiss();
-		}
-	}
-
-	private class SendPMTask extends RoboAsyncTask<Void> {
-		private Activity mContext;
+	private class SendPMTask extends ProgressRoboAsyncTask<Void> {
 		private String mToUser;
 		private String mContent;
 		private String mTitle;
-		private ProgressDialog mDialog;
 		@Inject
 		private ICC98Service mService;
 
@@ -834,16 +717,14 @@ public class EditActivity extends BaseActivity {
 				String content) {
 			super(context);
 			mToUser = toUser;
-			mContext = context;
 			mContent = content;
 			mTitle = title;
 		}
 
 		@Override
-		protected void onPreExecute() {
-			mDialog = new ProgressDialog(mContext);
-			mDialog.setMessage("正在发送站短...");
-			mDialog.show();
+		protected void onPreExecute() throws Exception {
+			super.onPreExecute();
+			dialog.setMessage("正在发送站短...");
 		}
 
 		@Override
@@ -853,23 +734,20 @@ public class EditActivity extends BaseActivity {
 		}
 
 		@Override
-		protected void onSuccess(Void v) {
-			ToastUtils.show(mContext, "发送站短成功");
-			if (mod == MOD_PM) {
+		protected void onSuccess(Void v) throws Exception {
+			super.onSuccess(v);
+			ToastUtils.show(context, "发送站短成功");
+			if (requestType == REQUEST_PM) {
 				setResult(Activity.RESULT_OK);
-				mContext.finish();
+				context.finish();
 			}
 		}
 
 		@Override
 		protected void onException(Exception e) {
-			ToastUtils.show(mContext, "发送失败，请检查网络连接");
-		}
-
-		@Override
-		protected void onFinally() {
-			if (mDialog.isShowing())
-				mDialog.dismiss();
+			super.onException(e);
+			ToastUtils.show(context, "发送失败，请检查网络连接");
 		}
 	}
+
 }

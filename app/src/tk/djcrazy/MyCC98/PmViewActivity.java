@@ -8,9 +8,8 @@ import org.apache.http.client.ClientProtocolException;
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
-import tk.djcrazy.MyCC98.dialog.MoreEmotChooseDialog;
-import tk.djcrazy.MyCC98.dialog.MoreEmotChooseDialog.FaceExpressionChooseListener;
 import tk.djcrazy.MyCC98.helper.HtmlGenHelper;
+import tk.djcrazy.MyCC98.util.Intents;
 import tk.djcrazy.libCC98.ICC98Service;
 import tk.djcrazy.libCC98.exception.ParseContentException;
 import android.content.Intent;
@@ -71,7 +70,7 @@ public class PmViewActivity extends BaseActivity {
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		actionBar.setLogo(new BitmapDrawable(service.getUserAvatar()));
 		setViews();
- 		preparePage(pmId);
+		preparePage(pmId);
 	}
 
 	@Override
@@ -97,27 +96,25 @@ public class PmViewActivity extends BaseActivity {
 		return super.onOptionsItemSelected(item);
 	}
 
- 	private void doReply() {
-		Intent intent = new Intent(getApplicationContext(),
-				EditActivity.class);
-		intent.putExtra(EditActivity.MOD, EditActivity.MOD_PM);
-		intent.putExtra(EditActivity.PM_TO_USER, sender);
-		intent.putExtra(EditActivity.PM_TITLE, readTopic);
-		StringBuilder tmp = new StringBuilder();
+	private void doReply() {
+ 		StringBuilder tmp = new StringBuilder();
 		tmp.append("[quote][b]以下是引用").append(sender).append("在[i]")
 				.append(sendTime).append("[/i]时发送的短信：[/b]\n")
 				.append(pmContent.replaceAll("(<BR>|<br>)", "\n"))
 				.append("[/quote]");
-		intent.putExtra(EditActivity.PM_CONTENT, tmp.toString());
-		startActivity(intent);
+ 		Intents.Builder builder = new Intents.Builder(this, EditActivity.class);
+		startActivity(builder.requestType(EditActivity.REQUEST_PM)
+				.pmToUser(sender).pmTitle(readTopic).pmContent(tmp.toString())
+				.toIntent());
 	}
+
 	/**
 	 * 
 	 */
 	private void setViews() {
 		WebSettings webSettings = webView.getSettings();
 		webSettings.setJavaScriptEnabled(true);
- 		webSettings.setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
+		webSettings.setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
 		webSettings.setAppCacheEnabled(true);
 		webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
 		webView.setWebViewClient(new WebViewClient() {
@@ -201,32 +198,12 @@ public class PmViewActivity extends BaseActivity {
 		}.start();
 
 	}
- 
+
 	public void preview(String content) {
 		Log.d(TAG, "preview clicked");
 		Intent intent = new Intent(this, PreviewActivity.class);
 		intent.putExtra("content", content);
 		startActivity(intent);
-	}
-
-	public void moreEmot() {
-		FaceExpressionChooseListener faceListener = new FaceExpressionChooseListener() {
-
-			@Override
-			public void onOkClick() {
-
-			}
-
-			@Override
-			public void onFaceExpressionClick(String faceExpression) {
-
-				faceChoosedString = faceExpression;
-				handler.sendEmptyMessage(1);
-			}
-		};
-		MoreEmotChooseDialog dialog = new MoreEmotChooseDialog(
-				PmViewActivity.this, faceListener);
-		dialog.show();
 	}
 
 	public void open(String pageLink, int pageNum) {

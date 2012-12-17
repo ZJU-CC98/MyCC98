@@ -188,8 +188,12 @@ public class CC98ParserImpl implements ICC98Parser {
 				POST_CONTENT_WHOLE_REGEX, html, -1);
 		for (String reply : contentHtml) {
 			PostContentEntity entity = new PostContentEntity();
-			entity.setUserName(getMatchedString(POST_CONTENT_USERNAME_REGEX,
-					reply));
+			try {
+				entity.setUserName(getMatchedString(POST_CONTENT_USERNAME_REGEX,
+						reply));
+			} catch (Exception e) {
+				entity.setUserName("匿名");
+			}
 			entity.setPostContent(getMatchedString(
 					POST_CONTENT_POST_CONTENT_REGEX, reply));
 			entity.setPostTitle(getMatchedString(POST_CONTENT_POST_TITLE_REGEX,
@@ -341,7 +345,7 @@ public class CC98ParserImpl implements ICC98Parser {
 			entity.setLastLoginTime(details[10]);
 		}
 		// personal profile
-		{
+		try {
 			String info = getMatchedString(USER_PROFILE_PERSON_PROFILE_REGEX,
 					html);
 			String[] details = info.split("<br>");
@@ -367,6 +371,8 @@ public class CC98ParserImpl implements ICC98Parser {
 			entity.setUserMSN(details[5]);
 			entity.setUserPage(details[6]);
 
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		// bbs master info
 		{

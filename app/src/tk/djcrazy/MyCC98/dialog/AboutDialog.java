@@ -1,15 +1,14 @@
 package tk.djcrazy.MyCC98.dialog;
 
 import tk.djcrazy.MyCC98.R;
-import tk.djcrazy.MyCC98.dialog.MoreEmotChooseDialog.FaceExpressionChooseListener;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.webkit.WebView;
 import android.webkit.WebSettings.LayoutAlgorithm;
+import android.webkit.WebView;
 import android.widget.Button;
 
 public class AboutDialog extends Dialog {
