@@ -90,6 +90,7 @@ public class PostContentsJSActivity extends RoboSherlockActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
  		setContentView(R.layout.post_contents);
+ 		
 		configureActionBar();
 		configureWebView();
 		webView.postDelayed(new Runnable() {
@@ -516,6 +517,9 @@ public class PostContentsJSActivity extends RoboSherlockActivity {
 			mContentEntities = t;
 			PostContentEntity info = t.get(0);
 			totalPageNum = info.getTotalPage();
+			if (currPageNum>totalPageNum) {
+				currPageNum = totalPageNum;
+			}
 			boardName = (String) info.getBoardName();
 			postName = (String) info.getPostTopic();
 			webView.loadDataWithBaseURL(null, assemblyContent(t), "text/html",

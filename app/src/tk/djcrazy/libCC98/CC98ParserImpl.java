@@ -9,6 +9,7 @@ import static tk.djcrazy.libCC98.util.StringUtil.filterHtmlDecode;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -294,6 +295,7 @@ public class CC98ParserImpl implements ICC98Parser {
 			} catch (ParseContentException e) {
 				entity.setBoardMaster("暂无");
 			}
+			try {
 			entity.setLastReplyAuthor(getMatchedString(
 					P_BOARD_LAST_REPLY_AUTHOR_REGEX, string));
 			entity.setLastReplyTime(DateFormatUtil
@@ -305,6 +307,8 @@ public class CC98ParserImpl implements ICC98Parser {
 					P_BOARD_LAST_REPLY_TOPIC_NAME_REGEX, string)));
 			entity.setPostNumberToday(Integer.parseInt(getMatchedString(
 					P_BOARD_POST_NUMBER_TODAY, string)));
+			} catch(Exception e) {
+ 			}
 			nList.add(entity);
 		}
 		return nList;
