@@ -6,10 +6,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
+import tk.djcrazy.MyCC98.R.drawable;
 import tk.djcrazy.MyCC98.adapter.EmotionGridViewAdapter;
 import tk.djcrazy.MyCC98.helper.TextHelper;
 import tk.djcrazy.MyCC98.task.ProgressRoboAsyncTask;
@@ -30,12 +33,18 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
+import android.text.Html;
+import android.text.Html.ImageGetter;
+import android.text.Spannable;
+import android.text.Spanned;
+import android.text.style.ImageSpan;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -64,9 +73,8 @@ public class EditActivity extends BaseActivity implements OnClickListener {
 	public static final int REQUEST_QUOTE_REPLY = 1;
 	public static final int REQUEST_NEW_POST = 2;
 	public static final int REQUEST_PM = 3;
-	public static final int REQUEST_EDIT = 4;  
-	
- 
+	public static final int REQUEST_EDIT = 4;
+
 	public static final String TAIL = "\n\n[right][color=gray]From  "
 			+ Build.MODEL + " via MyCC98[/color][/right]";
 
@@ -86,8 +94,8 @@ public class EditActivity extends BaseActivity implements OnClickListener {
 	private static final int MENU_REPLY_ID = 87356;
 
 	@InjectExtra(Intents.EXTRA_REQUEST_TYPE)
-	private int requestType; 
-	@InjectExtra(value =Intents.EXTRA_BOARD_ID, optional = true)
+	private int requestType;
+	@InjectExtra(value = Intents.EXTRA_BOARD_ID, optional = true)
 	private String boardID;
 	@InjectExtra(value = Intents.EXTRA_BOARD_NAME, optional = true)
 	private String boardName;
@@ -145,8 +153,19 @@ public class EditActivity extends BaseActivity implements OnClickListener {
 	private ICC98Service service;
 	@Inject
 	private ICC98UrlManager manager;
+	private ImageGetter getter = new ImageGetter() {
+		@Override
+		public Drawable getDrawable(String source) {
+			int id = getResources().getIdentifier(source, "drawable",
+					getPackageName());
+			BitmapDrawable drawable = (BitmapDrawable) getResources()
+					.getDrawable(id);
+			Bitmap bitmap = drawable.getBitmap();
+			drawable.setBounds(0, 0, bitmap.getWidth(), bitmap.getHeight());
+			return drawable;
+		}
+	};
 
- 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setupTailContent();
@@ -155,7 +174,7 @@ public class EditActivity extends BaseActivity implements OnClickListener {
 		mEmotionGrid.setAdapter(new EmotionGridViewAdapter(this));
 	}
 
- 	private void configureActionBar() {
+	private void configureActionBar() {
 		ActionBar actionBar = getSupportActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		actionBar.setLogo(new BitmapDrawable(service.getUserAvatar()));
@@ -234,9 +253,9 @@ public class EditActivity extends BaseActivity implements OnClickListener {
 			return true;
 		case MENU_REPLY_ID:
 			startActivity(new Intent(EditActivity.this, PreviewActivity.class)
-					.putExtra(PreviewActivity.CONTENT, replyContentEditText
-							.getText().toString()));
-			// ensure();
+					.putExtra(PreviewActivity.CONTENT,
+							replaceAllImage(replyContentEditText.getText()
+									.toString())));
 			return true;
 		default:
 			break;
@@ -248,9 +267,11 @@ public class EditActivity extends BaseActivity implements OnClickListener {
 	 * 
 	 */
 	private void ensure() {
-		final String titleString = replyTitleEditText.getText().toString();
-		final String contentString = replyContentEditText.getText().toString()
+		String titleString = replyTitleEditText.getText().toString();
+		Spannable spannable = replyContentEditText.getText();
+		String contentString = replyContentEditText.getText().toString()
 				+ appendTail;
+		contentString = replaceAllImage(contentString);
 		if (TextHelper.isEmpty(contentString)) {
 			ToastUtils.show(EditActivity.this, "内容不能为空");
 			return;
@@ -276,6 +297,14 @@ public class EditActivity extends BaseActivity implements OnClickListener {
 		} else if (requestType == REQUEST_EDIT) {
 			// submitEdit(editLink, titleString, contentString);
 		}
+	}
+
+	private String replaceAllImage(String titleString) {
+		Log.d(TAG, titleString);
+		titleString = titleString.replaceAll("<img src=(?=em\\d\\d />)", "[");
+		titleString = titleString.replaceAll("(?<=\\[em\\d\\d) />", "]");
+		Log.d(TAG, titleString);
+		return titleString;
 	}
 
 	private void setupRefDialog(final String titleString,
@@ -328,49 +357,32 @@ public class EditActivity extends BaseActivity implements OnClickListener {
 		mSubmitBtn.setOnClickListener(this);
 		replyTitleEditText.setOnClickListener(this);
 		mDeleteBtn.setOnClickListener(this);
-		replyContentEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
-			@Override
-			public void onFocusChange(View v, boolean hasFocus) {
-					ViewUtils.setGone(mEmotionGrid, true);
-			}
-		});
-		replyTitleEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
-			@Override
-			public void onFocusChange(View v, boolean hasFocus) {
-				ViewUtils.setGone(mEmotionGrid, true);
-			}
-		});
+		replyContentEditText
+				.setOnFocusChangeListener(new OnFocusChangeListener() {
+					@Override
+					public void onFocusChange(View v, boolean hasFocus) {
+						ViewUtils.setGone(mEmotionGrid, true);
+					}
+				});
+		replyTitleEditText
+				.setOnFocusChangeListener(new OnFocusChangeListener() {
+					@Override
+					public void onFocusChange(View v, boolean hasFocus) {
+						ViewUtils.setGone(mEmotionGrid, true);
+					}
+				});
 		replyContentEditText.setOnClickListener(this);
 		mEmotionGrid.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				int cursor = replyContentEditText.getSelectionStart();
-				if (position < 10) {
-					replyContentEditText.getText().insert(cursor,
-							"[em0" + position + "]");
+ 				if (position < 10) {
+					setFace("em0" + position, emotions[position]);
 				} else {
-					replyContentEditText.getText().insert(cursor,
-							"[em" + position + "]");
+					setFace("em" + position, emotions[position]);
 				}
 			}
 		});
-		// replyContentEditText
-		// .setOnFocusChangeListener(new OnFocusChangeListener() {
-		// @Override
-		// public void onFocusChange(View v, boolean hasFocus) {
-		// if (hasFocus) {
-		// getSupportActionBar().hide();
-		// // ViewUtils.setGone(mEmotionGrid, true);
-		// } else {
-		// // if
-		// // (!(EditActivity.this.getCurrentFocus()==mEmotionBtn))
-		// // {
-		// getSupportActionBar().show();
-		// // }
-		// }
-		// }
-		// });
 
 		faceRadioGroup
 				.setOnCheckedChangeListener(new OnCheckedChangeListener() {
@@ -495,7 +507,7 @@ public class EditActivity extends BaseActivity implements OnClickListener {
 			ViewUtils.setGone(mEmotionGrid, true);
 			break;
 		case R.id.edit_btn_delete:
-			if (replyContentEditText.getText().length()>0) {
+			if (replyContentEditText.getText().length() > 0) {
 				replyContentEditText.getText().delete(
 						replyContentEditText.getText().length() - 1,
 						replyContentEditText.getText().length());
@@ -503,6 +515,18 @@ public class EditActivity extends BaseActivity implements OnClickListener {
 		default:
 			break;
 		}
+	}
+
+	// 第一个参数 是图片要的名称，可以自己取 第二个参数就是 图片资源ID
+	private void setFace(String faceTitle, int faceImg) {
+		int start = replyContentEditText.getSelectionStart();
+		Spannable ss = replyContentEditText.getText().insert(start,
+				"[" + faceTitle + "]");
+		Drawable d = getResources().getDrawable(faceImg);
+		d.setBounds(0, 0, d.getIntrinsicWidth(), d.getIntrinsicHeight());
+		ImageSpan span = new ImageSpan(d, ImageSpan.ALIGN_BOTTOM);
+		ss.setSpan(span, start, start + ("[" + faceTitle + "]").length(),
+				Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 	}
 
 	private void hideKeyBoard() {
@@ -764,5 +788,30 @@ public class EditActivity extends BaseActivity implements OnClickListener {
 			ToastUtils.show(context, "发送失败，请检查网络连接");
 		}
 	}
+
+	private int[] emotions = { R.drawable.em00, R.drawable.em01,
+			R.drawable.em02, R.drawable.em03, R.drawable.em04, R.drawable.em05,
+			R.drawable.em06, R.drawable.em07, R.drawable.em08, R.drawable.em09,
+			R.drawable.em10, R.drawable.em11, R.drawable.em12, R.drawable.em13,
+			R.drawable.em14, R.drawable.em15, R.drawable.em16, R.drawable.em17,
+			R.drawable.em18, R.drawable.em19, R.drawable.em20, R.drawable.em21,
+			R.drawable.em22, R.drawable.em23, R.drawable.em24, R.drawable.em25,
+			R.drawable.em26, R.drawable.em27, R.drawable.em28, R.drawable.em29,
+			R.drawable.em30, R.drawable.em31, R.drawable.em32, R.drawable.em33,
+			R.drawable.em34, R.drawable.em35, R.drawable.em36, R.drawable.em37,
+			R.drawable.em38, R.drawable.em39, R.drawable.em40, R.drawable.em41,
+			R.drawable.em42, R.drawable.em43, R.drawable.em44, R.drawable.em45,
+			R.drawable.em46, R.drawable.em47, R.drawable.em48, R.drawable.em49,
+			R.drawable.em50, R.drawable.em51, R.drawable.em52, R.drawable.em53,
+			R.drawable.em54, R.drawable.em55, R.drawable.em56, R.drawable.em57,
+			R.drawable.em58, R.drawable.em59, R.drawable.em60, R.drawable.em61,
+			R.drawable.em62, R.drawable.em63, R.drawable.em64, R.drawable.em65,
+			R.drawable.em66, R.drawable.em67, R.drawable.em68, R.drawable.em69,
+			R.drawable.em70, R.drawable.em71, R.drawable.em72, R.drawable.em73,
+			R.drawable.em74, R.drawable.em75, R.drawable.em76, R.drawable.em77,
+			R.drawable.em78, R.drawable.em79, R.drawable.em80, R.drawable.em81,
+			R.drawable.em82, R.drawable.em83, R.drawable.em84, R.drawable.em85,
+			R.drawable.em86, R.drawable.em87, R.drawable.em88, R.drawable.em89,
+			R.drawable.em90, R.drawable.em91 };
 
 }
