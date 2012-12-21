@@ -42,7 +42,7 @@ public class CC98ParseRepository {
  	public static final String P_BOARD_INTRO_REGEX = "(?<=<img src=pic/Forum_readme.gif align=middle>).*?(?=</FONT></TD></TR>)";
  	public static final String P_BOARD_LAST_REPLY_TOPIC_ID_REGEX= "(?<=&ID=)\\d*?(?=\">)";
  	public static final String P_BOARD_LAST_REPLY_TOPIC_NAME_REGEX = "(?<=ID=\\d{0,10}\">).*?(?=</a><BR>作者)";
- 	public static final String P_BOARD_LAST_REPLY_AUTHOR_REGEX = "(?<=blank>).*?(?=</a><BR>)";
+ 	public static final String P_BOARD_LAST_REPLY_AUTHOR_REGEX = "(?<=blank>).*?(?=</a><BR>)|(?<=<BR>作者：)匿名(?=<BR>)";
  	public static final String P_BOARD_LAST_REPLY_TIME_REGEX = "(?<=bottom\">).*?(?=</a>)";
  	public static final String P_BOARD_LAST_REPLY_LINK_REGEX = "(?<=日期：<a href=\").*?(?=#bottom\")";
  	public static final String P_BOARD_BOARD_MASTER_REGEX = "版主：.*?(?=</a>&nbsp;</TD>)";

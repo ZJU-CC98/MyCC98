@@ -6,15 +6,14 @@ import java.util.Date;
 import java.util.Locale;
 
 public class DateFormatUtil {
+	private static SimpleDateFormat sdf1 = new SimpleDateFormat("M/d/yyyy h:mm:ss a", Locale.ENGLISH);
 	public static Date convertStringToDateInPostContent(String dateString)
 			throws ParseException {
-		SimpleDateFormat sdf = new SimpleDateFormat("M/d/yyyy h:mm:ss a", Locale.ENGLISH);
-		return sdf.parse(dateString);
+ 		return sdf1.parse(dateString);
 	}
 	public static Date convertStringToDateInPostList(String dateString)
 			throws ParseException {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		return sdf.parse(dateString);
+ 		return sdf1.parse(dateString);
 	}
 	public static Date convertStringToDateInQueryResult(String dateString)
 			throws ParseException {
@@ -24,15 +23,14 @@ public class DateFormatUtil {
 	
 	public static Date convertStrToDateInPBoard(String dateString)
 			throws ParseException {
- 		SimpleDateFormat sd = new SimpleDateFormat("M/d/yyyy h:mm:ss a", Locale.ENGLISH);
-		return sd.parse(dateString);
+ 		return sdf1.parse(dateString);
 	}
 
 	public static String convertDateToString(Date date, boolean useFriendlyTime) {
 		if (useFriendlyTime) {
 			return useFriendlyTime(date);
 		} else {
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.ENGLISH);
 			return sdf.format(date);
 		}
 	}
