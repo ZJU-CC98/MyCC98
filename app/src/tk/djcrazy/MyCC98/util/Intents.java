@@ -66,6 +66,9 @@ public class Intents {
             + "PM_CONTENT";
     public static final String EXTRA_REQUEST_TYPE = INTENT_EXTRA_PREFIX
             + "REQUEST_TYPE";
+    
+    public static final String EXTRA_DOWNLOAD_LINK = INTENT_EXTRA_PREFIX
+            + "DOWNLOAD_LINK";
 
      public static class Builder {
 
@@ -136,6 +139,10 @@ public class Intents {
          
          public Builder requestType(int type) {
              return add(EXTRA_REQUEST_TYPE, type);
+         }
+         
+         public Builder downloadLink(String type) {
+             return add(EXTRA_DOWNLOAD_LINK, type);
          }
          
          

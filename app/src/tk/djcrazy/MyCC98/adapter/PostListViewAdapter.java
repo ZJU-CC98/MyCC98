@@ -11,6 +11,7 @@ import tk.djcrazy.libCC98.util.DateFormatUtil;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -58,7 +59,7 @@ public class PostListViewAdapter extends BaseItemListAdapter<PostEntity> {
 			listItemView = (ListItemView) convertView.getTag();
 		}
 
-		listItemView.postName.setText(entity.getPostName());
+		listItemView.postName.setText(Html.fromHtml(entity.getPostName()));
 		listItemView.postAuthor.setText(entity.getPostAuthorName());
 		listItemView.lastReplyAuthor.setText(entity.getLastReplyAuthor());
 		listItemView.lastReplyTime.setText(DateFormatUtil.convertDateToString(

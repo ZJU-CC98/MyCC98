@@ -13,7 +13,9 @@ body {
 .bg-wrapper {
 	padding-left: 3px;
 	padding-right: 3px;
-	background-color: #ececec;
+	padding-bottom: 45px;
+	padding-top: 45px;
+background-color: #ececec;
 }
 
 .btn {
