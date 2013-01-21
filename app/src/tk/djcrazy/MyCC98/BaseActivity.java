@@ -1,26 +1,19 @@
 package tk.djcrazy.MyCC98;
 
-import android.os.Bundle;
-import android.view.KeyEvent;
+import com.baidu.mobstat.StatService;
+import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockActivity;
 
-import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockFragmentActivity;
-
-public class BaseActivity extends RoboSherlockFragmentActivity {
+public class BaseActivity extends RoboSherlockActivity {
 
 	@Override
-	public void onStart() {
-		super.onStart();
-		// FlurryAgent.onStartSession(this, "5EXV7SIGMTTDKYNXTKR4");
+	protected void onResume() {
+		super.onResume();
+		StatService.onResume(this);
 	}
 
 	@Override
-	public void onStop() {
-		super.onStop();
-		// FlurryAgent.onEndSession(this);
+	protected void onPause() {
+		super.onPause();
+		StatService.onPause(this);
 	}
-
-	public void onCreate(Bundle savedInstanceState) {
-//		setTheme(com.actionbarsherlock.R.style.Theme_Sherlock);
-		super.onCreate(savedInstanceState);
-	}
-}
+ }

@@ -29,14 +29,7 @@ public class HotTopicFragment extends PagedPullToRefeshListFragment<HotTopicEnti
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
 		HotTopicEntity entity = items.get(position - 1);
-		Intent intent = new Intent(getActivity(), PostContentsJSActivity.class);
-		intent.putExtra(PostContentsJSActivity.BOARD_ID, entity.getBoardId());
-		intent.putExtra(PostContentsJSActivity.BOARD_NAME,
-				entity.getBoardName());
-		intent.putExtra(PostContentsJSActivity.POST_ID, entity.getPostId());
-		intent.putExtra(PostContentsJSActivity.POST_NAME, entity.getTopicName());
-		intent.putExtra(PostContentsJSActivity.PAGE_NUMBER, 1);
-		getActivity().startActivity(intent);
+  		getActivity().startActivity(PostContentsJSActivity.createIntent(entity.getBoardId(), entity.getPostId()));
  	}
 
 	@Override

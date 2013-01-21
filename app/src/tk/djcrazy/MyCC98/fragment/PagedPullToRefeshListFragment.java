@@ -88,8 +88,7 @@ public abstract class PagedPullToRefeshListFragment<E> extends
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		Log.d(TAG, "onActivityCreated");
-		if (!items.isEmpty())
+ 		if (!items.isEmpty())
 			setListShown(true, false);
 		else
 			getLoaderManager().initLoader(0, null, this);
@@ -145,8 +144,7 @@ public abstract class PagedPullToRefeshListFragment<E> extends
 
  	@Override
 	public void onLoadFinished(Loader<List<E>> loader, List<E> items) {
- 		Log.d(TAG, "onLoadFinished:"+loader.getClass().getName());
-		Exception exception = getException(loader);
+ 		Exception exception = getException(loader);
 		isClearData =false;
 		this.items = items;
 		if (exception != null) {

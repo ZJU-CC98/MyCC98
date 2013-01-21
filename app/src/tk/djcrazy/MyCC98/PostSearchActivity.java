@@ -34,7 +34,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.google.inject.Inject;
 
 @ContentView(R.layout.post_search)
-public class PostSearchActivity extends BaseActivity {
+public class PostSearchActivity extends BaseFragmentActivity {
 
 	public static final String BOARD_ID = "boardid";
 	public static final String BOARD_NAME = "boardname";
@@ -244,16 +244,8 @@ public class PostSearchActivity extends BaseActivity {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
-				Intent intent = new Intent(PostSearchActivity.this,
-						PostContentsJSActivity.class);
-				intent.putExtra(PostContentsJSActivity.BOARD_ID,
-						mResList.get(arg2).getBoardId());
-				intent.putExtra(PostContentsJSActivity.PAGE_NUMBER, 1);
-				intent.putExtra(PostContentsJSActivity.POST_ID,
-						mResList.get(arg2).getPostId());
-				intent.putExtra(PostContentsJSActivity.POST_NAME,
-						mResList.get(arg2).getTitle());
-				startActivity(intent);
+ 				Intent intent2 = PostContentsJSActivity.createIntent(mResList.get(arg2).getBoardId(), mResList.get(arg2).getPostId(), 1);
+				startActivity(intent2);
  			}
 		});
 	}

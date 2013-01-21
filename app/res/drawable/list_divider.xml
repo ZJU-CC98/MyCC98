@@ -21,7 +21,7 @@
             <solid android:color="@color/list_divider_top" />
         </shape>
     </item>
-    <item android:top="1dp">
+    <item android:top="1px">
         <shape>
             <solid android:color="@color/list_divider_bottom" />
         </shape>

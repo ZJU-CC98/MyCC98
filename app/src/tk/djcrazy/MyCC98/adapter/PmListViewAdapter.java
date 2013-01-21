@@ -20,7 +20,6 @@ public class PmListViewAdapter extends BaseItemListAdapter<PmInfo> {
 
 	public PmListViewAdapter(Activity context, List<PmInfo> list) {
 		super(context, list);
-		// TODO Auto-generated constructor stub
 	}
 
 	public final class ListItemView {
@@ -51,7 +50,7 @@ public class PmListViewAdapter extends BaseItemListAdapter<PmInfo> {
 			@Override
 			public void onClick(View v) {
 				PmInfo pmInfo = items.get(fpos);
-				reply_pm(pmInfo.getPmId(), pmInfo.getSender(),
+				replyPm(pmInfo.getPmId(), pmInfo.getSender(),
 						pmInfo.getSendTime(), pmInfo.getTopic());
 			}
 		});
@@ -63,15 +62,9 @@ public class PmListViewAdapter extends BaseItemListAdapter<PmInfo> {
 	 * 
 	 * @param pmId
 	 */
-	public void reply_pm(int pmId, String sender, String sendTime, String topic) {
-		Intent intent = new Intent(context, PmViewActivity.class);
-		intent.putExtra("PmId", pmId);
-		intent.putExtra("Sender", sender);
-		intent.putExtra("SendTime", sendTime);
-		intent.putExtra("Topic", topic);
+	public void replyPm(int pmId, String sender, String sendTime, String topic) {
+		Intent intent = PmViewActivity.createIntent(topic, sender, sendTime, pmId);
 		context.startActivity(intent);
-		 
-
 	}
 
 	/**

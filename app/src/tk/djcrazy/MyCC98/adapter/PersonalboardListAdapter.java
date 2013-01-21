@@ -115,14 +115,9 @@ public class PersonalboardListAdapter extends BaseItemListAdapter<BoardEntity> {
 				.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						Intent intent = new Intent(context,
-								PostListActivity.class);
-						intent.putExtra(PostListActivity.BOARD_ID,
-								items.get(clickPosition).getBoardID());
-						intent.putExtra(PostListActivity.BOARD_NAME,
-								items.get(clickPosition).getBoardName());
-						context.startActivity(intent);
-
+						context.startActivity(PostListActivity.createIntent(
+								items.get(clickPosition).getBoardName(), items
+										.get(clickPosition).getBoardID()));
 					}
 				});
 
@@ -130,19 +125,10 @@ public class PersonalboardListAdapter extends BaseItemListAdapter<BoardEntity> {
 				.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						Intent intent = new Intent(context,
-								PostContentsJSActivity.class);
-						intent.putExtra(PostContentsJSActivity.POST_ID, items
-								.get(clickPosition).getLastReplyTopicID());
-						intent.putExtra(PostContentsJSActivity.POST_NAME, items
-								.get(clickPosition).getLastReplyTopicName());
-						intent.putExtra(PostContentsJSActivity.PAGE_NUMBER, 1);
-						intent.putExtra(PostContentsJSActivity.BOARD_ID, items
-								.get(clickPosition).getBoardID());
-						intent.putExtra(PostContentsJSActivity.BOARD_NAME,
-								items.get(clickPosition).getBoardName());
-						context.startActivity(intent);
-
+						context.startActivity(PostContentsJSActivity
+								.createIntent(items.get(clickPosition)
+										.getBoardID(), items.get(clickPosition)
+										.getLastReplyTopicID(), 1));
 					}
 				});
 
@@ -150,19 +136,10 @@ public class PersonalboardListAdapter extends BaseItemListAdapter<BoardEntity> {
 				.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						Intent intent = new Intent(context,
-								PostContentsJSActivity.class);
-						intent.putExtra(PostContentsJSActivity.POST_ID, items
-								.get(clickPosition).getLastReplyTopicID());
-						intent.putExtra(PostContentsJSActivity.POST_NAME, items
-								.get(clickPosition).getLastReplyTopicName());
-						intent.putExtra(PostContentsJSActivity.PAGE_NUMBER,
-								32767);
-						intent.putExtra(PostContentsJSActivity.BOARD_ID, items
-								.get(clickPosition).getBoardID());
-						intent.putExtra(PostContentsJSActivity.BOARD_NAME,
-								items.get(clickPosition).getBoardName());
-						context.startActivity(intent);
+						context.startActivity(PostContentsJSActivity
+								.createIntent(items.get(clickPosition)
+										.getBoardID(), items.get(clickPosition)
+										.getLastReplyTopicID(), 32767));
 					}
 				});
 	}

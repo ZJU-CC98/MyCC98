@@ -12,6 +12,7 @@ import tk.djcrazy.MyCC98.adapter.HomeActionListAdapter;
 import tk.djcrazy.MyCC98.adapter.HomeFragmentPagerAdapter;
 import tk.djcrazy.MyCC98.dialog.AboutDialog;
 import tk.djcrazy.MyCC98.listener.LoadingListener;
+import tk.djcrazy.MyCC98.service.NewVersionDownloadService;
 import tk.djcrazy.MyCC98.util.Intents;
 import tk.djcrazy.MyCC98.util.Intents.Builder;
 import tk.djcrazy.libCC98.ICC98Service;
@@ -43,10 +44,10 @@ import com.google.inject.Inject;
 import com.viewpagerindicator.TitlePageIndicator;
 
 @ContentView(R.layout.home)
-public class HomeActivity extends RoboSherlockFragmentActivity implements
+public class HomeActivity extends BaseFragmentActivity implements
 		LoadingListener, ActionBar.OnNavigationListener {
 
-	private static final String UPDATE_LINK = "http://djj0809.github.com/MyCC98/update.json";
+	private static final String UPDATE_LINK = "http://mycc98.sinaapp.com/update.json";
 
 	private static final String TAG = "HomeActivity";
 	public static final String USERINFO = "USERINFO";
@@ -65,7 +66,7 @@ public class HomeActivity extends RoboSherlockFragmentActivity implements
 		getSupportActionBar().setSelectedNavigationItem(0);
 		switch (itemPosition) {
 		case 0:
-			break;
+ 			break;
 		case 1:
 			goSettings();
 			break;
@@ -98,6 +99,7 @@ public class HomeActivity extends RoboSherlockFragmentActivity implements
 		viewPager.setAdapter(adapter);
 		indicator.setViewPager(viewPager, 0);
 		new CheckUpdateTask(this).execute();
+		
 	}
 
 	/**
@@ -105,7 +107,7 @@ public class HomeActivity extends RoboSherlockFragmentActivity implements
 	 */
 	private void configureActionBar() {
 		ActionBar actionBar = getSupportActionBar();
-		HomeActionListAdapter list = new HomeActionListAdapter(this,
+		HomeActionListAdapter list = new HomeActionListAdapter(actionBar.getThemedContext(),
 				service.getUserName(), service.getUserAvatar());
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 		actionBar.setListNavigationCallbacks(list, this);
@@ -198,8 +200,8 @@ public class HomeActivity extends RoboSherlockFragmentActivity implements
 			hasTask = true;
 		}
 	};
-
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
+	@Override
+	public boolean onKeyUp(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
 			if (isExit == false) {
 				isExit = true;
@@ -227,17 +229,13 @@ public class HomeActivity extends RoboSherlockFragmentActivity implements
 			HttpGet get = new HttpGet(UPDATE_LINK);
 			HttpResponse response = client.execute(get);
 			return EntityUtils.toString(response.getEntity(), "UTF-8");
-			//return service.getCC98Client().getPage(UPDATE_LINK);
-		}
+ 		}
 
 		@Override
 		protected void onSuccess(String t) throws Exception {
 			super.onSuccess(t); 
-			Log.d(TAG, t);
 			String aString =new String(t.getBytes(),"UTF-8" );
-			Log.d(TAG, aString);
 			aString = aString.replaceAll(".*?\\{", "{");
-			Log.d(TAG, aString);
 			JSONObject object = new JSONObject(t);
 			int verionCode = object.getInt("versionCode");
 			if (verionCode>getVersionCode()) {
@@ -250,8 +248,7 @@ public class HomeActivity extends RoboSherlockFragmentActivity implements
 				builder.setPositiveButton("下载", new OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						Intent viewIntent = new Intent("android.intent.action.VIEW",Uri.parse(downloadLink));
-						startActivity(viewIntent);
+ 						startService(NewVersionDownloadService.createIntent(HomeActivity.this, downloadLink));
 					}
 				});
 				builder.setNegativeButton("取消", new OnClickListener() {

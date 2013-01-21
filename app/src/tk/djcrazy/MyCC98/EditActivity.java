@@ -67,7 +67,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.google.inject.Inject;
 
 @ContentView(R.layout.reply)
-public class EditActivity extends BaseActivity implements OnClickListener {
+public class EditActivity extends BaseFragmentActivity implements OnClickListener {
 
 	public static final int REQUEST_REPLY = 0;
 	public static final int REQUEST_QUOTE_REPLY = 1;
@@ -300,11 +300,9 @@ public class EditActivity extends BaseActivity implements OnClickListener {
 	}
 
 	private String replaceAllImage(String titleString) {
-		Log.d(TAG, titleString);
-		titleString = titleString.replaceAll("<img src=(?=em\\d\\d />)", "[");
+ 		titleString = titleString.replaceAll("<img src=(?=em\\d\\d />)", "[");
 		titleString = titleString.replaceAll("(?<=\\[em\\d\\d) />", "]");
-		Log.d(TAG, titleString);
-		return titleString;
+ 		return titleString;
 	}
 
 	private void setupRefDialog(final String titleString,
@@ -466,8 +464,7 @@ public class EditActivity extends BaseActivity implements OnClickListener {
 	@Override
 	protected void onPause() {
 		super.onPause();
-		Log.d(TAG, "onPause");
-		ViewUtils.setGone(mEmotionGrid, true);
+ 		ViewUtils.setGone(mEmotionGrid, true);
 	}
 
 	@Override

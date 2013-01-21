@@ -22,7 +22,9 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -43,30 +45,26 @@ import com.actionbarsherlock.view.MenuItem;
 import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockActivity;
 import com.google.inject.Inject;
 
-public class PostContentsJSActivity extends RoboSherlockActivity {
+public class PostContentsJSActivity extends BaseActivity {
 	private static final String TAG = "PostContentsJSActivity";
 	private static final String JS_INTERFACE = "PostContentsJSActivity";
 
-	public static final String POST_ID = "postId";
-	public static final String BOARD_ID = "boardId";
-	public static final String BOARD_NAME = "boardName";
-	public static final String POST_NAME = "postName";
-	public static final String PAGE_NUMBER = "pageNumber";
-	public static final int LAST_PAGE = 32767;
+ 	public static final int LAST_PAGE = 32767;
 
 	@InjectView(R.id.post_contents)
 	private WebView webView;
 
-	@InjectExtra(value = BOARD_NAME, optional = true)
+	@InjectExtra(value = Intents.EXTRA_BOARD_NAME, optional = true)
 	private String boardName = "";
-	@InjectExtra(POST_ID)
+	@InjectExtra(Intents.EXTRA_POST_ID)
 	private String postId;
-	@InjectExtra(BOARD_ID)
+	@InjectExtra(Intents.EXTRA_BOARD_ID)
 	private String boardId;
-	@InjectExtra(POST_NAME)
+	@InjectExtra(value = Intents.EXTRA_POST_NAME, optional = true)
 	private String postName;
-	@InjectExtra(value = PAGE_NUMBER, optional = true)
+	@InjectExtra(value = Intents.EXTRA_PAGE_NUMBER, optional = true)
 	private int currPageNum = 1;
+	
 	private int totalPageNum = 1;
 
 	private List<PostContentEntity> mContentEntities;
@@ -194,7 +192,7 @@ public class PostContentsJSActivity extends RoboSherlockActivity {
 		ActionBar actionBar = getSupportActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		actionBar.setLogo(new BitmapDrawable(service.getUserAvatar()));
-	}
+ 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu optionMenu) {
@@ -350,8 +348,7 @@ public class PostContentsJSActivity extends RoboSherlockActivity {
 	}
 
 	public void showContentDialog(final int index, int which) {
-		Log.d(TAG, "showContentDialog: " + which);
-		final PostContentEntity item = mContentEntities.get(index);
+ 		final PostContentEntity item = mContentEntities.get(index);
 		switch (which) {
 		case 0: {
 			// quote & reply
@@ -450,17 +447,17 @@ public class PostContentsJSActivity extends RoboSherlockActivity {
 
 		}
 	}
-
-	public void open(String pageLink, int pageNum) {
-		Log.d(TAG, "open new post:" + pageNum);
-		Bundle bundle = new Bundle();
-		bundle.putString(POST_ID, pageLink);
-		bundle.putInt(PAGE_NUMBER, pageNum);
-		bundle.putString(POST_NAME, "");
-		Intent intent = new Intent(this, PostContentsJSActivity.class);
-		// intent.putExtra(POST, bundle);
-		this.startActivity(intent);
-	}
+//
+//	public void open(String pageLink, int pageNum) {
+//		Log.d(TAG, "open new post:" + pageNum);
+//		Bundle bundle = new Bundle();
+//		bundle.putString(POST_ID, pageLink);
+//		bundle.putInt(PAGE_NUMBER, pageNum);
+//		bundle.putString(POST_NAME, "");
+//		Intent intent = new Intent(this, PostContentsJSActivity.class);
+//		// intent.putExtra(POST, bundle);
+//		this.startActivity(intent);
+//	}
 
 	private void setRefreshActionButtonState(boolean refreshing) {
 		if (mOptionsMenu == null) {

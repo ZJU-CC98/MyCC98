@@ -2,7 +2,7 @@ package tk.djcrazy.MyCC98.view;
 
 import com.actionbarsherlock.app.ActionBar;
 
-import tk.djcrazy.MyCC98.BaseActivity;
+import tk.djcrazy.MyCC98.BaseFragmentActivity;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.EditText;
@@ -25,7 +25,7 @@ public class MyEditText extends EditText {
 	@Override
 	protected void onSizeChanged(int w, int h, int oldw, int oldh) {
 		super.onSizeChanged(w, h, oldw, oldh);
-		ActionBar actionBar = ((BaseActivity)getContext()).getSupportActionBar();
+		ActionBar actionBar = ((BaseFragmentActivity)getContext()).getSupportActionBar();
 		if (h<actionBar.getHeight()) {
 			actionBar.hide();
 		} else if (h>2*actionBar.getHeight()) {

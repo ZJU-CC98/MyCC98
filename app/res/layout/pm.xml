@@ -8,13 +8,13 @@
     android:orientation="vertical" >
 
  
-    <com.viewpagerindicator.TitlePageIndicator
-        android:id="@+id/pm_main_titles"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/pager_title_background"
-        android:textColor="@color/pager_title_text"
-        android:textSize="12sp"/>
+<!--     <com.viewpagerindicator.TitlePageIndicator -->
+<!--         android:id="@+id/pm_main_titles" -->
+<!--         android:layout_width="match_parent" -->
+<!--         android:layout_height="wrap_content" -->
+<!--         android:background="@drawable/pager_title_background" -->
+<!--         android:textColor="@color/pager_title_text" -->
+<!--         android:textSize="12sp"/> -->
 <!--         app:clipPadding="5dp" -->
 <!--         app:footerColor="@color/pager_footer" -->
 <!--         app:footerIndicatorHeight="5dp" -->

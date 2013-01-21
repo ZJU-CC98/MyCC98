@@ -21,26 +21,28 @@ import com.actionbarsherlock.view.Menu;
 import com.google.inject.Inject;
 
 @ContentView(R.layout.post_list)
-public class PostListActivity extends BaseActivity {
+public class PostListActivity extends BaseFragmentActivity {
 	private static final String TAG = "PostListActivity";
 
-	public static final String BOARD_ID = "boardId";
-	public static final String BOARD_NAME = "boardName";
-
-	@InjectExtra(BOARD_NAME)
+	@InjectExtra(Intents.EXTRA_BOARD_NAME)
 	private String boardName;
-	@InjectExtra(BOARD_ID)
+	@InjectExtra(Intents.EXTRA_BOARD_ID)
 	private String boardId;
 
 	@Inject
 	private ICC98Service service;
 
+	public static Intent createIntent(String boardName, String boardId) {
+		Intent intent = new Intents.Builder("post_list.VIEW").boardId(boardId)
+				.boardName(boardName).toIntent();
+		return intent;
+	}
+
 	@Override
 	public void onCreate(Bundle SavedInstanceState) {
 		super.onCreate(SavedInstanceState);
 		configureActionBar();
-		Log.d(TAG, "onCreate");
-		if (SavedInstanceState == null) {
+ 		if (SavedInstanceState == null) {
 			getSupportFragmentManager()
 					.beginTransaction()
 					.add(R.id.post_list_fragment_container,
@@ -98,7 +100,6 @@ public class PostListActivity extends BaseActivity {
 
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
-		Log.d(TAG, "onConfigurationChanged");
-		super.onConfigurationChanged(newConfig);
+ 		super.onConfigurationChanged(newConfig);
 	}
 }

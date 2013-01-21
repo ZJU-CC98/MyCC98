@@ -45,8 +45,7 @@ public class PostListFragment extends PagedPullToRefeshListFragment<PostEntity> 
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-		Log.d(TAG, "onViewCreated");
-		if (savedInstanceState!=null) {
+ 		if (savedInstanceState!=null) {
 			boardId = savedInstanceState.getString(BOARD_ID);
 			boardName = savedInstanceState.getString(BOARD_NAME);
 		}
@@ -82,15 +81,13 @@ public class PostListFragment extends PagedPullToRefeshListFragment<PostEntity> 
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		Log.d(TAG, "onSaveInstanceState");
-		outState.putString(BOARD_ID, boardId);
+ 		outState.putString(BOARD_ID, boardId);
 		outState.putString(BOARD_NAME, boardName);
 	}
 	
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
-		Log.d(TAG, "onConfigurationChanged");
-		super.onConfigurationChanged(newConfig);
+ 		super.onConfigurationChanged(newConfig);
 	}
 	
  }

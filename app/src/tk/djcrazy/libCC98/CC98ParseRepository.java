@@ -22,17 +22,17 @@ public class CC98ParseRepository {
  	
  	
  	//post list regex string
- 	public static final String POST_LIST_POST_TYPE_REGEX= "(?<=alt=).*?(?=></TD>)";
+ 	public static final String POST_LIST_POST_TYPE_REGEX= "(?<=alt=\").{1,20}?(?=\" />)|(?<=alt=\").{1,20}?(?=\">)";
  	public static final String POST_LIST_POST_NAME_REGEX = "(?<=最后跟贴：\">).*?(?=</a>)";
  	public static final String POST_LIST_POST_ID_REGEX = "(?<=&ID=)\\d{1,10}?(?=&page=)";
  	public static final String POST_LIST_POST_BOARD_ID_REGEX = "(?<=dispbbs.asp\\?boardID=)\\d{1,10}?(?=&ID=)";
  	
  	public static final String POST_LIST_POST_PAGE_NUMBER_REGEX = "(?<=<font color=#FF0000>).{1,6}?(?=</font></a>.?</b>\\])";
- 	public static final String POST_LIST_POST_AUTHOR_NAME_REGEX = "(?<=target=_blank>).{1,15}(?=</a></a>)|(?<=<td width=80 nowrap class=tablebody2>).{1,15}?(?=</td>)";
- 	public static final String POST_LIST_REPLY_NUM_REGEX= "(?<=<td width=\\* nowrap class=tablebody1>).*?(?=</td>)";
+ 	public static final String POST_LIST_POST_AUTHOR_NAME_REGEX = "(?<=target=\"_blank\">).{1,15}(?=</a>)|(?<=auto;\" class=\"tablebody2\">).{1,15}?(?=</td>)";
+ 	public static final String POST_LIST_REPLY_NUM_REGEX= "(?<=auto;\" class=\"tablebody1\">).*?(?=</td>)";
  	public static final String POST_LIST_LAST_REPLY_TIME_REGEX = "(?<=#bottom\">).*?(?=</a>)";
   	public static final String POST_LIST_LAST_REPLY_AUTHOR_REGEX= "(?<=usr\":\").*?(?=\")";
- 	public static final String POST_LIST_POST_ENTITY_REGEX  = "(?<=<tr align=middle><td).*?(?=;</script>)";
+ 	public static final String POST_LIST_POST_ENTITY_REGEX  = "(?<=<tr style=\"vertical-align: middle;\">).*?(?=;</script>)";
 
  	//personal board list
  	public static final String P_BOARD_OUTER_WRAAPER_REGEX = "var customboards_disp = new Array.*?document.write";
