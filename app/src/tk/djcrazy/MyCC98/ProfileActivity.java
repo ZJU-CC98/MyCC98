@@ -33,7 +33,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.google.inject.Inject;
 
 @ContentView(R.layout.user_profile)
-public class ProfileActivity extends BaseActivity {
+public class ProfileActivity extends BaseFragmentActivity {
 
 	private static final int MENU_SEND_MESSAGE_ID = 8790124;
 	private static final String USER_NAME = "userName";

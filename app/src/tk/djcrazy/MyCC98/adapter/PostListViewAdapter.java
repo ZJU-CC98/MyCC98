@@ -24,9 +24,9 @@ import com.google.inject.Inject;
 
 public class PostListViewAdapter extends BaseItemListAdapter<PostEntity> {
 
- 	private String mBoardId;
+	private String mBoardId;
 	private String mBoardName;
- 
+
 	private final class ListItemView {
 		public TextView postName;
 		public TextView postAuthor;
@@ -39,10 +39,10 @@ public class PostListViewAdapter extends BaseItemListAdapter<PostEntity> {
 	public PostListViewAdapter(Activity context, List<PostEntity> postList,
 			String boardId, String boardName) {
 		super(context, postList);
- 		mBoardId = boardId;
+		mBoardId = boardId;
 		mBoardName = boardName;
 	}
- 
+
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		PostEntity entity = items.get(position);
@@ -51,8 +51,7 @@ public class PostListViewAdapter extends BaseItemListAdapter<PostEntity> {
 		if (convertView == null) {
 			listItemView = new ListItemView();
 			// 获取布局文件视图
-			convertView = inflater.inflate(
-					R.layout.post_list_item, null);
+			convertView = inflater.inflate(R.layout.post_list_item, null);
 			getPostListView(convertView, listItemView);
 			convertView.setTag(listItemView);
 		} else {
@@ -68,8 +67,7 @@ public class PostListViewAdapter extends BaseItemListAdapter<PostEntity> {
 		setListItemViewListener(clickPosition, listItemView);
 
 		String postType = items.get(position).getPostType();
-		Log.d("postType", postType);
-		// 给不同类型的帖子给予不同的颜色的标题
+ 		// 给不同类型的帖子给予不同的颜色的标题
 		if (postType.equals(PostType.Z_TOP)) {
 			// 总固顶，红色
 			listItemView.postName.setTextColor(Color.rgb(220, 20, 60));
@@ -80,7 +78,7 @@ public class PostListViewAdapter extends BaseItemListAdapter<PostEntity> {
 			// 区固顶，暗橙色
 			listItemView.postName.setTextColor(Color.rgb(222, 184, 135));
 		} else if (postType.equals(PostType.FOLDER)) {
-			// 普通贴， 
+			// 普通贴，
 			listItemView.postName.setTextColor(Color.rgb(117, 137, 158));
 		} else if (postType.equals(PostType.CLOSED_B)) {
 			// 投票贴
@@ -109,17 +107,9 @@ public class PostListViewAdapter extends BaseItemListAdapter<PostEntity> {
 		listItemView.postName.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(context,
-						PostContentsJSActivity.class);
-				intent.putExtra(PostContentsJSActivity.BOARD_ID, items.get(clickPosition).getBoardId());
-				intent.putExtra(PostContentsJSActivity.BOARD_NAME, mBoardName);
-				intent.putExtra(PostContentsJSActivity.POST_ID,
-						items.get(clickPosition).getPostId());
-				intent.putExtra(PostContentsJSActivity.POST_NAME, items
-						.get(clickPosition).getPostName());
-				intent.putExtra(PostContentsJSActivity.PAGE_NUMBER, 1);
-				context.startActivity(intent);
-				 
+ 				context.startActivity(PostContentsJSActivity.createIntent(items
+						.get(clickPosition).getBoardId(),
+						items.get(clickPosition).getPostId(), 1));
 			}
 		});
 
@@ -129,20 +119,10 @@ public class PostListViewAdapter extends BaseItemListAdapter<PostEntity> {
 					@Override
 					public void onClick(View v) {
 
-						Intent intent = new Intent(context,
-								PostContentsJSActivity.class);
-						intent.putExtra(PostContentsJSActivity.BOARD_ID,
-								items.get(clickPosition).getBoardId());
-						intent.putExtra(PostContentsJSActivity.BOARD_NAME,
-								mBoardName);
-						intent.putExtra(PostContentsJSActivity.POST_ID,
-								items.get(clickPosition).getPostId());
-						intent.putExtra(PostContentsJSActivity.POST_NAME,
-								items.get(clickPosition).getPostName());
-						intent.putExtra(PostContentsJSActivity.PAGE_NUMBER,
-								32767);
-						context.startActivity(intent);
-						 
+		 				context.startActivity(PostContentsJSActivity.createIntent(items
+								.get(clickPosition).getBoardId(),
+								items.get(clickPosition).getPostId(), 32767));
+
 					}
 				});
 	}

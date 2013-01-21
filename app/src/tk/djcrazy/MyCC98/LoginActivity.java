@@ -46,7 +46,7 @@ import android.widget.Toast;
 
 import com.google.inject.Inject;
 
-public class LoginActivity extends BaseActivity implements OnClickListener {
+public class LoginActivity extends BaseFragmentActivity implements OnClickListener {
 	private static final String TAG = "MyCC98";
 
 	public static final boolean IS_LIFETOY_VERSION = false;

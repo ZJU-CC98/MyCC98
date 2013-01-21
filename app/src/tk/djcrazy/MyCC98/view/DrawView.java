@@ -152,8 +152,7 @@ public class DrawView extends View {
 		currPath.reset();
 		preX = -1;
 		preY = -1;
-		Log.d(TAG, "ACTION UP");
-		// path.addPath(tPath);
+ 		// path.addPath(tPath);
 		invalidate();
 	}
 

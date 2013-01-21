@@ -99,8 +99,7 @@ public class CC98ClientImpl implements ICC98Client {
 	}
 
 	public DefaultHttpClient getHttpClient() {
-		Log.d(TAG, "getHttpClient");
-		if (client == null) {
+ 		if (client == null) {
 			HttpParams params = new BasicHttpParams();
 			HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
 			HttpProtocolParams.setContentCharset(params, HTTP.UTF_8);
@@ -141,8 +140,7 @@ public class CC98ClientImpl implements ICC98Client {
 			ParseContentException, NetworkErrorException {
 
 		HttpPost httpost = new HttpPost(manager.getLoginUrl());
-		Log.d(TAG, "doLogin: " + manager.getLoginUrl());
-		List<NameValuePair> nvps = new ArrayList<NameValuePair>();
+ 		List<NameValuePair> nvps = new ArrayList<NameValuePair>();
 		nvps.add(new BasicNameValuePair("a", "i"));
 		nvps.add(new BasicNameValuePair("u", id));
 		nvps.add(new BasicNameValuePair("p", pw32));
@@ -221,7 +219,7 @@ public class CC98ClientImpl implements ICC98Client {
 		nvpsList.add(new BasicNameValuePair("passwd", getUserData()
 				.getPassword16()));
 		httpPost.setEntity(new UrlEncodedFormEntity(nvpsList, HTTP.UTF_8));
-		Log.d(TAG, "request: "+EntityUtils.toString(httpPost.getEntity()));
+//		Log.d(TAG, "request: "+EntityUtils.toString(httpPost.getEntity()));
 		response = getHttpClient().execute(httpPost);
 		entity = response.getEntity();
 		if (entity != null) {
@@ -277,7 +275,7 @@ public class CC98ClientImpl implements ICC98Client {
 	public String getPage(String link) throws ClientProtocolException,
 			IOException, ParseException {
 		HttpGet get = new HttpGet(link);
-		Log.d(TAG, "get page: " + link);
+//		Log.d(TAG, "get page: " + link);
 		HttpResponse rsp = null;
 		rsp = getHttpClient().execute(get);
 		int mCode = rsp.getStatusLine().getStatusCode();

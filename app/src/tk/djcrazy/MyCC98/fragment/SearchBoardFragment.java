@@ -207,12 +207,9 @@ public class SearchBoardFragment extends RoboSherlockFragment implements
 
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-		Intent intent = new Intent(getActivity(), PostListActivity.class);
-		intent.putExtra(PostListActivity.BOARD_ID, currentResult.get(arg2)
-				.getBoardId());
-		intent.putExtra(PostListActivity.BOARD_NAME, currentResult.get(arg2)
-				.getBoardName());
- 		getActivity().startActivity(intent);
+  		getActivity().startActivity(PostListActivity.createIntent(currentResult.get(arg2)
+				.getBoardName(), currentResult.get(arg2)
+				.getBoardId()));
  	}
 
 }

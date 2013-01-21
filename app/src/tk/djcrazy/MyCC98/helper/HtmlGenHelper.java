@@ -99,8 +99,7 @@ public class HtmlGenHelper {
 				end = end == -1 ? tmp.length() : end;
 			}
 
-			Log.d(TAG + " url", tmp);
-			int pageNum = 1;
+ 			int pageNum = 1;
 			String ttmpString = "";
 			if (beg == -1) {
 				pageNum = 1;
@@ -117,10 +116,8 @@ public class HtmlGenHelper {
 				}
 			}
 
-			Log.d(TAG + " url", "tmp:" + ttmpString);
-
-			Log.d(TAG, "pn:" + pageNum);
-
+ 
+ 
 			pageLink = tmp.replaceAll(
 					"(\\&star=\\d+.*)|(\\[url\\])|(\\[/url\\])", "");
 			if (!pageLink.startsWith("http")) {
@@ -130,8 +127,7 @@ public class HtmlGenHelper {
 					pageLink = service.getDomain() + pageLink;
 				}
 			}
-			Log.d(TAG, " link" + pageLink);
-			matcher.appendReplacement(
+ 			matcher.appendReplacement(
 					stringBuffer,
 					"[noubb]<a style=\"color:blue;\" href=\"javascript:"
 							+ jsInterface + ".open('" + pageLink + "',"
@@ -140,8 +136,7 @@ public class HtmlGenHelper {
 							+ "</a>[/noubb]");
 		}
 		matcher.appendTail(stringBuffer);
-		Log.d(TAG, "final:" + stringBuffer.toString());
-		return stringBuffer.toString();
+ 		return stringBuffer.toString();
 	}
 
 	public static void jsBtn(StringBuilder out, String text, String funcName,

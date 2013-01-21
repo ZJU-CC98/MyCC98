@@ -12,7 +12,7 @@ import android.webkit.WebSettings.LayoutAlgorithm;
 import android.webkit.WebView;
 
 @ContentView(R.layout.preview)
-public class PreviewActivity extends BaseActivity {
+public class PreviewActivity extends BaseFragmentActivity {
 	
 	public static final String CONTENT = "content";
 	@InjectView(R.id.preview)
@@ -37,8 +37,7 @@ public class PreviewActivity extends BaseActivity {
 				case 0:
 					webView.loadDataWithBaseURL(null, tagedContent, "text/html",
 							"utf-8", null);
-					Log.d("WebView", tagedContent);
-					break;
+ 					break;
 				default:
 					break;
 				}

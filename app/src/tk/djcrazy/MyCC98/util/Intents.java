@@ -69,6 +69,12 @@ public class Intents {
     
     public static final String EXTRA_DOWNLOAD_LINK = INTENT_EXTRA_PREFIX
             + "DOWNLOAD_LINK";
+    public static final String EXTRA_PM_SENDER = INTENT_EXTRA_PREFIX
+            + "PM_SENDER";
+    public static final String EXTRA_PM_SEND_TIME = INTENT_EXTRA_PREFIX
+            + "PM_SEND_TIME";
+    public static final String EXTRA_PM_ID = INTENT_EXTRA_PREFIX
+            + "PM_ID";
 
      public static class Builder {
 
@@ -143,6 +149,15 @@ public class Intents {
          
          public Builder downloadLink(String type) {
              return add(EXTRA_DOWNLOAD_LINK, type);
+         }
+         public Builder pmSender(String type) {
+             return add(EXTRA_PM_SENDER, type);
+         }
+         public Builder pmSendTime(String type) {
+             return add(EXTRA_PM_SEND_TIME, type);
+         }
+         public Builder pmId(int type) {
+             return add(EXTRA_PM_ID, type);
          }
          
          

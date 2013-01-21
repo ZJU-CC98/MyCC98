@@ -36,8 +36,7 @@ public abstract class GenericTask extends AsyncTask<TaskParams, Object, TaskResu
 		if (mListener != null){
 			mListener.onCancelled(this);
 		}
-        Log.d(TAG,  mListener.getName() + " has been Cancelled.");
-		//Toast.makeText(TwitterApplication.mContext, mListener.getName() + " has been cancelled", Toast.LENGTH_SHORT);
+ 		//Toast.makeText(TwitterApplication.mContext, mListener.getName() + " has been cancelled", Toast.LENGTH_SHORT);
 	}
 	@Override
 	protected void onPostExecute(TaskResult result) {

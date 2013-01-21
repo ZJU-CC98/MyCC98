@@ -14,6 +14,7 @@ import android.widget.Spinner;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.MenuItem;
+import com.baidu.mobstat.StatService;
 import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockPreferenceActivity;
 
 /**
@@ -32,6 +33,19 @@ public class SettingsActivity extends RoboSherlockPreferenceActivity {
  	private CheckBoxPreference useCustomPreference;
  	private EditTextPreference customTailContentPreference;
  	
+ 	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		 StatService.onResume(this);
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		 StatService.onPause(this);
+	}
+
  	@Override
 	protected void onCreate(Bundle savedInstanceState) {
  		super.onCreate(savedInstanceState);

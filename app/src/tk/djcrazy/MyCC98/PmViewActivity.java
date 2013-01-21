@@ -36,31 +36,36 @@ import com.google.inject.Inject;
  * 
  */
 @ContentView(R.layout.pm_reply)
-public class PmViewActivity extends BaseActivity {
+public class PmViewActivity extends BaseFragmentActivity {
 	private static String TAG = "PmReply";
-	private static final String PM_ID = "PmId";
-	private static final String TOPIC = "Topic";
-	private static final String SENDER = "Sender";
-	private static final String SEND_TIME = "SendTime";
 	private static final int MENU_REPLY_ID = 9237465;
 	@InjectView(R.id.pm_reply_view)
 	private WebView webView;
-	@InjectExtra(TOPIC)
+
+	@InjectExtra(Intents.EXTRA_PM_CONTENT)
 	private String readTopic;
-	@InjectExtra(SENDER)
+	@InjectExtra(Intents.EXTRA_PM_SENDER)
 	private String sender;
-	@InjectExtra(SEND_TIME)
+	@InjectExtra(Intents.EXTRA_PM_SEND_TIME)
 	private String sendTime;
+	@InjectExtra(value = Intents.EXTRA_PM_ID, optional = true)
+	private int pmId = -1;
+
 	private String pageString;
 	private String senderAvatarUrl;
 	private String faceChoosedString;
 	private String pmContent;
-	@InjectExtra(value = PM_ID, optional = true)
-	private int pmId = -1;
 	@Inject
 	private ICC98Service service;
 
 	private HtmlGenHelper helper = new HtmlGenHelper();
+
+	public static Intent createIntent(String content, String sender,
+			String sendTime, int pmId) {
+		Intent intent = new Intents.Builder("pm.VIEW").pmContent(content)
+				.pmSender(sender).pmSendTime(sendTime).pmId(pmId).toIntent();
+		return intent;
+	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -97,12 +102,12 @@ public class PmViewActivity extends BaseActivity {
 	}
 
 	private void doReply() {
- 		StringBuilder tmp = new StringBuilder();
+		StringBuilder tmp = new StringBuilder();
 		tmp.append("[quote][b]以下是引用").append(sender).append("在[i]")
 				.append(sendTime).append("[/i]时发送的短信：[/b]\n")
 				.append(pmContent.replaceAll("(<BR>|<br>)", "\n"))
 				.append("[/quote]");
- 		Intents.Builder builder = new Intents.Builder(this, EditActivity.class);
+		Intents.Builder builder = new Intents.Builder(this, EditActivity.class);
 		startActivity(builder.requestType(EditActivity.REQUEST_PM)
 				.pmToUser(sender).pmTitle(readTopic).pmContent(tmp.toString())
 				.toIntent());
@@ -200,19 +205,9 @@ public class PmViewActivity extends BaseActivity {
 	}
 
 	public void preview(String content) {
-		Log.d(TAG, "preview clicked");
-		Intent intent = new Intent(this, PreviewActivity.class);
+ 		Intent intent = new Intent(this, PreviewActivity.class);
 		intent.putExtra("content", content);
 		startActivity(intent);
 	}
 
-	public void open(String pageLink, int pageNum) {
-		Log.d("MyCC98", "open new post:" + pageNum);
-		Bundle bundle = new Bundle();
-		bundle.putString(PostContentsJSActivity.POST_ID, pageLink);
-		bundle.putInt(PostContentsJSActivity.PAGE_NUMBER, pageNum);
-		bundle.putString(PostContentsJSActivity.POST_NAME, "");
-		Intent intent = new Intent(this, PostContentsJSActivity.class);
-		this.startActivity(intent);
-	}
-}
+ }

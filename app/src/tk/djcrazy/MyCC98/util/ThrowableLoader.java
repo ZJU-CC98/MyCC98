@@ -52,8 +52,7 @@ public abstract class ThrowableLoader<D> extends AsyncLoader<D> {
 		} catch (Exception e2) {
 			exception = e2;
 		}
-		Log.d(TAG, "Exception loading data", exception);
-		return data;
+ 		return data;
 	}
 
  	/**

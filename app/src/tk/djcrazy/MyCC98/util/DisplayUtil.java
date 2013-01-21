@@ -10,8 +10,7 @@ public class DisplayUtil {
 	public static int dip2px(Context context, float dpValue) {
 		final float scale = context.getResources().getDisplayMetrics().density;
 		int res = (int) (dpValue * scale + 0.5f);
-		Log.d("DisplayUtil", "dip2px:"+res);
-		return res;
+ 		return res;
 	}
  
 	/**

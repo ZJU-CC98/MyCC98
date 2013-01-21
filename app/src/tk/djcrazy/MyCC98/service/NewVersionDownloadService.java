@@ -40,7 +40,7 @@ public class NewVersionDownloadService extends RoboIntentService {
 	private void createNotification() {
 		mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		mBuilder = new NotificationCompat.Builder(this).setSmallIcon(
-				R.drawable.icon).setContentTitle("正在下载更新");
+				R.drawable.icon).setContentTitle("正在下载更新").setTicker("正在下载更新...");
  		// mId allows you to update the notification later on.
  		File storeDir = new File(Environment.getExternalStorageDirectory(), "MyCC98");
 		if (!storeDir.exists()) {
@@ -59,8 +59,7 @@ public class NewVersionDownloadService extends RoboIntentService {
 					.openConnection();
 			fileOutputStream = new FileOutputStream(saveFile);
 			int length = Integer.parseInt(connection.getHeaderField("Content-Length"));
-			Log.d(link, length+"");
-			mBuilder.setContentText("软件包大小："+(length/1024)+"KB");
+ 			mBuilder.setContentText("软件包大小："+(length/1024)+"KB");
 			mBuilder.setProgress(length, 0, false);
 			InputStream inputStream = connection.getInputStream();
 			int temp = 0;
