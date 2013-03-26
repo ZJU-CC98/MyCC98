@@ -66,7 +66,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.google.inject.Inject;
 
-@ContentView(R.layout.reply)
+@ContentView(R.layout.activity_reply)
 public class EditActivity extends BaseFragmentActivity implements OnClickListener {
 
 	public static final int REQUEST_REPLY = 0;

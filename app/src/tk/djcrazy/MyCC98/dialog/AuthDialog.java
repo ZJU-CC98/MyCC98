@@ -39,7 +39,7 @@ public class AuthDialog extends Dialog implements OnClickListener {
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.auth_dialog);
+		setContentView(R.layout.dialog_auth);
 		okButton = (Button) findViewById(R.id.okButton);
 		cancelButton = (Button) findViewById(R.id.cancelbutton);
 		userNameText = (EditText) findViewById(R.id.auth_username);

@@ -33,7 +33,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.google.inject.Inject;
 
-@ContentView(R.layout.post_search)
+@ContentView(R.layout.activity_post_search)
 public class PostSearchActivity extends BaseFragmentActivity {
 
 	public static final String BOARD_ID = "boardid";

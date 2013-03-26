@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 import java.util.Date;
 import java.util.List;
 
+import roboguice.inject.ContentView;
 import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
 import roboguice.util.RoboAsyncTask;
@@ -44,7 +45,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockActivity;
 import com.google.inject.Inject;
-
+@ContentView(R.layout.activity_post_contents)
 public class PostContentsJSActivity extends BaseActivity {
 	private static final String TAG = "PostContentsJSActivity";
 	private static final String JS_INTERFACE = "PostContentsJSActivity";
@@ -87,7 +88,6 @@ public class PostContentsJSActivity extends BaseActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
- 		setContentView(R.layout.post_contents);
  		
 		configureActionBar();
 		configureWebView();

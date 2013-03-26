@@ -47,7 +47,7 @@ public class PersonalboardListAdapter extends BaseItemListAdapter<BoardEntity> {
 		if (convertView == null) {
 			listItemView = new ListItemView();
 			convertView = inflater.inflate(
-					R.layout.personal_board_list_item_view, null);
+					R.layout.personal_board_list_item, null);
 			findViews(convertView, listItemView);
 			convertView.setTag(listItemView);
 
