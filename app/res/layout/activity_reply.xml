@@ -3,7 +3,7 @@
     android:id="@+id/layout_root"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@drawable/global_bg"
+    android:background="#f9f9f9"
     android:orientation="vertical" >
 
     <LinearLayout
@@ -35,7 +35,7 @@
 
             <!-- 回复内容 -->
 
-            <tk.djcrazy.MyCC98.view.MyEditText
+            <EditText
                 android:id="@+id/reply_content"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"

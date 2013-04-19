@@ -4432,11 +4432,6 @@ tk.djcrazy.MyCC98.dialog.AuthDialog:
     private static final java.lang.String AUTOLOGIN
     private static final java.lang.String REMEMBERPWD
     private android.widget.ArrayAdapter adapter
-tk.djcrazy.MyCC98.fragment.FriendListFragment:
-    private static final java.lang.String TAG
-    private static final int GET_LIST_SUCCESS
-    private static final int GET_LIST_FAILED
-    97:98:public void scrollListTo(int,int)
 tk.djcrazy.MyCC98.fragment.HotTopicFragment:
     private static final java.lang.String TAG
 tk.djcrazy.MyCC98.fragment.NewTopicFragment:
@@ -4457,8 +4452,8 @@ tk.djcrazy.MyCC98.fragment.SearchBoardFragment:
     private static final java.lang.String TAG
     private static final int FETCH_SUCC
     private static final int FETCH_FAIL
-    155:156:public void scrollListTo(int,int)
-    197:197:public int getPosition()
+    153:154:public void scrollListTo(int,int)
+    195:195:public int getPosition()
 tk.djcrazy.MyCC98.helper.HtmlGenHelper:
     public static final java.lang.String ITEM_OPEN
     public static final java.lang.String ITEM_CLOSE
@@ -4547,18 +4542,22 @@ tk.djcrazy.libCC98.CC98ClientImpl:
     244:271:public java.lang.String queryPosts(java.lang.String,java.lang.String,java.lang.String,int,java.lang.String)
     357:357:public java.lang.String getInboxHtml(int)
     439:445:public java.lang.String getUserProfileHtml(java.lang.String)
+    464:464:public android.graphics.Bitmap getUserImg(java.lang.String)
     1:1:public bridge synthetic ch.boye.httpclientandroidlib.client.HttpClient getHttpClient()
 tk.djcrazy.libCC98.CC98ParseRepository
 tk.djcrazy.libCC98.CC98ParserImpl:
     private static final java.lang.String TAG
-    548:548:public java.util.List query(java.lang.String,java.lang.String,java.lang.String,int,java.lang.String)
-    659:659:public tk.djcrazy.libCC98.ICC98Client getCC98Client()
-    671:672:public void setCC98Client(tk.djcrazy.libCC98.ICC98Client)
-    681:681:public tk.djcrazy.libCC98.ICC98UrlManager getCC98UrlManager()
-    692:693:public void setCC98UrlManager(tk.djcrazy.libCC98.ICC98UrlManager)
+    137:137:public java.util.List getUserFriendList()
+    544:544:public java.util.List query(java.lang.String,java.lang.String,java.lang.String,int,java.lang.String)
+    593:624:private java.util.List parseUserFriendList(java.lang.String)
+    655:655:public tk.djcrazy.libCC98.ICC98Client getCC98Client()
+    667:668:public void setCC98Client(tk.djcrazy.libCC98.ICC98Client)
+    677:677:public tk.djcrazy.libCC98.ICC98UrlManager getCC98UrlManager()
+    688:689:public void setCC98UrlManager(tk.djcrazy.libCC98.ICC98UrlManager)
 tk.djcrazy.libCC98.CC98ServiceImpl:
     62:63:public void logOut()
     67:68:public void clearProxy()
+    183:183:public java.util.List getFriendList()
     213:213:public boolean isUseProxy()
     228:228:public tk.djcrazy.libCC98.ICC98Client getCC98Client()
 tk.djcrazy.libCC98.CC98UrlManagerImpl:
@@ -4567,14 +4566,17 @@ tk.djcrazy.libCC98.CC98UrlManagerImpl:
     49:49:public java.lang.String getQueryUrl()
     54:54:public java.lang.String getQueryReferer()
     110:110:public java.lang.String getBoardUrl(java.lang.String)
+    136:136:public java.lang.String getUserManagerUrl()
 tk.djcrazy.libCC98.ICC98Client:
     public abstract boolean editPost(java.util.List,java.lang.String)
     public abstract java.lang.String queryPosts(java.lang.String,java.lang.String,java.lang.String,int,java.lang.String)
     public abstract java.lang.String getInboxHtml(int)
     public abstract java.lang.String getUserProfileHtml(java.lang.String)
+    public abstract android.graphics.Bitmap getUserImg(java.lang.String)
     public abstract void clearLoginInfo()
     public abstract ch.boye.httpclientandroidlib.client.HttpClient getHttpClient()
 tk.djcrazy.libCC98.ICC98Parser:
+    public abstract java.util.List getUserFriendList()
     public abstract java.util.List query(java.lang.String,java.lang.String,java.lang.String,int,java.lang.String)
     public abstract java.util.List parseQueryResult(java.lang.String)
     public abstract tk.djcrazy.libCC98.ICC98Client getCC98Client()
@@ -4585,6 +4587,7 @@ tk.djcrazy.libCC98.ICC98Service:
     public abstract boolean isUseProxy()
     public abstract void logOut()
     public abstract void clearProxy()
+    public abstract java.util.List getFriendList()
     public abstract tk.djcrazy.libCC98.ICC98Client getCC98Client()
 tk.djcrazy.libCC98.ICC98UrlManager:
     public abstract java.lang.String getGetOutboxUrl(java.lang.String)
@@ -4592,6 +4595,7 @@ tk.djcrazy.libCC98.ICC98UrlManager:
     public abstract java.lang.String getQueryUrl()
     public abstract java.lang.String getQueryReferer()
     public abstract java.lang.String getBoardUrl(java.lang.String)
+    public abstract java.lang.String getUserManagerUrl()
 tk.djcrazy.libCC98.data.BoardEntity:
     43:43:public java.lang.String getBoardIntro()
     91:91:public java.lang.String getBoardMaster()
@@ -4626,8 +4630,7 @@ tk.djcrazy.libCC98.data.UserData:
     35:35:public java.lang.String getPassword32()
 tk.djcrazy.libCC98.data.UserProfileEntity:
     243:243:public java.lang.String getBbsMasterInfo()
-tk.djcrazy.libCC98.data.UserStatueEntity:
-    41:41:public java.lang.String getOnlineTime()
+tk.djcrazy.libCC98.data.UserStatueEntity
 tk.djcrazy.libCC98.exception.NoUserFoundException:
     private static final long serialVersionUID
 tk.djcrazy.libCC98.exception.ParseContentException:

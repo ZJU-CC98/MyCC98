@@ -17,60 +17,65 @@
 
             <!-- 头像部分 -->
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="fill_parent"
-                android:layout_height="120dip"
-                android:layout_margin="10.0dip"
-                android:orientation="horizontal" >
+                android:layout_height="wrap_content" >
 
-                <RelativeLayout
+							<ImageView 
+							    android:layout_height="wrap_content"
+							    android:layout_width="match_parent"
+							    android:scaleType="fitXY"
+							    android:src="@drawable/profile_head_bg"
+							    android:adjustViewBounds="true"/>
+							<LinearLayout 
+							    android:layout_height="wrap_content"
+							    android:layout_width="wrap_content"
+							    android:layout_centerInParent="true"
+							    android:orientation="vertical"
+							    android:gravity="center_horizontal">
+							    
+							   <RelativeLayout
                     android:id="@+id/profile_head_portrait_frame"
-                    android:layout_width="120dip"
-                    android:layout_height="120dip"
-                    android:layout_marginBottom="2dip"
-                    android:layout_marginLeft="2dip"
-                    android:layout_marginTop="2dip" >
-
-                    <!-- 用户头像 -->
-
-                    <ImageView
+                    android:layout_width="80dip"
+                    android:layout_height="80dip"   >
+ 
+							       <ImageView
                         android:id="@+id/profile_image"
-                        android:layout_width="120dip"
-                        android:layout_height="120dip"
-                        android:layout_marginRight="5.0dip"
-                         android:padding="5dp"
-                        android:scaleType="centerInside"
-                        android:src="@drawable/bug" />
-                </RelativeLayout>
+                        android:layout_width="75dp"
+                        android:layout_height="75dp"
+                         android:layout_centerInParent="true"
+                         android:scaleType="fitXY" 
+                         android:padding="2dp"
+	                       android:background="@drawable/avatar_bg"  />
+                    </RelativeLayout>
 
                 <RelativeLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:orientation="vertical" >
 
                     <!-- 用户昵称 -->
 
                     <TextView
+                        android:id="@+id/profile_online_statues"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                         android:text="在线"
+                        android:visibility="gone"
+                        android:textColor="#444" />
+
+                    <TextView
                         android:id="@+id/profile_user_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:layout_marginBottom="6dp"
-                        android:text="aaaaaa"
-                        android:textColor="#000"
+                         android:text=""
+                        android:textColor="@android:color/white"
+                        android:layout_marginTop="20dp"
                         android:textSize="30sp" />
 
- 
-                    <TextView
-                        android:id="@+id/profile_online_statues"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentBottom="true"
-                        android:layout_alignParentRight="true"
-                        android:text="在线"
-                        android:textColor="#444" />
                 </RelativeLayout>
-            </LinearLayout>
+							</LinearLayout>
+            </RelativeLayout>
             <!-- 基本信息部分 -->
 
             <LinearLayout
