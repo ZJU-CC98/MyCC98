@@ -11,12 +11,10 @@ import roboguice.inject.InjectView;
 import tk.djcrazy.MyCC98.PostListActivity;
 import tk.djcrazy.MyCC98.R;
 import tk.djcrazy.MyCC98.adapter.SearchBoardListAdapter;
-import tk.djcrazy.MyCC98.listener.LoadingListener;
 import tk.djcrazy.MyCC98.util.ViewUtils;
 import tk.djcrazy.libCC98.ICC98Service;
 import tk.djcrazy.libCC98.data.BoardStatus;
 import tk.djcrazy.libCC98.exception.ParseContentException;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
@@ -103,7 +101,7 @@ public class SearchBoardFragment extends RoboSherlockFragment implements
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		return LayoutInflater.from(getActivity()).inflate(
-				R.layout.search_board, null);
+				R.layout.fragment_search_board, null);
 	}
 
 	@Override

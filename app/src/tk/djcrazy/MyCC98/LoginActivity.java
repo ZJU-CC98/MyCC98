@@ -49,7 +49,7 @@ import com.google.inject.Inject;
 public class LoginActivity extends BaseFragmentActivity implements OnClickListener {
 	private static final String TAG = "MyCC98";
 
-	public static final boolean IS_LIFETOY_VERSION = false;
+	public static final boolean IS_LIFETOY_VERSION = true;
 
 	public static final String USERNAME = "USERNAME";
 	public static final String PASSWORD32 = "PASSWORD32";
@@ -125,7 +125,7 @@ public class LoginActivity extends BaseFragmentActivity implements OnClickListen
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		setContentView(R.layout.login);
+		setContentView(R.layout.activity_login);
 		mSignInButton.setOnClickListener(this);
 		initAuthInfo();
 	}

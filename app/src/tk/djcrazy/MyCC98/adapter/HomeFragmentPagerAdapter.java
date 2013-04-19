@@ -1,9 +1,7 @@
 package tk.djcrazy.MyCC98.adapter;
 
-import tk.djcrazy.MyCC98.fragment.FriendListFragment;
 import tk.djcrazy.MyCC98.fragment.HotTopicFragment;
 import tk.djcrazy.MyCC98.fragment.NewTopicFragment;
-import tk.djcrazy.MyCC98.fragment.PersonalBoardFragment;
 import tk.djcrazy.MyCC98.fragment.PersonalBoardFragment;
 import tk.djcrazy.MyCC98.fragment.SearchBoardFragment;
 import tk.djcrazy.MyCC98.listener.LoadingListener;
@@ -13,7 +11,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 public class HomeFragmentPagerAdapter extends FragmentPagerAdapter {
 	private FragmentManager mFragment;
-	private String[] pageTitle = {"我的版面","热门","列表","新帖","好友"};
+	private String[] pageTitle = {"我的版面","热门","列表","新帖"};
 	private final int FRAGMENT_NUMBER = 4;
  	public HomeFragmentPagerAdapter(FragmentManager fm) {
 		super(fm);
@@ -37,9 +35,7 @@ public class HomeFragmentPagerAdapter extends FragmentPagerAdapter {
 			return sFragment;
 		case 3:
 			return new NewTopicFragment();
-		case 4:
-			return new FriendListFragment();
-		default:
+ 		default:
 			break;
 		}
 		return null;

@@ -22,7 +22,7 @@ public class AboutDialog extends Dialog {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.about_dialog);
+		setContentView(R.layout.dialog_about);
 		setTitle("About");
 		webView = (WebView) findViewById(R.id.about_web_view);
 		okButton = (Button) findViewById(R.id.about_ok);

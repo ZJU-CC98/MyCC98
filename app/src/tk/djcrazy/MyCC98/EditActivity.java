@@ -66,7 +66,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.google.inject.Inject;
 
-@ContentView(R.layout.reply)
+@ContentView(R.layout.activity_reply)
 public class EditActivity extends BaseFragmentActivity implements OnClickListener {
 
 	public static final int REQUEST_REPLY = 0;
@@ -179,10 +179,10 @@ public class EditActivity extends BaseFragmentActivity implements OnClickListene
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		actionBar.setLogo(new BitmapDrawable(service.getUserAvatar()));
 		if (requestType == REQUEST_REPLY) {
-			actionBar.setTitle("回复：" + postName);
+			actionBar.setTitle(Html.fromHtml("回复：" + postName));
 			replyContentEditText.requestFocus();
 		} else if (requestType == REQUEST_QUOTE_REPLY) {
-			actionBar.setTitle("回复：" + postName);
+			actionBar.setTitle(Html.fromHtml("回复：" + postName));
 			replyContentEditText.requestFocus();
 			replyUserPostContent = replyUserPostContent.replaceAll(
 					"<.*?>|searchubb.*?;", "");
@@ -190,13 +190,13 @@ public class EditActivity extends BaseFragmentActivity implements OnClickListene
 		} else if (requestType == REQUEST_NEW_POST) {
 			actionBar.setTitle("发表新话题：" + boardName);
 		} else if (requestType == REQUEST_PM) {
-			actionBar.setTitle("站短：" + pmReplyName);
+			actionBar.setTitle(Html.fromHtml("站短：" + pmReplyName));
 			pmReplyTopic = pmReplyTopic == null ? "" : "回复: " + pmReplyTopic;
-			replyContentEditText.setText(pmReplyContent);
-			replyTitleEditText.setText(pmReplyTopic);
+			replyContentEditText.setText(Html.fromHtml(pmReplyContent));
+			replyTitleEditText.setText(Html.fromHtml(pmReplyTopic));
 		} else if (requestType == REQUEST_EDIT) {
-			replyContentEditText.setText(editContent);
-			replyTitleEditText.setText(editTopic);
+			replyContentEditText.setText(Html.fromHtml(editContent));
+			replyTitleEditText.setText(Html.fromHtml(editTopic));
 		}
 	}
 

@@ -11,7 +11,7 @@ import android.util.Log;
 import android.webkit.WebSettings.LayoutAlgorithm;
 import android.webkit.WebView;
 
-@ContentView(R.layout.preview)
+@ContentView(R.layout.activity_preview)
 public class PreviewActivity extends BaseFragmentActivity {
 	
 	public static final String CONTENT = "content";

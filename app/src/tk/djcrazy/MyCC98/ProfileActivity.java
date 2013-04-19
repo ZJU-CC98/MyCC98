@@ -32,7 +32,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.google.inject.Inject;
 
-@ContentView(R.layout.user_profile)
+@ContentView(R.layout.activity_user_profile)
 public class ProfileActivity extends BaseFragmentActivity {
 
 	private static final int MENU_SEND_MESSAGE_ID = 8790124;
@@ -71,8 +71,7 @@ public class ProfileActivity extends BaseFragmentActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.user_profile);
-		findViews();
+ 		findViews();
 		new GetProfileTask(this).execute();
 		ActionBar actionBar = getSupportActionBar();
 		actionBar.setLogo(R.drawable.personal_profile_icon);

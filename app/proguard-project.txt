@@ -1,4 +1,3 @@
-# To enable ProGuard in your project, edit project.properties
 # to define the proguard.config property as described in that file.
 #
 # Add project specific ProGuard rules here.
@@ -16,5 +15,63 @@
 # and specify the fully qualified class name to the JavaScript interface
 # class:
 -keepclassmembers class tk.djcrazy.MyCC98.PostContentsJSActivity {
-	public *;
+   public *;
 }
+
+-injars  bin/classes
+-injars  libs
+-outjars bin/classes-processed.jar
+
+-dontwarn javax.xml.stream.events.**
+-dontwarn roboguice.test.**
+-dontwarn roboguice.activity.RoboMapActivity
+-dontwarn android.support.**
+ 
+-libraryjars libs/httpclientandroidlib-1.1.1.jar
+-libraryjars libs/guice-3.0-no_aop.jar
+-libraryjars libs/commons-lang3-3.1.jar
+-libraryjars libs/javax.inject-1.jar
+-libraryjars libs/jsr305-1.3.9.jar
+-libraryjars libs/roboguice-2.0.jar
+-libraryjars libs/android_api.jar
+
+-keep class tk.djcrazy.MyCC98.module.* 
+-keep class * implements java.io.Serializable
+-keepattributes Signature
+
+-keep public class roboguice.**
+-keep class com.google.inject.Binder
+-keep class com.google.inject.Key
+-keep class com.google.inject.Provider
+-keep class com.google.inject.TypeLiteral
+
+-keepclassmembers class * { @com.google.inject.Provides *; @android.test.suitebuilder.annotation.* *; void test*(...); }
+
+-keepclassmembers class * { @com.google.inject.Inject <init>(...); }
+-keepclassmembers class com.google.inject.assistedinject.FactoryProvider2 { *; }
+-keepclassmembers class com.google.** {
+    private void finalizeReferent();
+    protected void finalizeReferent();
+    public void finalizeReferent();
+    void finalizeReferent();
+    
+    private *** startFinalizer(java.lang.Class,java.lang.Object);
+    protected *** startFinalizer(java.lang.Class,java.lang.Object);
+    public *** startFinalizer(java.lang.Class,java.lang.Object);
+    *** startFinalizer(java.lang.Class,java.lang.Object);
+}
+-keepclassmembers class * implements android.os.Parcelable { static android.os.Parcelable$Creator *; }
+-keepclassmembers class * { 
+	@com.google.inject.Inject <init>(...);
+	@com.google.inject.Inject <fields>;
+	@com.google.inject.InjectView <fields>;
+	@javax.annotation.Nullable <fields>;
+}
+
+-keepclassmembers class * extends com.actionbarsherlock.ActionBarSherlock { public <init>(...); }
+-renamesourcefileattribute SourceFile
+-keepattributes SourceFile,LineNumberTable,*Annotation*,Signature
+-keep class com.google.inject.** { *; }
+-keep class javax.inject.** { *; }
+-keep class javax.annotation.** { *; }
+-keep class roboguice.** { *; }

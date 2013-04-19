@@ -18,7 +18,7 @@ import com.google.inject.Inject;
 import com.viewpagerindicator.TabPageIndicator;
 import com.viewpagerindicator.TitlePageIndicator;
  
-@ContentView(R.layout.pm)
+@ContentView(R.layout.activity_pm)
 public class PmActivity extends BaseFragmentActivity implements OnPageChangeListener, TabListener{
 
 	private static String TAG = "PmActivity";
@@ -33,7 +33,7 @@ public class PmActivity extends BaseFragmentActivity implements OnPageChangeList
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
  		super.onCreate(savedInstanceState);
-		setContentView(R.layout.pm);
+		setContentView(R.layout.activity_pm);
 		configureActionBar();
 		InboxFragmentPagerAdapter adapter = new InboxFragmentPagerAdapter(
 				getSupportFragmentManager());

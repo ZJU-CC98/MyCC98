@@ -43,7 +43,7 @@ import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockFragmen
 import com.google.inject.Inject;
 import com.viewpagerindicator.TitlePageIndicator;
 
-@ContentView(R.layout.home)
+@ContentView(R.layout.activity_home)
 public class HomeActivity extends BaseFragmentActivity implements
 		LoadingListener, ActionBar.OnNavigationListener {
 

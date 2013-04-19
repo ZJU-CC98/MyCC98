@@ -20,7 +20,7 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
 import com.google.inject.Inject;
 
-@ContentView(R.layout.post_list)
+@ContentView(R.layout.activity_post_list)
 public class PostListActivity extends BaseFragmentActivity {
 	private static final String TAG = "PostListActivity";
 

@@ -35,7 +35,7 @@ import com.google.inject.Inject;
  * @author zsy
  * 
  */
-@ContentView(R.layout.pm_reply)
+@ContentView(R.layout.activity_pm_reply)
 public class PmViewActivity extends BaseFragmentActivity {
 	private static String TAG = "PmReply";
 	private static final int MENU_REPLY_ID = 9237465;

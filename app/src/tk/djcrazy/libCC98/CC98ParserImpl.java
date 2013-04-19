@@ -182,20 +182,16 @@ public class CC98ParserImpl implements ICC98Parser {
 		PostContentEntity postInfoEntity = new PostContentEntity();
 		postInfoEntity.setPostTopic(filterHtmlDecode(postInfoList.get(0)));
 		postInfoEntity.setBoardName(postInfoList.get(1));
-		postInfoEntity.setTotalPage(Integer.parseInt(postInfoList.get(2)));
+		postInfoEntity.setTotalPage((int) Math.ceil(Integer.parseInt(postInfoList.get(2))/10.0));
 		list.add(postInfoEntity);
 		// get each reply info
 		List<String> contentHtml = getMatchedStringList(
 				POST_CONTENT_WHOLE_REGEX, html, -1);
 		for (String reply : contentHtml) {
 			PostContentEntity entity = new PostContentEntity();
-			try {
-				entity.setUserName(getMatchedString(POST_CONTENT_USERNAME_REGEX,
+ 			entity.setUserName(getMatchedString(POST_CONTENT_USERNAME_REGEX,
 						reply));
-			} catch (Exception e) {
-				entity.setUserName("匿名");
-			}
-			entity.setPostContent(getMatchedString(
+ 			entity.setPostContent(getMatchedString(
 					POST_CONTENT_POST_CONTENT_REGEX, reply));
 			entity.setPostTitle(getMatchedString(POST_CONTENT_POST_TITLE_REGEX,
 					reply));
