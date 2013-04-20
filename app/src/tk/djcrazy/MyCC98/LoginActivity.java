@@ -135,6 +135,7 @@ public class LoginActivity extends BaseFragmentActivity implements OnClickListen
 		authDialog = new AuthDialog(this, listener, setting);
 		AlertDialog.Builder authBuilder = new AlertDialog.Builder(this);
 		authBuilder.setTitle("是否启用代理？");
+		authBuilder.setCancelable(false);
 		authBuilder.setPositiveButton("启用",
 				new DialogInterface.OnClickListener() {
 					@Override

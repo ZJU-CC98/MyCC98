@@ -1,6 +1,59 @@
 package tk.djcrazy.libCC98;
 
-import static tk.djcrazy.libCC98.CC98ParseRepository.*;
+import static tk.djcrazy.libCC98.CC98ParseRepository.HOT_TOPIC_BOARD_ID_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.HOT_TOPIC_BOARD_NAME_WITH_AUTHOR_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.HOT_TOPIC_CLICK_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.HOT_TOPIC_ID_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.HOT_TOPIC_NAME_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.HOT_TOPIC_POST_TIME_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.HOT_TOPIC_WRAPPER;
+import static tk.djcrazy.libCC98.CC98ParseRepository.NEW_TOPIC_AUTHOR_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.NEW_TOPIC_BOARD_ID;
+import static tk.djcrazy.libCC98.CC98ParseRepository.NEW_TOPIC_FACE_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.NEW_TOPIC_ID_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.NEW_TOPIC_TIME;
+import static tk.djcrazy.libCC98.CC98ParseRepository.NEW_TOPIC_TITLE_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.NEW_TOPIC_TOTAL_POST;
+import static tk.djcrazy.libCC98.CC98ParseRepository.NEW_TOPIC_WRAPPER_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.POST_CONTENT_GENDER_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.POST_CONTENT_INFO_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.POST_CONTENT_POST_CONTENT_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.POST_CONTENT_POST_FACE_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.POST_CONTENT_POST_TIME_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.POST_CONTENT_POST_TITLE_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.POST_CONTENT_USERNAME_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.POST_CONTENT_USER_AVATAR_LINK_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.POST_CONTENT_WHOLE_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.POST_LIST_LAST_REPLY_AUTHOR_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.POST_LIST_LAST_REPLY_TIME_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.POST_LIST_POST_AUTHOR_NAME_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.POST_LIST_POST_BOARD_ID_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.POST_LIST_POST_ENTITY_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.POST_LIST_POST_ID_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.POST_LIST_POST_NAME_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.POST_LIST_POST_PAGE_NUMBER_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.POST_LIST_POST_TYPE_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.POST_LIST_REPLY_NUM_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.P_BOARD_BOARD_MASTER_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.P_BOARD_ID_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.P_BOARD_INTRO_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.P_BOARD_LAST_REPLY_AUTHOR_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.P_BOARD_LAST_REPLY_TIME_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.P_BOARD_LAST_REPLY_TOPIC_ID_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.P_BOARD_LAST_REPLY_TOPIC_NAME_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.P_BOARD_NAME_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.P_BOARD_OUTER_WRAAPER_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.P_BOARD_POST_NUMBER_TODAY;
+import static tk.djcrazy.libCC98.CC98ParseRepository.P_BOARD_SINGLE_BOARD_WRAPPER_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.TODAY_BOARD_ENTITY_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.TODAY_BOARD_ID_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.TODAY_BOARD_NAME_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.TODAY_BOARD_TOPIC_NUM_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.TODAY_POST_NUMBER_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.USER_PROFILE_AVATAR_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.USER_PROFILE_GENERAL_PROFILE_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.USER_PROFILE_ONLINE_INFO_REGEX;
+import static tk.djcrazy.libCC98.CC98ParseRepository.USER_PROFILE_PERSON_PROFILE_REGEX;
 import static tk.djcrazy.libCC98.util.DateFormatUtil.convertStringToDateInPostContent;
 import static tk.djcrazy.libCC98.util.RegexUtil.getMatchedString;
 import static tk.djcrazy.libCC98.util.RegexUtil.getMatchedStringList;
@@ -9,20 +62,12 @@ import static tk.djcrazy.libCC98.util.StringUtil.filterHtmlDecode;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.http.ParseException;
 import org.apache.http.client.ClientProtocolException;
-
-import android.util.Log;
-
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
 import tk.djcrazy.libCC98.data.BoardEntity;
 import tk.djcrazy.libCC98.data.BoardStatus;
@@ -40,6 +85,9 @@ import tk.djcrazy.libCC98.exception.NoUserFoundException;
 import tk.djcrazy.libCC98.exception.ParseContentException;
 import tk.djcrazy.libCC98.util.DateFormatUtil;
 import tk.djcrazy.libCC98.util.StringUtil;
+
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 @Singleton
 public class CC98ParserImpl implements ICC98Parser {

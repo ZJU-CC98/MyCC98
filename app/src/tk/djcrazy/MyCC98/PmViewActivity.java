@@ -161,7 +161,7 @@ public class PmViewActivity extends BaseFragmentActivity {
 		new Thread() {
 			@Override
 			public void run() {
-				String replyed = "";
+ 				StringBuilder builder = new StringBuilder(1000);
 				if (pmId != -1) { // in reply mod
 					try {
 						pmContent = service.getMsgContent(pmId);
@@ -170,12 +170,13 @@ public class PmViewActivity extends BaseFragmentActivity {
 						} catch (ParseContentException e) {
 							e.printStackTrace();
 						}
-						replyed = helper.addPostInfo(readTopic,
-								senderAvatarUrl, sender, "", -1, sendTime, -1)
-								+ "<div class=\"post-content\"><span id=\"ubbcode\">"
-								+ helper.parseInnerLink(pmContent, "PmReply")
-								+ "</span><script>searchubb('ubbcode',1,'tablebody2');</script></div>";
-					} catch (ClientProtocolException e) {
+						 HtmlGenHelper.addPostInfo(builder, readTopic,
+								senderAvatarUrl, sender, "", -1, sendTime, -1);
+						 builder.append("<div class=\"post-content\"><span id=\"ubbcode\">") 
+								.append( "<div class=\"post-content\"><span id=\"ubbcode\">")
+								.append(helper.parseInnerLink(pmContent, "PmReply"))
+								.append("</span><script>searchubb('ubbcode',1,'tablebody2');</script></div>");
+					} catch (ClientProtocolException e) { 
 
 						e.printStackTrace();
 					} catch (ParseException e) {
@@ -186,18 +187,15 @@ public class PmViewActivity extends BaseFragmentActivity {
 						e.printStackTrace();
 					}
 				} else {
-					// replyed = "<br /><br /><br />";
-					replyed = "";
-					if (sender == null) {
+ 					if (sender == null) {
 						sender = "";
 					}
 					if (readTopic == null) {
 						readTopic = "";
 					}
 				}
-				pageString = helper.PAGE_OPEN + replyed
-				// + getReplyString(sender, readTopic)
-						+ helper.PAGE_CLOSE;
+				pageString = helper.PAGE_OPEN + builder.toString() 
+ 						+ helper.PAGE_CLOSE;
 				handler.sendEmptyMessage(0);
 			}
 		}.start();
