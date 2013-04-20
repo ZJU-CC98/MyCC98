@@ -41,7 +41,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="30dip"
             android:scaleType="fitCenter"
-            android:src="@drawable/ic_pulltorefresh_arrow"
+            android:src="@drawable/arrow_down"
             android:visibility="gone" />
 
         <TextView

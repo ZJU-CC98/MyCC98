@@ -25,7 +25,6 @@ import tk.djcrazy.MyCC98.util.ToastUtils;
 import tk.djcrazy.MyCC98.util.ViewUtils;
 import tk.djcrazy.MyCC98.view.PagedPullToRefreshListView;
 import tk.djcrazy.MyCC98.view.PagedPullToRefreshListView.LoadMoreListener;
-import tk.djcrazy.MyCC98.view.PullToRefreshListView.OnRefreshListener;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
@@ -44,6 +43,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
 /**
  * Base fragment for displaying a list of items that loads with a progress bar
@@ -51,22 +53,20 @@ import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragmen
  * 
  * @param <E>
  */
-public abstract class PagedPullToRefeshListFragment<E> extends
-		RoboSherlockFragment implements LoaderCallbacks<List<E>>,
-		OnRefreshListener, LoadMoreListener {
+public abstract class PullToRefeshListFragment<E> extends RoboSherlockFragment
+		implements OnRefreshListener<ListView>, LoaderCallbacks<List<E>> {
 
 	private static final String TAG = "PullToRefeshListFragment";
-	
-	private boolean mIsLoadingMore = false;
+
 	/**
 	 * List items provided to {@link #onLoadFinished(Loader, List)}
 	 */
 	protected List<E> items = new ArrayList<E>();
-	
+
 	/**
 	 * List view
 	 */
-	protected PagedPullToRefreshListView listView;
+	protected PullToRefreshListView listView;
 
 	/**
 	 * Empty view
@@ -84,11 +84,11 @@ public abstract class PagedPullToRefeshListFragment<E> extends
 	protected boolean listShown;
 
 	protected boolean isClearData;
-	
+
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
- 		if (!items.isEmpty())
+		if (!items.isEmpty())
 			setListShown(true, false);
 		else
 			getLoaderManager().initLoader(0, null, this);
@@ -97,7 +97,7 @@ public abstract class PagedPullToRefeshListFragment<E> extends
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.item_list, container, false);
+		return inflater.inflate(R.layout.paged_item_list, null);
 	}
 
 	/**
@@ -115,8 +115,8 @@ public abstract class PagedPullToRefeshListFragment<E> extends
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-		listView = (PagedPullToRefreshListView) view
-				.findViewById(android.R.id.list);
+		listView = (PullToRefreshListView) view
+				.findViewById(R.id.pull_list);
 		listView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
@@ -124,8 +124,8 @@ public abstract class PagedPullToRefeshListFragment<E> extends
 				onListItemClick((ListView) parent, view, position, id);
 			}
 		});
-		listView.setOnRefreshListener(this);
-		progressBar = (ProgressBar) view.findViewById(R.id.pb_loading);
+ 		listView.setOnRefreshListener(this);
+ 		progressBar = (ProgressBar) view.findViewById(R.id.pb_loading);
 		emptyView = (TextView) view.findViewById(android.R.id.empty);
 		configureList(getActivity(), getListView());
 	}
@@ -137,32 +137,28 @@ public abstract class PagedPullToRefeshListFragment<E> extends
 	 * @param listView
 	 */
 	protected void configureList(Activity activity,
-			PagedPullToRefreshListView listView) {
+			PullToRefreshListView listView) {
+		ListView inner = listView.getRefreshableView();
+		inner.setCacheColorHint(getResources().getColor(R.color.transparent));
+		inner.setDivider(getResources().getDrawable(R.drawable.list_divider));
+		inner.setDividerHeight(1);
 		listView.setAdapter(createAdapter(items));
-		listView.setLoadMoreListener(this);
 	}
 
- 	@Override
+	@Override
 	public void onLoadFinished(Loader<List<E>> loader, List<E> items) {
- 		Exception exception = getException(loader);
-		isClearData =false;
+		Exception exception = getException(loader);
+		isClearData = false;
 		this.items = items;
 		if (exception != null) {
 			showList();
 			return;
-		} 
-		if (mIsLoadingMore) { 
-			mIsLoadingMore = false;
-			//this.items.addAll(items);
-			getListAdapter().setItems(this.items);
-			listView.onLoadComplete();
-		} else {
-			//this.items = items;
-			getListAdapter().setItems(this.items);
-			listView.onRefreshComplete();
 		}
- 		showList();
- 	}
+		// this.items = items;
+		getListAdapter().setItems(this.items);
+		listView.onRefreshComplete();
+		showList();
+	}
 
 	@Override
 	public void onLoaderReset(Loader<List<E>> loader) {
@@ -209,7 +205,7 @@ public abstract class PagedPullToRefeshListFragment<E> extends
 	 * 
 	 * @return listView
 	 */
-	public PagedPullToRefreshListView getListView() {
+	public PullToRefreshListView getListView() {
 		return listView;
 	}
 
@@ -222,7 +218,7 @@ public abstract class PagedPullToRefeshListFragment<E> extends
 	protected BaseItemListAdapter<E> getListAdapter() {
 		if (listView != null)
 			return (BaseItemListAdapter<E>) ((HeaderViewListAdapter) listView
-					.getAdapter()).getWrappedAdapter();
+					.getRefreshableView().getAdapter()).getWrappedAdapter();
 		else
 			return null;
 	}
@@ -233,14 +229,14 @@ public abstract class PagedPullToRefeshListFragment<E> extends
 	 * @param adapter
 	 * @return this fragment
 	 */
-	protected PagedPullToRefeshListFragment<E> setListAdapter(
+	protected PullToRefeshListFragment<E> setListAdapter(
 			final BaseItemListAdapter<E> adapter) {
 		if (listView != null)
 			listView.setAdapter(adapter);
 		return this;
 	}
 
-	private PagedPullToRefeshListFragment<E> fadeIn(final View view,
+	private PullToRefeshListFragment<E> fadeIn(final View view,
 			final boolean animate) {
 		if (view != null)
 			if (animate)
@@ -251,12 +247,12 @@ public abstract class PagedPullToRefeshListFragment<E> extends
 		return this;
 	}
 
-	private PagedPullToRefeshListFragment<E> show(final View view) {
+	private PullToRefeshListFragment<E> show(final View view) {
 		ViewUtils.setGone(view, false);
 		return this;
 	}
 
-	private PagedPullToRefeshListFragment<E> hide(final View view) {
+	private PullToRefeshListFragment<E> hide(final View view) {
 		ViewUtils.setGone(view, true);
 		return this;
 	}
@@ -267,7 +263,7 @@ public abstract class PagedPullToRefeshListFragment<E> extends
 	 * @param shown
 	 * @return this fragment
 	 */
-	public PagedPullToRefeshListFragment<E> setListShown(final boolean shown) {
+	public PullToRefeshListFragment<E> setListShown(final boolean shown) {
 		return setListShown(shown, true);
 	}
 
@@ -278,7 +274,7 @@ public abstract class PagedPullToRefeshListFragment<E> extends
 	 * @param animate
 	 * @return this fragment
 	 */
-	public PagedPullToRefeshListFragment<E> setListShown(final boolean shown,
+	public PullToRefeshListFragment<E> setListShown(final boolean shown,
 			final boolean animate) {
 		if (!isUsable())
 			return this;
@@ -316,7 +312,7 @@ public abstract class PagedPullToRefeshListFragment<E> extends
 	 * @param message
 	 * @return this fragment
 	 */
-	protected PagedPullToRefeshListFragment<E> setEmptyText(final String message) {
+	protected PullToRefeshListFragment<E> setEmptyText(final String message) {
 		if (emptyView != null)
 			emptyView.setText(message);
 		return this;
@@ -328,7 +324,7 @@ public abstract class PagedPullToRefeshListFragment<E> extends
 	 * @param resId
 	 * @return this fragment
 	 */
-	protected PagedPullToRefeshListFragment<E> setEmptyText(final int resId) {
+	protected PullToRefeshListFragment<E> setEmptyText(final int resId) {
 		if (emptyView != null)
 			emptyView.setText(resId);
 		return this;
@@ -354,24 +350,10 @@ public abstract class PagedPullToRefeshListFragment<E> extends
 		return getActivity() != null;
 	}
 
- 	@Override
-	public void onRefresh() {
-		if (getLoaderManager().hasRunningLoaders()) {
-			listView.onLoadComplete();
-			return;
-		}
-		isClearData = true;
-		mIsLoadingMore = false;
-		getListAdapter().notifyDataSetChanged();
-		getLoaderManager().restartLoader(0, null, this);
-	}
-
 	@Override
-	public void OnLoadMore(int currentPage, int pageSize) {
-		mIsLoadingMore = true;
-		if (getLoaderManager().hasRunningLoaders()) {
-			return;
-		}
+	public void onRefresh(PullToRefreshBase<ListView> refreshView) {
+		isClearData = true;
+ 		getListAdapter().notifyDataSetChanged();
 		getLoaderManager().restartLoader(0, null, this);
 	}
 }

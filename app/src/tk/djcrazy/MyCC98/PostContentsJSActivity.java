@@ -29,6 +29,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.text.Html;
 import android.text.InputType;
 import android.util.Log;
 import android.view.View;
@@ -365,7 +366,7 @@ public class PostContentsJSActivity extends BaseActivity {
 			AlertDialog.Builder builder = new AlertDialog.Builder(
 					PostContentsJSActivity.this);
 			builder.setTitle("提示");
-			builder.setMessage("确认添加 " + item.getUserName() + " 为好友？");
+			builder.setMessage(Html.fromHtml("确认添加 " + item.getUserName() + " 为好友？"));
 			builder.setPositiveButton("确定",
 					new DialogInterface.OnClickListener() {
 

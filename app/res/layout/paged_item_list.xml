@@ -15,18 +15,20 @@
   limitations under the License.
 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res/tk.djcrazy.MyCC98"
     android:layout_width="match_parent"
     android:layout_height="match_parent" 
     android:background="@drawable/dark_main_background">
 
-    <tk.djcrazy.MyCC98.view.PagedPullToRefreshListView
-        android:id="@android:id/list"
-        style="@style/listview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone" 
-        android:headerDividersEnabled="false"
-        android:footerDividersEnabled="false"/>
+    <com.handmark.pulltorefresh.library.PullToRefreshListView
+        android:id="@+id/pull_list"
+         android:layout_width="match_parent"
+        android:layout_height="match_parent" 
+        app:ptrHeaderTextColor="#999"
+        app:ptrMode="pullFromStart" 
+        app:ptrOverScroll="true"
+        app:ptrAnimationStyle="flip"
+        app:ptrDrawable="@drawable/arrow_down"/>
 
     <TextView
         android:id="@android:id/empty"
