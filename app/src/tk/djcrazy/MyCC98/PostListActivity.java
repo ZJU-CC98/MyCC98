@@ -54,7 +54,7 @@ public class PostListActivity extends BaseFragmentActivity {
 	private void configureActionBar() {
 		ActionBar actionBar = getSupportActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
-		actionBar.setLogo(new BitmapDrawable(service.getUserAvatar()));
+		actionBar.setLogo(new BitmapDrawable(service.getCurrentUserAvatar()));
 		actionBar.setTitle(boardName);
 	}
 

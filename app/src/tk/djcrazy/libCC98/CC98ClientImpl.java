@@ -21,11 +21,13 @@ import java.util.List;
 import java.util.regex.PatternSyntaxException;
 
 import tk.djcrazy.MyCC98.application.MyApplication;
+import tk.djcrazy.MyCC98.application.MyApplication.UsersInfo;
 import tk.djcrazy.MyCC98.security.Md5;
 import tk.djcrazy.libCC98.data.UserData;
 import tk.djcrazy.libCC98.exception.NoUserFoundException;
 import tk.djcrazy.libCC98.exception.ParseContentException;
 import tk.djcrazy.libCC98.util.RegexUtil;
+import android.R.integer;
 import android.accounts.NetworkErrorException;
 import android.app.Application;
 import android.graphics.Bitmap;
@@ -82,25 +84,22 @@ public class CC98ClientImpl implements ICC98Client {
 
 	@Inject
 	private Application application;
-	private UserData userData;
-	private DefaultHttpClient client;
+ 	private DefaultHttpClient client;
 
 	@Override
-	public UserData getUserData() {
-		if (userData == null) {
-			userData = ((MyApplication) application).getUserData();
-		}
-		return userData;
+	public UserData getCurrentUserData() {
+		UserData userData = ((MyApplication) application).getCurrentUserData();
+ 		return userData;
 	}
 
 	@Override
-	public Bitmap getUserAvatar() {
-		return ((MyApplication) application).getUserAvatar();
+	public Bitmap getCurrentUserAvatar() {
+		return ((MyApplication) application).getCurrentUserAvatar();
 	}
 
 	public DefaultHttpClient getHttpClient() {
- 		if (client == null) {
-			HttpParams params = new BasicHttpParams();
+		if (client==null) {
+ 			HttpParams params = new BasicHttpParams();
 			HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
 			HttpProtocolParams.setContentCharset(params, HTTP.UTF_8);
 			HttpProtocolParams.setUseExpectContinue(params, true);
@@ -116,16 +115,45 @@ public class CC98ClientImpl implements ICC98Client {
 					CoreConnectionPNames.CONNECTION_TIMEOUT, 30000);
 			client.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT,
 					30000);
-			if (getUserData().getCookieStore() != null) {
-				client.setCookieStore(getUserData().getCookieStore());
+			if (getCurrentUserData().getCookieStore() != null) {
+				client.setCookieStore(getCurrentUserData().getCookieStore());
 			}
-			if (getUserData().isProxyVersion()
-					&& (getUserData().getProxyUserName() != null)) {
-				addHttpBasicAuthorization(getUserData().getProxyUserName(),
-						getUserData().getProxyPassword());
+			if (getCurrentUserData().isProxyVersion()
+					&& (getCurrentUserData().getProxyUserName() != null)) {
+				addHttpBasicAuthorization(getCurrentUserData(), getCurrentUserData().getProxyUserName(),
+						getCurrentUserData().getProxyPassword());
 			}
 		}
-		return client;
+ 		return client;
+	}
+	public DefaultHttpClient getHttpClient(boolean forceRefresh) {
+		if (client==null||forceRefresh) {
+ 			HttpParams params = new BasicHttpParams();
+			HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
+			HttpProtocolParams.setContentCharset(params, HTTP.UTF_8);
+			HttpProtocolParams.setUseExpectContinue(params, true);
+			SchemeRegistry schReg = new SchemeRegistry();
+			schReg.register(new Scheme("http", PlainSocketFactory
+					.getSocketFactory(), 80));
+			schReg.register(new Scheme("https", SSLSocketFactory
+					.getSocketFactory(), 443));
+			ClientConnectionManager conMgr = new ThreadSafeClientConnManager(
+					params, schReg);
+			client = new DefaultHttpClient(conMgr, params);
+			client.getParams().setParameter(
+					CoreConnectionPNames.CONNECTION_TIMEOUT, 30000);
+			client.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT,
+					30000);
+			if (getCurrentUserData().getCookieStore() != null) {
+				client.setCookieStore(getCurrentUserData().getCookieStore());
+			}
+			if (getCurrentUserData().isProxyVersion()
+					&& (getCurrentUserData().getProxyUserName() != null)) {
+				addHttpBasicAuthorization(getCurrentUserData(), getCurrentUserData().getProxyUserName(),
+						getCurrentUserData().getProxyPassword());
+			}
+		}
+ 		return client;
 	}
 
 	@Override
@@ -133,13 +161,37 @@ public class CC98ClientImpl implements ICC98Client {
 		getHttpClient().getCookieStore().clear();
 		getHttpClient().getCredentialsProvider().clear();
 	}
+	
+	public DefaultHttpClient getNoCurrentUserHttpClient() {
+			HttpParams params = new BasicHttpParams();
+		HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
+		HttpProtocolParams.setContentCharset(params, HTTP.UTF_8);
+		HttpProtocolParams.setUseExpectContinue(params, true);
+		SchemeRegistry schReg = new SchemeRegistry();
+		schReg.register(new Scheme("http", PlainSocketFactory
+				.getSocketFactory(), 80));
+		schReg.register(new Scheme("https", SSLSocketFactory
+				.getSocketFactory(), 443));
+		ClientConnectionManager conMgr = new ThreadSafeClientConnManager(
+				params, schReg);
+		client = new DefaultHttpClient(conMgr, params);
+		client.getParams().setParameter(
+				CoreConnectionPNames.CONNECTION_TIMEOUT, 30000);
+		client.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT,
+				30000);
+ 		return client;
+	}
 
 	@Override
-	public void doLogin(String id, String pw32, String pw16) throws ClientProtocolException,
+	public void doLogin(String id, String pw32, String pw16, String proxyName, String proxyPwd, boolean useProxy) throws ClientProtocolException,
 			IOException, IllegalAccessException, ParseException,
 			ParseContentException, NetworkErrorException {
-
-		HttpPost httpost = new HttpPost(manager.getLoginUrl());
+		getNoCurrentUserHttpClient();
+		UserData newUserData = new UserData();
+		if (useProxy) {
+			addHttpBasicAuthorization(newUserData, proxyName, proxyPwd);
+		}
+		HttpPost httpost = new HttpPost(manager.getLoginUrl(useProxy));
  		List<NameValuePair> nvps = new ArrayList<NameValuePair>();
 		nvps.add(new BasicNameValuePair("a", "i"));
 		nvps.add(new BasicNameValuePair("u", id));
@@ -151,15 +203,20 @@ public class CC98ClientImpl implements ICC98Client {
 			throw new NetworkErrorException(SERVER_ERROR);
 		}
 		String sysMsg = EntityUtils.toString(response.getEntity());
-		if (sysMsg.contains("密码错误") || sysMsg.contains("论坛错误信息")) {
+		Log.d("doLogin", sysMsg);
+ 		if (!sysMsg.contains("9898")) {
 			throw new IllegalAccessException(ID_PASSWD_ERROR_MSG);
 		}
-		getUserData().setUserName(id);
-		getUserData().setPassword16(pw16);
-		getUserData().setPassword32(pw32);
-		getUserData().setCookieStore(getHttpClient().getCookieStore());
-		getLoginUserImgAndGender();
-		((MyApplication) application).storeUserInfo();
+		newUserData.setUserName(id);
+		newUserData.setPassword16(pw16);
+		newUserData.setPassword32(pw32);
+		newUserData.setProxyVersion(useProxy);
+		newUserData.setProxyUserName(proxyName);
+		newUserData.setProxyPassword(proxyPwd);
+		newUserData.setCookieStore(getHttpClient().getCookieStore());
+		Bitmap bitmap = getLoginUserImgAndGender(newUserData, useProxy);
+		((MyApplication) application).addNewUser(newUserData, bitmap, true);
+		((MyApplication) application).storeUsersInfo();
 	}
 
 	@Override
@@ -171,9 +228,9 @@ public class CC98ClientImpl implements ICC98Client {
 		HttpResponse response = null;
 		String html = null;
 		httpPost.addHeader("Referer", manager.getPushNewPostReferer(boardID));
-		nvpsList.add(new BasicNameValuePair("username", getUserData()
+		nvpsList.add(new BasicNameValuePair("username", getCurrentUserData()
 				.getUserName()));
-		nvpsList.add(new BasicNameValuePair("passwd", getUserData()
+		nvpsList.add(new BasicNameValuePair("passwd", getCurrentUserData()
 				.getPassword16()));
 		httpPost.setEntity(new UrlEncodedFormEntity(nvpsList, HTTP.UTF_8));
 		response = getHttpClient().execute(httpPost);
@@ -214,9 +271,9 @@ public class CC98ClientImpl implements ICC98Client {
 
 		httpPost.addHeader("Referer",
 				manager.getSubmitReplyReferer(boardID, rootID));
-		nvpsList.add(new BasicNameValuePair("username", getUserData()
+		nvpsList.add(new BasicNameValuePair("username", getCurrentUserData()
 				.getUserName()));
-		nvpsList.add(new BasicNameValuePair("passwd", getUserData()
+		nvpsList.add(new BasicNameValuePair("passwd", getCurrentUserData()
 				.getPassword16()));
 		httpPost.setEntity(new UrlEncodedFormEntity(nvpsList, HTTP.UTF_8));
 //		Log.d(TAG, "request: "+EntityUtils.toString(httpPost.getEntity()));
@@ -464,9 +521,9 @@ public class CC98ClientImpl implements ICC98Client {
 		return getBitmapFromUrl(getUserImgUrl(userName));
 	}
 
-	private void getLoginUserImgAndGender() throws ClientProtocolException,
+	private Bitmap getLoginUserImgAndGender(UserData userData2, boolean useProxy) throws ClientProtocolException,
 			ParseException, IOException, ParseContentException {
-		String html = getPage(manager.getUserProfileUrl(getUserData()
+		String html = getPage(manager.getUserProfileUrl(useProxy,userData2
 				.getUserName()));
 		try {
 			String url = RegexUtil.getMatchedString(
@@ -474,23 +531,23 @@ public class CC98ClientImpl implements ICC98Client {
 			if (!url.startsWith("http") && !url.startsWith("ftp")) {
 				url = getDomain() + url;
 			}
-			((MyApplication) application).setUserAvatar(getBitmapFromUrl(url));
+			return getBitmapFromUrl(url);
 		} catch (Exception e) {
-			((MyApplication) application).setUserAvatar(BitmapFactory
-					.decodeFile("file:///android_asset/pic/no_avatar.jpg"));
+			return BitmapFactory
+					.decodeFile("file:///android_asset/pic/no_avatar.jpg");
 		}
 	}
 
 	@Override
-	public void addHttpBasicAuthorization(String authName, String authPassword) {
+	public void addHttpBasicAuthorization(UserData userData2, String authName, String authPassword) {
 		try {
-			URI uri = new URI(getDomain());
+			URI uri = new URI(getDomain(true));
 			getHttpClient().getCredentialsProvider().setCredentials(
 					new AuthScope(uri.getHost(), uri.getPort(),
 							AuthScope.ANY_SCHEME),
 					new UsernamePasswordCredentials(authName, authPassword));
-			getUserData().setProxyUserName(authName);
-			getUserData().setProxyPassword(authPassword);
+			userData2.setProxyUserName(authName);
+			userData2.setProxyPassword(authPassword);
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
 			throw new Error("Very bad error:(", e);
@@ -501,9 +558,26 @@ public class CC98ClientImpl implements ICC98Client {
 	public String getDomain() {
 		return manager.getClientUrl();
 	}
-
+ 
 	@Override
-	public void setUseProxy(boolean b) {
-		getUserData().setProxyVersion(b);
+	public String getDomain(boolean proxy) {
+		return manager.getClientUrl(proxy);
 	}
+ 
+	@Override
+	public List<Bitmap> getuserAvatars() {
+		return ((MyApplication) application).getUserAvatars();
+	}
+
+ 	@Override
+	public UsersInfo getusersInfo() {
+		return ((MyApplication) application).getUsersInfo();
+	}
+ 	
+ 	@Override
+ 	public void switchToUser(int index) {
+ 		getusersInfo().currentUserIndex = index;
+ 		((MyApplication) application).storeUsersInfo();
+ 		getHttpClient(true);
+ 	}
 }

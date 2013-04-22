@@ -10,12 +10,14 @@ import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
 
 import java.io.IOException;
 
+import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
 import tk.djcrazy.MyCC98.application.MyApplication;
 import tk.djcrazy.MyCC98.dialog.AuthDialog;
 import tk.djcrazy.MyCC98.dialog.AuthDialog.MyAuthDialogListener;
 import tk.djcrazy.MyCC98.security.Md5;
 import tk.djcrazy.MyCC98.task.ProgressRoboAsyncTask;
+import tk.djcrazy.MyCC98.util.Intents;
 import tk.djcrazy.MyCC98.util.ToastUtils;
 import tk.djcrazy.libCC98.ICC98Service;
 import android.annotation.SuppressLint;
@@ -37,6 +39,7 @@ import android.os.Message;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -46,7 +49,8 @@ import android.widget.Toast;
 
 import com.google.inject.Inject;
 
-public class LoginActivity extends BaseFragmentActivity implements OnClickListener {
+public class LoginActivity extends BaseFragmentActivity implements
+		OnClickListener {
 	private static final String TAG = "MyCC98";
 
 	public static final boolean IS_LIFETOY_VERSION = true;
@@ -70,6 +74,8 @@ public class LoginActivity extends BaseFragmentActivity implements OnClickListen
 	@InjectView(R.id.auto_login)
 	private CheckBox autoLoginBox;
 
+	@InjectExtra(value = Intents.EXTRA_NEED_LOGIN, optional = true)
+	private boolean mNeedLogin = false;
 	private String mUsername = "";
 	private String mPassword = "";
 	private String mPWD32 = "";
@@ -77,16 +83,14 @@ public class LoginActivity extends BaseFragmentActivity implements OnClickListen
 
 	private String authUserName = "";
 	private String authPassword = "";
-	private Boolean authRememberPwd = false;
+	private boolean useAuth = false;
 	private AuthDialog authDialog;
+	private Boolean authRememberPwd = false;
 
 	private static final String AUTHINFO = "AUTHINFO";
 
 	@Inject
 	private ICC98Service service;
-
-	@Inject
-	private Application application;
 
 	MyAuthDialogListener listener = new MyAuthDialogListener() {
 		@Override
@@ -94,22 +98,22 @@ public class LoginActivity extends BaseFragmentActivity implements OnClickListen
 				Boolean rememberPwd) {
 			authUserName = userName;
 			authPassword = password;
+			useAuth = true;
 			authRememberPwd = rememberPwd;
-			service.setUseProxy(true);
-			service.addProxyAuthorization(userName, password);
 			saveAuthInfo();
-			setupRememberedLoginInfo();
+			showLoginField();
 		}
 
 		@Override
 		public void onCancelClick() {
-			service.setUseProxy(false);
+			useAuth = false;
 			showLoginField();
 		}
 	};
 
 	private void forwardToNextActivity() {
 		Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(intent);
 		finish();
 	}
@@ -117,8 +121,12 @@ public class LoginActivity extends BaseFragmentActivity implements OnClickListen
 	private void showLoginField() {
 		final LinearLayout layout = (LinearLayout) findViewById(R.id.login_field);
 		ImageView loginImg = (ImageView) findViewById(R.id.login_img);
-		animate(layout).setDuration(1000).alpha(1).start();
-		animate(loginImg).setDuration(600).translationY(0).start();
+		animate(layout).setDuration(800)
+				.setInterpolator(new AccelerateDecelerateInterpolator())
+				.alpha(1).setStartDelay(700).start();
+		animate(loginImg).setDuration(800)
+				.setInterpolator(new AccelerateDecelerateInterpolator())
+				.translationY(0).start();
 	}
 
 	@Override
@@ -127,7 +135,13 @@ public class LoginActivity extends BaseFragmentActivity implements OnClickListen
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_login);
 		mSignInButton.setOnClickListener(this);
-		initAuthInfo();
+		if (mNeedLogin) {
+			initAuthInfo();
+		} else if (service.getusersInfo().users.size() < 1) {
+			initAuthInfo();
+		} else {
+			forwardToNextActivity();
+		}
 	}
 
 	private void initAuthInfo() {
@@ -140,9 +154,6 @@ public class LoginActivity extends BaseFragmentActivity implements OnClickListen
 				new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface arg0, int arg1) {
-						service.setUseProxy(true);
-						((MyApplication) getApplication()).getUserData()
-								.setProxyVersion(true);
 						authDialog.show();
 					}
 				});
@@ -150,14 +161,14 @@ public class LoginActivity extends BaseFragmentActivity implements OnClickListen
 				new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface arg0, int arg1) {
-						service.setUseProxy(false);
-						setupRememberedLoginInfo();
+						showLoginField();
 					}
 				});
+		authBuilder.setCancelable(false);
 		if (IS_LIFETOY_VERSION) {
 			authBuilder.show();
 		} else {
-			setupRememberedLoginInfo();
+			showLoginField();
 		}
 	}
 
@@ -172,25 +183,6 @@ public class LoginActivity extends BaseFragmentActivity implements OnClickListen
 					.putBoolean(REMEMBERPWD, false);
 		}
 		editor.commit();
-	}
-
-	private void setupRememberedLoginInfo() {
-		SharedPreferences setting = getSharedPreferences(USERINFO, 0);
-		if (setting.getBoolean(REMEMBERPWD, false)) {
-			mUsernameEdit.setText(setting.getString(USERNAME, ""));
-			mPasswordEdit.setText(setting.getString(PASSWORD32, ""));
-			mPWD32 = setting.getString(PASSWORD32, "");
-			mPWD16 = setting.getString(PASSWORD16, "");
-			rememberPassword.setChecked(true);
-			if (setting.getBoolean(AUTOLOGIN, false)) {
-				autoLoginBox.setChecked(true);
-				if (((MyApplication) application).getUserData() != null) {
-					forwardToNextActivity();
-					return;
-				}
-			}
-		}
-		showLoginField();
 	}
 
 	public void onClick(View v) {
@@ -209,8 +201,10 @@ public class LoginActivity extends BaseFragmentActivity implements OnClickListen
 		mPassword = mPasswordEdit.getText().toString().trim();
 		if (mUsername.equals("")) {
 			ToastUtils.show(this, "用户名不能为空");
+			return;
 		} else if (mPassword.length() <= 0) {
 			ToastUtils.show(this, "密码不能为空");
+			return;
 		}
 		mPWD16 = mPWD16.equals("") ? Md5.MyMD5(mPassword, Md5.T16) : mPWD16;
 		mPWD32 = mPWD32.equals("") ? Md5.MyMD5(mPassword, Md5.T32) : mPWD32;
@@ -221,8 +215,7 @@ public class LoginActivity extends BaseFragmentActivity implements OnClickListen
 		Editor editor = getSharedPreferences(USERINFO, 0).edit();
 		editor.putBoolean(AUTOLOGIN, autoLoginBox.isChecked());
 		if (rememberPassword.isChecked()) {
-			editor.putString(USERNAME, mUsername)
-					.putString(PASSWORD32, mPWD32)
+			editor.putString(USERNAME, mUsername).putString(PASSWORD32, mPWD32)
 					.putString(PASSWORD16, mPWD16)
 					.putBoolean(REMEMBERPWD, true);
 		} else {
@@ -255,7 +248,8 @@ public class LoginActivity extends BaseFragmentActivity implements OnClickListen
 
 		@Override
 		public String call() throws Exception {
-			service.doLogin(userName, password32, password16);
+			service.doLogin(userName, password32, password16, authUserName,
+					authPassword, useAuth);
 			return null;
 		}
 

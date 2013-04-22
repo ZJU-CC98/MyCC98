@@ -7,6 +7,7 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.regex.PatternSyntaxException;
 
+import tk.djcrazy.MyCC98.application.MyApplication.UsersInfo;
 import tk.djcrazy.libCC98.data.BoardEntity;
 import tk.djcrazy.libCC98.data.BoardStatus;
 import tk.djcrazy.libCC98.data.HotTopicEntity;
@@ -27,13 +28,10 @@ import ch.boye.httpclientandroidlib.client.ClientProtocolException;
 import ch.boye.httpclientandroidlib.client.HttpClient;
 
 public interface ICC98Service {
-	public void addProxyAuthorization(String userName, String pwd) ;
-
-	public void setUseProxy(boolean b);
-
+ 
 	public boolean isUseProxy();
 
-	public void doLogin(String userName, String pwd32, String pw16)
+	public void doLogin(String userName, String pwd32, String pw16, String proxyName, String proxyPwd, boolean useProxy)
 			throws ClientProtocolException, IOException,
 			IllegalAccessException, ParseException, ParseContentException,
 			NetworkErrorException;
@@ -45,10 +43,11 @@ public interface ICC98Service {
 	public void addFriend(String friendName) throws ParseException,
 			NoUserFoundException, IOException;
 
-	public String getUserName();
+	public String getCurrentUserName();
 
-	public Bitmap getUserAvatar();
-
+	public List<Bitmap> getUserAvatars();
+	
+	public Bitmap getCurrentUserAvatar();
 	public String uploadFile(File file) throws PatternSyntaxException,
 			MalformedURLException, IOException, ParseContentException;
 
@@ -113,4 +112,9 @@ public interface ICC98Service {
 	public Bitmap getBitmapFromUrl(String url) throws IOException;
 	
 	public ICC98Client getCC98Client();
+
+	public UsersInfo getusersInfo();
+	
+	public void switchToUser(int index);
+
 }

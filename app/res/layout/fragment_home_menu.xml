@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/home_menu_background"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/abs__action_bar_default_height"
+        android:background="#77252525"
+        android:gravity="center_vertical" >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_weight="1.0"
+            android:text="账号"
+            android:textColor="#f9f9f9"
+            android:textSize="18sp" />
+
+        <ImageView
+            android:id="@+id/add_caccount"
+            android:layout_width="@dimen/abs__action_bar_default_height"
+            android:layout_height="@dimen/abs__action_bar_default_height"
+            android:background="@drawable/abs__list_selector_holo_dark"
+            android:scaleType="center"
+            android:src="@drawable/new_account" />
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/home_behind_listview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1.0"
+        android:divider="@drawable/account_list_divider"
+        android:dividerHeight="0.5dp" >
+    </ListView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp" >
+
+        <Button
+            android:id="@+id/home_menu_profile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.0"
+            android:background="@drawable/abs__list_selector_holo_dark"
+            android:drawableTop="@drawable/personal_profile_icon"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp"
+            android:text="个人主页"
+            android:textColor="@android:color/white"
+            android:textSize="12sp" />
+
+        <Button
+            android:id="@+id/home_menu_setting"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.0"
+            android:background="@drawable/abs__list_selector_holo_dark"
+            android:drawableTop="@drawable/setting_btn"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp"
+            android:text="设置"
+            android:textColor="@android:color/white"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <Button
+            android:id="@+id/home_menu_feedback"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.0"
+            android:background="@drawable/abs__list_selector_holo_dark"
+            android:drawableTop="@drawable/feedback_icon"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp"
+            android:text="建议反馈"
+            android:textColor="@android:color/white"
+            android:textSize="12sp" />
+
+        <Button
+            android:id="@+id/home_menu_about"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.0"
+            android:background="@drawable/abs__list_selector_holo_dark"
+            android:drawableTop="@drawable/about_icon"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp"
+            android:text="关于"
+            android:textColor="@android:color/white"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+</LinearLayout>

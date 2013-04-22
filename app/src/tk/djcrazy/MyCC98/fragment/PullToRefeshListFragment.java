@@ -26,6 +26,7 @@ import tk.djcrazy.MyCC98.util.ViewUtils;
 import tk.djcrazy.MyCC98.view.PagedPullToRefreshListView;
 import tk.djcrazy.MyCC98.view.PagedPullToRefreshListView.LoadMoreListener;
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
@@ -97,7 +98,7 @@ public abstract class PullToRefeshListFragment<E> extends RoboSherlockFragment
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.paged_item_list, null);
+		return inflater.inflate(R.layout.paged_item_list, container, false);
 	}
 
 	/**
@@ -138,10 +139,10 @@ public abstract class PullToRefeshListFragment<E> extends RoboSherlockFragment
 	 */
 	protected void configureList(Activity activity,
 			PullToRefreshListView listView) {
-		ListView inner = listView.getRefreshableView();
-		inner.setCacheColorHint(getResources().getColor(R.color.transparent));
-		inner.setDivider(getResources().getDrawable(R.drawable.list_divider));
-		inner.setDividerHeight(1);
+//		ListView inner = listView.getRefreshableView();
+////		inner.setCacheColorHint(getResources().getColor(R.color.transparent));
+// 		inner.setDivider(getResources().getDrawable(R.drawable.list_divider));
+//		inner.setDividerHeight(1);
 		listView.setAdapter(createAdapter(items));
 	}
 
@@ -242,7 +243,7 @@ public abstract class PullToRefeshListFragment<E> extends RoboSherlockFragment
 			if (animate)
 				view.startAnimation(AnimationUtils.loadAnimation(getActivity(),
 						R.anim.activity_open_enter));
-			else
+			else;
 				view.clearAnimation();
 		return this;
 	}
@@ -276,7 +277,7 @@ public abstract class PullToRefeshListFragment<E> extends RoboSherlockFragment
 	 */
 	public PullToRefeshListFragment<E> setListShown(final boolean shown,
 			final boolean animate) {
-		if (!isUsable())
+ 		if (!isUsable())
 			return this;
 
 		if (shown == listShown) {

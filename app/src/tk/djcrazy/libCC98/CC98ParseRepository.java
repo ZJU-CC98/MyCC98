@@ -9,7 +9,7 @@ public class CC98ParseRepository {
 	public static final String POST_CONTENT_INFO_REGEX = "(?<=<title>).*?(?=&raquo;)|" +
 			"(?<=&page=\\d{1,5}>).+?(?=</a>)|" +
 			"(?<=本主题贴数 <b>).{0,10}?(?=</b>)";
-	public static final String POST_CONTENT_USERNAME_REGEX = "(?<=<span style=\"color: #.{6};\"><b>).*?(?=</b></span>)";
+	public static final String POST_CONTENT_USERNAME_REGEX = "(?<=<span style=\"color: #.{3,8};\"><b>).*?(?=</b></span>)";
 	public static final String POST_CONTENT_WHOLE_REGEX="(?<=<table cellpadding=).*?(?=align=absmiddle></a>)";
 	public static final String POST_CONTENT_POST_CONTENT_REGEX = "(?<=</b><br>).*?</script>";
 	public static final String POST_CONTENT_USER_AVATAR_LINK_REGEX = "(?<=\"><img src=\").*?(?=\" )|(?<=&nbsp;<img src=\").*?(?=\" style=\"border-style)";

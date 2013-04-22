@@ -73,7 +73,7 @@ public class PmViewActivity extends BaseFragmentActivity {
 		ActionBar actionBar = getSupportActionBar();
 		actionBar.setTitle("查看短消息");
 		actionBar.setDisplayHomeAsUpEnabled(true);
-		actionBar.setLogo(new BitmapDrawable(service.getUserAvatar()));
+		actionBar.setLogo(new BitmapDrawable(service.getCurrentUserAvatar()));
 		setViews();
 		preparePage(pmId);
 	}

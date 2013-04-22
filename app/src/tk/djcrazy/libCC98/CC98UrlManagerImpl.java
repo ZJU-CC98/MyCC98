@@ -29,9 +29,16 @@ public class CC98UrlManagerImpl implements ICC98UrlManager {
 			return CC98;
 		}
 	}
+	private String getClient(boolean proxy) {
+		if (proxy) {
+			return LIFETOY;
+		} else {
+			return CC98;
+		}
+	}
 
 	private boolean isProxyVersion() {
-		return ((MyApplication) application).getUserData().isProxyVersion();
+		return ((MyApplication) application).getCurrentUserData().isProxyVersion();
 	}
 
 	@Override
@@ -127,6 +134,11 @@ public class CC98UrlManagerImpl implements ICC98UrlManager {
 	}
 
 	@Override
+	public String getUserProfileUrl(boolean proxy, String userName) {
+		return getClient(proxy) + "dispuser.asp?name=" + URLEncoder.encode(userName);
+	}
+
+	@Override
 	public String getNewPostUrl(int pageNum) {
 		return getClient() + "queryresult.asp?stype=3" + "&page=" + pageNum;
 	}
@@ -149,6 +161,11 @@ public class CC98UrlManagerImpl implements ICC98UrlManager {
 	@Override
 	public String getLoginUrl() {
 		return getClient() + "sign.asp";
+	}
+
+	@Override
+	public String getLoginUrl(boolean proxy) {
+		return getClient(proxy) + "sign.asp";
 	}
 
   
@@ -177,6 +194,16 @@ public class CC98UrlManagerImpl implements ICC98UrlManager {
 	public String getSubmitReplyReferer(String boardID, String rootID) {
 		return getClient() + "reannounce.asp?BoardID=" + boardID + "&id="
 				+ rootID + "&star=1";
+	}
+
+	@Override
+	public String getClientUrl(boolean proxy) {
+		if (proxy) {
+			return LIFETOY;
+		} else {
+			return CC98;
+		}
+		  
 	}
 
  }

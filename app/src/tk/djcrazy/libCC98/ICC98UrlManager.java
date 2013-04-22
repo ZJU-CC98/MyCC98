@@ -44,6 +44,8 @@ public interface ICC98UrlManager {
 	public String getPersonalBoardUrl();
 
 	public String getClientUrl();
+	
+	public String getClientUrl(boolean proxy);
 
 	public String getBoardUrl(String boardId, int pageNum);
 
@@ -95,5 +97,8 @@ public interface ICC98UrlManager {
  	public String getSubmitReplyUrl(String boardID);
 
  	public String getSubmitReplyReferer(String boardID, String rootID);
- 
+
+ 	public String getUserProfileUrl(boolean proxy, String userName);
+
+ 	public String getLoginUrl(boolean proxy);
 }

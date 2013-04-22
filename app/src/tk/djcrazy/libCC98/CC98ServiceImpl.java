@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.PatternSyntaxException;
 
+import tk.djcrazy.MyCC98.application.MyApplication.UsersInfo;
 import tk.djcrazy.libCC98.data.BoardEntity;
 import tk.djcrazy.libCC98.data.BoardStatus;
 import tk.djcrazy.libCC98.data.HotTopicEntity;
@@ -40,21 +41,11 @@ public class CC98ServiceImpl implements ICC98Service {
 	private ICC98Parser cc98Parser;
 
 	@Override
-	public void addProxyAuthorization(String userName, String pwd) {
-		cc98Client.addHttpBasicAuthorization(userName, pwd);
-	}
-
-	@Override
-	public void setUseProxy(boolean b) {
-		cc98Client.setUseProxy(b);
-	}
-
-	@Override
-	public void doLogin(String userName, String pwd32, String pwd16)
+	public void doLogin(String userName, String pwd32, String pwd16, String proxyName, String proxyPwd, boolean useProxy)
 			throws ClientProtocolException, IOException,
 			IllegalAccessException, ParseException, ParseContentException,
 			NetworkErrorException {
-		cc98Client.doLogin(userName, pwd32, pwd16);
+		cc98Client.doLogin(userName, pwd32, pwd16, proxyName, proxyPwd, useProxy);
 	}
 
 	@Override
@@ -214,13 +205,13 @@ public class CC98ServiceImpl implements ICC98Service {
 	}
 
 	@Override
-	public String getUserName() {
-		return cc98Client.getUserData().getUserName();
+	public String getCurrentUserName() {
+		return cc98Client.getCurrentUserData().getUserName();
 	}
  
 	@Override
-	public Bitmap getUserAvatar() {
-		return cc98Client.getUserAvatar(); 
+	public List<Bitmap> getUserAvatars() {
+		return cc98Client.getuserAvatars(); 
 	}
 
 	@Override
@@ -228,4 +219,18 @@ public class CC98ServiceImpl implements ICC98Service {
 		return cc98Client;
 	}
 
+	@Override
+	public UsersInfo getusersInfo() {
+		return cc98Client.getusersInfo();
+	}
+
+	@Override
+	public Bitmap getCurrentUserAvatar() {
+		return cc98Client.getCurrentUserAvatar();
+	}
+
+	@Override
+	public void switchToUser(int index) {
+		cc98Client.switchToUser(index);
+	}
 }
