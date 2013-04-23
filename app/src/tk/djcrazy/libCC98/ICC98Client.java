@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.regex.PatternSyntaxException;
 
 import tk.djcrazy.MyCC98.application.MyApplication.UsersInfo;
+import tk.djcrazy.libCC98.data.LoginType;
 import tk.djcrazy.libCC98.data.UserData;
 import tk.djcrazy.libCC98.exception.NoUserFoundException;
 import tk.djcrazy.libCC98.exception.ParseContentException;
@@ -35,7 +36,7 @@ public interface ICC98Client {
 	 * @throws ParseException
 	 * @throws NetworkErrorException
 	 */
-	public void doLogin(String id, String pw32, String pw16, String proxyName, String proxyPwd, boolean useProxy) throws ClientProtocolException,
+	public void doLogin(String id, String pw32, String pw16, String proxyName, String proxyPwd, LoginType type) throws ClientProtocolException,
 			IOException, IllegalAccessException, ParseException,
 			ParseContentException, NetworkErrorException;
 
@@ -218,7 +219,7 @@ public interface ICC98Client {
 
 	public UsersInfo getusersInfo();
 
-	public String getDomain(boolean proxy);
+	public String getDomain(LoginType type);
 
 	public void switchToUser(int index);
 }

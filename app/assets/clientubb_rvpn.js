@@ -1,4 +1,4 @@
-﻿var canemcode=true;
+var canemcode=true;
 var canimgcode=true;
 var canmediacode=true;
 var canimgsign=true;
@@ -7,16 +7,6 @@ var isSimple=false;
 var emotdir='file:///android_asset/emot/';
 var icondir='file:///android_asset/images/files/';
 var tdclass;
-/*
-	2012.10.08(樱桃): 增加 Silverlight 支持
-	2012.10.09(樱桃): 改变 Silverlight 解析方式，支持替代内容和可选参数
-	2012.11.17(樱桃): 增加 tr td th 元素支持
-	2013.01.03(樱桃): 增加 topic 元素支持
-	2013.01.04(樱桃): 增加 board 元素支持
-	2013.03.29(樱桃): 修改 Flash 代码，降低安全风险
-*/
-
-// 字符串的 format 函数
 String.format = function () {
 	if (arguments.length == 0)
 		return null;
@@ -24,7 +14,7 @@ String.format = function () {
 	var str = arguments[0];
 	for (var i = 1; i < arguments.length; i++) {
 		var re = new RegExp('\\{' + (i - 1) + '\\}', 'gm');
-		str = str.replace(re, arguments[i]);
+		str = SF_FUNC_CALLFUNC(str,000000+19,this,re, arguments[i]);
 	}
 	return str;
 }
@@ -32,9 +22,9 @@ String.format = function () {
 
 function searchubb(tagid, posttype, thetdclass) {
 	tdclass = thetdclass;
-	var UbbInnerHtml = $(tagid).innerHTML.replace(/\<br\>/g, "<BR>").replace(/\r\n/g, '');
+	var UbbInnerHtml = SF_FUNC_GETATT($(tagid),00000+9).replace(/\<br\>/g, "<BR>").replace(/\r\n/g, '');
 	if (posttype == 3)
-		$(tagid).innerHTML = ubb.noubb(ubbsigncode(UbbInnerHtml));
+		SF_FUNC_SETATT($(tagid),000000+9, ubb.noubb(ubbsigncode(UbbInnerHtml)));
 	else {
 		var currubb = ubbcode(UbbInnerHtml);
 		var preubb = currubb;
@@ -43,13 +33,13 @@ function searchubb(tagid, posttype, thetdclass) {
 				preubb = currubb;
 			else
 				break;
-		$(tagid).innerHTML = ubb.noubb(ubb.code(ubb.noubb(currubb), '', 1));
+		SF_FUNC_SETATT($(tagid),000000+9, ubb.noubb(ubb.code(ubb.noubb(currubb), '', 1)));
 	}
 }
 
 function ubbcode(str) {
 	var pattern;
-	//noubb
+	       
 	pattern = /(^.*?)\[noubb\](.*?)\[\/noubb\](.*$)/i;
 	while (pattern.test(str)) {
 		var beforeNoubb = RegExp.$1;
@@ -58,7 +48,7 @@ function ubbcode(str) {
 		str = beforeNoubb + '{noubb' + ubb.num['noubb'].toString() + '}' + afterNoubb;
 		ubb.num['noubb']++;
 	}
-	// code
+	       
 	pattern = /(^.*?)(\[code(.*?)\](.*?)\[\/code\])(.*$)/i;
 	while (pattern.test(str)) {
 		var beforeCode = RegExp.$1;
@@ -71,13 +61,13 @@ function ubbcode(str) {
 		str = beforeCode + '{codes' + ubb.num['code'].toString() + '}' + afterCode;
 		ubb.num['code']++;
 	}
-	//image,media,url,emtion,quote,color and so on.
+	                                               
 	str = ubb.img(str, 1);
 	str = ubb.file(str);
 	str = ubb.media(str);
 	str = ubb.emotion(str);
 	str = ubb.quote(str);
-	//str = ubb.noEdit(str);
+	                        
 	str = ubb.color(str);
 	str = ubb.share(str);
 	str = ubb.software(str);
@@ -89,7 +79,7 @@ function ubbcode(str) {
 	str = ubb.i(str);
 	str = ubb.u(str);
 	str = ubb.del(str);
-	//str = ubb.cursor(str);
+	                        
 	str = ubb.english(str);
 	str = ubb.size(str);
 	str = ubb.align(str);
@@ -106,18 +96,16 @@ function ubbcode(str) {
 	return str;
 }
 
-/* 
- *Silverlight 解析代码 by 樱桃
- */
+                                              
 
-// Silverlight 代码
+                     
 function ubbSilverlightCode(str) {
 
 	var pattern = /\[SL=(.*?)\](.*?)\[\/SL\]/gi;
-	return str.replace(pattern, ubbSilverlightSingleReplace);
+	return SF_FUNC_CALLFUNC(str,000000+19,this,pattern, ubbSilverlightSingleReplace);
 }
 
-// 单个匹配的替换功能
+                              
 function ubbSilverlightSingleReplace(all, params, altUbb) {
 	var altHtml = ubbcode(altUbb);
 
@@ -130,7 +118,7 @@ function ubbSilverlightSingleReplace(all, params, altUbb) {
 	return html;
 }
 
-// 生成最终的 Silverlight Object HTML 代码。
+                                                    
 function ubbSilverlightBuidHtml(objInfo) {
 
 	if (objInfo == null) {
@@ -138,20 +126,20 @@ function ubbSilverlightBuidHtml(objInfo) {
 	}
 
 	var result = Silverlight.createObject(
-			objInfo.source, // Source
-			null, // Parent ID
-			null, // Object ID
-			objInfo.params, // Optional Params
-			null, // Event Handlers
-			objInfo.initParams, // initParams, 
-			null // context ID
+			objInfo.source,          
+			null,             
+			null,             
+			objInfo.params,                   
+			null,                  
+			objInfo.initParams,                
+			null              
 		);
 
 	return result;
 }
 
 
-// 为 Silverlight 对象附加替代 HTML。
+                                             
 function ubbSilverlightAttachAltHtml(objeInfo, altHtml) {
 	if (objeInfo != null) {
 		objeInfo.params.alt = altHtml;
@@ -159,7 +147,7 @@ function ubbSilverlightAttachAltHtml(objeInfo, altHtml) {
 }
 
 
-// 移除引号
+               
 function removequote(str) {
 	var quetomatch = /^"(.*)"$/i.exec(str);
 	if (quetomatch != null) {
@@ -170,32 +158,32 @@ function removequote(str) {
 	}
 }
 
-// 设置必要的安全信息。
+                                 
 function ubbSilverlightSetOptions(objInfo) {
 	if (objInfo != null) {
 
-		// 删除替代文字
+		                     
 		if (objInfo.params.alt == "") {
 			delete objInfo.params.alt;
 		}
 
-		// 安全限制
+		               
 		objInfo.params.enablehtmlaccess = false;
 		objInfo.params.allowHtmlPopupWindow = false;
 	}
 }
 
-// Silverlight 参数解析
+                           
 function ubbSilverlightGenerateObject(params) {
 
 	var pattern = /("[^"]*"|[^\s,]*)\s*,\s*("[^"]"|[^\s,]*)(.*)/i;
 
-	// 参数表 "allowHtmlPopupWindow", "autoUpgrade", "background", "enableautozoom", "enableCacheVisualization", "enableGPUAcceleration", "enablehtmlaccess", "enableNavigation", "enableRedrawRegions", "maxframerate", "minRuntimeVersion", "splashscreensource", "windowless"
+	                                                                                                                                                                                                                                                                               
 
-	// 禁止参数：enablehtmlaccess allowHtmlPopupWindow 允许参数 width height
+	                                                                                 
 	var allowedParams = new Array("autoUpgrade", "background", "enableautozoom", "enableCacheVisualization", "enableGPUAcceleration", "enableNavigation", "enableRedrawRegions", "maxframerate", "minRuntimeVersion", "splashscreensource", "width", "height", "windowless");
 
-	// 转换大小写
+	                  
 	for (var i = 0; i < allowedParams.length; i++) {
 		allowedParams[i] = allowedParams[i].toLowerCase();
 	}
@@ -216,14 +204,14 @@ function ubbSilverlightGenerateObject(params) {
 		var addParam = function (all, name, value) {
 			var realname = removequote(name).toLowerCase();
 
-			// 参数限制
+			               
 			if (allowedParams.indexOf(realname) != -1) {
 				result.params[removequote(name)] = removequote(value);
 			}
 			return all;
 		}
 
-		otherParams.replace(otherPattern, addParam);
+		SF_FUNC_CALLFUNC(otherParams,000000+19,this,otherPattern, addParam);
 
 		return result;
 
@@ -250,7 +238,7 @@ function ubbsigncode(str) {
 	str = ubb.del(str);
 	str = ubb.topic(str);
 	str = ubb.board(str);
-	//str = ubb.cursor(str);
+	                        
 	str = ubb.user(str);
 	str = ubb.color(str);
 	str = ubb.share(str);
@@ -269,7 +257,7 @@ var copy2cb = function (str) {
 	str = str.replace(/&gt;/gi, ">");
 	str = str.replace(/&amp;/gi, "&");
 	window.clipboardData.setData('text', str);
-	alert('代码已经复制到剪贴板');
+	alert('ä»£ç å·²ç»å¤å¶å°åªè´´æ¿');
 }
 
 var loadImg = function (target) {
@@ -292,15 +280,15 @@ window.addEvent('domready', function () {
 	})
 	var qmds = $$('div.userQmd');
 	$each(qmds, function (qmd) {
-		if (qmd.innerHTML.test('<img.*?>', 'i')) {
+		if (SF_FUNC_GETATT(qmd,00000+9).test('<img.*?>', 'i')) {
 			if (qmd.getSize().y > 450) {
-				//qmd.setStyle('height','450px');
-				qmd.innerHTML = '<br /><span style="color:blue;">该用户qmd过长，已被My CC98 My Home，请及时修改。</span><br />';
+				                                 
+				SF_FUNC_SETATT(qmd,000000+9, '<br /><span style="color:blue;">è¯¥ç¨æ·qmdè¿é¿ï¼å·²è¢«My CC98 My Homeï¼è¯·åæ¶ä¿®æ¹ã</span><br />');
 			}
 		} else {
 			if (qmd.getSize().y > 250) {
-				//qmd.setStyle('height','250px');
-				qmd.innerHTML = '<br /><span style="color:blue;">该用户qmd过长，已被My CC98 My Home，请及时修改。</span><br />';
+				                                 
+				SF_FUNC_SETATT(qmd,000000+9, '<br /><span style="color:blue;">è¯¥ç¨æ·qmdè¿é¿ï¼å·²è¢«My CC98 My Homeï¼è¯·åæ¶ä¿®æ¹ã</span><br />');
 			}
 		}
 	})
@@ -312,7 +300,7 @@ window.addEvent('domready', function () {
 	if ($('showAllImages')) {
 		$('showAllImages').addEvent('click', function () {
 			$$('a.clickloadImage').each(function (item) {
-				(function () { item.innerHTML = loadImg(item.href); }).delay(100);
+				(function () { SF_FUNC_SETATT(item,000000+9, loadImg(SF_FUNC_GETATT(item,+7))); }).delay(100);
 			})
 		})
 	}
@@ -524,14 +512,14 @@ var ubb = {
 	},
 	pm: function (str) {
 		str = str.replace(/\[pm=(.[^\[\'\"\:\(\)\;]*?)\](.*?)\[\/pm\]/gi, "<a href=\"javascript:;\" onclick=\"window.open(\'messanger.asp?action=new&touser=$1\',\'new_win\',\'width=500,height=400,resizable=yes,scrollbars=1\')\">$2</a>");
-		str = str.replace(/\[pm\](.[^\[\'\"\:\(\)\;]*?)\[\/pm\]/gi, "<a href=\"javascript:;\" onclick=\"window.open(\'messanger.asp?action=new&touser=$1\',\'new_win\',\'width=500,height=400,resizable=yes,scrollbars=1\')\">点击此处发送论坛短消息给$1</a>");
+		str = str.replace(/\[pm\](.[^\[\'\"\:\(\)\;]*?)\[\/pm\]/gi, "<a href=\"javascript:;\" onclick=\"window.open(\'messanger.asp?action=new&touser=$1\',\'new_win\',\'width=500,height=400,resizable=yes,scrollbars=1\')\">ç¹å»æ­¤å¤åéè®ºåç­æ¶æ¯ç»$1</a>");
 		return str;
 	},
 	noubb: function (content) {
 		var pattern = /{noubb([0-9]*)}/i;
 		while (content.test(pattern)) {
 			var tempNum = RegExp.$1;
-			content = content.replace(pattern, '<span id="noubb' + tempNum + '" onDblClick="copy2cb(this.innerHTML)">' + ubb.storage.noubb[tempNum] + '</span>');
+			content = SF_FUNC_CALLFUNC(content,000000+19,this,pattern, '<span id="noubb' + tempNum + '" onDblClick="copy2cb(this.innerHTML)">' + ubb.storage.noubb[tempNum] + '</span>');
 		}
 		return content;
 	},
@@ -540,7 +528,7 @@ var ubb = {
 			var pattern = /{codes([0-9]*)}/i;
 			while (str.test(pattern)) {
 				var tempNum = RegExp.$1;
-				str = str.replace(pattern, ubb.storage.code[tempNum]);
+				str = SF_FUNC_CALLFUNC(str,000000+19,this,pattern, ubb.storage.code[tempNum]);
 			}
 			return str;
 		} else {
@@ -550,7 +538,7 @@ var ubb = {
 	media: function (str) {
 		var pattern;
 		if (canmediacode) {
-			//mp3 player
+			            
 			if (ubb.num['musicAuto'] < 1) {
 				pattern = /\[mp3=1\](.[^\[\'\"\(\)]*)\[\/mp3\]/gi;
 				if (pattern.test(str)) {
@@ -559,22 +547,22 @@ var ubb = {
 				}
 			}
 			str = str.replace(/\[mp3\](.[^\[\'\"\(\)]*)\[\/mp3\]/gi, '<div style="height:20px; width:240px;border:1px #e4e8ef solid;"><embed src="inc/mp3player.swf" width="240" height="20" type="application/x-shockwave-flash" quality="high" flashvars="mp3=$1&autoplay=0&showtime=1"></embed></object></div>');
-			//end mp3 player
-			//CC98 Share media
+			                
+			                  
 			str = str.replace(/\[MP=*([0-9]*),*([0-9]*),*([01]*)\](http:\/\/share\.cc98\.org\/[0-9A-Za-z]*?)(.file)?\[\/MP]/gi, '<embed type="application/x-mplayer2" pluginspage="http://microsoft.com/windows/mediaplayer/en/download/" src="$4" autoStart="0" width="$1" height="$2" />');
 			str = str.replace(/\[RM=*([0-9]*),*([0-9]*),*([01]*)\](http:\/\/share\.cc98\.org\/[0-9A-Za-z]*?)(.file)?\[\/RM]/gi, "<OBJECT classid=clsid:CFCDAA03-8BE4-11cf-B84B-0020AFBBCCFA class=OBJECT id=RAOCX width=$1 height=$2><PARAM NAME=SRC VALUE=$4><PARAM NAME=CONSOLE VALUE=Clip1><PARAM NAME=CONTROLS VALUE=imagewindow><param name=\"AutoStart\" value=\"False\"></OBJECT><BR><OBJECT classid=CLSID:CFCDAA03-8BE4-11CF-B84B-0020AFBBCCFA height=32 id=video2 width=$1><PARAM NAME=SRC VALUE=$4><PARAM NAME=AUTOSTART VALUE=0><PARAM NAME=CONTROLS VALUE=controlpanel><PARAM NAME=CONSOLE VALUE=Clip1></OBJECT>");
-			str = str.replace(/(\[FLASH\])(http:\/\/share\.cc98\.org\/[0-9A-Za-z]*?)(.file)?(\[\/FLASH\])/gi, "<a href=\"$2\" TARGET=_blank><IMG SRC=pic/swf.gif border=0 alt=点击开新窗口欣赏该FLASH动画! height=16 width=16>[全屏欣赏]</a><BR><object classid=\"clsid:d27cdb6e-ae6d-11cf-96b8-444553540000\" codebase=\"http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0\" width=\"500\" height=\"400\" align=\"middle\"><param name=\"allowScriptAccess\" value=\"always\" /><param name=\"movie\" value=\"$2\" /><param name=\"quality\" value=\"high\" /><param name=\"wmode\" value=\"transparent\" /><param name=\"devicefont\" value=\"true\" /><embed src=\"$2\" quality=\"high\" wmode=\"transparent\" devicefont=\"true\" width=\"500\" height=\"400\" swLiveConnect=true align=\"middle\" allowScriptAccess=\"always\" type=\"application/x-shockwave-flash\" pluginspage=\"http://www.macromedia.com/go/getflashplayer\" /></object>");
-			str = str.replace(/(\[FLASH=*([0-9]*),*([0-9]*),*([01]*)\])(http:\/\/share\.cc98\.org\/[0-9A-Za-z]*?)(.file)?(\[\/FLASH\])/gi, "<a href=\"$5\" TARGET=_blank><IMG SRC=pic/swf.gif border=0 alt=点击开新窗口欣赏该FLASH动画! height=16 width=16>[全屏欣赏]</a><BR><object classid=\"clsid:d27cdb6e-ae6d-11cf-96b8-444553540000\" codebase=\"http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0\" width=\"$2\" height=\"$3\" align=\"middle\"><param name=\"allowScriptAccess\" value=\"always\" /><param name=\"movie\" value=\"$5\" /><param name=\"play\" value=\"$4\" /><param name=\"quality\" value=\"high\" /><param name=\"wmode\" value=\"transparent\" /><param name=\"devicefont\" value=\"true\" /><embed src=\"$5\" quality=\"high\" wmode=\"transparent\" devicefont=\"true\" width=\"$2\" height=\"$3\" swLiveConnect=true align=\"middle\" allowScriptAccess=\"always\" type=\"application/x-shockwave-flash\" pluginspage=\"http://www.macromedia.com/go/getflashplayer\" play=\"$4\" /></object>");
+			str = str.replace(/(\[FLASH\])(http:\/\/share\.cc98\.org\/[0-9A-Za-z]*?)(.file)?(\[\/FLASH\])/gi, "<a href=\"$2\" TARGET=_blank><IMG SRC=pic/swf.gif border=0 alt=ç¹å»å¼æ°çªå£æ¬£èµè¯¥FLASHå¨ç»! height=16 width=16>[å¨å±æ¬£èµ]</a><BR><object classid=\"clsid:d27cdb6e-ae6d-11cf-96b8-444553540000\" codebase=\"http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0\" width=\"500\" height=\"400\" align=\"middle\"><param name=\"allowScriptAccess\" value=\"always\" /><param name=\"movie\" value=\"$2\" /><param name=\"quality\" value=\"high\" /><param name=\"wmode\" value=\"transparent\" /><param name=\"devicefont\" value=\"true\" /><embed src=\"$2\" quality=\"high\" wmode=\"transparent\" devicefont=\"true\" width=\"500\" height=\"400\" swLiveConnect=true align=\"middle\" allowScriptAccess=\"always\" type=\"application/x-shockwave-flash\" pluginspage=\"http://www.macromedia.com/go/getflashplayer\" /></object>");
+			str = str.replace(/(\[FLASH=*([0-9]*),*([0-9]*),*([01]*)\])(http:\/\/share\.cc98\.org\/[0-9A-Za-z]*?)(.file)?(\[\/FLASH\])/gi, "<a href=\"$5\" TARGET=_blank><IMG SRC=pic/swf.gif border=0 alt=ç¹å»å¼æ°çªå£æ¬£èµè¯¥FLASHå¨ç»! height=16 width=16>[å¨å±æ¬£èµ]</a><BR><object classid=\"clsid:d27cdb6e-ae6d-11cf-96b8-444553540000\" codebase=\"http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0\" width=\"$2\" height=\"$3\" align=\"middle\"><param name=\"allowScriptAccess\" value=\"always\" /><param name=\"movie\" value=\"$5\" /><param name=\"play\" value=\"$4\" /><param name=\"quality\" value=\"high\" /><param name=\"wmode\" value=\"transparent\" /><param name=\"devicefont\" value=\"true\" /><embed src=\"$5\" quality=\"high\" wmode=\"transparent\" devicefont=\"true\" width=\"$2\" height=\"$3\" swLiveConnect=true align=\"middle\" allowScriptAccess=\"always\" type=\"application/x-shockwave-flash\" pluginspage=\"http://www.macromedia.com/go/getflashplayer\" play=\"$4\" /></object>");
 			str = str.replace(/(\[FLV\])(http:\/\/share\.cc98\.org\/[0-9A-Za-z]*?)(.file)?(\[\/FLV\])/gi, "<object classid=\"clsid:d27cdb6e-ae6d-11cf-96b8-444553540000\" codebase=\"http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0\" id=\"flvplayer\" width=\"400\" height=\"320\" align=\"middle\"><param name=\"allowScriptAccess\" value=\"always\" /><param name=\"movie\" value=\"inc/flvplayer.swf?file=$2\" /><param name=\"quality\" value=\"high\" /><param name=\"wmode\" value=\"transparent\" /><param name=\"devicefont\" value=\"true\" /><param name=\"bgcolor\" value=\"#ffffff\" /><embed src=\"inc/flvplayer.swf?file=$2\" quality=\"high\" wmode=\"transparent\" devicefont=\"true\" bgcolor=\"#ffffff\" width=\"400\" height=\"320\" swLiveConnect=true id=\"flvplayer\" name=\"flvplayer\" align=\"middle\" allowScriptAccess=\"always\" type=\"application/x-shockwave-flash\" pluginspage=\"http://www.macromedia.com/go/getflashplayer\" /></object>");
 			str = str.replace(/\[FLV=*([0-9]*),*([0-9]*)\](http:\/\/share\.cc98\.org\/[0-9A-Za-z]*?)(.file)?\[\/FLV\]/gi, "<object classid=\"clsid:d27cdb6e-ae6d-11cf-96b8-444553540000\" codebase=\"http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0\" id=\"flvplayer\" width=\"$1\" height=\"$2\" align=\"middle\"><param name=\"allowScriptAccess\" value=\"always\" /><param name=\"movie\" value=\"inc/flvplayer.swf?file=$3\" /><param name=\"quality\" value=\"high\" /><param name=\"wmode\" value=\"transparent\" /><param name=\"devicefont\" value=\"true\" /><param name=\"bgcolor\" value=\"#ffffff\" /><embed src=\"inc/flvplayer.swf?file=$3\" quality=\"high\" wmode=\"transparent\" devicefont=\"true\" bgcolor=\"#ffffff\" width=\"$1\" height=\"$2\" swLiveConnect=true id=\"flvplayer\" name=\"flvplayer\" align=\"middle\" allowScriptAccess=\"always\" type=\"application/x-shockwave-flash\" pluginspage=\"http://www.macromedia.com/go/getflashplayer\" /></object>");
-			//End CC98 Share media
+			                      
 			str = str.replace(/\[MP=*([0-9]*),*([0-9]*),*([01]*)\](.[^\[\'\"\(\)]*)\[\/MP]/gi, "<object align=middle classid=CLSID:22d6f312-b0f6-11d0-94ab-0080c74c7e95 class=OBJECT id=MediaPlayer width=$1 height=$2 ><param name=\"AutoStart\" value=\"False\"><param name=ShowStatusBar value=-1><param name=Filename value=$4><embed type=application/x-oleobject codebase=http://activex.microsoft.com/activex/controls/mplayer/en/nsmp2inf.cab#Version=5,1,52,701 flename=mp src=$4 autoStart=0 width=$1 height=$2></embed></object>");
 			str = str.replace(/\[RM=*([0-9]*),*([0-9]*),*([01]*)\](.[^\[\'\"\(\)]*)\[\/RM]/gi, "<OBJECT classid=clsid:CFCDAA03-8BE4-11cf-B84B-0020AFBBCCFA class=OBJECT id=RAOCX width=$1 height=$2><PARAM NAME=SRC VALUE=$4><PARAM NAME=CONSOLE VALUE=Clip1><PARAM NAME=CONTROLS VALUE=imagewindow><param name=\"AutoStart\" value=\"False\"></OBJECT><BR><OBJECT classid=CLSID:CFCDAA03-8BE4-11CF-B84B-0020AFBBCCFA height=32 id=video2 width=$1><PARAM NAME=SRC VALUE=$4><PARAM NAME=AUTOSTART VALUE=0><PARAM NAME=CONTROLS VALUE=controlpanel><PARAM NAME=CONSOLE VALUE=Clip1></OBJECT>");
-			str = str.replace(/(\[FLASH\])(.[^\[\'\"\(\)]*)(\[\/FLASH\])/gi, "<a href=\"$2\" TARGET=_blank><IMG SRC=pic/swf.gif border=0 alt=点击开新窗口欣赏该FLASH动画! height=16 width=16>[全屏欣赏]</a><BR><object classid=\"clsid:d27cdb6e-ae6d-11cf-96b8-444553540000\" codebase=\"http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0\" width=\"500\" height=\"400\" align=\"middle\"><param name=\"allowScriptAccess\" value=\"always\" /><param name=\"movie\" value=\"$2\" /><param name=\"quality\" value=\"high\" /><param name=\"wmode\" value=\"transparent\" /><param name=\"devicefont\" value=\"true\" /><embed src=\"$2\" quality=\"high\" wmode=\"transparent\" devicefont=\"true\" width=\"500\" height=\"400\" swLiveConnect=true align=\"middle\" allowScriptAccess=\"never\" type=\"application/x-shockwave-flash\" pluginspage=\"http://www.macromedia.com/go/getflashplayer\" /></object>");
-			str = str.replace(/(\[FLASH=*([0-9]*),*([0-9]*),*([01]*)\])(.[^\[\'\"\(\)]*)(\[\/FLASH\])/gi, "<a href=\"$5\" TARGET=_blank><IMG SRC=pic/swf.gif border=0 alt=点击开新窗口欣赏该FLASH动画! height=16 width=16>[全屏欣赏]</a><BR><object classid=\"clsid:d27cdb6e-ae6d-11cf-96b8-444553540000\" codebase=\"http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0\" width=\"$2\" height=\"$3\" align=\"middle\"><param name=\"allowScriptAccess\" value=\"always\" /><param name=\"movie\" value=\"$5\" /><param name=\"play\" value=\"$4\" /><param name=\"quality\" value=\"high\" /><param name=\"wmode\" value=\"transparent\" /><param name=\"devicefont\" value=\"true\" /><embed src=\"$5\" quality=\"high\" wmode=\"transparent\" devicefont=\"true\" width=\"$2\" height=\"$3\" swLiveConnect=true align=\"middle\" allowScriptAccess=\"always\" type=\"application/x-shockwave-flash\" pluginspage=\"http://www.macromedia.com/go/getflashplayer\" play=\"$4\" /></object>");
+			str = str.replace(/(\[FLASH\])(.[^\[\'\"\(\)]*)(\[\/FLASH\])/gi, "<a href=\"$2\" TARGET=_blank><IMG SRC=pic/swf.gif border=0 alt=ç¹å»å¼æ°çªå£æ¬£èµè¯¥FLASHå¨ç»! height=16 width=16>[å¨å±æ¬£èµ]</a><BR><object classid=\"clsid:d27cdb6e-ae6d-11cf-96b8-444553540000\" codebase=\"http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0\" width=\"500\" height=\"400\" align=\"middle\"><param name=\"allowScriptAccess\" value=\"always\" /><param name=\"movie\" value=\"$2\" /><param name=\"quality\" value=\"high\" /><param name=\"wmode\" value=\"transparent\" /><param name=\"devicefont\" value=\"true\" /><embed src=\"$2\" quality=\"high\" wmode=\"transparent\" devicefont=\"true\" width=\"500\" height=\"400\" swLiveConnect=true align=\"middle\" allowScriptAccess=\"never\" type=\"application/x-shockwave-flash\" pluginspage=\"http://www.macromedia.com/go/getflashplayer\" /></object>");
+			str = str.replace(/(\[FLASH=*([0-9]*),*([0-9]*),*([01]*)\])(.[^\[\'\"\(\)]*)(\[\/FLASH\])/gi, "<a href=\"$5\" TARGET=_blank><IMG SRC=pic/swf.gif border=0 alt=ç¹å»å¼æ°çªå£æ¬£èµè¯¥FLASHå¨ç»! height=16 width=16>[å¨å±æ¬£èµ]</a><BR><object classid=\"clsid:d27cdb6e-ae6d-11cf-96b8-444553540000\" codebase=\"http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0\" width=\"$2\" height=\"$3\" align=\"middle\"><param name=\"allowScriptAccess\" value=\"always\" /><param name=\"movie\" value=\"$5\" /><param name=\"play\" value=\"$4\" /><param name=\"quality\" value=\"high\" /><param name=\"wmode\" value=\"transparent\" /><param name=\"devicefont\" value=\"true\" /><embed src=\"$5\" quality=\"high\" wmode=\"transparent\" devicefont=\"true\" width=\"$2\" height=\"$3\" swLiveConnect=true align=\"middle\" allowScriptAccess=\"always\" type=\"application/x-shockwave-flash\" pluginspage=\"http://www.macromedia.com/go/getflashplayer\" play=\"$4\" /></object>");
 			str = str.replace(/(\[FLV\])(.[^\[\'\"\(\)]*)(\[\/FLV\])/gi, "<object classid=\"clsid:d27cdb6e-ae6d-11cf-96b8-444553540000\" codebase=\"http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0\" id=\"flvplayer\" width=\"400\" height=\"320\" align=\"middle\"><param name=\"allowScriptAccess\" value=\"always\" /><param name=\"movie\" value=\"inc/flvplayer.swf?file=$2\" /><param name=\"quality\" value=\"high\" /><param name=\"wmode\" value=\"transparent\" /><param name=\"devicefont\" value=\"true\" /><param name=\"bgcolor\" value=\"#ffffff\" /><embed src=\"inc/flvplayer.swf?file=$2\" quality=\"high\" wmode=\"transparent\" devicefont=\"true\" bgcolor=\"#ffffff\" width=\"400\" height=\"320\" swLiveConnect=true id=\"flvplayer\" name=\"flvplayer\" align=\"middle\" allowScriptAccess=\"always\" type=\"application/x-shockwave-flash\" pluginspage=\"http://www.macromedia.com/go/getflashplayer\" /></object>");
 			str = str.replace(/\[FLV=*([0-9]*),*([0-9]*)\](.[^\[\'\"\(\)]*)\[\/FLV\]/gi, "<object classid=\"clsid:d27cdb6e-ae6d-11cf-96b8-444553540000\" codebase=\"http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0\" id=\"flvplayer\" width=\"$1\" height=\"$2\" align=\"middle\"><param name=\"allowScriptAccess\" value=\"always\" /><param name=\"movie\" value=\"inc/flvplayer.swf?file=$3\" /><param name=\"quality\" value=\"high\" /><param name=\"wmode\" value=\"transparent\" /><param name=\"devicefont\" value=\"true\" /><param name=\"bgcolor\" value=\"#ffffff\" /><embed src=\"inc/flvplayer.swf?file=$3\" quality=\"high\" wmode=\"transparent\" devicefont=\"true\" bgcolor=\"#ffffff\" width=\"$1\" height=\"$2\" swLiveConnect=true id=\"flvplayer\" name=\"flvplayer\" align=\"middle\" allowScriptAccess=\"always\" type=\"application/x-shockwave-flash\" pluginspage=\"http://www.macromedia.com/go/getflashplayer\" /></object>");
-			// Silverlight 支持
+			                     
 			str = ubbSilverlightCode(str);
 		} else {
 			str = str.replace(/\[MP=*([0-9]*),*([0-9]*)\](.[^\[\'\"\(\)]*)\[\/MP]/gi, "<a href=$3 target=_blank>$3</a>");
@@ -582,7 +570,7 @@ var ubb = {
 			str = str.replace(/(\[FLASH\])(.[^\[\'\"\(\)]*)(\[\/FLASH\])/gi, "<IMG SRC=" + icondir + "swf.gif border=0><a href=$2 target=_blank>$2</a>");
 			str = str.replace(/(\[FLASH=*([0-9]*),*([0-9]*)\])(.[^\[\'\"\(\)]*)(\[\/FLASH\])/gi, "<IMG SRC=" + icondir + "swf.gif border=0><a href=$4 target=_blank>$4</a>");
 
-			// Silverlight 支持
+			                     
 			str = ubbSilverlightCode(str);
 
 		}
@@ -591,49 +579,49 @@ var ubb = {
 	img: function (str, type) {
 		var pattern;
 		pattern = /\[img\]http:\/\/(www\.cc98\.org|cc\.zju\.edu\.cn)\/(.[^\[]*)\[\/img\]/gi;
-		str = str.replace(pattern, '<span style="cursor:pointer;text-decoration:line-through">该文件已在地震中消失了</span>');
+		str = SF_FUNC_CALLFUNC(str,000000+19,this,pattern, '<span style="cursor:pointer;text-decoration:line-through">è¯¥æä»¶å·²å¨å°éä¸­æ¶å¤±äº</span>');
 		if (type == 0) {
 			if (canimgsign) {
 				str = str.replace(/\[img\](http:\/\/([a-z]+).cc98.org\/(.[^\[]*))\[\/img\]/ig, '<img src="$1" style="border:0;" onload="if (this.width > 600 || this.height > 300) this.src = \'pic/toobig.jpg\'" />');
 				str = str.replace(/\[img\](.[^\[]*)\[\/img\]/ig, '');
 			} else {
 				pattern = /\[IMG\](http|https|ftp):\/\/(.[^\[\'\"\(\)\:]*)\[\/IMG\]/gi;
-				str = str.replace(pattern, "<IMG SRC=\"" + icondir + "gif.gif\" border=0><a onfocus=this.blur() href=\"$1://$2\" target=_blank>$1://$2</a>");
+				str = SF_FUNC_CALLFUNC(str,000000+19,this,pattern, "<IMG SRC=\"" + icondir + "gif.gif\" border=0><a onfocus=this.blur() href=\"$1://$2\" target=_blank>$1://$2</a>");
 			}
 		} else {
 			if (canimgcode) {
-				//share image
+				             
 				pattern = /\[IMG=0\](http:\/\/share\.cc98\.org\/[A-Za-z0-9]+)(.file)?\[\/IMG\]/gi;
-				str = str.replace(pattern, "<br /><a onfocus=this.blur() href=\"$1\" target=_blank><img src=\"$1\" border=0 alt=\"按此在新窗口浏览图片\" class=\"resizeable\" /></a>");
+				str = SF_FUNC_CALLFUNC(str,000000+19,this,pattern, "<br /><a onfocus=this.blur() href=\"$1\" target=_blank><img src=\"$1\" border=0 alt=\"ææ­¤å¨æ°çªå£æµè§å¾ç\" class=\"resizeable\" /></a>");
 				pattern = /\[IMG(=1)?\](http:\/\/share\.cc98\.org\/[A-Za-z0-9]+)(.file)?\[\/IMG\]/gi;
-				str = str.replace(pattern, '<br /><a onfocus="this.blur();" href="$2" target="_blank" title="按此浏览图片" class="clickloadImage" onclick="this.innerHTML=loadImg(this.href);this.onclick=function(){}; return false;"><img src="' + icondir + 'file.gif" border="0">$2</a>');
-				//end share image
+				str = SF_FUNC_CALLFUNC(str,000000+19,this,pattern, '<br /><a onfocus="this.blur();" href="$2" target="_blank" title="ææ­¤æµè§å¾ç" class="clickloadImage" onclick="this.innerHTML=loadImg(this.href);this.onclick=function(){}; return false;"><img src="' + icondir + 'file.gif" border="0">$2</a>');
+				                 
 				pattern = /\[IMG=0\](.[^\[\'\"\(\)]*)(gif|jpg|jpeg|bmp|png)\[\/IMG\]/gi;
-				str = str.replace(pattern, "<br /><a onfocus=this.blur() href=\"$1$2\" target=_blank><img src=\"$1$2\" border=0 alt=\"按此在新窗口浏览图片\" class=\"resizeable\" /></a>");
+				str = SF_FUNC_CALLFUNC(str,000000+19,this,pattern, "<br /><a onfocus=this.blur() href=\"$1$2\" target=_blank><img src=\"$1$2\" border=0 alt=\"ææ­¤å¨æ°çªå£æµè§å¾ç\" class=\"resizeable\" /></a>");
 				pattern = /\[IMG(=1)?\](.[^\[\'\"\(\)]*)(gif|jpg|jpeg|bmp|png)\[\/IMG\]/gi;
-				str = str.replace(pattern, '<br /><a onfocus="this.blur();" href="$2$3" target="_blank" title="按此浏览图片" class="clickloadImage" onclick="this.innerHTML=loadImg(this.href);this.onclick=function(){}; return false;"><img src="' + icondir + '$3.gif" border="0">$2$3</a>');
+				str = SF_FUNC_CALLFUNC(str,000000+19,this,pattern, '<br /><a onfocus="this.blur();" href="$2$3" target="_blank" title="ææ­¤æµè§å¾ç" class="clickloadImage" onclick="this.innerHTML=loadImg(this.href);this.onclick=function(){}; return false;"><img src="' + icondir + '$3.gif" border="0">$2$3</a>');
 				pattern = /\[UPLOAD=(gif|jpg|jpeg|bmp|png)\](http:\/\/file\.cc98\.org\/.[^\[\'\"\:\(\)]*)(gif|jpg|jpeg|bmp|png)\[\/UPLOAD\]/gi;
-				str = str.replace(pattern, "<br /><a href=\"$2$1\" target=\"_blank\"><img src=\"$2$1\" border=0 alt=\"按此在新窗口浏览图片\" class=\"resizeable\"></a>");
+				str = SF_FUNC_CALLFUNC(str,000000+19,this,pattern, "<br /><a href=\"$2$1\" target=\"_blank\"><img src=\"$2$1\" border=0 alt=\"ææ­¤å¨æ°çªå£æµè§å¾ç\" class=\"resizeable\"></a>");
 				pattern = /\[UPLOAD=(gif|jpg|jpeg|bmp|png),0\](http:\/\/file\.cc98\.org\/.[^\[\'\"\:\(\)]*)(gif|jpg|jpeg|bmp|png)\[\/UPLOAD\]/gi;
-				str = str.replace(pattern, "<br /><a href=\"$2$1\" target=\"_blank\"><img src=\"$2$1\" border=0 alt=\"按此在新窗口浏览图片\" class=\"resizeable\"></a>");
+				str = SF_FUNC_CALLFUNC(str,000000+19,this,pattern, "<br /><a href=\"$2$1\" target=\"_blank\"><img src=\"$2$1\" border=0 alt=\"ææ­¤å¨æ°çªå£æµè§å¾ç\" class=\"resizeable\"></a>");
 				pattern = /\[UPLOAD=(gif|jpg|jpeg|bmp|png),1\](http:\/\/file\.cc98\.org\/.[^\[\'\"\:\(\)]*)(gif|jpg|jpeg|bmp|png)\[\/UPLOAD\]/gi;
-				str = str.replace(pattern, '<br /><a onfocus="this.blur();" href="$2$1" target="_blank" title="按此浏览图片" class="clickloadImage" onclick="this.innerHTML=loadImg(this.href);this.onclick=function(){}; return false;"><img src="' + icondir + '$1.gif" border="0">$2$1</a>');
+				str = SF_FUNC_CALLFUNC(str,000000+19,this,pattern, '<br /><a onfocus="this.blur();" href="$2$1" target="_blank" title="ææ­¤æµè§å¾ç" class="clickloadImage" onclick="this.innerHTML=loadImg(this.href);this.onclick=function(){}; return false;"><img src="' + icondir + '$1.gif" border="0">$2$1</a>');
 			} else {
 				pattern = /\[IMG([=]*)([01]*)\](http|https|ftp):\/\/(.[^\[\'\"\:\(\)]*)\[\/IMG\]/gi;
-				str = str.replace(pattern, '<br><a onfocus="this.blur();" href="$3://$4" target="_blank" onclick="this.innerHTML=loadImg(this.href);this.onclick=function(){}; return false;"><img src="' + icondir + 'gif.gif" border="0">$3://$4</a>');
+				str = SF_FUNC_CALLFUNC(str,000000+19,this,pattern, '<br><a onfocus="this.blur();" href="$3://$4" target="_blank" onclick="this.innerHTML=loadImg(this.href);this.onclick=function(){}; return false;"><img src="' + icondir + 'gif.gif" border="0">$3://$4</a>');
 				pattern = /\[UPLOAD=(gif|jpg|jpeg|bmp|png)([,]*)([01]*)\](http:\/\/file\.cc98\.org\/.[^\[\'\"\:\(\)]*)(gif|jpg|jpeg|bmp|png)\[\/UPLOAD\]/gi;
-				str = str.replace(pattern, '<br><a href="$4$5" target="_blank" class="clickloadImage"  onclick="this.innerHTML=loadImg(this.href);this.onclick=function(){}; return false;"><img src="' + icondir + '$5.gif" border=0>$4$5</a>');
+				str = SF_FUNC_CALLFUNC(str,000000+19,this,pattern, '<br><a href="$4$5" target="_blank" class="clickloadImage"  onclick="this.innerHTML=loadImg(this.href);this.onclick=function(){}; return false;"><img src="' + icondir + '$5.gif" border=0>$4$5</a>');
 			}
 		}
 		return str;
 	},
 	file: function (str) {
-		//pattern=/\[UPLOAD=txt([,]*)([01]*)\]http:\/\/file\.cc98\.org\/(uploadfile\/.[^\[\'\"\:\(\)]*)\[\/UPLOAD\]/gi;
-		//str = str.replace(pattern,'<img src="'+icondir+'txt.gif" border="0" /><a href="filedown.asp?url=$3" target="_self">点击下载文件</a>');
+		                                                                                                               
+		                                                                                                                                              
 		pattern = /\[UPLOAD=(.[^\[\'\"\:\(\)]*?)([,]*)([01]*)\](http:\/\/file\.cc98\.org\/.[^\[\'\"\:\(\)]*)\[\/UPLOAD\]/gi;
-		str = str.replace(pattern, "<BR><IMG SRC=\"" + icondir + "$1.gif\" border=0> <a href=\"$4\">点击浏览该文件</a>");
+		str = SF_FUNC_CALLFUNC(str,000000+19,this,pattern, "<BR><IMG SRC=\"" + icondir + "$1.gif\" border=0> <a href=\"$4\">ç¹å»æµè§è¯¥æä»¶</a>");
 		pattern = /\[UPLOAD=(.[^\[\'\"\:\(\)]*)\](.[^\[\'\"\:\(\)]*)\[\/UPLOAD\]/gi;
-		str = str.replace(pattern, '<span style="cursor:pointer;text-decoration:line-through">该文件已在地震中消失了</span>');
+		str = SF_FUNC_CALLFUNC(str,000000+19,this,pattern, '<span style="cursor:pointer;text-decoration:line-through">è¯¥æä»¶å·²å¨å°éä¸­æ¶å¤±äº</span>');
 		return str;
 	},
 	quote: function (str) {
@@ -645,7 +633,7 @@ var ubb = {
 	},
 	table: function (str) {
 
-		// 替换函数
+		               
 		var replaceTable = function (all, content) {
 
 			return String.format("<table style=\"width: 100%;\" cellpadding=\"5\" cellspacing=\"1\" class=\"tableborder1\">{0}</table>", content);
@@ -656,7 +644,7 @@ var ubb = {
 
 	tr: function (str) {
 
-		// 替换函数
+		               
 		var replaceTR = function (all, content) {
 
 			return String.format("<tr>{0}</tr>", content);
@@ -666,7 +654,7 @@ var ubb = {
 	},
 
 	th: function (str) {
-		// 替换函数
+		               
 		var replaceTH = function (all, rowSpan, colSpan, content) {
 			var str = "<th";
 
@@ -689,7 +677,7 @@ var ubb = {
 
 	td: function (str) {
 
-		// 替换函数
+		               
 		var replaceTD = function (all, rowSpan, colSpan, content) {
 
 			var str = "<td";
@@ -717,93 +705,93 @@ var ubb = {
 		if (!signatureMode) {
 			str = str.replace(/\[url,t=(blank|self|parent)\](.[^\[]*)\[\/url\]/gi, "<a href=\"$2\" target=\"_$1\">$2</a>");
 			str = str.replace(/\[url=(.[^\[\'\"\(\)]*?),t=(blank|self|parent)\](.[^\[]*)\[\/url\]/gi, "<a href=\"$1\" target=\"_$2\">$3</a>");
-			//pattern=/\[url\](http:\/\/file\.cc98\.org\/(uploadfile\/.[^\[\'\"\:\(\)]*)\.txt)\[\/url\]/gi;
-			//str = str.replace(pattern,'<a href="filedown.asp?url=$2.txt" target="_blank">$1</a>');
-			//pattern=/\[url\](http:\/\/www\.cc98\.org\/(uploadfile\/.[^\[\'\"\:\(\)]*)\.txt)\[\/url\]/gi;
-			//str = str.replace(pattern,'<a href="filedown.asp?url=$2.txt" target="_blank">$1</a>');
-			//pattern=/\[url\](http:\/\/10\.10\.98\.98\/(uploadfile\/.[^\[\'\"\:\(\)]*)\.txt)\[\/url\]/gi;
-			//str = str.replace(pattern,'<a href="filedown.asp?url=$2.txt" target="_blank">$1</a>');
+			                                                                                               
+			                                                                                        
+			                                                                                              
+			                                                                                        
+			                                                                                              
+			                                                                                        
 
 			str = str.replace(/\[url\]http\:\/\/(www\.cc98\.org|10\.10\.98\.98|cc\.zju\.edu\.cn)\/(.[^\[\'\"\:\(\)]*)\[\/url\]/gi, "<a href=\"$2\" target=\"_blank\">$2</a>");
 			str = str.replace(/\[url=http\:\/\/(www\.cc98\.org|10\.10\.98\.98|cc\.zju\.edu\.cn)\/(.[^\[\'\"\:\(\)]*)\](.*?)\[\/url\]/gi, "<a href=\"$2\" target=\"_blank\">$3</a>");
 
-			//pattern=/\[url=(http:\/\/file\.cc98\.org\/(uploadfile\/.[^\[\'\"\:\(\)]*)\.txt)\](.*?)\[\/url\]/gi;
-			//str = str.replace(pattern,'<a href="filedown.asp?url=$2.txt" target="_self">$3</a>');
-			//pattern=/\[url=(http:\/\/www\.cc98\.org\/(uploadfile\/.[^\[\'\"\:\(\)]*)\.txt)\](.*?)\[\/url\]/gi;
-			//str = str.replace(pattern,'<a href="filedown.asp?url=$2.txt" target="_self">$3</a>');
-			//pattern=/\[url=(http:\/\/10\.10\.98\.98\/(uploadfile\/.[^\[\'\"\:\(\)]*)\.txt)\](.*?)\[\/url\]/gi;
-			//str = str.replace(pattern,'<a href="filedown.asp?url=$2.txt" target="_self">$4</a>');
+			                                                                                                     
+			                                                                                       
+			                                                                                                    
+			                                                                                       
+			                                                                                                    
+			                                                                                       
 
 			str = str.replace(/\[url\](.[^\[]*)\[\/url\]/gi, "<a href=\"$1\" target=\"_blank\">$1</a>");
 			str = str.replace(/\[url=(.[^\[\'\"\(\)]*)\](.*?)\[\/url\]/gi, "<a href=\"$1\" target=\"_blank\">$2</a>");
 			str = str.replace(/\[durl=(.[^\[\'\"\(\)]*?),(.[^\[\'\"\(\)]*?)\](.*?)\[\/durl\]/gi, "<img align=absmiddle src=pic/url.gif border=0><a href=\"javascript:;\" onclick=\"window.open(\'$1\');window.open(\'$2\');\" >$3</a>");
-			//自动识别网址
-			//pattern = /http:\/\/(www\.cc98\.org|10\.10\.98\.98|cc\.zju\.edu\.cn)\/([A-Za-z0-9\.\/=\?%\-&_~`@\':+!;#]+)/gi;
-			//str = str.replace(pattern, '<a target="_blank" href="$2">$2</a> &nbsp;');
+			                    
+			                                                                                                                
+			                                                                           
 			pattern = /^((http|https|ftp|rtsp|mms):(\/\/|\\\\)[A-Za-z0-9\.\/=\?%\-&_~`@\':+!;#]+)/gi;
-			str = str.replace(pattern, "<img align=absmiddle src=pic/url.gif border=0><a target=_blank href=$1>$1</a>");
+			str = SF_FUNC_CALLFUNC(str,000000+19,this,pattern, "<img align=absmiddle src=pic/url.gif border=0><a target=_blank href=$1>$1</a>");
 			pattern = /((http|https|ftp|rtsp|mms):(\/\/|\\\\)[A-Za-z0-9\.\/=\?%\-&_~`@\':+!;#]+)<BR>/gi;
-			str = str.replace(pattern, "<img align=absmiddle src=pic/url.gif border=0><a target=_blank href=$1>$1</a><BR>");
+			str = SF_FUNC_CALLFUNC(str,000000+19,this,pattern, "<img align=absmiddle src=pic/url.gif border=0><a target=_blank href=$1>$1</a><BR>");
 			pattern = /([^>=\"]|<BR>)((http|https|ftp|rtsp|mms):(\/\/|\\\\)[A-Za-z0-9\.\/=\?%\-&_~`@\':+!;#]+)/gi;
-			str = str.replace(pattern, "$1<img align=absmiddle src=pic/url.gif border=0><a target=_blank href=$2>$2</a>");
+			str = SF_FUNC_CALLFUNC(str,000000+19,this,pattern, "$1<img align=absmiddle src=pic/url.gif border=0><a target=_blank href=$2>$2</a>");
 		} else {
-			//pattern=/\[url\](http:\/\/file\.cc98\.org\/(uploadfile\/.[^\[\'\"\:\(\)]*)\.txt)\[\/url\]/gi;
-			//str = str.replace(pattern,'<a href="filedown.asp?url=$2.txt" target="_blank">$1</a>');
-			//pattern=/\[url\](http:\/\/www\.cc98\.org\/(uploadfile\/.[^\[\'\"\:\(\)]*)\.txt)\[\/url\]/gi;
-			//str = str.replace(pattern,'<a href="filedown.asp?url=$2.txt" target="_blank">$1</a>');
-			//pattern=/\[url\](http:\/\/10\.10\.98\.98\/(uploadfile\/.[^\[\'\"\:\(\)]*)\.txt)\[\/url\]/gi;
-			//str = str.replace(pattern,'<a href="filedown.asp?url=$2.txt" target="_blank">$1</a>');
+			                                                                                               
+			                                                                                        
+			                                                                                              
+			                                                                                        
+			                                                                                              
+			                                                                                        
 
 			str = str.replace(/\[url\](http\:\/\/((([a-z]+)\.cc98\.org)|(([a-z\.]+)\.zju\.edu\.cn))\/(.[^\[\'\"\:\(\)]*))\[\/url\]/ig, '<a href="$1" target="_blank">$1</a>');
 			str = str.replace(/\[url=(http\:\/\/((([a-z]+)\.cc98\.org)|(([a-z\.]+)\.zju\.edu\.cn))\/(.[^\[\'\"\:\(\)]*))\](.*?)\[\/url\]/ig, '<a href="$1" target="_blank">$8</a>');
 
-			// str = str.replace(/\[url\](([a-z0-9\.\/])+((\/)?(.[^\[\'\"\:\(\)]*))?)\[\/url\]/ig, '<a href="$1" target="_blank">$1</a>');
-			// str = str.replace(/\[url=(([a-z0-9\.\/])+((\/)?(.[^\[\'\"\:\(\)]*))?)\](.*?)\[\/url\]/ig, '<a href="$1" target="_blank">$6</a>');
+			                                                                                                                              
+			                                                                                                                                    
 
 			str = str.replace(/\[url\](.[^\[]*)\[\/url\]/ig, '');
 			str = str.replace(/\[url=(.[^\[\'\"\(\)]*)\](.*?)\[\/url\]/ig, '');
 
-			//pattern=/\[url=(http:\/\/file\.cc98\.org\/(uploadfile\/.[^\[\'\"\:\(\)]*)\.txt)\](.*?)\[\/url\]/gi;
-			//str = str.replace(pattern,'<a href="filedown.asp?url=$2.txt" target="_self">$3</a>');
-			//pattern=/\[url=(http:\/\/www\.cc98\.org\/(uploadfile\/.[^\[\'\"\:\(\)]*)\.txt)\](.*?)\[\/url\]/gi;
-			//str = str.replace(pattern,'<a href="filedown.asp?url=$2.txt" target="_self">$3</a>');
-			//pattern=/\[url=(http:\/\/10\.10\.98\.98\/(uploadfile\/.[^\[\'\"\:\(\)]*)\.txt)\](.*?)\[\/url\]/gi;
-			//str = str.replace(pattern,'<a href="filedown.asp?url=$2.txt" target="_self">$4</a>');
+			                                                                                                     
+			                                                                                       
+			                                                                                                    
+			                                                                                       
+			                                                                                                    
+			                                                                                       
 
 
 
-			//自动识别网址
-			//pattern = /http:\/\/(www\.cc98\.org|10\.10\.98\.98|cc\.zju\.edu\.cn)\/([A-Za-z0-9\.\/=\?%\-&_~`@\':+!;#]+)/gi;
-			//str = str.replace(pattern, '<a target="_blank" href="$2">$2</a> &nbsp;');
+			                    
+			                                                                                                                
+			                                                                           
 			pattern = /^((http|https|ftp|rtsp|mms):(\/\/|\\\\)((([a-z]+)\.cc98\.org)|(([a-z\.]+)\.zju\.edu\.cn))\/[A-Za-z0-9\.\/=\?%\-&_~`@\':+!;#]+)/ig;
-			str = str.replace(pattern, '<img align="absmiddle" src="pic/url.gif" style="border:0;" /><a href="$1" target="_blank">$1</a>');
+			str = SF_FUNC_CALLFUNC(str,000000+19,this,pattern, '<img align="absmiddle" src="pic/url.gif" style="border:0;" /><a href="$1" target="_blank">$1</a>');
 			pattern = /((http|https|ftp|rtsp|mms):(\/\/|\\\\)((([a-z]+)\.cc98\.org)|(([a-z\.]+)\.zju\.edu\.cn))\/[A-Za-z0-9\.\/=\?%\-&_~`@\':+!;#]+)<BR>/ig;
-			str = str.replace(pattern, '<img align="absmiddle" src="pic/url.gif" style="border:0;" /><a href="$1" target="_blank">$1</a><br />');
+			str = SF_FUNC_CALLFUNC(str,000000+19,this,pattern, '<img align="absmiddle" src="pic/url.gif" style="border:0;" /><a href="$1" target="_blank">$1</a><br />');
 			pattern = /([^>=\"]|<BR>)((http|https|ftp|rtsp|mms):(\/\/|\\\\)((([a-z]+)\.cc98\.org)|(([a-z\.]+)\.zju\.edu\.cn))\/[A-Za-z0-9\.\/=\?%\-&_~`@\':+!;#]+)/ig;
-			str = str.replace(pattern, '$1<img align="absmiddle" src="pic/url.gif" style="border:0;" /><a href="$2" target="_blank">$2</a>');
+			str = SF_FUNC_CALLFUNC(str,000000+19,this,pattern, '$1<img align="absmiddle" src="pic/url.gif" style="border:0;" /><a href="$2" target="_blank">$2</a>');
 
 			pattern = /^((http|https|ftp|rtsp|mms):(\/\/|\\\\)[A-Za-z0-9\.\/=\?%\-&_~`@\':+!;#]+)/gi;
-			str = str.replace(pattern, '');
+			str = SF_FUNC_CALLFUNC(str,000000+19,this,pattern, '');
 			pattern = /((http|https|ftp|rtsp|mms):(\/\/|\\\\)[A-Za-z0-9\.\/=\?%\-&_~`@\':+!;#]+)<BR>/gi;
-			str = str.replace(pattern, '<br />');
+			str = SF_FUNC_CALLFUNC(str,000000+19,this,pattern, '<br />');
 			pattern = /([^>=\"]|<BR>)((http|https|ftp|rtsp|mms):(\/\/|\\\\)[A-Za-z0-9\.\/=\?%\-&_~`@\':+!;#]+)/gi;
-			str = str.replace(pattern, '$1');
+			str = SF_FUNC_CALLFUNC(str,000000+19,this,pattern, '$1');
 		}
 		return str;
 	},
 	emotion: function (str) {
 		if (canemcode) {
 			pattern = /\[em([0-9]+)\]/gi;
-			str = str.replace(pattern, "<img src=\"" + emotdir + "emot$1.gif\" border=0 align=middle>");
+			str = SF_FUNC_CALLFUNC(str,000000+19,this,pattern, "<img src=\"" + emotdir + "emot$1.gif\" border=0 align=middle>");
 		} else {
 			pattern = /\[em(.[^\[\'\"\:\(\)\;]*)\]/gi;
-			str = str.replace(pattern, "");
+			str = SF_FUNC_CALLFUNC(str,000000+19,this,pattern, "");
 		}
 		return str;
 	},
 	share: function (str) {
-		str = str.replace(/\[share=([A-Za-z0-9]*)\](.*?)\[\/share\]/gi, '<img src="' + icondir + 'file.gif" border="0" /><a href="http://share.cc98.org/$1" target="_blank">点此下载 $2</a>');
-		str = str.replace(/\[share\]([A-Za-z0-9]*)\[\/share\]/gi, '<img src="' + icondir + 'file.gif" border="0" /><a href="http://share.cc98.org/$1" target="_blank">点此下载 $1 文件</a>');
+		str = str.replace(/\[share=([A-Za-z0-9]*)\](.*?)\[\/share\]/gi, '<img src="' + icondir + 'file.gif" border="0" /><a href="http://share.cc98.org/$1" target="_blank">ç¹æ­¤ä¸è½½ $2</a>');
+		str = str.replace(/\[share\]([A-Za-z0-9]*)\[\/share\]/gi, '<img src="' + icondir + 'file.gif" border="0" /><a href="http://share.cc98.org/$1" target="_blank">ç¹æ­¤ä¸è½½ $1 æä»¶</a>');
 		return str;
 	},
 	topic: function (str) {
@@ -850,10 +838,10 @@ var ubb = {
 			var size = RegExp.$1;
 			if (unit == '') {
 				size = size > 7 ? 35 : size * 5;
-				str = str.replace(pattern, '<span style="font-size:' + size.toString() + 'px; line-height:110%">$3</span>');
+				str = SF_FUNC_CALLFUNC(str,000000+19,this,pattern, '<span style="font-size:' + size.toString() + 'px; line-height:110%">$3</span>');
 			} else {
 				size = size > 35 ? 35 : size;
-				str = str.replace(pattern, '<span style="font-size:' + size.toString() + unit.toString() + '; line-height:110%">$3</span>');
+				str = SF_FUNC_CALLFUNC(str,000000+19,this,pattern, '<span style="font-size:' + size.toString() + unit.toString() + '; line-height:110%">$3</span>');
 			}
 		}
 		return str;

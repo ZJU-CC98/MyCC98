@@ -5,6 +5,18 @@ import java.io.Serializable;
 import ch.boye.httpclientandroidlib.client.CookieStore;
 
 public class UserData implements Serializable {
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "UserData [userName=" + userName + ", password32=" + password32
+				+ ", password16=" + password16 + ", proxyUserName="
+				+ proxyUserName + ", proxyPassword=" + proxyPassword
+				+ ", loginType=" + loginType + ", cookieStore=" + cookieStore
+				+ "]";
+	}
+
 	private static final long serialVersionUID = 5656863335203265871L;
 	private String userName;
 	private String password32;
@@ -12,13 +24,30 @@ public class UserData implements Serializable {
 
 	private String proxyUserName;
 	private String proxyPassword;
-	private boolean proxyVersion;
+	private LoginType loginType;
+
 	private CookieStore cookieStore;
+	
+	
+	
+	/**
+	 * @return the loginType
+	 */
+	public LoginType getLoginType() {
+		return loginType;
+	}
+
+	/**
+	 * @param loginType the loginType to set
+	 */
+	public void setLoginType(LoginType loginType) {
+		this.loginType = loginType;
+	}
 
 	public String getUserName() {
 		return userName;
 	}
-
+ 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
@@ -26,7 +55,8 @@ public class UserData implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + (proxyVersion ? 1231 : 1237);
+		result = prime * result
+				+ ((loginType == null) ? 0 : loginType.hashCode());
 		result = prime * result
 				+ ((userName == null) ? 0 : userName.hashCode());
 		return result;
@@ -44,7 +74,7 @@ public class UserData implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		UserData other = (UserData) obj;
-		if (proxyVersion != other.proxyVersion)
+		if (loginType != other.loginType)
 			return false;
 		if (userName == null) {
 			if (other.userName != null)
@@ -82,15 +112,7 @@ public class UserData implements Serializable {
 		this.password16 = password;
 	}
 
-	public boolean isProxyVersion() {
-		return proxyVersion;
-	}
-
-	public void setProxyVersion(boolean proxyVersion) {
-		this.proxyVersion = proxyVersion;
-	}
-
-	public String getProxyUserName() {
+ 	public String getProxyUserName() {
 		return proxyUserName;
 	}
 

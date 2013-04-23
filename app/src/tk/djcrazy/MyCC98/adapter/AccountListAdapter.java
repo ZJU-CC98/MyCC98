@@ -8,6 +8,7 @@ import java.util.List;
 import tk.djcrazy.MyCC98.R;
 import tk.djcrazy.MyCC98.application.MyApplication.UsersInfo;
 import tk.djcrazy.MyCC98.util.ViewUtils;
+import tk.djcrazy.libCC98.data.LoginType;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -33,7 +34,7 @@ public class AccountListAdapter extends BaseAdapter {
 		public ImageView image;
 		public TextView text;
 		public ImageView currentView;
-		private View  useProxy;
+		private TextView  useProxy;
 		
 	}
 
@@ -70,7 +71,7 @@ public class AccountListAdapter extends BaseAdapter {
 			listItemView.text = (TextView) convertView
 					.findViewById(R.id.action_item_text);
 			listItemView.currentView = (ImageView) convertView.findViewById(R.id.current_accept);
-			listItemView.useProxy = convertView.findViewById(R.id.use_proxy);
+			listItemView.useProxy = (TextView) convertView.findViewById(R.id.use_proxy);
 			convertView.setTag(listItemView);
 		} else {
 			listItemView = (ViewHolder) convertView.getTag();
@@ -83,8 +84,12 @@ public class AccountListAdapter extends BaseAdapter {
 			ViewUtils.setGone(listItemView.currentView, true);
 		}
 		
-		if (mUsersInfo.getCurrentUserData().isProxyVersion()) {
+		if (mUsersInfo.users.get(position).getLoginType()==LoginType.USER_DEFINED) {
 			ViewUtils.setGone(listItemView.useProxy, false);
+			listItemView.useProxy.setText("使用代理登录");
+		} else if (mUsersInfo.users.get(position).getLoginType()==LoginType.RVPN) {
+			ViewUtils.setGone(listItemView.useProxy, false);
+			listItemView.useProxy.setText("使用RVPN登录");
 		} else {
 			ViewUtils.setGone(listItemView.useProxy, true);
 		}

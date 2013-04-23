@@ -17,6 +17,7 @@ import android.app.Application;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 
 public class MyApplication extends Application {
 
@@ -50,6 +51,7 @@ public class MyApplication extends Application {
 			e.printStackTrace();
 			System.exit(-1);
 		}
+		Log.d("User info:", usersInfo.toString());
 	}
 
 	public void storeUsersInfo() {
@@ -115,7 +117,15 @@ public class MyApplication extends Application {
 	}
  	
 	public static class UsersInfo implements Serializable{
- 		private static final long serialVersionUID = 1161679319055452529L;
+ 		/* (non-Javadoc)
+		 * @see java.lang.Object#toString()
+		 */
+		@Override
+		public String toString() {
+			return "UsersInfo [currentUserIndex=" + currentUserIndex
+					+ ", users=" + users + "]";
+		}
+		private static final long serialVersionUID = 1161679319055452529L;
 		public int currentUserIndex;
 		public ArrayList<UserData> users = new ArrayList<UserData>();
 		public UserData getCurrentUserData() {

@@ -3,7 +3,6 @@ package tk.djcrazy.libCC98;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.PatternSyntaxException;
@@ -13,6 +12,7 @@ import tk.djcrazy.libCC98.data.BoardEntity;
 import tk.djcrazy.libCC98.data.BoardStatus;
 import tk.djcrazy.libCC98.data.HotTopicEntity;
 import tk.djcrazy.libCC98.data.InboxInfo;
+import tk.djcrazy.libCC98.data.LoginType;
 import tk.djcrazy.libCC98.data.PmInfo;
 import tk.djcrazy.libCC98.data.PostContentEntity;
 import tk.djcrazy.libCC98.data.PostEntity;
@@ -25,9 +25,7 @@ import android.accounts.NetworkErrorException;
 import android.graphics.Bitmap;
 import ch.boye.httpclientandroidlib.NameValuePair;
 import ch.boye.httpclientandroidlib.ParseException;
-import ch.boye.httpclientandroidlib.auth.AuthenticationException;
 import ch.boye.httpclientandroidlib.client.ClientProtocolException;
-import ch.boye.httpclientandroidlib.client.HttpClient;
 import ch.boye.httpclientandroidlib.message.BasicNameValuePair;
 
 import com.google.inject.Inject;
@@ -41,11 +39,11 @@ public class CC98ServiceImpl implements ICC98Service {
 	private ICC98Parser cc98Parser;
 
 	@Override
-	public void doLogin(String userName, String pwd32, String pwd16, String proxyName, String proxyPwd, boolean useProxy)
+	public void doLogin(String userName, String pwd32, String pwd16, String proxyName, String proxyPwd, LoginType type)
 			throws ClientProtocolException, IOException,
 			IllegalAccessException, ParseException, ParseContentException,
 			NetworkErrorException {
-		cc98Client.doLogin(userName, pwd32, pwd16, proxyName, proxyPwd, useProxy);
+		cc98Client.doLogin(userName, pwd32, pwd16, proxyName, proxyPwd, type);
 	}
 
 	@Override

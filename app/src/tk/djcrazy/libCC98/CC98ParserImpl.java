@@ -606,6 +606,7 @@ public class CC98ParserImpl implements ICC98Parser {
 		try {
 			totalPost = getMatchedString(NEW_TOPIC_TOTAL_POST, html);
 		} catch (Exception e) {
+			e.printStackTrace();
 			totalPost="0";
 			return list;
 		}

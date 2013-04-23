@@ -24,9 +24,32 @@ public class HtmlGenHelper {
 			+ "<link rel=\"stylesheet\" href=\"file:///android_asset/bootstrap.css\" />"
 			+ "<script type=\"text/javascript\" src=\"file:///android_asset/mootools.core.js\"></script>"
 			+ "<script type=\"text/javascript\" src=\"file:///android_asset/tools.js\"></script>"
+			+ "<script type=\"text/javascript\" src=\"file:///android_asset/clientubb.js\"></script>"
+			+ "<meta name=\"viewport\" content=\"width=device-width, user-scalable=no\" />"
+			+ "</head><body>" + "<div  class=\"bg-wrapper\">";
+
+	public final String PAGE_PROXY_OPEN = "<!DOCTYPE html><html>" // min-width-320px
+			+ "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">"
+			+ "<link rel=\"stylesheet\" href=\"file:///android_asset/custom.css\" />"
+			+ "<link rel=\"stylesheet\" href=\"file:///android_asset/bootstrap.css\" />"
+			+ "<script type=\"text/javascript\" src=\"file:///android_asset/mootools.core.js\"></script>"
+			+ "<script type=\"text/javascript\" src=\"file:///android_asset/tools.js\"></script>"
 			+ "<script type=\"text/javascript\" src=\"file:///android_asset/clientubb_proxy.js\"></script>"
 			+ "<meta name=\"viewport\" content=\"width=device-width, user-scalable=no\" />"
 			+ "</head><body>" + "<div  class=\"bg-wrapper\">";
+	
+	public final String PAGE_RVPN_OPEN = "<!DOCTYPE html><html>" // min-width-320px
+			+ "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">"
+			+ "<link rel=\"stylesheet\" href=\"file:///android_asset/custom.css\" />"
+			+ "<link rel=\"stylesheet\" href=\"file:///android_asset/bootstrap.css\" />"
+			+ "<script language=\"JavaScript\" src=\"file:///android_asset/svpn_websvc_functions.js\" charset=\"utf-8\" sf_script=\"1\"></script>"
+			+ "<script type=\"text/vbscript\" src=\"file:///android_asset/svpn_websvc_functions.vbs\" charset=\"utf-8\" sf_script=\"1\"></script><script sf_script=\"1\"></script>"
+			+ "<script type=\"text/javascript\" src=\"file:///android_asset/mootools.core.js\"></script>"
+			+ "<script type=\"text/javascript\" src=\"file:///android_asset/tools.js\"></script>"
+			+ "<script type=\"text/javascript\" src=\"file:///android_asset/clientubb_rvpn.js\"></script>"
+			+ "<meta name=\"viewport\" content=\"width=device-width, user-scalable=no\" />"
+			+ "</head><body>" + "<div  class=\"bg-wrapper\">";
+
 	public final String PAGE_CLOSE = "</div> </body></html>";
 
 	private final String TAG = "HtmlGenHelper";
@@ -78,8 +101,8 @@ public class HtmlGenHelper {
 	}
 
 	public static void addSendTime(StringBuilder out, String sendTime) {
-		out.append("<div class=\"time\"><small>").append(sendTime).append(
-			"</small></div><br />");
+		out.append("<div class=\"time\"><small>").append(sendTime)
+				.append("</small></div><br />");
 	}
 
 	public String parseInnerLink(String content, String jsInterface) {

@@ -14,9 +14,9 @@ public class CC98ParseRepository {
 	public static final String POST_CONTENT_POST_CONTENT_REGEX = "(?<=</b><br>).*?</script>";
 	public static final String POST_CONTENT_USER_AVATAR_LINK_REGEX = "(?<=\"><img src=\").*?(?=\" )|(?<=&nbsp;<img src=\").*?(?=\" style=\"border-style)";
 	public static final String POST_CONTENT_POST_TITLE_REGEX = "(?<=title=\"发贴心情\">&nbsp;<b>).*?(?=</b><br>)";
-	public static final String POST_CONTENT_POST_FACE_REGEX = "(?<=<img src=\"face/)face.*?.gif";
+	public static final String POST_CONTENT_POST_FACE_REGEX = "(?<=face/)face.*?.gif";
 	public static final String POST_CONTENT_POST_TIME_REGEX = "(?<=\"></a>).{10,25}?(PM|AM)";
-	public static final String POST_CONTENT_GENDER_REGEX = "(?<=<img src=pic/).*?Male(?=\\.gif)|(?<=<img src=\"pic/).*?Male(?=\\.gif)";
+	public static final String POST_CONTENT_GENDER_REGEX = "(?<=pic/).{0,5}?Male(?=\\.gif)";
  	public static final String POST_CONTENT_REPLY_ID_REGEX = "";
  	
  	
@@ -31,10 +31,10 @@ public class CC98ParseRepository {
  	public static final String POST_LIST_REPLY_NUM_REGEX= "(?<=auto;\" class=\"tablebody1\">).*?(?=</td>)";
  	public static final String POST_LIST_LAST_REPLY_TIME_REGEX = "(?<=#bottom\">).*?(?=</a>)";
   	public static final String POST_LIST_LAST_REPLY_AUTHOR_REGEX= "(?<=usr\":\").*?(?=\")";
- 	public static final String POST_LIST_POST_ENTITY_REGEX  = "(?<=<tr style=\"vertical-align: middle;\">).*?(?=;</script>)";
+ 	public static final String POST_LIST_POST_ENTITY_REGEX  = "(?<=<tr style=\"vertical-align: middle;\">).*?(?=</script>)";
 
  	//personal board list
- 	public static final String P_BOARD_OUTER_WRAAPER_REGEX = "var customboards_disp = new Array.*?document.write";
+ 	public static final String P_BOARD_OUTER_WRAAPER_REGEX = "var customboards_disp = new Array.*?var moveup=''";
  	public static final String P_BOARD_SINGLE_BOARD_WRAPPER_REGEX = "</a>-->.*?(?=</td></tr></table></TD>)";
  	public static final String P_BOARD_NAME_REGEX = "(?<=<font color=#000066>).*?(?=</font>)";
  	public static final String P_BOARD_ID_REGEX = "(?<=<a href=\"list.asp\\?boardid=)[0-9]+(?=\">)";
@@ -71,7 +71,7 @@ public class CC98ParseRepository {
  	public static final String TODAY_BOARD_NAME_REGEX  = "(?<=\">).*?(?=</a></td><td)";
  	public static final String TODAY_BOARD_TOPIC_NUM_REGEX = "(?<=align=center>)\\d{0,10}?(?=</td>)";
 
- 	public static final String NEW_TOPIC_WRAPPER_REGEX = "(?<=<img src='face/face).*?(?=<!--<font color=\"#FF0000\">)";
+ 	public static final String NEW_TOPIC_WRAPPER_REGEX = "(?<=<img src=').*?(?=<!--<font color=\"#FF0000\">)";
  	public static final String NEW_TOPIC_TITLE_REGEX = "(?<=blank\">).*?(?=</a>)";
  	public static final String NEW_TOPIC_FACE_REGEX = "\\d{0,3}?(?=\\.gif)";
  	public static final String NEW_TOPIC_AUTHOR_REGEX = "(?<=\" target=\"_blank\">).{1,12}?(?=</a>)";

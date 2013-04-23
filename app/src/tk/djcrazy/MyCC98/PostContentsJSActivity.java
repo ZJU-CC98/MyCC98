@@ -16,42 +16,44 @@ import tk.djcrazy.MyCC98.util.Intents.Builder;
 import tk.djcrazy.MyCC98.util.ToastUtils;
 import tk.djcrazy.libCC98.ICC98Service;
 import tk.djcrazy.libCC98.data.Gender;
+import tk.djcrazy.libCC98.data.LoginType;
 import tk.djcrazy.libCC98.data.PostContentEntity;
+import tk.djcrazy.libCC98.data.UserData;
 import tk.djcrazy.libCC98.util.DateFormatUtil;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Html;
 import android.text.InputType;
 import android.util.Log;
-import android.view.View;
-import android.view.View.OnClickListener;
+import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
+import android.webkit.HttpAuthHandler;
 import android.webkit.WebSettings;
 import android.webkit.WebSettings.LayoutAlgorithm;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.EditText;
 import android.widget.Toast;
+import ch.boye.httpclientandroidlib.cookie.Cookie;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockActivity;
 import com.google.inject.Inject;
+
 @ContentView(R.layout.activity_post_contents)
 public class PostContentsJSActivity extends BaseActivity {
 	private static final String TAG = "PostContentsJSActivity";
 	private static final String JS_INTERFACE = "PostContentsJSActivity";
 
- 	public static final int LAST_PAGE = 32767;
+	public static final int LAST_PAGE = 32767;
 
 	@InjectView(R.id.post_contents)
 	private WebView webView;
@@ -66,7 +68,7 @@ public class PostContentsJSActivity extends BaseActivity {
 	private String postName;
 	@InjectExtra(value = Intents.EXTRA_PAGE_NUMBER, optional = true)
 	private int currPageNum = 1;
-	
+
 	private int totalPageNum = 1;
 
 	private List<PostContentEntity> mContentEntities;
@@ -89,7 +91,7 @@ public class PostContentsJSActivity extends BaseActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
- 		
+
 		configureActionBar();
 		configureWebView();
 		webView.postDelayed(new Runnable() {
@@ -113,8 +115,19 @@ public class PostContentsJSActivity extends BaseActivity {
 	private String assemblyContent(List<PostContentEntity> list) {
 		int tmpNum = (currPageNum == LAST_PAGE) ? totalPageNum : currPageNum;
 		StringBuilder builder = new StringBuilder(5000);
-		builder.append(helper.PAGE_OPEN).append(
-				"<a href=\"javascript:;\" id=\"showAllImages\"></a>");
+		if (service.getusersInfo().getCurrentUserData().getLoginType()==LoginType.NORMAL) {
+			Log.d(TAG, "add Normal page open...");
+			builder.append(helper.PAGE_OPEN).append(
+					"<a href=\"javascript:;\" id=\"showAllImages\"></a>");
+		} else if (service.getusersInfo().getCurrentUserData().getLoginType()==LoginType.USER_DEFINED) {
+			Log.d(TAG, "add proxy page open...");
+			builder.append(helper.PAGE_PROXY_OPEN).append(
+					"<a href=\"javascript:;\" id=\"showAllImages\"></a>");
+		} else {
+			Log.d(TAG, "add rvpn page open...");
+			builder.append(helper.PAGE_RVPN_OPEN).append(
+					"<a href=\"javascript:;\" id=\"showAllImages\"></a>");
+		}
 		for (int i = 1; i < list.size(); ++i) {
 			PostContentEntity item = list.get(i);
 			String author = item.getUserName();
@@ -193,7 +206,7 @@ public class PostContentsJSActivity extends BaseActivity {
 		ActionBar actionBar = getSupportActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		actionBar.setLogo(new BitmapDrawable(service.getCurrentUserAvatar()));
- 	}
+	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu optionMenu) {
@@ -265,6 +278,14 @@ public class PostContentsJSActivity extends BaseActivity {
 				i.setData(Uri.parse(url));
 				startActivity(i);
 				return true;
+			}
+
+			@Override
+			public void onReceivedHttpAuthRequest(WebView view,
+					HttpAuthHandler handler, String host, String realm) {
+				handler.proceed(service.getusersInfo().getCurrentUserData()
+						.getProxyUserName(), service.getusersInfo()
+						.getCurrentUserData().getProxyPassword());
 			}
 		});
 	}
@@ -341,7 +362,7 @@ public class PostContentsJSActivity extends BaseActivity {
 	}
 
 	public void reply() {
-  		Intents.Builder builder = new Intents.Builder(this, EditActivity.class);
+		Intents.Builder builder = new Intents.Builder(this, EditActivity.class);
 		Intent intent = builder.requestType(EditActivity.REQUEST_REPLY)
 				.postId(postId).postName(postName).boardId(boardId)
 				.boardName(boardName).toIntent();
@@ -349,7 +370,7 @@ public class PostContentsJSActivity extends BaseActivity {
 	}
 
 	public void showContentDialog(final int index, int which) {
- 		final PostContentEntity item = mContentEntities.get(index);
+		final PostContentEntity item = mContentEntities.get(index);
 		switch (which) {
 		case 0: {
 			// quote & reply
@@ -366,7 +387,8 @@ public class PostContentsJSActivity extends BaseActivity {
 			AlertDialog.Builder builder = new AlertDialog.Builder(
 					PostContentsJSActivity.this);
 			builder.setTitle("提示");
-			builder.setMessage(Html.fromHtml("确认添加 " + item.getUserName() + " 为好友？"));
+			builder.setMessage(Html.fromHtml("确认添加 " + item.getUserName()
+					+ " 为好友？"));
 			builder.setPositiveButton("确定",
 					new DialogInterface.OnClickListener() {
 
@@ -425,15 +447,18 @@ public class PostContentsJSActivity extends BaseActivity {
 
 	private void sendPm(String target) {
 		Intents.Builder builder = new Builder(this, EditActivity.class);
-		Intent intent = builder.requestType(EditActivity.REQUEST_PM).pmToUser(target).toIntent();
+		Intent intent = builder.requestType(EditActivity.REQUEST_PM)
+				.pmToUser(target).toIntent();
 		startActivity(intent);
 	}
 
 	private void quoteReply(String sender, String postTime, String postContent,
 			int floorNum, int pageNum) {
- 		Intents.Builder builder = new Builder(this, EditActivity.class);
-		Intent intent = builder.requestType(EditActivity.REQUEST_QUOTE_REPLY).boardId(boardId).boardName(boardName)
-				.postId(postId).postName(postName).replyUserName(sender).replyUserPostTime(postTime).replyContent(postContent)
+		Intents.Builder builder = new Builder(this, EditActivity.class);
+		Intent intent = builder.requestType(EditActivity.REQUEST_QUOTE_REPLY)
+				.boardId(boardId).boardName(boardName).postId(postId)
+				.postName(postName).replyUserName(sender)
+				.replyUserPostTime(postTime).replyContent(postContent)
 				.floorNumber(floorNum).pageNumber(pageNum).toIntent();
 		startActivityForResult(intent, 1);
 	}
@@ -448,17 +473,18 @@ public class PostContentsJSActivity extends BaseActivity {
 
 		}
 	}
-//
-//	public void open(String pageLink, int pageNum) {
-//		Log.d(TAG, "open new post:" + pageNum);
-//		Bundle bundle = new Bundle();
-//		bundle.putString(POST_ID, pageLink);
-//		bundle.putInt(PAGE_NUMBER, pageNum);
-//		bundle.putString(POST_NAME, "");
-//		Intent intent = new Intent(this, PostContentsJSActivity.class);
-//		// intent.putExtra(POST, bundle);
-//		this.startActivity(intent);
-//	}
+
+	//
+	// public void open(String pageLink, int pageNum) {
+	// Log.d(TAG, "open new post:" + pageNum);
+	// Bundle bundle = new Bundle();
+	// bundle.putString(POST_ID, pageLink);
+	// bundle.putInt(PAGE_NUMBER, pageNum);
+	// bundle.putString(POST_NAME, "");
+	// Intent intent = new Intent(this, PostContentsJSActivity.class);
+	// // intent.putExtra(POST, bundle);
+	// this.startActivity(intent);
+	// }
 
 	private void setRefreshActionButtonState(boolean refreshing) {
 		if (mOptionsMenu == null) {
@@ -474,6 +500,36 @@ public class PostContentsJSActivity extends BaseActivity {
 				refreshItem.setActionView(null);
 			}
 		}
+	}
+
+	/**
+	 * 同步一下cookie
+	 */
+	public void synCookies() {
+		CookieSyncManager.createInstance(this);
+		CookieManager cookieManager = CookieManager.getInstance();
+		cookieManager.setAcceptCookie(true);
+		cookieManager.removeSessionCookie();
+		UserData userData = service.getusersInfo().getCurrentUserData();
+//		if (userData.getLoginType() == LoginType.USER_DEFINED) {
+//			webView.setHttpAuthUsernamePassword(service.getDomain(), "",
+//					userData.getProxyUserName(), userData.getProxyPassword());
+//		}
+		for (Cookie cookie : service.getusersInfo().getCurrentUserData()
+				.getCookieStore().getCookies()) {
+			cookieManager.setCookie(service.getDomain(),
+					"version=" + cookie.getVersion());
+			cookieManager.setCookie(service.getDomain(), cookie.getName() + "="
+					+ cookie.getValue());
+			cookieManager.setCookie(service.getDomain(),
+					"domain=" + cookie.getDomain());
+			cookieManager.setCookie(service.getDomain(),
+					"path=" + cookie.getPath());
+			cookieManager.setCookie(service.getDomain(),
+					"expiry=" + cookie.getExpiryDate());
+			Log.d(TAG, cookie.toString());
+		}
+		CookieSyncManager.getInstance().sync();
 	}
 
 	private class GetPostContentTask extends
@@ -515,11 +571,12 @@ public class PostContentsJSActivity extends BaseActivity {
 			mContentEntities = t;
 			PostContentEntity info = t.get(0);
 			totalPageNum = info.getTotalPage();
-			if (currPageNum>totalPageNum) {
+			if (currPageNum > totalPageNum) {
 				currPageNum = totalPageNum;
 			}
 			boardName = (String) info.getBoardName();
 			postName = (String) info.getPostTopic();
+			synCookies();
 			webView.loadDataWithBaseURL(null, assemblyContent(t), "text/html",
 					"utf-8", null);
 			getSupportActionBar().setTitle(postName);

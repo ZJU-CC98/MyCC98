@@ -6,8 +6,7 @@
     android:layout_height="fill_parent"
     android:scrollbars="vertical">
 	<LinearLayout 
-		xmlns:android="http://schemas.android.com/apk/res/android"
-		android:orientation="vertical" 
+ 		android:orientation="vertical" 
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content" 
 		android:scrollbars="vertical">
@@ -28,6 +27,24 @@
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
 			android:password="true" />
+	<RadioGroup 
+	    android:id="@+id/login_type"
+	    android:layout_height="wrap_content"
+	    android:layout_width="match_parent"
+	    android:orientation="horizontal">
+	    
+	    <RadioButton 
+	        android:layout_height="wrap_content"
+	        android:layout_width="match_parent"
+	        android:layout_weight="1.0"
+	        android:text="RVPN代理"/>
+	    <RadioButton 
+	        android:layout_height="wrap_content"
+	        android:layout_width="match_parent"
+	        android:layout_weight="1.0"
+	        android:text="其他代理"/>
+	    
+	</RadioGroup>
  	<CheckBox 
  	android:id="@+id/auth_remember_pwd"
  	android:text="记住用户名密码"

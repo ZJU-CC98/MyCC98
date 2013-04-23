@@ -100,30 +100,10 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <LinearLayout
+             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
-
-                <CheckBox
-                    android:id="@+id/remember_password"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/rem_pw"
-                    android:textColor="@color/login_text_color" />
-
-                <CheckBox
-                    android:id="@+id/auto_login"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/auto_login"
-                    android:textColor="@color/login_text_color" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="32dp" >
+                android:layout_height="32dp" 
+                android:layout_marginTop="30dp">
 
                 <Button
                     android:id="@+id/proxy_setting"

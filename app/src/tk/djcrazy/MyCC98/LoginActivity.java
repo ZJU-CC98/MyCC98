@@ -20,6 +20,7 @@ import tk.djcrazy.MyCC98.task.ProgressRoboAsyncTask;
 import tk.djcrazy.MyCC98.util.Intents;
 import tk.djcrazy.MyCC98.util.ToastUtils;
 import tk.djcrazy.libCC98.ICC98Service;
+import tk.djcrazy.libCC98.data.LoginType;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -53,7 +54,7 @@ public class LoginActivity extends BaseFragmentActivity implements
 		OnClickListener {
 	private static final String TAG = "MyCC98";
 
-	public static final boolean IS_LIFETOY_VERSION = true;
+	public static final boolean IS_LIFETOY_VERSION = false;
 
 	public static final String USERNAME = "USERNAME";
 	public static final String PASSWORD32 = "PASSWORD32";
@@ -69,11 +70,7 @@ public class LoginActivity extends BaseFragmentActivity implements
 	private EditText mPasswordEdit;
 	@InjectView(R.id.login)
 	private Button mSignInButton;
-	@InjectView(R.id.remember_password)
-	private CheckBox rememberPassword;
-	@InjectView(R.id.auto_login)
-	private CheckBox autoLoginBox;
-
+ 
 	@InjectExtra(value = Intents.EXTRA_NEED_LOGIN, optional = true)
 	private boolean mNeedLogin = false;
 	private String mUsername = "";
@@ -83,7 +80,7 @@ public class LoginActivity extends BaseFragmentActivity implements
 
 	private String authUserName = "";
 	private String authPassword = "";
-	private boolean useAuth = false;
+	private LoginType mLoginType = LoginType.NORMAL;
 	private AuthDialog authDialog;
 	private Boolean authRememberPwd = false;
 
@@ -95,10 +92,10 @@ public class LoginActivity extends BaseFragmentActivity implements
 	MyAuthDialogListener listener = new MyAuthDialogListener() {
 		@Override
 		public void onOkClick(String userName, String password,
-				Boolean rememberPwd) {
+				Boolean rememberPwd, LoginType type) {
 			authUserName = userName;
 			authPassword = password;
-			useAuth = true;
+			mLoginType = type;
 			authRememberPwd = rememberPwd;
 			saveAuthInfo();
 			showLoginField();
@@ -106,7 +103,7 @@ public class LoginActivity extends BaseFragmentActivity implements
 
 		@Override
 		public void onCancelClick() {
-			useAuth = false;
+			mLoginType = LoginType.NORMAL;
 			showLoginField();
 		}
 	};
@@ -123,8 +120,8 @@ public class LoginActivity extends BaseFragmentActivity implements
 		ImageView loginImg = (ImageView) findViewById(R.id.login_img);
 		animate(layout).setDuration(800)
 				.setInterpolator(new AccelerateDecelerateInterpolator())
-				.alpha(1).setStartDelay(700).start();
-		animate(loginImg).setDuration(800)
+				.alpha(1).setStartDelay(1000).start();
+		animate(loginImg).setDuration(800).setStartDelay(400)
 				.setInterpolator(new AccelerateDecelerateInterpolator())
 				.translationY(0).start();
 	}
@@ -212,18 +209,7 @@ public class LoginActivity extends BaseFragmentActivity implements
 	}
 
 	private void onLoginSuccess() {
-		Editor editor = getSharedPreferences(USERINFO, 0).edit();
-		editor.putBoolean(AUTOLOGIN, autoLoginBox.isChecked());
-		if (rememberPassword.isChecked()) {
-			editor.putString(USERNAME, mUsername).putString(PASSWORD32, mPWD32)
-					.putString(PASSWORD16, mPWD16)
-					.putBoolean(REMEMBERPWD, true);
-		} else {
-			editor.putString(USERNAME, "").putString(PASSWORD32, "")
-					.putString(PASSWORD16, "").putBoolean(REMEMBERPWD, false);
-		}
-		editor.commit();
-		forwardToNextActivity();
+ 		forwardToNextActivity();
 	}
 
 	private class LoginTask extends ProgressRoboAsyncTask<String> {
@@ -249,8 +235,8 @@ public class LoginActivity extends BaseFragmentActivity implements
 		@Override
 		public String call() throws Exception {
 			service.doLogin(userName, password32, password16, authUserName,
-					authPassword, useAuth);
-			return null;
+					authPassword, mLoginType);
+			return null; 
 		}
 
 		@Override

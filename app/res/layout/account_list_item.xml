@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:text="DJ"
             android:textColor="#ddd"
-            android:textSize="15sp" />
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/use_proxy"
@@ -36,7 +36,7 @@
             android:layout_weight="1.0"
             android:text="使用代理登录"
             android:textColor="#aaa"
-            android:textSize="12sp" />
+            android:textSize="11sp" />
     </LinearLayout>
 
     <ImageView

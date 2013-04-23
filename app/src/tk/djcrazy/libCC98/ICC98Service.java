@@ -12,6 +12,7 @@ import tk.djcrazy.libCC98.data.BoardEntity;
 import tk.djcrazy.libCC98.data.BoardStatus;
 import tk.djcrazy.libCC98.data.HotTopicEntity;
 import tk.djcrazy.libCC98.data.InboxInfo;
+import tk.djcrazy.libCC98.data.LoginType;
 import tk.djcrazy.libCC98.data.PmInfo;
 import tk.djcrazy.libCC98.data.PostContentEntity;
 import tk.djcrazy.libCC98.data.PostEntity;
@@ -31,7 +32,7 @@ public interface ICC98Service {
  
 	public boolean isUseProxy();
 
-	public void doLogin(String userName, String pwd32, String pw16, String proxyName, String proxyPwd, boolean useProxy)
+	public void doLogin(String userName, String pwd32, String pw16, String proxyName, String proxyPwd, LoginType type)
 			throws ClientProtocolException, IOException,
 			IllegalAccessException, ParseException, ParseContentException,
 			NetworkErrorException;
