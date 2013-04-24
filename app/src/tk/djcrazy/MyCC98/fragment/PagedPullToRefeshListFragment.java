@@ -97,7 +97,7 @@ public abstract class PagedPullToRefeshListFragment<E> extends
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.item_list, null);
+		return inflater.inflate(R.layout.item_list, container, false);
 	}
 
 	/**
@@ -245,7 +245,7 @@ public abstract class PagedPullToRefeshListFragment<E> extends
 		if (view != null)
 			if (animate)
 				view.startAnimation(AnimationUtils.loadAnimation(getActivity(),
-						android.R.anim.fade_in));
+						R.anim.activity_open_enter));
 			else
 				view.clearAnimation();
 		return this;

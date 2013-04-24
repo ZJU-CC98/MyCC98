@@ -6,7 +6,10 @@ import java.lang.reflect.Method;
 
 import tk.djcrazy.MyCC98.R;
 import tk.djcrazy.MyCC98.util.ViewUtils;
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.os.Build;
+import android.os.Build.VERSION_CODES;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -282,7 +285,7 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
             // Set refresh view text to the pull label
             mRefreshViewText.setText("点击刷新");
             // Replace refresh drawable with arrow drawable
-            mRefreshViewImage.setImageResource(R.drawable.ic_pulltorefresh_arrow);
+            mRefreshViewImage.setImageResource(R.drawable.arrow_down);
             // Clear the full rotation animation
             mRefreshViewImage.clearAnimation();
             // Hide progress bar and arrow.
@@ -404,11 +407,11 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
         // the next item.
         if (mRefreshView.getBottom() > 0) {
             invalidateViews();
-            setSelection(1);
-        }
+ 	        setSelection(1);
+         }
     }
-
-    /**
+ 
+	/**
      * Invoked when the refresh view is clicked on. This is mainly used when
      * there's only a few items in the list and it's not possible to drag the
      * list.

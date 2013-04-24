@@ -2349,11 +2349,12 @@ ch.boye.httpclientandroidlib.cookie.ClientCookie -> ch.boye.httpclientandroidlib
 ch.boye.httpclientandroidlib.cookie.Cookie -> ch.boye.httpclientandroidlib.cookie.b:
     java.lang.String getName() -> a
     java.lang.String getValue() -> b
-    java.lang.String getDomain() -> c
-    java.lang.String getPath() -> d
-    int[] getPorts() -> e
-    boolean isSecure() -> f
-    int getVersion() -> g
+    java.util.Date getExpiryDate() -> c
+    java.lang.String getDomain() -> d
+    java.lang.String getPath() -> e
+    int[] getPorts() -> f
+    boolean isSecure() -> g
+    int getVersion() -> h
     boolean isExpired(java.util.Date) -> a
 ch.boye.httpclientandroidlib.cookie.CookieAttributeHandler -> ch.boye.httpclientandroidlib.cookie.c:
     void parse(ch.boye.httpclientandroidlib.cookie.SetCookie,java.lang.String) -> a
@@ -3326,15 +3327,16 @@ ch.boye.httpclientandroidlib.impl.cookie.BasicClientCookie -> ch.boye.httpclient
     73:73:java.lang.String getName() -> a
     82:82:java.lang.String getValue() -> b
     115:116:void setComment(java.lang.String) -> c
+    139:139:java.util.Date getExpiryDate() -> c
     154:155:void setExpiryDate(java.util.Date) -> b
-    178:178:java.lang.String getDomain() -> c
+    178:178:java.lang.String getDomain() -> d
     189:194:void setDomain(java.lang.String) -> d
-    205:205:java.lang.String getPath() -> d
+    205:205:java.lang.String getPath() -> e
     217:218:void setPath(java.lang.String) -> e
-    225:225:boolean isSecure() -> f
+    225:225:boolean isSecure() -> g
     241:242:void setSecure(boolean) -> a
-    249:249:int[] getPorts() -> e
-    263:263:int getVersion() -> g
+    249:249:int[] getPorts() -> f
+    263:263:int getVersion() -> h
     275:276:void setVersion(int) -> a
     285:288:boolean isExpired(java.util.Date) -> a
     293:294:void setAttribute(java.lang.String,java.lang.String) -> a
@@ -3346,7 +3348,7 @@ ch.boye.httpclientandroidlib.impl.cookie.BasicClientCookie2 -> ch.boye.httpclien
     java.lang.String commentURL -> a
     int[] ports -> b
     boolean discard -> c
-    63:63:int[] getPorts() -> e
+    63:63:int[] getPorts() -> f
     67:68:void setPorts(int[]) -> a
     76:77:void setCommentURL(java.lang.String) -> a_
     80:81:void setDiscard(boolean) -> b
@@ -4242,8 +4244,8 @@ com.actionbarsherlock.R$dimen -> com.actionbarsherlock.n:
     int abs__dialog_min_width_minor -> abs__dialog_min_width_minor
     int abs__dialog_min_width_major -> abs__dialog_min_width_major
     int abs__action_bar_icon_vertical_padding -> abs__action_bar_icon_vertical_padding
-    int abs__action_button_min_width -> abs__action_button_min_width
     int abs__action_bar_subtitle_top_margin -> abs__action_bar_subtitle_top_margin
+    int abs__action_button_min_width -> abs__action_button_min_width
     int abs__alert_dialog_title_height -> abs__alert_dialog_title_height
     int abs__action_bar_subtitle_bottom_margin -> abs__action_bar_subtitle_bottom_margin
     int action_button_min_width -> action_button_min_width
@@ -4315,8 +4317,8 @@ com.actionbarsherlock.R$layout -> com.actionbarsherlock.q:
     int abs__action_menu_item_layout -> abs__action_menu_item_layout
     int abs__action_bar_tab -> abs__action_bar_tab
 com.actionbarsherlock.R$string -> com.actionbarsherlock.r:
-    int abs__activitychooserview_choose_application -> abs__activitychooserview_choose_application
     int abs__action_bar_up_description -> abs__action_bar_up_description
+    int abs__activitychooserview_choose_application -> abs__activitychooserview_choose_application
     int abs__share_action_provider_share_with -> abs__share_action_provider_share_with
     int abs__action_menu_overflow_description -> abs__action_menu_overflow_description
     int abs__action_mode_done -> abs__action_mode_done
@@ -4456,24 +4458,19 @@ com.actionbarsherlock.R$styleable -> com.actionbarsherlock.s:
     int[] SherlockSpinner -> SherlockSpinner
     int SherlockTheme_windowActionBarOverlay -> SherlockTheme_windowActionBarOverlay
 com.actionbarsherlock.app.ActionBar -> com.actionbarsherlock.a.a:
+    void setIcon(android.graphics.drawable.Drawable) -> a
     void setLogo(int) -> a
-    void setLogo(android.graphics.drawable.Drawable) -> a
-    void setListNavigationCallbacks(android.widget.SpinnerAdapter,com.actionbarsherlock.app.ActionBar$OnNavigationListener) -> a
+    void setLogo(android.graphics.drawable.Drawable) -> b
     void setSelectedNavigationItem(int) -> b
     void setTitle(java.lang.CharSequence) -> a
     void setSubtitle(java.lang.CharSequence) -> b
-    void setDisplayUseLogoEnabled(boolean) -> a
-    void setDisplayShowHomeEnabled(boolean) -> b
-    void setDisplayHomeAsUpEnabled(boolean) -> c
-    void setDisplayShowTitleEnabled(boolean) -> d
+    void setDisplayHomeAsUpEnabled(boolean) -> a
     void setNavigationMode(int) -> c
     com.actionbarsherlock.app.ActionBar$Tab newTab() -> a
     void addTab(com.actionbarsherlock.app.ActionBar$Tab) -> a
-    int getHeight() -> b
-    void show() -> c
-    void hide() -> d
-    658:658:void setHomeButtonEnabled(boolean) -> e
-    669:669:android.content.Context getThemedContext() -> e
+    void hide() -> b
+    658:658:void setHomeButtonEnabled(boolean) -> b
+    669:669:android.content.Context getThemedContext() -> c
 com.actionbarsherlock.app.ActionBar$LayoutParams -> com.actionbarsherlock.a.b:
     int gravity -> a
 com.actionbarsherlock.app.ActionBar$OnMenuVisibilityListener -> com.actionbarsherlock.a.c:
@@ -4778,39 +4775,34 @@ com.actionbarsherlock.internal.app.ActionBarImpl -> com.actionbarsherlock.intern
     com.actionbarsherlock.internal.nineoldandroids.animation.Animator$AnimatorListener mShowListener -> g
     153:177:void init(android.view.View) -> a
     180:190:void onConfigurationChanged(android.content.res.Configuration) -> a
-    193:207:void setHasEmbeddedTabs(boolean) -> j
-    210:225:void ensureTabsExist() -> j
-    228:233:void completeDeferredDestroyActionMode() -> f
-    243:247:void setShowHideAnimationEnabled(boolean) -> f
-    258:267:void dispatchMenuVisibilityChanged(boolean) -> g
-    276:277:void setDisplayUseLogoEnabled(boolean) -> a
-    281:282:void setDisplayShowHomeEnabled(boolean) -> b
-    286:287:void setDisplayHomeAsUpEnabled(boolean) -> c
-    291:292:void setDisplayShowTitleEnabled(boolean) -> d
-    301:302:void setHomeButtonEnabled(boolean) -> e
+    193:207:void setHasEmbeddedTabs(boolean) -> g
+    210:225:void ensureTabsExist() -> h
+    228:233:void completeDeferredDestroyActionMode() -> d
+    243:247:void setShowHideAnimationEnabled(boolean) -> c
+    258:267:void dispatchMenuVisibilityChanged(boolean) -> d
+    286:287:void setDisplayHomeAsUpEnabled(boolean) -> a
+    301:302:void setHomeButtonEnabled(boolean) -> b
     315:326:void setSelectedNavigationItem(int) -> b
     344:345:void setTitle(java.lang.CharSequence) -> a
     348:349:void setSubtitle(java.lang.CharSequence) -> b
     356:358:void setDisplayOptions(int,int) -> a
-    387:387:int getNavigationMode() -> g
+    387:387:int getNavigationMode() -> e
     395:416:com.actionbarsherlock.view.ActionMode startActionMode(com.actionbarsherlock.view.ActionMode$Callback) -> a
     420:434:void configureTab(com.actionbarsherlock.app.ActionBar$Tab,int) -> a
     438:439:void addTab(com.actionbarsherlock.app.ActionBar$Tab) -> a
     448:454:void addTab(com.actionbarsherlock.app.ActionBar$Tab,boolean) -> a
     468:468:com.actionbarsherlock.app.ActionBar$Tab newTab() -> a
     503:533:void selectTab(com.actionbarsherlock.app.ActionBar$Tab) -> b
-    542:542:int getHeight() -> b
-    547:548:void show() -> c
-    551:583:void show(boolean) -> h
-    587:615:void hide() -> d
-    618:618:boolean isShowing() -> h
-    622:634:void animateToMode(boolean) -> i
-    637:650:android.content.Context getThemedContext() -> e
-    943:945:void setListNavigationCallbacks(android.widget.SpinnerAdapter,com.actionbarsherlock.app.ActionBar$OnNavigationListener) -> a
-    949:955:int getSelectedNavigationIndex() -> i
+    551:583:void show(boolean) -> e
+    587:615:void hide() -> b
+    618:618:boolean isShowing() -> f
+    622:634:void animateToMode(boolean) -> f
+    637:650:android.content.Context getThemedContext() -> c
+    949:955:int getSelectedNavigationIndex() -> g
     979:999:void setNavigationMode(int) -> c
+    1014:1015:void setIcon(android.graphics.drawable.Drawable) -> a
     1019:1020:void setLogo(int) -> a
-    1024:1025:void setLogo(android.graphics.drawable.Drawable) -> a
+    1024:1025:void setLogo(android.graphics.drawable.Drawable) -> b
     78:78:com.actionbarsherlock.internal.nineoldandroids.widget.NineFrameLayout access$0(com.actionbarsherlock.internal.app.ActionBarImpl) -> a
     74:74:com.actionbarsherlock.internal.widget.ActionBarContainer access$1(com.actionbarsherlock.internal.app.ActionBarImpl) -> b
     77:77:com.actionbarsherlock.internal.widget.ActionBarContainer access$2(com.actionbarsherlock.internal.app.ActionBarImpl) -> c
@@ -4859,25 +4851,20 @@ com.actionbarsherlock.internal.app.ActionBarWrapper -> com.actionbarsherlock.int
     com.actionbarsherlock.app.ActionBar$OnNavigationListener mNavigationListener -> c
     java.util.Set mMenuVisibilityListeners -> d
     android.support.v4.app.FragmentTransaction mFragmentTransaction -> e
-    35:36:void setHomeButtonEnabled(boolean) -> e
-    40:40:android.content.Context getThemedContext() -> e
+    35:36:void setHomeButtonEnabled(boolean) -> b
+    40:40:android.content.Context getThemedContext() -> c
+    71:72:void setIcon(android.graphics.drawable.Drawable) -> a
     76:77:void setLogo(int) -> a
-    81:82:void setLogo(android.graphics.drawable.Drawable) -> a
-    86:88:void setListNavigationCallbacks(android.widget.SpinnerAdapter,com.actionbarsherlock.app.ActionBar$OnNavigationListener) -> a
+    81:82:void setLogo(android.graphics.drawable.Drawable) -> b
     94:94:boolean onNavigationItemSelected(int,long) -> onNavigationItemSelected
     99:100:void setSelectedNavigationItem(int) -> b
     114:115:void setTitle(java.lang.CharSequence) -> a
     124:125:void setSubtitle(java.lang.CharSequence) -> b
-    144:145:void setDisplayUseLogoEnabled(boolean) -> a
-    149:150:void setDisplayShowHomeEnabled(boolean) -> b
-    154:155:void setDisplayHomeAsUpEnabled(boolean) -> c
-    159:160:void setDisplayShowTitleEnabled(boolean) -> d
+    154:155:void setDisplayHomeAsUpEnabled(boolean) -> a
     204:205:void setNavigationMode(int) -> c
     372:372:com.actionbarsherlock.app.ActionBar$Tab newTab() -> a
     377:378:void addTab(com.actionbarsherlock.app.ActionBar$Tab) -> a
-    434:434:int getHeight() -> b
-    439:440:void show() -> c
-    444:445:void hide() -> d
+    444:445:void hide() -> b
     464:467:void onMenuVisibilityChanged(boolean) -> onMenuVisibilityChanged
     17:17:android.app.Activity access$0(com.actionbarsherlock.internal.app.ActionBarWrapper) -> a
     21:21:android.support.v4.app.FragmentTransaction access$1(com.actionbarsherlock.internal.app.ActionBarWrapper) -> b
@@ -10052,6 +10039,442 @@ com.google.inject.util.Types -> com.google.inject.util.Types:
     109:109:java.lang.reflect.ParameterizedType setOf(java.lang.reflect.Type) -> setOf
     119:119:java.lang.reflect.ParameterizedType mapOf(java.lang.reflect.Type,java.lang.reflect.Type) -> mapOf
     131:131:java.lang.reflect.ParameterizedType providerOf(java.lang.reflect.Type) -> providerOf
+com.handmark.pulltorefresh.library.ILoadingLayout -> com.handmark.pulltorefresh.library.a:
+    void setLastUpdatedLabel(java.lang.CharSequence) -> setLastUpdatedLabel
+    void setLoadingDrawable(android.graphics.drawable.Drawable) -> setLoadingDrawable
+    void setPullLabel(java.lang.CharSequence) -> setPullLabel
+    void setRefreshingLabel(java.lang.CharSequence) -> setRefreshingLabel
+    void setReleaseLabel(java.lang.CharSequence) -> setReleaseLabel
+com.handmark.pulltorefresh.library.LoadingLayoutProxy -> com.handmark.pulltorefresh.library.b:
+    java.util.HashSet mLoadingLayouts -> a
+    28:31:void addLayout(com.handmark.pulltorefresh.library.internal.LoadingLayout) -> a
+    35:38:void setLastUpdatedLabel(java.lang.CharSequence) -> setLastUpdatedLabel
+    42:45:void setLoadingDrawable(android.graphics.drawable.Drawable) -> setLoadingDrawable
+    49:52:void setRefreshingLabel(java.lang.CharSequence) -> setRefreshingLabel
+    56:59:void setPullLabel(java.lang.CharSequence) -> setPullLabel
+    63:66:void setReleaseLabel(java.lang.CharSequence) -> setReleaseLabel
+com.handmark.pulltorefresh.library.OverscrollHelper -> com.handmark.pulltorefresh.library.c:
+    int[] $SWITCH_TABLE$com$handmark$pulltorefresh$library$PullToRefreshBase$Orientation -> a
+    53:54:void overScrollBy(com.handmark.pulltorefresh.library.PullToRefreshBase,int,int,int,int,boolean) -> a
+    77:78:void overScrollBy(com.handmark.pulltorefresh.library.PullToRefreshBase,int,int,int,int,int,boolean) -> a
+    107:173:void overScrollBy(com.handmark.pulltorefresh.library.PullToRefreshBase,int,int,int,int,int,int,float,boolean) -> a
+    176:176:boolean isAndroidOverScrollEnabled(android.view.View) -> a
+    26:26:int[] $SWITCH_TABLE$com$handmark$pulltorefresh$library$PullToRefreshBase$Orientation() -> a
+com.handmark.pulltorefresh.library.PullToRefreshAdapterViewBase -> com.handmark.pulltorefresh.library.d:
+    boolean mLastItemVisible -> b
+    android.widget.AbsListView$OnScrollListener mOnScrollListener -> c
+    com.handmark.pulltorefresh.library.PullToRefreshBase$OnLastItemVisibleListener mOnLastItemVisibleListener -> d
+    android.view.View mEmptyView -> e
+    com.handmark.pulltorefresh.library.internal.IndicatorLayout mIndicatorIvTop -> f
+    com.handmark.pulltorefresh.library.internal.IndicatorLayout mIndicatorIvBottom -> g
+    boolean mShowIndicator -> h
+    boolean mScrollEmptyView -> i
+    int[] $SWITCH_TABLE$com$handmark$pulltorefresh$library$PullToRefreshBase$Mode -> j
+    42:54:android.widget.FrameLayout$LayoutParams convertEmptyViewLayoutParams(android.view.ViewGroup$LayoutParams) -> a
+    99:99:boolean getShowIndicator() -> getShowIndicator
+    114:127:void onScroll(android.widget.AbsListView,int,int,int) -> onScroll
+    134:141:void onScrollStateChanged(android.widget.AbsListView,int) -> onScrollStateChanged
+    152:153:void setAdapter(android.widget.ListAdapter) -> setAdapter
+    169:197:void setEmptyView(android.view.View) -> setEmptyView
+    208:209:void setOnItemClickListener(android.widget.AdapterView$OnItemClickListener) -> setOnItemClickListener
+    212:213:void setOnLastItemVisibleListener(com.handmark.pulltorefresh.library.PullToRefreshBase$OnLastItemVisibleListener) -> setOnLastItemVisibleListener
+    216:217:void setOnScrollListener(android.widget.AbsListView$OnScrollListener) -> setOnScrollListener
+    220:221:void setScrollEmptyView(boolean) -> setScrollEmptyView
+    232:241:void setShowIndicator(boolean) -> setShowIndicator
+    247:262:void onPullToRefresh() -> a
+    265:270:void onRefreshing(boolean) -> a
+    274:289:void onReleaseToRefresh() -> b
+    293:298:void onReset() -> c
+    303:304:void handleStyledAttributes(android.content.res.TypedArray) -> a
+    307:307:boolean isReadyForPullStart() -> d
+    311:311:boolean isReadyForPullEnd() -> e
+    316:320:void onScrollChanged(int,int,int,int) -> onScrollChanged
+    324:332:void updateUIForMode() -> f
+    335:367:void addIndicatorViews() -> q
+    370:370:boolean getShowIndicatorInternal() -> getShowIndicatorInternal
+    374:399:boolean isFirstItemVisible() -> r
+    403:435:boolean isLastItemVisible() -> s
+    439:448:void removeIndicatorViews() -> t
+    451:474:void updateIndicatorViewsVisibility() -> u
+    38:38:int[] $SWITCH_TABLE$com$handmark$pulltorefresh$library$PullToRefreshBase$Mode() -> g
+com.handmark.pulltorefresh.library.PullToRefreshBase -> com.handmark.pulltorefresh.library.PullToRefreshBase:
+    int mTouchSlop -> b
+    float mLastMotionX -> c
+    float mLastMotionY -> d
+    float mInitialMotionX -> e
+    float mInitialMotionY -> f
+    boolean mIsBeingDragged -> g
+    com.handmark.pulltorefresh.library.PullToRefreshBase$State mState -> h
+    com.handmark.pulltorefresh.library.PullToRefreshBase$Mode mMode -> i
+    com.handmark.pulltorefresh.library.PullToRefreshBase$Mode mCurrentMode -> j
+    android.view.View mRefreshableView -> a
+    android.widget.FrameLayout mRefreshableViewWrapper -> k
+    boolean mShowViewWhileRefreshing -> l
+    boolean mScrollingWhileRefreshingEnabled -> m
+    boolean mFilterTouchEvents -> n
+    boolean mOverScrollEnabled -> o
+    boolean mLayoutVisibilityChangesEnabled -> p
+    android.view.animation.Interpolator mScrollAnimationInterpolator -> q
+    com.handmark.pulltorefresh.library.PullToRefreshBase$AnimationStyle mLoadingAnimationStyle -> r
+    com.handmark.pulltorefresh.library.internal.LoadingLayout mHeaderLayout -> s
+    com.handmark.pulltorefresh.library.internal.LoadingLayout mFooterLayout -> t
+    com.handmark.pulltorefresh.library.PullToRefreshBase$OnRefreshListener mOnRefreshListener -> u
+    com.handmark.pulltorefresh.library.PullToRefreshBase$OnRefreshListener2 mOnRefreshListener2 -> v
+    com.handmark.pulltorefresh.library.PullToRefreshBase$OnPullEventListener mOnPullEventListener -> w
+    com.handmark.pulltorefresh.library.PullToRefreshBase$SmoothScrollRunnable mCurrentSmoothScrollRunnable -> x
+    int[] $SWITCH_TABLE$com$handmark$pulltorefresh$library$PullToRefreshBase$Orientation -> y
+    int[] $SWITCH_TABLE$com$handmark$pulltorefresh$library$PullToRefreshBase$State -> z
+    int[] $SWITCH_TABLE$com$handmark$pulltorefresh$library$PullToRefreshBase$Mode -> A
+    135:142:void addView(android.view.View,int,android.view.ViewGroup$LayoutParams) -> addView
+    159:159:com.handmark.pulltorefresh.library.PullToRefreshBase$Mode getCurrentMode() -> getCurrentMode
+    164:164:boolean getFilterTouchEvents() -> getFilterTouchEvents
+    169:169:com.handmark.pulltorefresh.library.ILoadingLayout getLoadingLayoutProxy() -> getLoadingLayoutProxy
+    174:174:com.handmark.pulltorefresh.library.ILoadingLayout getLoadingLayoutProxy(boolean,boolean) -> a
+    179:179:com.handmark.pulltorefresh.library.PullToRefreshBase$Mode getMode() -> getMode
+    184:184:android.view.View getRefreshableView() -> getRefreshableView
+    189:189:boolean getShowViewWhileRefreshing() -> getShowViewWhileRefreshing
+    194:194:com.handmark.pulltorefresh.library.PullToRefreshBase$State getState() -> getState
+    206:206:boolean isPullToRefreshEnabled() -> h
+    211:211:boolean isPullToRefreshOverScrollEnabled() -> i
+    217:217:boolean isRefreshing() -> j
+    228:299:boolean onInterceptTouchEvent(android.view.MotionEvent) -> onInterceptTouchEvent
+    304:307:void onRefreshComplete() -> k
+    312:372:boolean onTouchEvent(android.view.MotionEvent) -> onTouchEvent
+    376:377:void setScrollingWhileRefreshingEnabled(boolean) -> setScrollingWhileRefreshingEnabled
+    383:384:void setDisableScrollingWhileRefreshing(boolean) -> setDisableScrollingWhileRefreshing
+    388:389:void setFilterTouchEvents(boolean) -> setFilterTouchEvents
+    396:397:void setLastUpdatedLabel(java.lang.CharSequence) -> setLastUpdatedLabel
+    404:405:void setLoadingDrawable(android.graphics.drawable.Drawable) -> setLoadingDrawable
+    418:419:void setLongClickable(boolean) -> setLongClickable
+    423:430:void setMode(com.handmark.pulltorefresh.library.PullToRefreshBase$Mode) -> setMode
+    433:434:void setOnPullEventListener(com.handmark.pulltorefresh.library.PullToRefreshBase$OnPullEventListener) -> setOnPullEventListener
+    438:440:void setOnRefreshListener(com.handmark.pulltorefresh.library.PullToRefreshBase$OnRefreshListener) -> setOnRefreshListener
+    444:446:void setOnRefreshListener(com.handmark.pulltorefresh.library.PullToRefreshBase$OnRefreshListener2) -> setOnRefreshListener
+    453:454:void setPullLabel(java.lang.CharSequence) -> setPullLabel
+    470:471:void setPullToRefreshEnabled(boolean) -> setPullToRefreshEnabled
+    475:476:void setPullToRefreshOverScrollEnabled(boolean) -> setPullToRefreshOverScrollEnabled
+    485:488:void setRefreshing(boolean) -> setRefreshing
+    495:496:void setRefreshingLabel(java.lang.CharSequence) -> setRefreshingLabel
+    512:513:void setReleaseLabel(java.lang.CharSequence) -> setReleaseLabel
+    520:522:void setReleaseLabel(java.lang.CharSequence,com.handmark.pulltorefresh.library.PullToRefreshBase$Mode) -> a
+    525:526:void setScrollAnimationInterpolator(android.view.animation.Interpolator) -> setScrollAnimationInterpolator
+    530:531:void setShowViewWhileRefreshing(boolean) -> setShowViewWhileRefreshing
+    com.handmark.pulltorefresh.library.PullToRefreshBase$Orientation getPullToRefreshScrollDirection() -> getPullToRefreshScrollDirection
+    540:568:void setState(com.handmark.pulltorefresh.library.PullToRefreshBase$State,boolean[]) -> a
+    575:576:void addViewInternal(android.view.View,int,android.view.ViewGroup$LayoutParams) -> a
+    583:584:void addViewInternal(android.view.View,android.view.ViewGroup$LayoutParams) -> a
+    587:590:com.handmark.pulltorefresh.library.internal.LoadingLayout createLoadingLayout(android.content.Context,com.handmark.pulltorefresh.library.PullToRefreshBase$Mode,android.content.res.TypedArray) -> a
+    598:607:com.handmark.pulltorefresh.library.LoadingLayoutProxy createLoadingLayoutProxy(boolean,boolean) -> b
+    android.view.View createRefreshableView(android.content.Context,android.util.AttributeSet) -> a
+    627:628:void disableLoadingLayoutVisibilityChanges() -> l
+    631:631:com.handmark.pulltorefresh.library.internal.LoadingLayout getFooterLayout() -> getFooterLayout
+    635:635:int getFooterSize() -> getFooterSize
+    639:639:com.handmark.pulltorefresh.library.internal.LoadingLayout getHeaderLayout() -> getHeaderLayout
+    643:643:int getHeaderSize() -> getHeaderSize
+    647:647:int getPullToRefreshScrollDuration() -> getPullToRefreshScrollDuration
+    651:651:int getPullToRefreshScrollDurationLonger() -> getPullToRefreshScrollDurationLonger
+    655:655:android.widget.FrameLayout getRefreshableViewWrapper() -> getRefreshableViewWrapper
+    665:665:void handleStyledAttributes(android.content.res.TypedArray) -> a
+    boolean isReadyForPullEnd() -> e
+    boolean isReadyForPullStart() -> d
+    692:692:void onPtrRestoreInstanceState(android.os.Bundle) -> a
+    701:701:void onPtrSaveInstanceState(android.os.Bundle) -> b
+    708:719:void onPullToRefresh() -> a
+    728:763:void onRefreshing(boolean) -> a
+    770:781:void onReleaseToRefresh() -> b
+    788:796:void onReset() -> c
+    800:823:void onRestoreInstanceState(android.os.Parcelable) -> onRestoreInstanceState
+    827:840:android.os.Parcelable onSaveInstanceState() -> onSaveInstanceState
+    849:867:void onSizeChanged(int,int,int,int) -> onSizeChanged
+    874:919:void refreshLoadingViewsSize() -> m
+    924:940:void refreshRefreshableViewSize(int,int) -> a
+    954:986:void setHeaderScroll(int) -> setHeaderScroll
+    995:996:void smoothScrollTo(int) -> a
+    1006:1007:void smoothScrollTo(int,com.handmark.pulltorefresh.library.PullToRefreshBase$OnSmoothScrollFinishedListener) -> a
+    1026:1050:void updateUIForMode() -> f
+    1053:1059:void addRefreshableView(android.content.Context,android.view.View) -> a
+    1062:1071:void callRefreshListener() -> g
+    1075:1143:void init(android.content.Context,android.util.AttributeSet) -> b
+    1146:1154:boolean isReadyForPull() -> q
+    1169:1213:void pullEvent() -> r
+    1216:1222:android.widget.LinearLayout$LayoutParams getLoadingLayoutLayoutParams() -> getLoadingLayoutLayoutParams
+    1228:1233:int getMaximumPullScroll() -> getMaximumPullScroll
+    1244:1245:void smoothScrollTo(int,long) -> a
+    1249:1277:void smoothScrollTo(int,long,long,com.handmark.pulltorefresh.library.PullToRefreshBase$OnSmoothScrollFinishedListener) -> a
+    90:90:android.view.animation.Interpolator access$0(com.handmark.pulltorefresh.library.PullToRefreshBase) -> a
+    43:43:int[] $SWITCH_TABLE$com$handmark$pulltorefresh$library$PullToRefreshBase$Orientation() -> n
+    43:43:int[] $SWITCH_TABLE$com$handmark$pulltorefresh$library$PullToRefreshBase$State() -> o
+    43:43:int[] $SWITCH_TABLE$com$handmark$pulltorefresh$library$PullToRefreshBase$Mode() -> p
+    1061:1061:void access$4(com.handmark.pulltorefresh.library.PullToRefreshBase) -> b
+com.handmark.pulltorefresh.library.PullToRefreshBase$1 -> com.handmark.pulltorefresh.library.e:
+    com.handmark.pulltorefresh.library.PullToRefreshBase this$0 -> a
+    742:743:void onSmoothScrollFinished() -> a
+com.handmark.pulltorefresh.library.PullToRefreshBase$2 -> com.handmark.pulltorefresh.library.f:
+    com.handmark.pulltorefresh.library.PullToRefreshBase this$0 -> a
+    864:865:void run() -> run
+com.handmark.pulltorefresh.library.PullToRefreshBase$AnimationStyle -> com.handmark.pulltorefresh.library.PullToRefreshBase$AnimationStyle:
+    com.handmark.pulltorefresh.library.PullToRefreshBase$AnimationStyle ROTATE -> a
+    com.handmark.pulltorefresh.library.PullToRefreshBase$AnimationStyle FLIP -> b
+    int[] $SWITCH_TABLE$com$handmark$pulltorefresh$library$PullToRefreshBase$AnimationStyle -> c
+    com.handmark.pulltorefresh.library.PullToRefreshBase$AnimationStyle[] ENUM$VALUES -> d
+    1303:1303:com.handmark.pulltorefresh.library.PullToRefreshBase$AnimationStyle getDefault() -> a
+    1315:1320:com.handmark.pulltorefresh.library.PullToRefreshBase$AnimationStyle mapIntToValue(int) -> a
+    1325:1330:com.handmark.pulltorefresh.library.internal.LoadingLayout createLoadingLayout(android.content.Context,com.handmark.pulltorefresh.library.PullToRefreshBase$Mode,com.handmark.pulltorefresh.library.PullToRefreshBase$Orientation,android.content.res.TypedArray) -> a
+    1:1:com.handmark.pulltorefresh.library.PullToRefreshBase$AnimationStyle[] values() -> values
+    1:1:com.handmark.pulltorefresh.library.PullToRefreshBase$AnimationStyle valueOf(java.lang.String) -> valueOf
+    1289:1289:int[] $SWITCH_TABLE$com$handmark$pulltorefresh$library$PullToRefreshBase$AnimationStyle() -> b
+com.handmark.pulltorefresh.library.PullToRefreshBase$Mode -> com.handmark.pulltorefresh.library.PullToRefreshBase$Mode:
+    com.handmark.pulltorefresh.library.PullToRefreshBase$Mode DISABLED -> a
+    com.handmark.pulltorefresh.library.PullToRefreshBase$Mode PULL_FROM_START -> b
+    com.handmark.pulltorefresh.library.PullToRefreshBase$Mode PULL_FROM_END -> c
+    com.handmark.pulltorefresh.library.PullToRefreshBase$Mode BOTH -> d
+    com.handmark.pulltorefresh.library.PullToRefreshBase$Mode MANUAL_REFRESH_ONLY -> e
+    com.handmark.pulltorefresh.library.PullToRefreshBase$Mode PULL_DOWN_TO_REFRESH -> f
+    com.handmark.pulltorefresh.library.PullToRefreshBase$Mode PULL_UP_TO_REFRESH -> g
+    int mIntValue -> h
+    com.handmark.pulltorefresh.library.PullToRefreshBase$Mode[] ENUM$VALUES -> i
+    1387:1394:com.handmark.pulltorefresh.library.PullToRefreshBase$Mode mapIntToValue(int) -> a
+    1398:1398:com.handmark.pulltorefresh.library.PullToRefreshBase$Mode getDefault() -> a
+    1412:1412:boolean permitsPullToRefresh() -> b
+    1419:1419:boolean showHeaderLoadingLayout() -> c
+    1426:1426:boolean showFooterLoadingLayout() -> d
+    1430:1430:int getIntValue() -> e
+    1:1:com.handmark.pulltorefresh.library.PullToRefreshBase$Mode[] values() -> values
+    1:1:com.handmark.pulltorefresh.library.PullToRefreshBase$Mode valueOf(java.lang.String) -> valueOf
+com.handmark.pulltorefresh.library.PullToRefreshBase$OnLastItemVisibleListener -> com.handmark.pulltorefresh.library.g:
+    void onLastItemVisible() -> a
+com.handmark.pulltorefresh.library.PullToRefreshBase$OnPullEventListener -> com.handmark.pulltorefresh.library.h:
+    void onPullEvent(com.handmark.pulltorefresh.library.PullToRefreshBase,com.handmark.pulltorefresh.library.PullToRefreshBase$State,com.handmark.pulltorefresh.library.PullToRefreshBase$Mode) -> a
+com.handmark.pulltorefresh.library.PullToRefreshBase$OnRefreshListener -> com.handmark.pulltorefresh.library.i:
+    void onRefresh(com.handmark.pulltorefresh.library.PullToRefreshBase) -> a
+com.handmark.pulltorefresh.library.PullToRefreshBase$OnRefreshListener2 -> com.handmark.pulltorefresh.library.j:
+    void onPullDownToRefresh(com.handmark.pulltorefresh.library.PullToRefreshBase) -> a
+    void onPullUpToRefresh(com.handmark.pulltorefresh.library.PullToRefreshBase) -> b
+com.handmark.pulltorefresh.library.PullToRefreshBase$OnSmoothScrollFinishedListener -> com.handmark.pulltorefresh.library.k:
+    void onSmoothScrollFinished() -> a
+com.handmark.pulltorefresh.library.PullToRefreshBase$Orientation -> com.handmark.pulltorefresh.library.PullToRefreshBase$Orientation:
+    com.handmark.pulltorefresh.library.PullToRefreshBase$Orientation VERTICAL -> a
+    com.handmark.pulltorefresh.library.PullToRefreshBase$Orientation HORIZONTAL -> b
+    com.handmark.pulltorefresh.library.PullToRefreshBase$Orientation[] ENUM$VALUES -> c
+    1:1:com.handmark.pulltorefresh.library.PullToRefreshBase$Orientation[] values() -> values
+    1:1:com.handmark.pulltorefresh.library.PullToRefreshBase$Orientation valueOf(java.lang.String) -> valueOf
+com.handmark.pulltorefresh.library.PullToRefreshBase$SmoothScrollRunnable -> com.handmark.pulltorefresh.library.l:
+    android.view.animation.Interpolator mInterpolator -> b
+    int mScrollToY -> c
+    int mScrollFromY -> d
+    long mDuration -> e
+    com.handmark.pulltorefresh.library.PullToRefreshBase$OnSmoothScrollFinishedListener mListener -> f
+    boolean mContinueRunning -> g
+    long mStartTime -> h
+    int mCurrentY -> i
+    com.handmark.pulltorefresh.library.PullToRefreshBase this$0 -> a
+    1615:1641:void run() -> run
+    1644:1646:void stop() -> a
+com.handmark.pulltorefresh.library.PullToRefreshBase$State -> com.handmark.pulltorefresh.library.PullToRefreshBase$State:
+    com.handmark.pulltorefresh.library.PullToRefreshBase$State RESET -> a
+    com.handmark.pulltorefresh.library.PullToRefreshBase$State PULL_TO_REFRESH -> b
+    com.handmark.pulltorefresh.library.PullToRefreshBase$State RELEASE_TO_REFRESH -> c
+    com.handmark.pulltorefresh.library.PullToRefreshBase$State REFRESHING -> d
+    com.handmark.pulltorefresh.library.PullToRefreshBase$State MANUAL_REFRESHING -> e
+    com.handmark.pulltorefresh.library.PullToRefreshBase$State OVERSCROLLING -> f
+    int mIntValue -> g
+    com.handmark.pulltorefresh.library.PullToRefreshBase$State[] ENUM$VALUES -> h
+    1568:1575:com.handmark.pulltorefresh.library.PullToRefreshBase$State mapIntToValue(int) -> a
+    1585:1585:int getIntValue() -> a
+    1:1:com.handmark.pulltorefresh.library.PullToRefreshBase$State[] values() -> values
+    1:1:com.handmark.pulltorefresh.library.PullToRefreshBase$State valueOf(java.lang.String) -> valueOf
+com.handmark.pulltorefresh.library.PullToRefreshListView -> com.handmark.pulltorefresh.library.PullToRefreshListView:
+    com.handmark.pulltorefresh.library.internal.LoadingLayout mHeaderLoadingView -> b
+    com.handmark.pulltorefresh.library.internal.LoadingLayout mFooterLoadingView -> c
+    android.widget.FrameLayout mLvFooterLoadingFrame -> d
+    boolean mListViewExtrasEnabled -> e
+    int[] $SWITCH_TABLE$com$handmark$pulltorefresh$library$PullToRefreshBase$Mode -> f
+    62:62:com.handmark.pulltorefresh.library.PullToRefreshBase$Orientation getPullToRefreshScrollDirection() -> getPullToRefreshScrollDirection
+    71:127:void onRefreshing(boolean) -> a
+    134:185:void onReset() -> c
+    189:202:com.handmark.pulltorefresh.library.LoadingLayoutProxy createLoadingLayoutProxy(boolean,boolean) -> b
+    207:212:android.widget.ListView createListView(android.content.Context,android.util.AttributeSet) -> b
+    217:221:android.widget.ListView createRefreshableView(android.content.Context,android.util.AttributeSet) -> c
+    226:254:void handleStyledAttributes(android.content.res.TypedArray) -> a
+    1:1:android.view.View createRefreshableView(android.content.Context,android.util.AttributeSet) -> a
+    40:40:android.widget.FrameLayout access$1(com.handmark.pulltorefresh.library.PullToRefreshListView) -> a
+    35:35:int[] $SWITCH_TABLE$com$handmark$pulltorefresh$library$PullToRefreshBase$Mode() -> q
+com.handmark.pulltorefresh.library.PullToRefreshListView$InternalListView -> com.handmark.pulltorefresh.library.m:
+    boolean mAddedLvFooter -> b
+    com.handmark.pulltorefresh.library.PullToRefreshListView this$0 -> a
+    293:297:void dispatchDraw(android.graphics.Canvas) -> dispatchDraw
+    307:310:boolean dispatchTouchEvent(android.view.MotionEvent) -> dispatchTouchEvent
+    317:323:void setAdapter(android.widget.ListAdapter) -> setAdapter
+    327:328:void setEmptyView(android.view.View) -> setEmptyView
+    332:333:void setEmptyViewInternal(android.view.View) -> setEmptyViewInternal
+com.handmark.pulltorefresh.library.PullToRefreshListView$InternalListViewSDK9 -> com.handmark.pulltorefresh.library.n:
+    com.handmark.pulltorefresh.library.PullToRefreshListView this$0 -> b
+    267:273:boolean overScrollBy(int,int,int,int,int,int,int,int,boolean) -> overScrollBy
+com.handmark.pulltorefresh.library.R -> com.handmark.pulltorefresh.library.o:
+com.handmark.pulltorefresh.library.R$anim -> com.handmark.pulltorefresh.library.p:
+    int slide_out_to_bottom -> slide_out_to_bottom
+    int slide_out_to_top -> slide_out_to_top
+    int slide_in_from_bottom -> slide_in_from_bottom
+    int slide_in_from_top -> slide_in_from_top
+com.handmark.pulltorefresh.library.R$dimen -> com.handmark.pulltorefresh.library.q:
+    int indicator_right_padding -> indicator_right_padding
+    int indicator_corner_radius -> indicator_corner_radius
+    int indicator_internal_padding -> indicator_internal_padding
+    int header_footer_top_bottom_padding -> header_footer_top_bottom_padding
+    int header_footer_left_right_padding -> header_footer_left_right_padding
+com.handmark.pulltorefresh.library.R$drawable -> com.handmark.pulltorefresh.library.r:
+    int indicator_bg_top -> indicator_bg_top
+    int default_ptr_flip -> default_ptr_flip
+    int indicator_arrow -> indicator_arrow
+    int indicator_bg_bottom -> indicator_bg_bottom
+    int default_ptr_rotate -> default_ptr_rotate
+com.handmark.pulltorefresh.library.R$id -> com.handmark.pulltorefresh.library.s:
+    int pullFromStart -> pullFromStart
+    int pull_to_refresh_progress -> pull_to_refresh_progress
+    int rotate -> rotate
+    int both -> both
+    int webview -> webview
+    int pull_to_refresh_text -> pull_to_refresh_text
+    int pullDownFromTop -> pullDownFromTop
+    int gridview -> gridview
+    int pullUpFromBottom -> pullUpFromBottom
+    int scrollview -> scrollview
+    int pullFromEnd -> pullFromEnd
+    int pull_to_refresh_image -> pull_to_refresh_image
+    int fl_inner -> fl_inner
+    int pull_to_refresh_sub_text -> pull_to_refresh_sub_text
+    int disabled -> disabled
+    int flip -> flip
+    int manualOnly -> manualOnly
+com.handmark.pulltorefresh.library.R$layout -> com.handmark.pulltorefresh.library.t:
+    int pull_to_refresh_header_horizontal -> pull_to_refresh_header_horizontal
+    int pull_to_refresh_header_vertical -> pull_to_refresh_header_vertical
+com.handmark.pulltorefresh.library.R$string -> com.handmark.pulltorefresh.library.u:
+    int pull_to_refresh_refreshing_label -> pull_to_refresh_refreshing_label
+    int pull_to_refresh_release_label -> pull_to_refresh_release_label
+    int pull_to_refresh_from_bottom_pull_label -> pull_to_refresh_from_bottom_pull_label
+    int pull_to_refresh_from_bottom_refreshing_label -> pull_to_refresh_from_bottom_refreshing_label
+    int pull_to_refresh_pull_label -> pull_to_refresh_pull_label
+    int pull_to_refresh_from_bottom_release_label -> pull_to_refresh_from_bottom_release_label
+com.handmark.pulltorefresh.library.R$styleable -> com.handmark.pulltorefresh.library.v:
+    int PullToRefresh_ptrDrawableStart -> PullToRefresh_ptrDrawableStart
+    int PullToRefresh_ptrShowIndicator -> PullToRefresh_ptrShowIndicator
+    int[] PullToRefresh -> PullToRefresh
+    int PullToRefresh_ptrHeaderTextAppearance -> PullToRefresh_ptrHeaderTextAppearance
+    int PullToRefresh_ptrRefreshableViewBackground -> PullToRefresh_ptrRefreshableViewBackground
+    int PullToRefresh_ptrAnimationStyle -> PullToRefresh_ptrAnimationStyle
+    int PullToRefresh_ptrScrollingWhileRefreshingEnabled -> PullToRefresh_ptrScrollingWhileRefreshingEnabled
+    int PullToRefresh_ptrAdapterViewBackground -> PullToRefresh_ptrAdapterViewBackground
+    int PullToRefresh_ptrMode -> PullToRefresh_ptrMode
+    int PullToRefresh_ptrHeaderTextColor -> PullToRefresh_ptrHeaderTextColor
+    int PullToRefresh_ptrListViewExtrasEnabled -> PullToRefresh_ptrListViewExtrasEnabled
+    int PullToRefresh_ptrDrawableBottom -> PullToRefresh_ptrDrawableBottom
+    int PullToRefresh_ptrHeaderBackground -> PullToRefresh_ptrHeaderBackground
+    int PullToRefresh_ptrDrawableTop -> PullToRefresh_ptrDrawableTop
+    int PullToRefresh_ptrOverScroll -> PullToRefresh_ptrOverScroll
+    int PullToRefresh_ptrDrawableEnd -> PullToRefresh_ptrDrawableEnd
+    int PullToRefresh_ptrRotateDrawableWhilePulling -> PullToRefresh_ptrRotateDrawableWhilePulling
+    int PullToRefresh_ptrSubHeaderTextAppearance -> PullToRefresh_ptrSubHeaderTextAppearance
+    int PullToRefresh_ptrDrawable -> PullToRefresh_ptrDrawable
+    int PullToRefresh_ptrHeaderSubTextColor -> PullToRefresh_ptrHeaderSubTextColor
+com.handmark.pulltorefresh.library.internal.EmptyViewMethodAccessor -> com.handmark.pulltorefresh.library.a.a:
+    void setEmptyViewInternal(android.view.View) -> setEmptyViewInternal
+com.handmark.pulltorefresh.library.internal.FlipLoadingLayout -> com.handmark.pulltorefresh.library.a.b:
+    android.view.animation.Animation mRotateAnimation -> f
+    android.view.animation.Animation mResetRotateAnimation -> g
+    int[] $SWITCH_TABLE$com$handmark$pulltorefresh$library$PullToRefreshBase$Mode -> h
+    60:83:void onLoadingDrawableSet(android.graphics.drawable.Drawable) -> a
+    88:88:void onPullImpl(float) -> a
+    93:96:void pullToRefreshImpl() -> a
+    100:103:void refreshingImpl() -> b
+    107:108:void releaseToRefreshImpl() -> c
+    112:115:void resetImpl() -> d
+    119:119:int getDefaultDrawableResId() -> getDefaultDrawableResId
+    123:143:float getDrawableRotationAngle() -> getDrawableRotationAngle
+    34:34:int[] $SWITCH_TABLE$com$handmark$pulltorefresh$library$PullToRefreshBase$Mode() -> e
+com.handmark.pulltorefresh.library.internal.IndicatorLayout -> com.handmark.pulltorefresh.library.a.c:
+    android.view.animation.Animation mInAnim -> a
+    android.view.animation.Animation mOutAnim -> b
+    android.widget.ImageView mArrowImageView -> c
+    android.view.animation.Animation mRotateAnimation -> d
+    android.view.animation.Animation mResetRotateAnimation -> e
+    int[] $SWITCH_TABLE$com$handmark$pulltorefresh$library$PullToRefreshBase$Mode -> f
+    100:105:boolean isVisible() -> a
+    109:110:void hide() -> b
+    113:115:void show() -> c
+    119:127:void onAnimationEnd(android.view.animation.Animation) -> onAnimationEnd
+    132:132:void onAnimationRepeat(android.view.animation.Animation) -> onAnimationRepeat
+    136:137:void onAnimationStart(android.view.animation.Animation) -> onAnimationStart
+    140:141:void releaseToRefresh() -> d
+    144:145:void pullToRefresh() -> e
+    37:37:int[] $SWITCH_TABLE$com$handmark$pulltorefresh$library$PullToRefreshBase$Mode() -> f
+com.handmark.pulltorefresh.library.internal.LoadingLayout -> com.handmark.pulltorefresh.library.a.d:
+    android.view.animation.Interpolator ANIMATION_INTERPOLATOR -> a
+    android.widget.FrameLayout mInnerLayout -> f
+    android.widget.ImageView mHeaderImage -> b
+    android.widget.ProgressBar mHeaderProgress -> c
+    boolean mUseIntrinsicAnimation -> g
+    android.widget.TextView mHeaderText -> h
+    android.widget.TextView mSubHeaderText -> i
+    com.handmark.pulltorefresh.library.PullToRefreshBase$Mode mMode -> d
+    com.handmark.pulltorefresh.library.PullToRefreshBase$Orientation mScrollDirection -> e
+    java.lang.CharSequence mPullLabel -> j
+    java.lang.CharSequence mRefreshingLabel -> k
+    java.lang.CharSequence mReleaseLabel -> l
+    int[] $SWITCH_TABLE$com$handmark$pulltorefresh$library$PullToRefreshBase$Orientation -> m
+    int[] $SWITCH_TABLE$com$handmark$pulltorefresh$library$PullToRefreshBase$Mode -> n
+    184:187:void setHeight(int) -> setHeight
+    190:193:void setWidth(int) -> setWidth
+    196:201:int getContentSize() -> getContentSize
+    206:218:void hideAllViews() -> f
+    221:224:void onPull(float) -> b
+    227:233:void pullToRefresh() -> g
+    236:250:void refreshing() -> h
+    253:259:void releaseToRefresh() -> i
+    262:281:void reset() -> j
+    285:286:void setLastUpdatedLabel(java.lang.CharSequence) -> setLastUpdatedLabel
+    290:295:void setLoadingDrawable(android.graphics.drawable.Drawable) -> setLoadingDrawable
+    298:299:void setPullLabel(java.lang.CharSequence) -> setPullLabel
+    302:303:void setRefreshingLabel(java.lang.CharSequence) -> setRefreshingLabel
+    306:307:void setReleaseLabel(java.lang.CharSequence) -> setReleaseLabel
+    311:312:void setTextTypeface(android.graphics.Typeface) -> setTextTypeface
+    315:327:void showInvisibleViews() -> k
+    int getDefaultDrawableResId() -> getDefaultDrawableResId
+    void onLoadingDrawableSet(android.graphics.drawable.Drawable) -> a
+    void onPullImpl(float) -> a
+    void pullToRefreshImpl() -> a
+    void refreshingImpl() -> b
+    void releaseToRefreshImpl() -> c
+    void resetImpl() -> d
+    348:361:void setSubHeaderText(java.lang.CharSequence) -> setSubHeaderText
+    364:367:void setSubTextAppearance(int) -> setSubTextAppearance
+    370:373:void setSubTextColor(android.content.res.ColorStateList) -> setSubTextColor
+    376:382:void setTextAppearance(int) -> setTextAppearance
+    385:391:void setTextColor(android.content.res.ColorStateList) -> setTextColor
+    44:44:int[] $SWITCH_TABLE$com$handmark$pulltorefresh$library$PullToRefreshBase$Orientation() -> l
+    44:44:int[] $SWITCH_TABLE$com$handmark$pulltorefresh$library$PullToRefreshBase$Mode() -> m
+com.handmark.pulltorefresh.library.internal.RotateLoadingLayout -> com.handmark.pulltorefresh.library.a.e:
+    android.view.animation.Animation mRotateAnimation -> f
+    android.graphics.Matrix mHeaderImageMatrix -> g
+    float mRotationPivotX -> h
+    float mRotationPivotY -> i
+    boolean mRotateDrawableWhilePulling -> j
+    59:63:void onLoadingDrawableSet(android.graphics.drawable.Drawable) -> a
+    67:75:void onPullImpl(float) -> a
+    79:80:void refreshingImpl() -> b
+    84:86:void resetImpl() -> d
+    89:93:void resetImageRotation() -> e
+    98:98:void pullToRefreshImpl() -> a
+    103:103:void releaseToRefreshImpl() -> c
+    107:107:int getDefaultDrawableResId() -> getDefaultDrawableResId
+com.handmark.pulltorefresh.library.internal.Utils -> com.handmark.pulltorefresh.library.a.f:
+    10:11:void warnDeprecation(java.lang.String,java.lang.String) -> a
+com.handmark.pulltorefresh.library.internal.ViewCompat -> com.handmark.pulltorefresh.library.a.g:
+    28:33:void postOnAnimation(android.view.View,java.lang.Runnable) -> a
+    36:41:void setBackground(android.view.View,android.graphics.drawable.Drawable) -> a
+com.handmark.pulltorefresh.library.internal.ViewCompat$SDK16 -> com.handmark.pulltorefresh.library.a.h:
+    61:62:void postOnAnimation(android.view.View,java.lang.Runnable) -> a
+    65:66:void setBackground(android.view.View,android.graphics.drawable.Drawable) -> a
 com.nineoldandroids.animation.Animator -> com.nineoldandroids.a.a:
     java.util.ArrayList mListeners -> a
     49:49:void start() -> a
@@ -10234,6 +10657,8 @@ com.nineoldandroids.view.ViewPropertyAnimator -> com.nineoldandroids.b.a:
     java.util.WeakHashMap ANIMATORS -> a
     58:70:com.nineoldandroids.view.ViewPropertyAnimator animate(android.view.View) -> a
     com.nineoldandroids.view.ViewPropertyAnimator setDuration(long) -> a
+    com.nineoldandroids.view.ViewPropertyAnimator setStartDelay(long) -> b
+    com.nineoldandroids.view.ViewPropertyAnimator setInterpolator(android.view.animation.Interpolator) -> a
     void start() -> a
     com.nineoldandroids.view.ViewPropertyAnimator translationY(float) -> a
     com.nineoldandroids.view.ViewPropertyAnimator alpha(float) -> b
@@ -10251,6 +10676,8 @@ com.nineoldandroids.view.ViewPropertyAnimatorHC -> com.nineoldandroids.b.b:
     java.lang.Runnable mAnimationStarter -> k
     java.util.HashMap mAnimatorMap -> l
     219:225:com.nineoldandroids.view.ViewPropertyAnimator setDuration(long) -> a
+    259:265:com.nineoldandroids.view.ViewPropertyAnimator setStartDelay(long) -> b
+    270:272:com.nineoldandroids.view.ViewPropertyAnimator setInterpolator(android.view.animation.Interpolator) -> a
     283:284:void start() -> a
     377:378:com.nineoldandroids.view.ViewPropertyAnimator translationY(float) -> a
     413:414:com.nineoldandroids.view.ViewPropertyAnimator alpha(float) -> b
@@ -10286,6 +10713,8 @@ com.nineoldandroids.view.ViewPropertyAnimatorHC$PropertyBundle -> com.nineoldand
 com.nineoldandroids.view.ViewPropertyAnimatorICS -> com.nineoldandroids.b.g:
     java.lang.ref.WeakReference mNative -> a
     27:31:com.nineoldandroids.view.ViewPropertyAnimator setDuration(long) -> a
+    45:49:com.nineoldandroids.view.ViewPropertyAnimator setStartDelay(long) -> b
+    63:67:com.nineoldandroids.view.ViewPropertyAnimator setInterpolator(android.view.animation.Interpolator) -> a
     105:109:void start() -> a
     229:233:com.nineoldandroids.view.ViewPropertyAnimator translationY(float) -> a
     283:287:com.nineoldandroids.view.ViewPropertyAnimator alpha(float) -> b
@@ -10304,6 +10733,8 @@ com.nineoldandroids.view.ViewPropertyAnimatorPreHC -> com.nineoldandroids.b.h:
     java.lang.Runnable mAnimationStarter -> l
     java.util.HashMap mAnimatorMap -> m
     226:232:com.nineoldandroids.view.ViewPropertyAnimator setDuration(long) -> a
+    266:272:com.nineoldandroids.view.ViewPropertyAnimator setStartDelay(long) -> b
+    277:279:com.nineoldandroids.view.ViewPropertyAnimator setInterpolator(android.view.animation.Interpolator) -> a
     290:291:void start() -> a
     384:385:com.nineoldandroids.view.ViewPropertyAnimator translationY(float) -> a
     420:421:com.nineoldandroids.view.ViewPropertyAnimator alpha(float) -> b
@@ -10381,6 +10812,510 @@ com.nineoldandroids.view.animation.AnimatorProxy -> com.nineoldandroids.b.a.a:
     254:278:void computeRect(android.graphics.RectF,android.view.View) -> a
     281:312:void transformMatrix(android.graphics.Matrix,android.view.View) -> a
     316:321:void applyTransformation(float,android.view.animation.Transformation) -> applyTransformation
+com.slidingmenu.lib.CustomViewAbove -> com.slidingmenu.lib.a:
+    android.view.animation.Interpolator sInterpolator -> e
+    android.view.View mContent -> f
+    int mCurItem -> g
+    android.widget.Scroller mScroller -> h
+    boolean mScrollingCacheEnabled -> i
+    boolean mScrolling -> j
+    boolean mIsBeingDragged -> k
+    boolean mIsUnableToDrag -> l
+    int mTouchSlop -> m
+    float mInitialMotionX -> n
+    float mLastMotionX -> o
+    float mLastMotionY -> p
+    int mActivePointerId -> a
+    android.view.VelocityTracker mVelocityTracker -> b
+    int mMinimumVelocity -> q
+    int mMaximumVelocity -> c
+    int mFlingDistance -> r
+    com.slidingmenu.lib.CustomViewBehind mViewBehind -> s
+    boolean mEnabled -> t
+    com.slidingmenu.lib.CustomViewAbove$OnPageChangeListener mOnPageChangeListener -> u
+    com.slidingmenu.lib.CustomViewAbove$OnPageChangeListener mInternalPageChangeListener -> v
+    com.slidingmenu.lib.SlidingMenu$OnClosedListener mClosedListener -> w
+    com.slidingmenu.lib.SlidingMenu$OnOpenedListener mOpenedListener -> x
+    java.util.List mIgnoredViews -> y
+    int mTouchMode -> d
+    boolean mQuickReturn -> z
+    float mScrollX -> A
+    161:188:void initCustomViewAbove() -> a
+    198:199:void setCurrentItem(int) -> setCurrentItem
+    208:209:void setCurrentItem(int,boolean) -> a
+    212:212:int getCurrentItem() -> getCurrentItem
+    216:217:void setCurrentItemInternal(int,boolean,boolean) -> a
+    220:242:void setCurrentItemInternal(int,boolean,boolean,int) -> a
+    251:252:void setOnPageChangeListener(com.slidingmenu.lib.CustomViewAbove$OnPageChangeListener) -> setOnPageChangeListener
+    263:264:void setOnOpenedListener(com.slidingmenu.lib.SlidingMenu$OnOpenedListener) -> setOnOpenedListener
+    267:268:void setOnClosedListener(com.slidingmenu.lib.SlidingMenu$OnClosedListener) -> setOnClosedListener
+    277:279:com.slidingmenu.lib.CustomViewAbove$OnPageChangeListener setInternalPageChangeListener(com.slidingmenu.lib.CustomViewAbove$OnPageChangeListener) -> a
+    301:303:float distanceInfluenceForSnapDuration(float) -> a
+    307:314:int getDestScrollX(int) -> a
+    318:318:int getLeftBound() -> getLeftBound
+    322:322:int getRightBound() -> getRightBound
+    326:326:int getContentLeft() -> getContentLeft
+    330:330:boolean isMenuOpen() -> b
+    334:339:boolean isInIgnoredView(android.view.MotionEvent) -> a
+    343:346:int getBehindWidth() -> getBehindWidth
+    366:367:void setSlidingEnabled(boolean) -> setSlidingEnabled
+    387:430:void smoothScrollTo(int,int,int) -> a
+    433:437:void setContent(android.view.View) -> setContent
+    440:440:android.view.View getContent() -> getContent
+    444:445:void setCustomViewBehind(com.slidingmenu.lib.CustomViewBehind) -> setCustomViewBehind
+    450:457:void onMeasure(int,int) -> onMeasure
+    461:470:void onSizeChanged(int,int,int,int) -> onSizeChanged
+    474:477:void onLayout(boolean,int,int,int,int) -> onLayout
+    482:484:void setAboveOffset(int) -> setAboveOffset
+    489:509:void computeScroll() -> computeScroll
+    512:518:void pageScrolled(int) -> c
+    533:539:void onPageScrolled(int,float,int) -> a
+    542:563:void completeScroll() -> e
+    568:569:void setTouchMode(int) -> setTouchMode
+    572:572:int getTouchMode() -> getTouchMode
+    576:589:boolean thisTouchAllowed(android.view.MotionEvent) -> b
+    593:601:boolean thisSlideAllowed(float) -> b
+    605:608:int getPointerIndex(android.view.MotionEvent,int) -> a
+    616:663:boolean onInterceptTouchEvent(android.view.MotionEvent) -> onInterceptTouchEvent
+    670:777:boolean onTouchEvent(android.view.MotionEvent) -> onTouchEvent
+    781:800:void determineDrag(android.view.MotionEvent) -> c
+    804:808:void scrollTo(int,int) -> scrollTo
+    811:821:int determineTargetPage(float,int,int) -> a
+    825:825:float getPercentOpen() -> getPercentOpen
+    830:835:void dispatchDraw(android.graphics.Canvas) -> dispatchDraw
+    842:854:void onSecondaryPointerUp(android.view.MotionEvent) -> d
+    857:859:void startDrag() -> f
+    862:871:void endDrag() -> g
+    874:886:void setScrollingCacheEnabled(boolean) -> setScrollingCacheEnabled
+    924:924:boolean dispatchKeyEvent(android.view.KeyEvent) -> dispatchKeyEvent
+    936:958:boolean executeKeyEvent(android.view.KeyEvent) -> a
+    962:991:boolean arrowScroll(int) -> b
+    995:999:boolean pageLeft() -> c
+    1003:1007:boolean pageRight() -> d
+    88:88:com.slidingmenu.lib.CustomViewBehind access$0(com.slidingmenu.lib.CustomViewAbove) -> a
+com.slidingmenu.lib.CustomViewAbove$1 -> com.slidingmenu.lib.b:
+    46:47:float getInterpolation(float) -> getInterpolation
+com.slidingmenu.lib.CustomViewAbove$2 -> com.slidingmenu.lib.c:
+    com.slidingmenu.lib.CustomViewAbove this$0 -> a
+    172:183:void onPageSelected(int) -> a
+com.slidingmenu.lib.CustomViewAbove$OnPageChangeListener -> com.slidingmenu.lib.d:
+    void onPageScrolled(int,float,int) -> a
+    void onPageSelected(int) -> a
+com.slidingmenu.lib.CustomViewAbove$SimpleOnPageChangeListener -> com.slidingmenu.lib.e:
+    139:139:void onPageScrolled(int,float,int) -> a
+    143:143:void onPageSelected(int) -> a
+com.slidingmenu.lib.CustomViewBehind -> com.slidingmenu.lib.f:
+    int mTouchMode -> a
+    com.slidingmenu.lib.CustomViewAbove mViewAbove -> b
+    android.view.View mContent -> c
+    android.view.View mSecondaryContent -> d
+    int mMarginThreshold -> e
+    int mWidthOffset -> f
+    com.slidingmenu.lib.SlidingMenu$CanvasTransformer mTransformer -> g
+    boolean mChildrenEnabled -> h
+    int mMode -> i
+    boolean mFadeEnabled -> j
+    android.graphics.Paint mFadePaint -> k
+    float mScrollScale -> l
+    android.graphics.drawable.Drawable mShadowDrawable -> m
+    android.graphics.drawable.Drawable mSecondaryShadowDrawable -> n
+    int mShadowWidth -> o
+    float mFadeDegree -> p
+    boolean mSelectorEnabled -> q
+    android.graphics.Bitmap mSelectorDrawable -> r
+    android.view.View mSelectedView -> s
+    45:46:void setCustomViewAbove(com.slidingmenu.lib.CustomViewAbove) -> setCustomViewAbove
+    49:50:void setCanvasTransformer(com.slidingmenu.lib.SlidingMenu$CanvasTransformer) -> setCanvasTransformer
+    53:55:void setWidthOffset(int) -> setWidthOffset
+    58:59:void setMarginThreshold(int) -> setMarginThreshold
+    62:62:int getMarginThreshold() -> getMarginThreshold
+    66:66:int getBehindWidth() -> getBehindWidth
+    70:74:void setContent(android.view.View) -> setContent
+    77:77:android.view.View getContent() -> getContent
+    85:89:void setSecondaryContent(android.view.View) -> setSecondaryContent
+    92:92:android.view.View getSecondaryContent() -> getSecondaryContent
+    96:97:void setChildrenEnabled(boolean) -> setChildrenEnabled
+    101:104:void scrollTo(int,int) -> scrollTo
+    108:108:boolean onInterceptTouchEvent(android.view.MotionEvent) -> onInterceptTouchEvent
+    113:113:boolean onTouchEvent(android.view.MotionEvent) -> onTouchEvent
+    118:125:void dispatchDraw(android.graphics.Canvas) -> dispatchDraw
+    129:134:void onLayout(boolean,int,int,int,int) -> onLayout
+    138:146:void onMeasure(int,int) -> onMeasure
+    158:165:void setMode(int) -> setMode
+    168:168:int getMode() -> getMode
+    172:173:void setScrollScale(float) -> setScrollScale
+    176:176:float getScrollScale() -> getScrollScale
+    180:182:void setShadowDrawable(android.graphics.drawable.Drawable) -> setShadowDrawable
+    185:187:void setSecondaryShadowDrawable(android.graphics.drawable.Drawable) -> setSecondaryShadowDrawable
+    190:192:void setShadowWidth(int) -> setShadowWidth
+    195:196:void setFadeEnabled(boolean) -> setFadeEnabled
+    199:202:void setFadeDegree(float) -> setFadeDegree
+    205:211:int getMenuPage(int) -> a
+    216:238:void scrollBehindTo(android.view.View,int,int) -> a
+    241:263:int getMenuLeft(android.view.View,int) -> a
+    267:272:int getAbsLeftBound(android.view.View) -> a
+    276:281:int getAbsRightBound(android.view.View) -> b
+    285:295:boolean marginTouchAllowed(android.view.View,int) -> b
+    299:300:void setTouchMode(int) -> setTouchMode
+    303:309:boolean menuOpenTouchAllowed(android.view.View,int,float) -> a
+    313:318:boolean menuTouchInQuickReturn(android.view.View,int,float) -> b
+    322:329:boolean menuClosedSlideAllowed(float) -> a
+    333:340:boolean menuOpenSlideAllowed(float) -> b
+    344:360:void drawShadow(android.view.View,android.graphics.Canvas) -> a
+    363:382:void drawFade(android.view.View,android.graphics.Canvas,float) -> a
+    389:410:void drawSelector(android.view.View,android.graphics.Canvas,float) -> b
+    413:414:void setSelectorEnabled(boolean) -> setSelectorEnabled
+    417:426:void setSelectedView(android.view.View) -> setSelectedView
+    429:431:int getSelectorTop() -> getSelectorTop
+    435:437:void setSelectorBitmap(android.graphics.Bitmap) -> setSelectorBitmap
+com.slidingmenu.lib.R -> com.slidingmenu.lib.g:
+com.slidingmenu.lib.R$id -> com.slidingmenu.lib.h:
+    int abs__image -> abs__image
+    int showCustom -> showCustom
+    int abs__action_mode_bar_stub -> abs__action_mode_bar_stub
+    int abs__content -> abs__content
+    int abs__action_bar_container -> abs__action_bar_container
+    int normal -> normal
+    int abs__action_menu_divider -> abs__action_menu_divider
+    int abs__icon -> abs__icon
+    int homeAsUp -> homeAsUp
+    int abs__action_bar -> abs__action_bar
+    int abs__default_activity_button -> abs__default_activity_button
+    int abs__action_mode_bar -> abs__action_mode_bar
+    int abs__imageButton -> abs__imageButton
+    int abs__action_mode_close_button -> abs__action_mode_close_button
+    int abs__action_bar_subtitle -> abs__action_bar_subtitle
+    int abs__activity_chooser_view_content -> abs__activity_chooser_view_content
+    int selected_view -> selected_view
+    int wrap_content -> wrap_content
+    int margin -> margin
+    int listMode -> listMode
+    int left -> left
+    int disableHome -> disableHome
+    int showTitle -> showTitle
+    int abs__title -> abs__title
+    int right -> right
+    int abs__up -> abs__up
+    int abs__progress_circular -> abs__progress_circular
+    int abs__split_action_bar -> abs__split_action_bar
+    int useLogo -> useLogo
+    int abs__action_context_bar -> abs__action_context_bar
+    int tabMode -> tabMode
+    int abs__list_item -> abs__list_item
+    int abs__progress_horizontal -> abs__progress_horizontal
+    int abs__action_bar_title -> abs__action_bar_title
+    int abs__radio -> abs__radio
+    int abs__shortcut -> abs__shortcut
+    int showHome -> showHome
+    int abs__action_menu_presenter -> abs__action_menu_presenter
+    int fullscreen -> fullscreen
+    int slidingmenumain -> slidingmenumain
+    int abs__textButton -> abs__textButton
+    int abs__home -> abs__home
+    int abs__titleDivider -> abs__titleDivider
+    int abs__checkbox -> abs__checkbox
+    int abs__expand_activities_button -> abs__expand_activities_button
+com.slidingmenu.lib.R$layout -> com.slidingmenu.lib.i:
+    int abs__list_menu_item_radio -> abs__list_menu_item_radio
+    int abs__action_mode_close_item -> abs__action_mode_close_item
+    int abs__activity_chooser_view_list_item -> abs__activity_chooser_view_list_item
+    int abs__dialog_title_holo -> abs__dialog_title_holo
+    int abs__screen_simple_overlay_action_mode -> abs__screen_simple_overlay_action_mode
+    int abs__screen_action_bar -> abs__screen_action_bar
+    int abs__action_menu_layout -> abs__action_menu_layout
+    int sherlock_spinner_dropdown_item -> sherlock_spinner_dropdown_item
+    int abs__screen_action_bar_overlay -> abs__screen_action_bar_overlay
+    int abs__action_bar_title_item -> abs__action_bar_title_item
+    int abs__list_menu_item_checkbox -> abs__list_menu_item_checkbox
+    int abs__list_menu_item_icon -> abs__list_menu_item_icon
+    int slidingmenumain -> slidingmenumain
+    int abs__action_mode_bar -> abs__action_mode_bar
+    int abs__list_menu_item_layout -> abs__list_menu_item_layout
+    int sherlock_spinner_item -> sherlock_spinner_item
+    int abs__screen_simple -> abs__screen_simple
+    int abs__activity_chooser_view -> abs__activity_chooser_view
+    int abs__popup_menu_item_layout -> abs__popup_menu_item_layout
+    int abs__action_bar_home -> abs__action_bar_home
+    int abs__action_bar_tab_bar_view -> abs__action_bar_tab_bar_view
+    int abs__action_menu_item_layout -> abs__action_menu_item_layout
+    int abs__action_bar_tab -> abs__action_bar_tab
+com.slidingmenu.lib.R$styleable -> com.slidingmenu.lib.j:
+    int SherlockTheme_textColorPrimaryInverse -> SherlockTheme_textColorPrimaryInverse
+    int SherlockActionBar_displayOptions -> SherlockActionBar_displayOptions
+    int SherlockTheme_actionMenuTextAppearance -> SherlockTheme_actionMenuTextAppearance
+    int SherlockTheme_listPreferredItemPaddingLeft -> SherlockTheme_listPreferredItemPaddingLeft
+    int SherlockMenuView_itemBackground -> SherlockMenuView_itemBackground
+    int SherlockTheme_actionBarDivider -> SherlockTheme_actionBarDivider
+    int SherlockTheme_homeAsUpIndicator -> SherlockTheme_homeAsUpIndicator
+    int SherlockMenuItem_android_id -> SherlockMenuItem_android_id
+    int[] SherlockTheme -> SherlockTheme
+    int[] SherlockMenuGroup -> SherlockMenuGroup
+    int SherlockTheme_actionBarSplitStyle -> SherlockTheme_actionBarSplitStyle
+    int SherlockTheme_actionModeShareDrawable -> SherlockTheme_actionModeShareDrawable
+    int SherlockTheme_activatedBackgroundIndicator -> SherlockTheme_activatedBackgroundIndicator
+    int SherlockActionBar_subtitle -> SherlockActionBar_subtitle
+    int SherlockActionMode_backgroundSplit -> SherlockActionMode_backgroundSplit
+    int[] SherlockActionBar -> SherlockActionBar
+    int SherlockTheme_buttonStyleSmall -> SherlockTheme_buttonStyleSmall
+    int SherlockMenuItem_android_icon -> SherlockMenuItem_android_icon
+    int SherlockMenuItem_android_title -> SherlockMenuItem_android_title
+    int SherlockTheme_dropdownListPreferredItemHeight -> SherlockTheme_dropdownListPreferredItemHeight
+    int SherlockActivityChooserView_initialActivityCount -> SherlockActivityChooserView_initialActivityCount
+    int SherlockActionBar_itemPadding -> SherlockActionBar_itemPadding
+    int SherlockTheme_actionBarWidgetTheme -> SherlockTheme_actionBarWidgetTheme
+    int SlidingMenu_behindOffset -> SlidingMenu_behindOffset
+    int SlidingMenu_selectorEnabled -> SlidingMenu_selectorEnabled
+    int SherlockSpinner_android_dropDownHorizontalOffset -> SherlockSpinner_android_dropDownHorizontalOffset
+    int SherlockMenuGroup_android_orderInCategory -> SherlockMenuGroup_android_orderInCategory
+    int SherlockTheme_actionOverflowButtonStyle -> SherlockTheme_actionOverflowButtonStyle
+    int SherlockTheme_spinnerDropDownItemStyle -> SherlockTheme_spinnerDropDownItemStyle
+    int SherlockTheme_android_windowIsFloating -> SherlockTheme_android_windowIsFloating
+    int SherlockActionMode_background -> SherlockActionMode_background
+    int SherlockTheme_actionMenuTextColor -> SherlockTheme_actionMenuTextColor
+    int SherlockActionBar_progressBarPadding -> SherlockActionBar_progressBarPadding
+    int SherlockMenuItem_android_titleCondensed -> SherlockMenuItem_android_titleCondensed
+    int SherlockActionMode_height -> SherlockActionMode_height
+    int SherlockActionMenuItemView_android_minWidth -> SherlockActionMenuItemView_android_minWidth
+    int SherlockTheme_actionBarTabStyle -> SherlockTheme_actionBarTabStyle
+    int SherlockTheme_actionSpinnerItemStyle -> SherlockTheme_actionSpinnerItemStyle
+    int SherlockActivityChooserView_expandActivityOverflowButtonDrawable -> SherlockActivityChooserView_expandActivityOverflowButtonDrawable
+    int SherlockActionBar_backgroundSplit -> SherlockActionBar_backgroundSplit
+    int SherlockMenuView_headerBackground -> SherlockMenuView_headerBackground
+    int SlidingMenu_shadowDrawable -> SlidingMenu_shadowDrawable
+    int SherlockActionBar_subtitleTextStyle -> SherlockActionBar_subtitleTextStyle
+    int SlidingMenu_fadeEnabled -> SlidingMenu_fadeEnabled
+    int SherlockActionBar_icon -> SherlockActionBar_icon
+    int SherlockTheme_dropDownListViewStyle -> SherlockTheme_dropDownListViewStyle
+    int SherlockMenuItem_android_alphabeticShortcut -> SherlockMenuItem_android_alphabeticShortcut
+    int SlidingMenu_viewBehind -> SlidingMenu_viewBehind
+    int[] SherlockActionMenuItemView -> SherlockActionMenuItemView
+    int SherlockSpinner_android_dropDownWidth -> SherlockSpinner_android_dropDownWidth
+    int SherlockActionBar_indeterminateProgressStyle -> SherlockActionBar_indeterminateProgressStyle
+    int SherlockTheme_textAppearanceLargePopupMenu -> SherlockTheme_textAppearanceLargePopupMenu
+    int SherlockTheme_windowMinWidthMajor -> SherlockTheme_windowMinWidthMajor
+    int SherlockMenuItem_android_checked -> SherlockMenuItem_android_checked
+    int SherlockActionBar_progressBarStyle -> SherlockActionBar_progressBarStyle
+    int SherlockMenuView_horizontalDivider -> SherlockMenuView_horizontalDivider
+    int[] SherlockActivityChooserView -> SherlockActivityChooserView
+    int[] SherlockMenuItem -> SherlockMenuItem
+    int SlidingMenu_behindWidth -> SlidingMenu_behindWidth
+    int SherlockTheme_actionBarStyle -> SherlockTheme_actionBarStyle
+    int SherlockTheme_windowSplitActionBar -> SherlockTheme_windowSplitActionBar
+    int SherlockMenuGroup_android_enabled -> SherlockMenuGroup_android_enabled
+    int SherlockSpinner_android_gravity -> SherlockSpinner_android_gravity
+    int SlidingMenu_fadeDegree -> SlidingMenu_fadeDegree
+    int SherlockActionBar_customNavigationLayout -> SherlockActionBar_customNavigationLayout
+    int SlidingMenu_touchModeBehind -> SlidingMenu_touchModeBehind
+    int SherlockSpinner_android_prompt -> SherlockSpinner_android_prompt
+    int SherlockTheme_actionBarTabBarStyle -> SherlockTheme_actionBarTabBarStyle
+    int SherlockActionBar_title -> SherlockActionBar_title
+    int SherlockMenuItem_android_menuCategory -> SherlockMenuItem_android_menuCategory
+    int SherlockActionBar_height -> SherlockActionBar_height
+    int SherlockActionBar_navigationMode -> SherlockActionBar_navigationMode
+    int SherlockTheme_actionBarTabTextStyle -> SherlockTheme_actionBarTabTextStyle
+    int SherlockTheme_windowMinWidthMinor -> SherlockTheme_windowMinWidthMinor
+    int SherlockMenuItem_android_actionViewClass -> SherlockMenuItem_android_actionViewClass
+    int SherlockMenuView_itemTextAppearance -> SherlockMenuView_itemTextAppearance
+    int SherlockTheme_actionModeBackground -> SherlockTheme_actionModeBackground
+    int SherlockMenuItem_android_checkable -> SherlockMenuItem_android_checkable
+    int SherlockTheme_actionModeCloseDrawable -> SherlockTheme_actionModeCloseDrawable
+    int SherlockTheme_windowNoTitle -> SherlockTheme_windowNoTitle
+    int SherlockTheme_textAppearanceSmall -> SherlockTheme_textAppearanceSmall
+    int SherlockSpinner_android_dropDownVerticalOffset -> SherlockSpinner_android_dropDownVerticalOffset
+    int SherlockMenuView_verticalDivider -> SherlockMenuView_verticalDivider
+    int SherlockMenuGroup_android_visible -> SherlockMenuGroup_android_visible
+    int SherlockActionMode_subtitleTextStyle -> SherlockActionMode_subtitleTextStyle
+    int SherlockMenuView_itemIconDisabledAlpha -> SherlockMenuView_itemIconDisabledAlpha
+    int SherlockTheme_actionBarItemBackground -> SherlockTheme_actionBarItemBackground
+    int SherlockTheme_textColorPrimary -> SherlockTheme_textColorPrimary
+    int SherlockTheme_listPreferredItemHeightSmall -> SherlockTheme_listPreferredItemHeightSmall
+    int SherlockTheme_windowContentOverlay -> SherlockTheme_windowContentOverlay
+    int SherlockTheme_listPopupWindowStyle -> SherlockTheme_listPopupWindowStyle
+    int SherlockMenuGroup_android_menuCategory -> SherlockMenuGroup_android_menuCategory
+    int SherlockActionBar_logo -> SherlockActionBar_logo
+    int SherlockMenuItem_android_actionProviderClass -> SherlockMenuItem_android_actionProviderClass
+    int SherlockTheme_actionBarSize -> SherlockTheme_actionBarSize
+    int SherlockActionBar_backgroundStacked -> SherlockActionBar_backgroundStacked
+    int SherlockTheme_actionModeCloseButtonStyle -> SherlockTheme_actionModeCloseButtonStyle
+    int SherlockActivityChooserView_android_background -> SherlockActivityChooserView_android_background
+    int SherlockTheme_absForceOverflow -> SherlockTheme_absForceOverflow
+    int SlidingMenu_shadowWidth -> SlidingMenu_shadowWidth
+    int SherlockTheme_dividerVertical -> SherlockTheme_dividerVertical
+    int SherlockTheme_actionModePopupWindowStyle -> SherlockTheme_actionModePopupWindowStyle
+    int SherlockTheme_textAppearanceSmallPopupMenu -> SherlockTheme_textAppearanceSmallPopupMenu
+    int SherlockSpinner_android_popupBackground -> SherlockSpinner_android_popupBackground
+    int[] SherlockActionMode -> SherlockActionMode
+    int SherlockTheme_popupMenuStyle -> SherlockTheme_popupMenuStyle
+    int[] SherlockMenuView -> SherlockMenuView
+    int SherlockSpinner_android_popupPromptView -> SherlockSpinner_android_popupPromptView
+    int SlidingMenu_selectorDrawable -> SlidingMenu_selectorDrawable
+    int SherlockActionBar_background -> SherlockActionBar_background
+    int SherlockSpinner_android_dropDownSelector -> SherlockSpinner_android_dropDownSelector
+    int SherlockTheme_actionModeSplitBackground -> SherlockTheme_actionModeSplitBackground
+    int SherlockTheme_actionModeStyle -> SherlockTheme_actionModeStyle
+    int SlidingMenu_mode -> SlidingMenu_mode
+    int SherlockMenuView_windowAnimationStyle -> SherlockMenuView_windowAnimationStyle
+    int SherlockTheme_listPreferredItemPaddingRight -> SherlockTheme_listPreferredItemPaddingRight
+    int SherlockMenuItem_android_numericShortcut -> SherlockMenuItem_android_numericShortcut
+    int SherlockMenuItem_android_showAsAction -> SherlockMenuItem_android_showAsAction
+    int SherlockTheme_actionButtonStyle -> SherlockTheme_actionButtonStyle
+    int SlidingMenu_touchModeAbove -> SlidingMenu_touchModeAbove
+    int SherlockMenuGroup_android_checkableBehavior -> SherlockMenuGroup_android_checkableBehavior
+    int SherlockMenuGroup_android_id -> SherlockMenuGroup_android_id
+    int SherlockTheme_actionDropDownStyle -> SherlockTheme_actionDropDownStyle
+    int SlidingMenu_behindScrollScale -> SlidingMenu_behindScrollScale
+    int SherlockActionMode_titleTextStyle -> SherlockActionMode_titleTextStyle
+    int SherlockTheme_textColorPrimaryDisableOnly -> SherlockTheme_textColorPrimaryDisableOnly
+    int SherlockTheme_textAppearanceListItemSmall -> SherlockTheme_textAppearanceListItemSmall
+    int SherlockTheme_windowActionModeOverlay -> SherlockTheme_windowActionModeOverlay
+    int SherlockActionBar_homeLayout -> SherlockActionBar_homeLayout
+    int SherlockActionBar_divider -> SherlockActionBar_divider
+    int SherlockTheme_spinnerItemStyle -> SherlockTheme_spinnerItemStyle
+    int SherlockMenuItem_android_visible -> SherlockMenuItem_android_visible
+    int SherlockMenuItem_android_orderInCategory -> SherlockMenuItem_android_orderInCategory
+    int SlidingMenu_viewAbove -> SlidingMenu_viewAbove
+    int SherlockActionBar_titleTextStyle -> SherlockActionBar_titleTextStyle
+    int SherlockMenuView_preserveIconSpacing -> SherlockMenuView_preserveIconSpacing
+    int SherlockTheme_windowActionBar -> SherlockTheme_windowActionBar
+    int SherlockTheme_activityChooserViewStyle -> SherlockTheme_activityChooserViewStyle
+    int SherlockMenuItem_android_enabled -> SherlockMenuItem_android_enabled
+    int SherlockMenuItem_android_onClick -> SherlockMenuItem_android_onClick
+    int SherlockMenuItem_android_actionLayout -> SherlockMenuItem_android_actionLayout
+    int[] SlidingMenu -> SlidingMenu
+    int[] SherlockSpinner -> SherlockSpinner
+    int SherlockTheme_windowActionBarOverlay -> SherlockTheme_windowActionBarOverlay
+com.slidingmenu.lib.SlidingMenu -> com.slidingmenu.lib.SlidingMenu:
+    boolean mActionbarOverlay -> a
+    com.slidingmenu.lib.CustomViewAbove mViewAbove -> b
+    com.slidingmenu.lib.CustomViewBehind mViewBehind -> c
+    com.slidingmenu.lib.SlidingMenu$OnOpenListener mOpenListener -> d
+    com.slidingmenu.lib.SlidingMenu$OnCloseListener mCloseListener -> e
+    android.os.Handler mHandler -> f
+    287:288:void attachToActivity(android.app.Activity,int) -> a
+    298:333:void attachToActivity(android.app.Activity,int,boolean) -> a
+    342:343:void setContent(int) -> setContent
+    351:353:void setContent(android.view.View) -> setContent
+    360:360:android.view.View getContent() -> getContent
+    370:371:void setMenu(int) -> setMenu
+    379:380:void setMenu(android.view.View) -> setMenu
+    387:387:android.view.View getMenu() -> getMenu
+    397:398:void setSecondaryMenu(int) -> setSecondaryMenu
+    406:408:void setSecondaryMenu(android.view.View) -> setSecondaryMenu
+    415:415:android.view.View getSecondaryMenu() -> getSecondaryMenu
+    425:426:void setSlidingEnabled(boolean) -> setSlidingEnabled
+    442:446:void setMode(int) -> setMode
+    453:453:int getMode() -> getMode
+    462:473:void setStatic(boolean) -> setStatic
+    488:489:void showMenu(boolean) -> a
+    506:507:void showSecondaryMenu(boolean) -> b
+    513:514:void showContent() -> a
+    522:523:void showContent(boolean) -> c
+    529:530:void toggle() -> b
+    538:543:void toggle(boolean) -> d
+    551:551:boolean isMenuShowing() -> c
+    560:560:boolean isSecondaryMenuShowing() -> d
+    569:569:int getBehindOffset() -> getBehindOffset
+    583:584:void setBehindOffset(int) -> setBehindOffset
+    593:595:void setBehindOffsetRes(int) -> setBehindOffsetRes
+    603:604:void setAboveOffset(int) -> setAboveOffset
+    612:614:void setAboveOffsetRes(int) -> setAboveOffsetRes
+    624:637:void setBehindWidth(int) -> setBehindWidth
+    646:648:void setBehindWidthRes(int) -> setBehindWidthRes
+    656:656:float getBehindScrollScale() -> getBehindScrollScale
+    664:664:int getTouchmodeMarginThreshold() -> getTouchmodeMarginThreshold
+    672:673:void setTouchmodeMarginThreshold(int) -> setTouchmodeMarginThreshold
+    682:685:void setBehindScrollScale(float) -> setBehindScrollScale
+    693:694:void setBehindCanvasTransformer(com.slidingmenu.lib.SlidingMenu$CanvasTransformer) -> setBehindCanvasTransformer
+    702:702:int getTouchModeAbove() -> getTouchModeAbove
+    713:719:void setTouchModeAbove(int) -> setTouchModeAbove
+    729:735:void setTouchModeBehind(int) -> setTouchModeBehind
+    743:744:void setShadowDrawable(int) -> setShadowDrawable
+    752:753:void setShadowDrawable(android.graphics.drawable.Drawable) -> setShadowDrawable
+    761:762:void setSecondaryShadowDrawable(int) -> setSecondaryShadowDrawable
+    770:771:void setSecondaryShadowDrawable(android.graphics.drawable.Drawable) -> setSecondaryShadowDrawable
+    779:780:void setShadowWidthRes(int) -> setShadowWidthRes
+    788:789:void setShadowWidth(int) -> setShadowWidth
+    797:798:void setFadeEnabled(boolean) -> setFadeEnabled
+    807:808:void setFadeDegree(float) -> setFadeDegree
+    816:817:void setSelectorEnabled(boolean) -> setSelectorEnabled
+    825:826:void setSelectedView(android.view.View) -> setSelectedView
+    834:835:void setSelectorDrawable(int) -> setSelectorDrawable
+    843:844:void setSelectorBitmap(android.graphics.Bitmap) -> setSelectorBitmap
+    878:879:void setOnOpenListener(com.slidingmenu.lib.SlidingMenu$OnOpenListener) -> setOnOpenListener
+    888:889:void setOnCloseListener(com.slidingmenu.lib.SlidingMenu$OnCloseListener) -> setOnCloseListener
+    897:898:void setOnOpenedListener(com.slidingmenu.lib.SlidingMenu$OnOpenedListener) -> setOnOpenedListener
+    906:907:void setOnClosedListener(com.slidingmenu.lib.SlidingMenu$OnClosedListener) -> setOnClosedListener
+    953:955:android.os.Parcelable onSaveInstanceState() -> onSaveInstanceState
+    963:966:void onRestoreInstanceState(android.os.Parcelable) -> onRestoreInstanceState
+    974:982:boolean fitSystemWindows(android.graphics.Rect) -> fitSystemWindows
+    989:1006:void manageLayers(float) -> a
+    71:71:com.slidingmenu.lib.SlidingMenu$OnOpenListener access$0(com.slidingmenu.lib.SlidingMenu) -> a
+    73:73:com.slidingmenu.lib.SlidingMenu$OnCloseListener access$1(com.slidingmenu.lib.SlidingMenu) -> b
+com.slidingmenu.lib.SlidingMenu$1 -> com.slidingmenu.lib.k:
+    com.slidingmenu.lib.SlidingMenu this$0 -> a
+    217:217:void onPageScrolled(int,float,int) -> a
+    220:225:void onPageSelected(int) -> a
+com.slidingmenu.lib.SlidingMenu$2 -> com.slidingmenu.lib.l:
+    com.slidingmenu.lib.SlidingMenu this$0 -> a
+    int val$layerType -> b
+    997:1003:void run() -> run
+com.slidingmenu.lib.SlidingMenu$CanvasTransformer -> com.slidingmenu.lib.m:
+    void transformCanvas(android.graphics.Canvas,float) -> a
+com.slidingmenu.lib.SlidingMenu$OnCloseListener -> com.slidingmenu.lib.n:
+    void onClose() -> a
+com.slidingmenu.lib.SlidingMenu$OnClosedListener -> com.slidingmenu.lib.o:
+    void onClosed() -> a
+com.slidingmenu.lib.SlidingMenu$OnOpenListener -> com.slidingmenu.lib.p:
+    void onOpen() -> a
+com.slidingmenu.lib.SlidingMenu$OnOpenedListener -> com.slidingmenu.lib.q:
+    void onOpened() -> a
+com.slidingmenu.lib.SlidingMenu$SavedState -> com.slidingmenu.lib.SlidingMenu$SavedState:
+    int mItem -> a
+    android.os.Parcelable$Creator CREATOR -> CREATOR
+    924:924:int getItem() -> a
+    931:933:void writeToParcel(android.os.Parcel,int) -> writeToParcel
+com.slidingmenu.lib.SlidingMenu$SavedState$1 -> com.slidingmenu.lib.r:
+    938:938:com.slidingmenu.lib.SlidingMenu$SavedState createFromParcel(android.os.Parcel) -> a
+    942:942:com.slidingmenu.lib.SlidingMenu$SavedState[] newArray(int) -> a
+    1:1:java.lang.Object createFromParcel(android.os.Parcel) -> createFromParcel
+    1:1:java.lang.Object[] newArray(int) -> newArray
+com.slidingmenu.lib.app.SlidingActivityHelper -> com.slidingmenu.lib.a.a:
+    android.app.Activity mActivity -> a
+    com.slidingmenu.lib.SlidingMenu mSlidingMenu -> b
+    android.view.View mViewAbove -> c
+    android.view.View mViewBehind -> d
+    boolean mBroadcasting -> e
+    boolean mOnPostCreateCalled -> f
+    boolean mEnableSlide -> g
+    45:46:void onCreate(android.os.Bundle) -> a
+    54:86:void onPostCreate(android.os.Bundle) -> b
+    109:114:android.view.View findViewById(int) -> a
+    125:127:void onSaveInstanceState(android.os.Bundle) -> c
+    136:138:void registerAboveContentView(android.view.View,android.view.ViewGroup$LayoutParams) -> a
+    162:164:void setBehindContentView(android.view.View,android.view.ViewGroup$LayoutParams) -> b
+    172:172:com.slidingmenu.lib.SlidingMenu getSlidingMenu() -> a
+    186:187:void showContent() -> b
+    212:216:boolean onKeyUp(int,android.view.KeyEvent) -> a
+    18:18:com.slidingmenu.lib.SlidingMenu access$0(com.slidingmenu.lib.app.SlidingActivityHelper) -> a
+com.slidingmenu.lib.app.SlidingActivityHelper$1 -> com.slidingmenu.lib.a.b:
+    com.slidingmenu.lib.app.SlidingActivityHelper this$0 -> a
+    boolean val$open -> b
+    boolean val$secondary -> c
+    75:84:void run() -> run
+com.slidingmenu.lib.app.SlidingFragmentActivity -> com.slidingmenu.lib.a.c:
+    com.slidingmenu.lib.app.SlidingActivityHelper mHelper -> c
+    20:23:void onCreate(android.os.Bundle) -> onCreate
+    30:32:void onPostCreate(android.os.Bundle) -> onPostCreate
+    39:42:android.view.View findViewById(int) -> findViewById
+    50:52:void onSaveInstanceState(android.os.Bundle) -> onSaveInstanceState
+    59:60:void setContentView(int) -> setContentView
+    67:68:void setContentView(android.view.View) -> setContentView
+    75:77:void setContentView(android.view.View,android.view.ViewGroup$LayoutParams) -> setContentView
+    83:84:void setBehindContentView(int) -> a
+    90:91:void setBehindContentView(android.view.View) -> setBehindContentView
+    97:98:void setBehindContentView(android.view.View,android.view.ViewGroup$LayoutParams) -> a
+    104:104:com.slidingmenu.lib.SlidingMenu getSlidingMenu() -> d
+    147:149:boolean onKeyUp(int,android.view.KeyEvent) -> onKeyUp
 com.viewpagerindicator.CirclePageIndicator -> com.viewpagerindicator.CirclePageIndicator:
     float mRadius -> a
     android.graphics.Paint mPaintPageFill -> b
@@ -10482,124 +11417,6 @@ com.viewpagerindicator.LinePageIndicator$SavedState$1 -> com.viewpagerindicator.
     1:1:java.lang.Object createFromParcel(android.os.Parcel) -> createFromParcel
     1:1:java.lang.Object[] newArray(int) -> newArray
 com.viewpagerindicator.PageIndicator -> com.viewpagerindicator.c:
-com.viewpagerindicator.R -> com.viewpagerindicator.d:
-com.viewpagerindicator.R$attr -> com.viewpagerindicator.e:
-    int footerIndicatorStyle -> footerIndicatorStyle
-    int fillColor -> fillColor
-    int vpiCirclePageIndicatorStyle -> vpiCirclePageIndicatorStyle
-    int snap -> snap
-    int clipPadding -> clipPadding
-    int footerColor -> footerColor
-    int topPadding -> topPadding
-    int vpiLinePageIndicatorStyle -> vpiLinePageIndicatorStyle
-    int fadeDelay -> fadeDelay
-    int unselectedColor -> unselectedColor
-    int footerLineHeight -> footerLineHeight
-    int fades -> fades
-    int selectedColor -> selectedColor
-    int footerPadding -> footerPadding
-    int footerIndicatorUnderlinePadding -> footerIndicatorUnderlinePadding
-    int titlePadding -> titlePadding
-    int vpiUnderlinePageIndicatorStyle -> vpiUnderlinePageIndicatorStyle
-    int strokeWidth -> strokeWidth
-    int vpiTabPageIndicatorStyle -> vpiTabPageIndicatorStyle
-    int footerIndicatorHeight -> footerIndicatorHeight
-    int centered -> centered
-    int lineWidth -> lineWidth
-    int pageColor -> pageColor
-    int strokeColor -> strokeColor
-    int vpiTitlePageIndicatorStyle -> vpiTitlePageIndicatorStyle
-    int radius -> radius
-    int gapWidth -> gapWidth
-    int selectedBold -> selectedBold
-    int fadeLength -> fadeLength
-com.viewpagerindicator.R$bool -> com.viewpagerindicator.f:
-    int default_title_indicator_selected_bold -> default_title_indicator_selected_bold
-    int default_underline_indicator_fades -> default_underline_indicator_fades
-    int default_line_indicator_centered -> default_line_indicator_centered
-    int default_circle_indicator_centered -> default_circle_indicator_centered
-    int default_circle_indicator_snap -> default_circle_indicator_snap
-com.viewpagerindicator.R$color -> com.viewpagerindicator.g:
-    int vpi__bright_foreground_disabled_holo_dark -> vpi__bright_foreground_disabled_holo_dark
-    int vpi__light_theme -> vpi__light_theme
-    int vpi__background_holo_light -> vpi__background_holo_light
-    int default_title_indicator_text_color -> default_title_indicator_text_color
-    int vpi__background_holo_dark -> vpi__background_holo_dark
-    int default_title_indicator_footer_color -> default_title_indicator_footer_color
-    int default_title_indicator_selected_color -> default_title_indicator_selected_color
-    int vpi__bright_foreground_inverse_holo_dark -> vpi__bright_foreground_inverse_holo_dark
-    int default_line_indicator_selected_color -> default_line_indicator_selected_color
-    int default_circle_indicator_fill_color -> default_circle_indicator_fill_color
-    int vpi__bright_foreground_disabled_holo_light -> vpi__bright_foreground_disabled_holo_light
-    int vpi__bright_foreground_inverse_holo_light -> vpi__bright_foreground_inverse_holo_light
-    int default_line_indicator_unselected_color -> default_line_indicator_unselected_color
-    int default_underline_indicator_selected_color -> default_underline_indicator_selected_color
-    int vpi__bright_foreground_holo_dark -> vpi__bright_foreground_holo_dark
-    int vpi__dark_theme -> vpi__dark_theme
-    int default_circle_indicator_stroke_color -> default_circle_indicator_stroke_color
-    int vpi__bright_foreground_holo_light -> vpi__bright_foreground_holo_light
-    int default_circle_indicator_page_color -> default_circle_indicator_page_color
-com.viewpagerindicator.R$dimen -> com.viewpagerindicator.h:
-    int default_title_indicator_footer_line_height -> default_title_indicator_footer_line_height
-    int default_line_indicator_gap_width -> default_line_indicator_gap_width
-    int default_line_indicator_line_width -> default_line_indicator_line_width
-    int default_title_indicator_title_padding -> default_title_indicator_title_padding
-    int default_title_indicator_text_size -> default_title_indicator_text_size
-    int default_title_indicator_clip_padding -> default_title_indicator_clip_padding
-    int default_title_indicator_footer_indicator_underline_padding -> default_title_indicator_footer_indicator_underline_padding
-    int default_line_indicator_stroke_width -> default_line_indicator_stroke_width
-    int default_circle_indicator_radius -> default_circle_indicator_radius
-    int default_title_indicator_footer_indicator_height -> default_title_indicator_footer_indicator_height
-    int default_title_indicator_footer_padding -> default_title_indicator_footer_padding
-    int default_title_indicator_top_padding -> default_title_indicator_top_padding
-    int default_circle_indicator_stroke_width -> default_circle_indicator_stroke_width
-com.viewpagerindicator.R$integer -> com.viewpagerindicator.i:
-    int default_underline_indicator_fade_length -> default_underline_indicator_fade_length
-    int default_title_indicator_footer_indicator_style -> default_title_indicator_footer_indicator_style
-    int default_underline_indicator_fade_delay -> default_underline_indicator_fade_delay
-    int default_circle_indicator_orientation -> default_circle_indicator_orientation
-com.viewpagerindicator.R$styleable -> com.viewpagerindicator.j:
-    int[] UnderlinePageIndicator -> UnderlinePageIndicator
-    int TitlePageIndicator_selectedBold -> TitlePageIndicator_selectedBold
-    int CirclePageIndicator_pageColor -> CirclePageIndicator_pageColor
-    int UnderlinePageIndicator_fades -> UnderlinePageIndicator_fades
-    int LinePageIndicator_lineWidth -> LinePageIndicator_lineWidth
-    int TitlePageIndicator_clipPadding -> TitlePageIndicator_clipPadding
-    int TitlePageIndicator_topPadding -> TitlePageIndicator_topPadding
-    int CirclePageIndicator_snap -> CirclePageIndicator_snap
-    int ViewPagerIndicator_vpiTabPageIndicatorStyle -> ViewPagerIndicator_vpiTabPageIndicatorStyle
-    int UnderlinePageIndicator_fadeLength -> UnderlinePageIndicator_fadeLength
-    int[] LinePageIndicator -> LinePageIndicator
-    int ViewPagerIndicator_vpiTitlePageIndicatorStyle -> ViewPagerIndicator_vpiTitlePageIndicatorStyle
-    int CirclePageIndicator_radius -> CirclePageIndicator_radius
-    int LinePageIndicator_strokeWidth -> LinePageIndicator_strokeWidth
-    int TitlePageIndicator_android_textSize -> TitlePageIndicator_android_textSize
-    int CirclePageIndicator_strokeWidth -> CirclePageIndicator_strokeWidth
-    int TitlePageIndicator_footerIndicatorHeight -> TitlePageIndicator_footerIndicatorHeight
-    int[] ViewPagerIndicator -> ViewPagerIndicator
-    int TitlePageIndicator_footerIndicatorStyle -> TitlePageIndicator_footerIndicatorStyle
-    int ViewPagerIndicator_vpiCirclePageIndicatorStyle -> ViewPagerIndicator_vpiCirclePageIndicatorStyle
-    int CirclePageIndicator_strokeColor -> CirclePageIndicator_strokeColor
-    int UnderlinePageIndicator_fadeDelay -> UnderlinePageIndicator_fadeDelay
-    int LinePageIndicator_gapWidth -> LinePageIndicator_gapWidth
-    int TitlePageIndicator_footerPadding -> TitlePageIndicator_footerPadding
-    int TitlePageIndicator_footerLineHeight -> TitlePageIndicator_footerLineHeight
-    int CirclePageIndicator_centered -> CirclePageIndicator_centered
-    int TitlePageIndicator_titlePadding -> TitlePageIndicator_titlePadding
-    int[] CirclePageIndicator -> CirclePageIndicator
-    int TitlePageIndicator_android_textColor -> TitlePageIndicator_android_textColor
-    int TitlePageIndicator_footerIndicatorUnderlinePadding -> TitlePageIndicator_footerIndicatorUnderlinePadding
-    int CirclePageIndicator_android_orientation -> CirclePageIndicator_android_orientation
-    int CirclePageIndicator_fillColor -> CirclePageIndicator_fillColor
-    int LinePageIndicator_unselectedColor -> LinePageIndicator_unselectedColor
-    int ViewPagerIndicator_vpiLinePageIndicatorStyle -> ViewPagerIndicator_vpiLinePageIndicatorStyle
-    int[] TitlePageIndicator -> TitlePageIndicator
-    int LinePageIndicator_selectedColor -> LinePageIndicator_selectedColor
-    int UnderlinePageIndicator_selectedColor -> UnderlinePageIndicator_selectedColor
-    int TitlePageIndicator_selectedColor -> TitlePageIndicator_selectedColor
-    int ViewPagerIndicator_vpiUnderlinePageIndicatorStyle -> ViewPagerIndicator_vpiUnderlinePageIndicatorStyle
-    int TitlePageIndicator_footerColor -> TitlePageIndicator_footerColor
-    int LinePageIndicator_centered -> LinePageIndicator_centered
 com.viewpagerindicator.TitlePageIndicator -> com.viewpagerindicator.TitlePageIndicator:
     android.support.v4.view.ViewPager mViewPager -> a
     android.support.v4.view.ViewPager$OnPageChangeListener mListener -> b
@@ -10661,7 +11478,6 @@ com.viewpagerindicator.TitlePageIndicator -> com.viewpagerindicator.TitlePageInd
     607:623:java.util.ArrayList calculateAllBounds(android.graphics.Paint) -> a
     635:639:android.graphics.Rect calcBounds(int,android.graphics.Paint) -> a
     644:657:void setViewPager(android.support.v4.view.ViewPager) -> setViewPager
-    661:663:void setViewPager(android.support.v4.view.ViewPager,int) -> a
     676:677:void setOnCenterItemClickListener(com.viewpagerindicator.TitlePageIndicator$OnCenterItemClickListener) -> setOnCenterItemClickListener
     681:687:void setCurrentItem(int) -> setCurrentItem
     691:696:void onPageScrollStateChanged(int) -> b
@@ -10679,16 +11495,15 @@ com.viewpagerindicator.TitlePageIndicator$IndicatorStyle -> com.viewpagerindicat
     com.viewpagerindicator.TitlePageIndicator$IndicatorStyle Underline -> c
     int value -> d
     com.viewpagerindicator.TitlePageIndicator$IndicatorStyle[] ENUM$VALUES -> e
-    88:93:com.viewpagerindicator.TitlePageIndicator$IndicatorStyle fromValue(int) -> a
     1:1:com.viewpagerindicator.TitlePageIndicator$IndicatorStyle[] values() -> values
     1:1:com.viewpagerindicator.TitlePageIndicator$IndicatorStyle valueOf(java.lang.String) -> valueOf
-com.viewpagerindicator.TitlePageIndicator$OnCenterItemClickListener -> com.viewpagerindicator.k:
+com.viewpagerindicator.TitlePageIndicator$OnCenterItemClickListener -> com.viewpagerindicator.d:
     void onCenterItemClick(int) -> a
 com.viewpagerindicator.TitlePageIndicator$SavedState -> com.viewpagerindicator.TitlePageIndicator$SavedState:
     int currentPage -> a
     android.os.Parcelable$Creator CREATOR -> CREATOR
     781:783:void writeToParcel(android.os.Parcel,int) -> writeToParcel
-com.viewpagerindicator.TitlePageIndicator$SavedState$1 -> com.viewpagerindicator.l:
+com.viewpagerindicator.TitlePageIndicator$SavedState$1 -> com.viewpagerindicator.e:
     788:788:com.viewpagerindicator.TitlePageIndicator$SavedState createFromParcel(android.os.Parcel) -> a
     793:793:com.viewpagerindicator.TitlePageIndicator$SavedState[] newArray(int) -> a
     1:1:java.lang.Object createFromParcel(android.os.Parcel) -> createFromParcel
@@ -10729,14 +11544,14 @@ com.viewpagerindicator.UnderlinePageIndicator -> com.viewpagerindicator.Underlin
     355:358:android.os.Parcelable onSaveInstanceState() -> onSaveInstanceState
     43:43:boolean access$2(com.viewpagerindicator.UnderlinePageIndicator) -> a
     59:59:java.lang.Runnable access$3(com.viewpagerindicator.UnderlinePageIndicator) -> b
-com.viewpagerindicator.UnderlinePageIndicator$2 -> com.viewpagerindicator.m:
+com.viewpagerindicator.UnderlinePageIndicator$2 -> com.viewpagerindicator.f:
     com.viewpagerindicator.UnderlinePageIndicator this$0 -> a
     271:274:void run() -> run
 com.viewpagerindicator.UnderlinePageIndicator$SavedState -> com.viewpagerindicator.UnderlinePageIndicator$SavedState:
     int currentPage -> a
     android.os.Parcelable$Creator CREATOR -> CREATOR
     375:377:void writeToParcel(android.os.Parcel,int) -> writeToParcel
-com.viewpagerindicator.UnderlinePageIndicator$SavedState$1 -> com.viewpagerindicator.n:
+com.viewpagerindicator.UnderlinePageIndicator$SavedState$1 -> com.viewpagerindicator.g:
     382:382:com.viewpagerindicator.UnderlinePageIndicator$SavedState createFromParcel(android.os.Parcel) -> a
     387:387:com.viewpagerindicator.UnderlinePageIndicator$SavedState[] newArray(int) -> a
     1:1:java.lang.Object createFromParcel(android.os.Parcel) -> createFromParcel
@@ -12106,6 +12921,9 @@ tk.djcrazy.MyCC98.BaseActivity -> tk.djcrazy.MyCC98.a:
 tk.djcrazy.MyCC98.BaseFragmentActivity -> tk.djcrazy.MyCC98.b:
     10:12:void onResume() -> onResume
     16:18:void onPause() -> onPause
+tk.djcrazy.MyCC98.BaseSlidingFragmentActivity -> tk.djcrazy.MyCC98.c:
+    10:12:void onResume() -> onResume
+    16:18:void onPause() -> onPause
 tk.djcrazy.MyCC98.EditActivity -> tk.djcrazy.MyCC98.EditActivity:
     java.lang.String TAIL -> c
     java.lang.String appendTail -> d
@@ -12143,27 +12961,27 @@ tk.djcrazy.MyCC98.EditActivity -> tk.djcrazy.MyCC98.EditActivity:
     android.text.Html$ImageGetter getter -> H
     int[] emotions -> I
     170:175:void onCreate(android.os.Bundle) -> onCreate
-    178:201:void configureActionBar() -> d
-    224:239:void setupTailContent() -> e
-    243:245:boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu) -> a
-    250:263:boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem) -> a
-    270:300:void ensure() -> f
-    303:305:java.lang.String replaceAllImage(java.lang.String) -> a
-    310:338:void setupRefDialog(java.lang.String,java.lang.String) -> a
-    344:344:java.lang.String generateQuoteContent() -> g
-    351:462:void setupListeners() -> h
-    466:468:void onPause() -> onPause
-    472:515:void onClick(android.view.View) -> onClick
-    519:527:void setFace(java.lang.String,int) -> a
-    530:533:void hideKeyBoard() -> i
-    536:538:void showKeyBoard() -> j
-    541:549:boolean checkReplyContentLimit(java.lang.String,java.lang.String) -> b
-    554:571:void doTakePhoto() -> k
-    575:582:void doPickPhotoFromGallery() -> l
-    586:592:boolean onKeyDown(int,android.view.KeyEvent) -> onKeyDown
-    597:633:void onActivityResult(int,int,android.content.Intent) -> onActivityResult
-    636:649:void doCompressPhoto() -> m
-    652:654:void doUploadPicture(java.io.File) -> a
+    178:200:void configureActionBar() -> d
+    223:238:void setupTailContent() -> e
+    242:244:boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu) -> a
+    249:262:boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem) -> a
+    269:298:void ensure() -> f
+    301:303:java.lang.String replaceAllImage(java.lang.String) -> a
+    308:336:void setupRefDialog(java.lang.String,java.lang.String) -> a
+    342:342:java.lang.String generateQuoteContent() -> g
+    349:460:void setupListeners() -> h
+    464:466:void onPause() -> onPause
+    470:513:void onClick(android.view.View) -> onClick
+    517:525:void setFace(java.lang.String,int) -> a
+    528:531:void hideKeyBoard() -> i
+    534:536:void showKeyBoard() -> j
+    539:547:boolean checkReplyContentLimit(java.lang.String,java.lang.String) -> b
+    552:569:void doTakePhoto() -> k
+    573:580:void doPickPhotoFromGallery() -> l
+    584:590:boolean onKeyDown(int,android.view.KeyEvent) -> onKeyDown
+    595:631:void onActivityResult(int,int,android.content.Intent) -> onActivityResult
+    634:647:void doCompressPhoto() -> m
+    650:652:void doUploadPicture(java.io.File) -> a
     151:151:void access$0(tk.djcrazy.MyCC98.EditActivity,java.lang.String) -> a
     128:128:android.widget.EditText access$1(tk.djcrazy.MyCC98.EditActivity) -> a
     151:151:java.lang.String access$2(tk.djcrazy.MyCC98.EditActivity) -> b
@@ -12177,38 +12995,38 @@ tk.djcrazy.MyCC98.EditActivity -> tk.djcrazy.MyCC98.EditActivity:
     119:119:java.lang.String access$11(tk.djcrazy.MyCC98.EditActivity) -> j
     150:150:java.lang.String access$12(tk.djcrazy.MyCC98.EditActivity) -> k
     142:142:android.widget.GridView access$13(tk.djcrazy.MyCC98.EditActivity) -> l
-    789:789:int[] access$14(tk.djcrazy.MyCC98.EditActivity) -> m
-    518:518:void access$15(tk.djcrazy.MyCC98.EditActivity,java.lang.String,int) -> a
+    787:787:int[] access$14(tk.djcrazy.MyCC98.EditActivity) -> m
+    516:516:void access$15(tk.djcrazy.MyCC98.EditActivity,java.lang.String,int) -> a
     150:150:void access$16(tk.djcrazy.MyCC98.EditActivity,java.lang.String) -> b
-tk.djcrazy.MyCC98.EditActivity$1 -> tk.djcrazy.MyCC98.c:
+tk.djcrazy.MyCC98.EditActivity$1 -> tk.djcrazy.MyCC98.d:
     tk.djcrazy.MyCC98.EditActivity this$0 -> a
     159:165:android.graphics.drawable.Drawable getDrawable(java.lang.String) -> getDrawable
-tk.djcrazy.MyCC98.EditActivity$3 -> tk.djcrazy.MyCC98.d:
+tk.djcrazy.MyCC98.EditActivity$3 -> tk.djcrazy.MyCC98.e:
     tk.djcrazy.MyCC98.EditActivity this$0 -> a
     java.lang.String val$contentString -> b
     java.lang.String val$titleString -> c
-    316:326:void onClick(android.content.DialogInterface,int) -> onClick
-tk.djcrazy.MyCC98.EditActivity$4 -> tk.djcrazy.MyCC98.e:
+    314:324:void onClick(android.content.DialogInterface,int) -> onClick
+tk.djcrazy.MyCC98.EditActivity$4 -> tk.djcrazy.MyCC98.f:
     tk.djcrazy.MyCC98.EditActivity this$0 -> a
     java.lang.String val$contentString -> b
     java.lang.String val$titleString -> c
-    331:335:void onClick(android.content.DialogInterface,int) -> onClick
-tk.djcrazy.MyCC98.EditActivity$5 -> tk.djcrazy.MyCC98.f:
+    329:333:void onClick(android.content.DialogInterface,int) -> onClick
+tk.djcrazy.MyCC98.EditActivity$5 -> tk.djcrazy.MyCC98.g:
     tk.djcrazy.MyCC98.EditActivity this$0 -> a
-    362:363:void onFocusChange(android.view.View,boolean) -> onFocusChange
-tk.djcrazy.MyCC98.EditActivity$6 -> tk.djcrazy.MyCC98.g:
+    360:361:void onFocusChange(android.view.View,boolean) -> onFocusChange
+tk.djcrazy.MyCC98.EditActivity$6 -> tk.djcrazy.MyCC98.h:
     tk.djcrazy.MyCC98.EditActivity this$0 -> a
-    369:370:void onFocusChange(android.view.View,boolean) -> onFocusChange
-tk.djcrazy.MyCC98.EditActivity$7 -> tk.djcrazy.MyCC98.h:
+    367:368:void onFocusChange(android.view.View,boolean) -> onFocusChange
+tk.djcrazy.MyCC98.EditActivity$7 -> tk.djcrazy.MyCC98.i:
     tk.djcrazy.MyCC98.EditActivity this$0 -> a
-    377:382:void onItemClick(android.widget.AdapterView,android.view.View,int,long) -> onItemClick
-tk.djcrazy.MyCC98.EditActivity$8 -> tk.djcrazy.MyCC98.i:
+    375:380:void onItemClick(android.widget.AdapterView,android.view.View,int,long) -> onItemClick
+tk.djcrazy.MyCC98.EditActivity$8 -> tk.djcrazy.MyCC98.j:
     tk.djcrazy.MyCC98.EditActivity this$0 -> a
-    389:460:void onCheckedChanged(android.widget.RadioGroup,int) -> onCheckedChanged
-tk.djcrazy.MyCC98.EditActivity$9 -> tk.djcrazy.MyCC98.j:
+    387:458:void onCheckedChanged(android.widget.RadioGroup,int) -> onCheckedChanged
+tk.djcrazy.MyCC98.EditActivity$9 -> tk.djcrazy.MyCC98.k:
     tk.djcrazy.MyCC98.EditActivity this$0 -> a
-    493:494:void run() -> run
-tk.djcrazy.MyCC98.EditActivity$PushReplyTask -> tk.djcrazy.MyCC98.k:
+    491:492:void run() -> run
+tk.djcrazy.MyCC98.EditActivity$PushReplyTask -> tk.djcrazy.MyCC98.l:
     java.lang.String mPostId -> d
     java.lang.String mBoardID -> e
     java.lang.String mContent -> f
@@ -12217,131 +13035,135 @@ tk.djcrazy.MyCC98.EditActivity$PushReplyTask -> tk.djcrazy.MyCC98.k:
     boolean mIsNewPost -> i
     tk.djcrazy.libCC98.ICC98Service mService -> mService
     tk.djcrazy.MyCC98.EditActivity this$0 -> a
-    715:717:void onPreExecute() -> onPreExecute
-    721:728:java.lang.Void call() -> a
-    733:736:void onSuccess(java.lang.Void) -> a
-    740:741:void onException(java.lang.Exception) -> onException
+    713:715:void onPreExecute() -> onPreExecute
+    719:726:java.lang.Void call() -> a
+    731:734:void onSuccess(java.lang.Void) -> a
+    738:739:void onException(java.lang.Exception) -> onException
     1:1:java.lang.Object call() -> call
     1:1:void onSuccess(java.lang.Object) -> onSuccess
-tk.djcrazy.MyCC98.EditActivity$SendPMTask -> tk.djcrazy.MyCC98.l:
+tk.djcrazy.MyCC98.EditActivity$SendPMTask -> tk.djcrazy.MyCC98.m:
     java.lang.String mToUser -> d
     java.lang.String mContent -> e
     java.lang.String mTitle -> f
     tk.djcrazy.libCC98.ICC98Service mService -> mService
     tk.djcrazy.MyCC98.EditActivity this$0 -> a
-    762:764:void onPreExecute() -> onPreExecute
-    768:769:java.lang.Void call() -> a
-    774:780:void onSuccess(java.lang.Void) -> a
-    784:786:void onException(java.lang.Exception) -> onException
+    760:762:void onPreExecute() -> onPreExecute
+    766:767:java.lang.Void call() -> a
+    772:778:void onSuccess(java.lang.Void) -> a
+    782:784:void onException(java.lang.Exception) -> onException
     1:1:java.lang.Object call() -> call
     1:1:void onSuccess(java.lang.Object) -> onSuccess
-tk.djcrazy.MyCC98.EditActivity$UpLoadPictureTask -> tk.djcrazy.MyCC98.m:
+tk.djcrazy.MyCC98.EditActivity$UpLoadPictureTask -> tk.djcrazy.MyCC98.n:
     java.io.File mUploadFile -> d
     tk.djcrazy.libCC98.ICC98Service mService -> mService
     tk.djcrazy.MyCC98.EditActivity this$0 -> a
-    668:670:void onPreExecute() -> onPreExecute
-    674:674:java.lang.String call() -> a
-    679:682:void onSuccess(java.lang.String) -> a
-    686:688:void onException(java.lang.Exception) -> onException
+    666:668:void onPreExecute() -> onPreExecute
+    672:672:java.lang.String call() -> a
+    677:680:void onSuccess(java.lang.String) -> a
+    684:686:void onException(java.lang.Exception) -> onException
     1:1:java.lang.Object call() -> call
     1:1:void onSuccess(java.lang.Object) -> onSuccess
 tk.djcrazy.MyCC98.HomeActivity -> tk.djcrazy.MyCC98.HomeActivity:
-    android.support.v4.view.ViewPager viewPager -> e
-    com.viewpagerindicator.TitlePageIndicator indicator -> f
+    android.support.v4.view.ViewPager viewPager -> f
     tk.djcrazy.libCC98.ICC98Service service -> service
+    android.support.v4.app.Fragment mFragment -> c
     java.lang.Boolean isExit -> g
     java.lang.Boolean hasTask -> h
-    java.util.Timer tExit -> c
-    java.util.TimerTask task -> d
-    66:88:boolean onNavigationItemSelected(int,long) -> a
-    93:103:void onCreate(android.os.Bundle) -> onCreate
-    109:118:void configureActionBar() -> d
-    122:123:boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu) -> a
-    133:144:boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem) -> a
-    149:153:boolean onSearchRequested() -> onSearchRequested
-    158:160:void goSettings() -> e
-    163:167:void doSendFeedBack() -> f
-    170:176:void logOut() -> g
-    179:180:void showAboutInfo() -> h
-    205:217:boolean onKeyUp(int,android.view.KeyEvent) -> onKeyUp
-    192:192:void access$0(java.lang.Boolean) -> a
-    193:193:void access$1(java.lang.Boolean) -> b
-tk.djcrazy.MyCC98.HomeActivity$1 -> tk.djcrazy.MyCC98.n:
+    java.util.Timer tExit -> d
+    java.util.TimerTask task -> e
+    68:117:void onCreate(android.os.Bundle) -> onCreate
+    124:133:void configureActionBar() -> e
+    137:138:boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu) -> a
+    147:161:boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem) -> a
+    166:170:boolean onSearchRequested() -> onSearchRequested
+    196:208:boolean onKeyUp(int,android.view.KeyEvent) -> onKeyUp
+    268:269:void onTabSelected(com.actionbarsherlock.app.ActionBar$Tab,android.support.v4.app.FragmentTransaction) -> a
+    273:273:void onTabUnselected(com.actionbarsherlock.app.ActionBar$Tab,android.support.v4.app.FragmentTransaction) -> b
+    277:277:void onTabReselected(com.actionbarsherlock.app.ActionBar$Tab,android.support.v4.app.FragmentTransaction) -> c
+    183:183:void access$0(java.lang.Boolean) -> a
+    184:184:void access$1(java.lang.Boolean) -> b
+tk.djcrazy.MyCC98.HomeActivity$1 -> tk.djcrazy.MyCC98.o:
     tk.djcrazy.MyCC98.HomeActivity this$0 -> a
-    199:201:void run() -> run
-tk.djcrazy.MyCC98.HomeActivity$CheckUpdateTask -> tk.djcrazy.MyCC98.o:
+    190:192:void run() -> run
+tk.djcrazy.MyCC98.HomeActivity$2 -> tk.djcrazy.MyCC98.p:
     tk.djcrazy.MyCC98.HomeActivity this$0 -> a
-    228:231:java.lang.String call() -> a
-    236:262:void onSuccess(java.lang.String) -> a
-    266:270:int getVersionCode() -> b
+    81:90:void onPageSelected(int) -> a
+    93:93:void onPageScrolled(int,float,int) -> a
+    96:96:void onPageScrollStateChanged(int) -> b
+tk.djcrazy.MyCC98.HomeActivity$CheckUpdateTask -> tk.djcrazy.MyCC98.q:
+    tk.djcrazy.MyCC98.HomeActivity this$0 -> a
+    219:222:java.lang.String call() -> a
+    227:253:void onSuccess(java.lang.String) -> a
+    257:261:int getVersionCode() -> b
     1:1:java.lang.Object call() -> call
     1:1:void onSuccess(java.lang.Object) -> onSuccess
-    220:220:tk.djcrazy.MyCC98.HomeActivity access$2(tk.djcrazy.MyCC98.HomeActivity$CheckUpdateTask) -> a
-tk.djcrazy.MyCC98.HomeActivity$CheckUpdateTask$1 -> tk.djcrazy.MyCC98.p:
+    211:211:tk.djcrazy.MyCC98.HomeActivity access$2(tk.djcrazy.MyCC98.HomeActivity$CheckUpdateTask) -> a
+tk.djcrazy.MyCC98.HomeActivity$CheckUpdateTask$1 -> tk.djcrazy.MyCC98.r:
     tk.djcrazy.MyCC98.HomeActivity$CheckUpdateTask this$1 -> a
     java.lang.String val$downloadLink -> b
-    251:252:void onClick(android.content.DialogInterface,int) -> onClick
-tk.djcrazy.MyCC98.HomeActivity$CheckUpdateTask$2 -> tk.djcrazy.MyCC98.q:
+    242:243:void onClick(android.content.DialogInterface,int) -> onClick
+tk.djcrazy.MyCC98.HomeActivity$CheckUpdateTask$2 -> tk.djcrazy.MyCC98.s:
     tk.djcrazy.MyCC98.HomeActivity$CheckUpdateTask this$1 -> a
-    257:258:void onClick(android.content.DialogInterface,int) -> onClick
+    248:249:void onClick(android.content.DialogInterface,int) -> onClick
 tk.djcrazy.MyCC98.LoginActivity -> tk.djcrazy.MyCC98.LoginActivity:
     android.widget.EditText mUsernameEdit -> d
     android.widget.EditText mPasswordEdit -> e
     android.widget.Button mSignInButton -> f
-    android.widget.CheckBox rememberPassword -> g
-    android.widget.CheckBox autoLoginBox -> h
-    java.lang.String mUsername -> i
-    java.lang.String mPassword -> j
-    java.lang.String mPWD32 -> k
-    java.lang.String mPWD16 -> l
-    java.lang.String authUserName -> m
-    java.lang.String authPassword -> n
-    java.lang.Boolean authRememberPwd -> o
-    tk.djcrazy.MyCC98.dialog.AuthDialog authDialog -> p
+    boolean mNeedLogin -> g
+    java.lang.String mUsername -> h
+    java.lang.String mPassword -> i
+    java.lang.String mPWD32 -> j
+    java.lang.String mPWD16 -> k
+    java.lang.String authUserName -> l
+    java.lang.String authPassword -> m
+    tk.djcrazy.libCC98.data.LoginType mLoginType -> n
+    tk.djcrazy.MyCC98.dialog.AuthDialog authDialog -> o
+    java.lang.Boolean authRememberPwd -> p
     tk.djcrazy.libCC98.ICC98Service service -> service
-    android.app.Application application -> application
     tk.djcrazy.MyCC98.dialog.AuthDialog$MyAuthDialogListener listener -> c
-    112:115:void forwardToNextActivity() -> d
-    118:122:void showLoginField() -> e
-    126:131:void onCreate(android.os.Bundle) -> onCreate
-    134:161:void initAuthInfo() -> f
-    164:174:void saveAuthInfo() -> g
-    177:193:void setupRememberedLoginInfo() -> h
-    196:204:void onClick(android.view.View) -> onClick
-    207:217:void doLogin() -> i
-    220:233:void onLoginSuccess() -> j
-    78:78:void access$0(tk.djcrazy.MyCC98.LoginActivity,java.lang.String) -> a
-    79:79:void access$1(tk.djcrazy.MyCC98.LoginActivity,java.lang.String) -> b
-    80:80:void access$2(tk.djcrazy.MyCC98.LoginActivity,java.lang.Boolean) -> a
-    86:86:tk.djcrazy.libCC98.ICC98Service access$3(tk.djcrazy.MyCC98.LoginActivity) -> a
-    163:163:void access$4(tk.djcrazy.MyCC98.LoginActivity) -> b
-    176:176:void access$5(tk.djcrazy.MyCC98.LoginActivity) -> c
-    117:117:void access$6(tk.djcrazy.MyCC98.LoginActivity) -> d
-    219:219:void access$7(tk.djcrazy.MyCC98.LoginActivity) -> e
-    81:81:tk.djcrazy.MyCC98.dialog.AuthDialog access$8(tk.djcrazy.MyCC98.LoginActivity) -> f
-tk.djcrazy.MyCC98.LoginActivity$1 -> tk.djcrazy.MyCC98.r:
+    112:116:void forwardToNextActivity() -> d
+    119:127:void showLoginField() -> e
+    131:142:void onCreate(android.os.Bundle) -> onCreate
+    145:170:void initAuthInfo() -> f
+    173:183:void saveAuthInfo() -> g
+    186:194:void onClick(android.view.View) -> onClick
+    197:209:void doLogin() -> h
+    212:213:void onLoginSuccess() -> i
+    81:81:void access$0(tk.djcrazy.MyCC98.LoginActivity,java.lang.String) -> a
+    82:82:void access$1(tk.djcrazy.MyCC98.LoginActivity,java.lang.String) -> b
+    83:83:void access$2(tk.djcrazy.MyCC98.LoginActivity,tk.djcrazy.libCC98.data.LoginType) -> a
+    85:85:void access$3(tk.djcrazy.MyCC98.LoginActivity,java.lang.Boolean) -> a
+    172:172:void access$4(tk.djcrazy.MyCC98.LoginActivity) -> a
+    118:118:void access$5(tk.djcrazy.MyCC98.LoginActivity) -> b
+    90:90:tk.djcrazy.libCC98.ICC98Service access$6(tk.djcrazy.MyCC98.LoginActivity) -> c
+    81:81:java.lang.String access$7(tk.djcrazy.MyCC98.LoginActivity) -> d
+    82:82:java.lang.String access$8(tk.djcrazy.MyCC98.LoginActivity) -> e
+    83:83:tk.djcrazy.libCC98.data.LoginType access$9(tk.djcrazy.MyCC98.LoginActivity) -> f
+    211:211:void access$10(tk.djcrazy.MyCC98.LoginActivity) -> g
+    84:84:tk.djcrazy.MyCC98.dialog.AuthDialog access$11(tk.djcrazy.MyCC98.LoginActivity) -> h
+tk.djcrazy.MyCC98.LoginActivity$1 -> tk.djcrazy.MyCC98.t:
     tk.djcrazy.MyCC98.LoginActivity this$0 -> a
-    95:102:void onOkClick(java.lang.String,java.lang.String,java.lang.Boolean) -> a
+    96:102:void onOkClick(java.lang.String,java.lang.String,java.lang.Boolean,tk.djcrazy.libCC98.data.LoginType) -> a
     106:108:void onCancelClick() -> a
-tk.djcrazy.MyCC98.LoginActivity$2 -> tk.djcrazy.MyCC98.s:
+tk.djcrazy.MyCC98.LoginActivity$2 -> tk.djcrazy.MyCC98.u:
     tk.djcrazy.MyCC98.LoginActivity this$0 -> a
-    142:146:void onClick(android.content.DialogInterface,int) -> onClick
-tk.djcrazy.MyCC98.LoginActivity$3 -> tk.djcrazy.MyCC98.t:
+    154:155:void onClick(android.content.DialogInterface,int) -> onClick
+tk.djcrazy.MyCC98.LoginActivity$3 -> tk.djcrazy.MyCC98.v:
     tk.djcrazy.MyCC98.LoginActivity this$0 -> a
-    152:154:void onClick(android.content.DialogInterface,int) -> onClick
-tk.djcrazy.MyCC98.LoginActivity$LoginTask -> tk.djcrazy.MyCC98.u:
+    161:162:void onClick(android.content.DialogInterface,int) -> onClick
+tk.djcrazy.MyCC98.LoginActivity$LoginTask -> tk.djcrazy.MyCC98.w:
     java.lang.String userName -> d
     java.lang.String password32 -> e
     java.lang.String password16 -> f
     tk.djcrazy.MyCC98.LoginActivity this$0 -> a
-    257:258:java.lang.String call() -> a
-    263:264:void onSuccess(java.lang.String) -> a
-    268:276:void onException(java.lang.Exception) -> onException
+    237:239:java.lang.String call() -> a
+    244:245:void onSuccess(java.lang.String) -> a
+    249:257:void onException(java.lang.Exception) -> onException
     1:1:java.lang.Object call() -> call
     1:1:void onSuccess(java.lang.Object) -> onSuccess
-tk.djcrazy.MyCC98.LoginActivity$LoginTask$1 -> tk.djcrazy.MyCC98.v:
+tk.djcrazy.MyCC98.LoginActivity$LoginTask$1 -> tk.djcrazy.MyCC98.x:
     tk.djcrazy.MyCC98.LoginActivity$LoginTask this$1 -> a
-    250:251:void onCancel(android.content.DialogInterface) -> onCancel
+    230:231:void onCancel(android.content.DialogInterface) -> onCancel
 tk.djcrazy.MyCC98.PmActivity -> tk.djcrazy.MyCC98.PmActivity:
     java.lang.String TAG -> c
     tk.djcrazy.libCC98.ICC98Service service -> service
@@ -12375,7 +13197,7 @@ tk.djcrazy.MyCC98.PmViewActivity -> tk.djcrazy.MyCC98.PmViewActivity:
     91:101:boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem) -> a
     105:114:void doReply() -> d
     120:137:void setViews() -> e
-    161:205:void preparePage(int) -> a
+    161:203:void preparePage(int) -> a
     43:43:android.webkit.WebView access$0(tk.djcrazy.MyCC98.PmViewActivity) -> a
     54:54:java.lang.String access$1(tk.djcrazy.MyCC98.PmViewActivity) -> b
     56:56:java.lang.String access$2(tk.djcrazy.MyCC98.PmViewActivity) -> c
@@ -12383,25 +13205,25 @@ tk.djcrazy.MyCC98.PmViewActivity -> tk.djcrazy.MyCC98.PmViewActivity:
     57:57:void access$4(tk.djcrazy.MyCC98.PmViewActivity,java.lang.String) -> a
     48:48:java.lang.String access$5(tk.djcrazy.MyCC98.PmViewActivity) -> e
     55:55:void access$6(tk.djcrazy.MyCC98.PmViewActivity,java.lang.String) -> b
-    61:61:tk.djcrazy.MyCC98.helper.HtmlGenHelper access$7(tk.djcrazy.MyCC98.PmViewActivity) -> f
-    46:46:java.lang.String access$8(tk.djcrazy.MyCC98.PmViewActivity) -> g
-    55:55:java.lang.String access$9(tk.djcrazy.MyCC98.PmViewActivity) -> h
-    50:50:java.lang.String access$10(tk.djcrazy.MyCC98.PmViewActivity) -> i
+    46:46:java.lang.String access$7(tk.djcrazy.MyCC98.PmViewActivity) -> f
+    55:55:java.lang.String access$8(tk.djcrazy.MyCC98.PmViewActivity) -> g
+    50:50:java.lang.String access$9(tk.djcrazy.MyCC98.PmViewActivity) -> h
+    61:61:tk.djcrazy.MyCC98.helper.HtmlGenHelper access$10(tk.djcrazy.MyCC98.PmViewActivity) -> i
     57:57:java.lang.String access$11(tk.djcrazy.MyCC98.PmViewActivity) -> j
     48:48:void access$12(tk.djcrazy.MyCC98.PmViewActivity,java.lang.String) -> c
     46:46:void access$13(tk.djcrazy.MyCC98.PmViewActivity,java.lang.String) -> d
     54:54:void access$14(tk.djcrazy.MyCC98.PmViewActivity,java.lang.String) -> e
     140:140:android.os.Handler access$15(tk.djcrazy.MyCC98.PmViewActivity) -> k
-tk.djcrazy.MyCC98.PmViewActivity$1 -> tk.djcrazy.MyCC98.w:
+tk.djcrazy.MyCC98.PmViewActivity$1 -> tk.djcrazy.MyCC98.y:
     tk.djcrazy.MyCC98.PmViewActivity this$0 -> a
     144:156:void handleMessage(android.os.Message) -> handleMessage
-tk.djcrazy.MyCC98.PmViewActivity$2 -> tk.djcrazy.MyCC98.x:
+tk.djcrazy.MyCC98.PmViewActivity$2 -> tk.djcrazy.MyCC98.z:
     tk.djcrazy.MyCC98.PmViewActivity this$0 -> a
     129:132:boolean shouldOverrideUrlLoading(android.webkit.WebView,java.lang.String) -> shouldOverrideUrlLoading
-tk.djcrazy.MyCC98.PmViewActivity$3 -> tk.djcrazy.MyCC98.y:
+tk.djcrazy.MyCC98.PmViewActivity$3 -> tk.djcrazy.MyCC98.aa:
     tk.djcrazy.MyCC98.PmViewActivity this$0 -> a
     int val$pmId -> b
-    164:202:void run() -> run
+    164:200:void run() -> run
 tk.djcrazy.MyCC98.PostContentsJSActivity -> tk.djcrazy.MyCC98.PostContentsJSActivity:
     int LAST_PAGE -> LAST_PAGE
     android.webkit.WebView webView -> c
@@ -12415,85 +13237,87 @@ tk.djcrazy.MyCC98.PostContentsJSActivity -> tk.djcrazy.MyCC98.PostContentsJSActi
     tk.djcrazy.libCC98.ICC98Service service -> service
     tk.djcrazy.MyCC98.helper.HtmlGenHelper helper -> k
     com.actionbarsherlock.view.Menu mOptionsMenu -> l
-    80:80:android.content.Intent createIntent(java.lang.String,java.lang.String,int) -> createIntent
-    85:85:android.content.Intent createIntent(java.lang.String,java.lang.String) -> createIntent
-    90:101:void onCreate(android.os.Bundle) -> onCreate
-    105:110:void onNewIntent(android.content.Intent) -> onNewIntent
-    113:160:java.lang.String assemblyContent(java.util.List) -> a
-    164:166:void onPause() -> onPause
-    169:171:void onResume() -> onResume
-    174:189:void callHiddenWebViewMethod(java.lang.String) -> a
-    192:195:void configureActionBar() -> b
-    199:201:boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu) -> onCreateOptionsMenu
-    206:231:boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem) -> onOptionsItemSelected
-    236:269:void configureWebView() -> c
-    272:275:void onLoadDone() -> d
-    278:282:void jumpTo(int) -> jumpTo
-    285:289:void prevPage() -> prevPage
-    292:294:void refreshPage() -> refreshPage
-    297:301:void nextPage() -> nextPage
-    304:340:void jumpDialog() -> jumpDialog
-    343:348:void reply() -> reply
-    351:401:void showContentDialog(int,int) -> showContentDialog
-    416:417:void addFriend(java.lang.String) -> b
-    420:423:void viewUserInfo(java.lang.String) -> c
-    426:429:void sendPm(java.lang.String) -> d
-    433:438:void quoteReply(java.lang.String,java.lang.String,java.lang.String,int,int) -> a
-    442:449:void onActivityResult(int,int,android.content.Intent) -> onActivityResult
-    463:476:void setRefreshActionButtonState(boolean) -> a
-    462:462:void access$0(tk.djcrazy.MyCC98.PostContentsJSActivity,boolean) -> a
-    73:73:tk.djcrazy.libCC98.ICC98Service access$1(tk.djcrazy.MyCC98.PostContentsJSActivity) -> a
-    71:71:void access$2(tk.djcrazy.MyCC98.PostContentsJSActivity,java.util.List) -> a
-    69:69:void access$3(tk.djcrazy.MyCC98.PostContentsJSActivity,int) -> a
-    67:67:int access$4(tk.djcrazy.MyCC98.PostContentsJSActivity) -> b
-    69:69:int access$5(tk.djcrazy.MyCC98.PostContentsJSActivity) -> c
-    67:67:void access$6(tk.djcrazy.MyCC98.PostContentsJSActivity,int) -> b
-    59:59:void access$7(tk.djcrazy.MyCC98.PostContentsJSActivity,java.lang.String) -> a
-    65:65:void access$8(tk.djcrazy.MyCC98.PostContentsJSActivity,java.lang.String) -> b
-    56:56:android.webkit.WebView access$9(tk.djcrazy.MyCC98.PostContentsJSActivity) -> d
-    112:112:java.lang.String access$10(tk.djcrazy.MyCC98.PostContentsJSActivity,java.util.List) -> b
-    65:65:java.lang.String access$11(tk.djcrazy.MyCC98.PostContentsJSActivity) -> e
-    63:63:java.lang.String access$12(tk.djcrazy.MyCC98.PostContentsJSActivity) -> f
-    61:61:java.lang.String access$13(tk.djcrazy.MyCC98.PostContentsJSActivity) -> g
-    271:271:void access$14(tk.djcrazy.MyCC98.PostContentsJSActivity) -> h
-    415:415:void access$15(tk.djcrazy.MyCC98.PostContentsJSActivity,java.lang.String) -> c
-tk.djcrazy.MyCC98.PostContentsJSActivity$1 -> tk.djcrazy.MyCC98.z:
+    83:83:android.content.Intent createIntent(java.lang.String,java.lang.String,int) -> createIntent
+    88:88:android.content.Intent createIntent(java.lang.String,java.lang.String) -> createIntent
+    93:104:void onCreate(android.os.Bundle) -> onCreate
+    108:113:void onNewIntent(android.content.Intent) -> onNewIntent
+    116:174:java.lang.String assemblyContent(java.util.List) -> a
+    178:180:void onPause() -> onPause
+    183:185:void onResume() -> onResume
+    188:203:void callHiddenWebViewMethod(java.lang.String) -> a
+    206:209:void configureActionBar() -> b
+    213:215:boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu) -> onCreateOptionsMenu
+    220:245:boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem) -> onOptionsItemSelected
+    250:291:void configureWebView() -> c
+    294:297:void onLoadDone() -> d
+    300:304:void jumpTo(int) -> jumpTo
+    307:311:void prevPage() -> prevPage
+    314:316:void refreshPage() -> refreshPage
+    319:323:void nextPage() -> nextPage
+    326:362:void jumpDialog() -> jumpDialog
+    365:370:void reply() -> reply
+    373:424:void showContentDialog(int,int) -> showContentDialog
+    439:440:void addFriend(java.lang.String) -> b
+    443:446:void viewUserInfo(java.lang.String) -> c
+    449:453:void sendPm(java.lang.String) -> d
+    457:464:void quoteReply(java.lang.String,java.lang.String,java.lang.String,int,int) -> a
+    468:475:void onActivityResult(int,int,android.content.Intent) -> onActivityResult
+    490:503:void setRefreshActionButtonState(boolean) -> a
+    509:533:void synCookies() -> synCookies
+    489:489:void access$0(tk.djcrazy.MyCC98.PostContentsJSActivity,boolean) -> a
+    76:76:tk.djcrazy.libCC98.ICC98Service access$1(tk.djcrazy.MyCC98.PostContentsJSActivity) -> a
+    74:74:void access$2(tk.djcrazy.MyCC98.PostContentsJSActivity,java.util.List) -> a
+    72:72:void access$3(tk.djcrazy.MyCC98.PostContentsJSActivity,int) -> a
+    70:70:int access$4(tk.djcrazy.MyCC98.PostContentsJSActivity) -> b
+    72:72:int access$5(tk.djcrazy.MyCC98.PostContentsJSActivity) -> c
+    70:70:void access$6(tk.djcrazy.MyCC98.PostContentsJSActivity,int) -> b
+    62:62:void access$7(tk.djcrazy.MyCC98.PostContentsJSActivity,java.lang.String) -> a
+    68:68:void access$8(tk.djcrazy.MyCC98.PostContentsJSActivity,java.lang.String) -> b
+    59:59:android.webkit.WebView access$9(tk.djcrazy.MyCC98.PostContentsJSActivity) -> d
+    115:115:java.lang.String access$10(tk.djcrazy.MyCC98.PostContentsJSActivity,java.util.List) -> b
+    68:68:java.lang.String access$11(tk.djcrazy.MyCC98.PostContentsJSActivity) -> e
+    66:66:java.lang.String access$12(tk.djcrazy.MyCC98.PostContentsJSActivity) -> f
+    64:64:java.lang.String access$13(tk.djcrazy.MyCC98.PostContentsJSActivity) -> g
+    293:293:void access$14(tk.djcrazy.MyCC98.PostContentsJSActivity) -> h
+    438:438:void access$15(tk.djcrazy.MyCC98.PostContentsJSActivity,java.lang.String) -> c
+tk.djcrazy.MyCC98.PostContentsJSActivity$1 -> tk.djcrazy.MyCC98.ab:
     tk.djcrazy.MyCC98.PostContentsJSActivity this$0 -> a
-    97:99:void run() -> run
-tk.djcrazy.MyCC98.PostContentsJSActivity$2 -> tk.djcrazy.MyCC98.aa:
+    100:102:void run() -> run
+tk.djcrazy.MyCC98.PostContentsJSActivity$2 -> tk.djcrazy.MyCC98.ac:
     tk.djcrazy.MyCC98.PostContentsJSActivity this$0 -> a
-    253:256:void onPageFinished(android.webkit.WebView,java.lang.String) -> onPageFinished
-    260:266:boolean shouldOverrideUrlLoading(android.webkit.WebView,java.lang.String) -> shouldOverrideUrlLoading
-tk.djcrazy.MyCC98.PostContentsJSActivity$3 -> tk.djcrazy.MyCC98.ab:
+    267:270:void onPageFinished(android.webkit.WebView,java.lang.String) -> onPageFinished
+    274:280:boolean shouldOverrideUrlLoading(android.webkit.WebView,java.lang.String) -> shouldOverrideUrlLoading
+    286:289:void onReceivedHttpAuthRequest(android.webkit.WebView,android.webkit.HttpAuthHandler,java.lang.String,java.lang.String) -> onReceivedHttpAuthRequest
+tk.djcrazy.MyCC98.PostContentsJSActivity$3 -> tk.djcrazy.MyCC98.ad:
     tk.djcrazy.MyCC98.PostContentsJSActivity this$0 -> a
     android.widget.EditText val$jumpEditText -> b
-    318:338:void onClick(android.content.DialogInterface,int) -> onClick
-tk.djcrazy.MyCC98.PostContentsJSActivity$4 -> tk.djcrazy.MyCC98.ac:
+    340:360:void onClick(android.content.DialogInterface,int) -> onClick
+tk.djcrazy.MyCC98.PostContentsJSActivity$4 -> tk.djcrazy.MyCC98.ae:
     tk.djcrazy.MyCC98.PostContentsJSActivity this$0 -> a
     tk.djcrazy.libCC98.data.PostContentEntity val$item -> b
-    374:375:void onClick(android.content.DialogInterface,int) -> onClick
-tk.djcrazy.MyCC98.PostContentsJSActivity$5 -> tk.djcrazy.MyCC98.ad:
+    397:398:void onClick(android.content.DialogInterface,int) -> onClick
+tk.djcrazy.MyCC98.PostContentsJSActivity$5 -> tk.djcrazy.MyCC98.af:
     tk.djcrazy.MyCC98.PostContentsJSActivity this$0 -> a
-    381:381:void onClick(android.content.DialogInterface,int) -> onClick
-tk.djcrazy.MyCC98.PostContentsJSActivity$AddFriendTask -> tk.djcrazy.MyCC98.ae:
+    404:404:void onClick(android.content.DialogInterface,int) -> onClick
+tk.djcrazy.MyCC98.PostContentsJSActivity$AddFriendTask -> tk.djcrazy.MyCC98.ag:
     java.lang.String aUserName -> d
     tk.djcrazy.MyCC98.PostContentsJSActivity this$0 -> a
-    546:547:java.lang.String call() -> a
-    552:554:void onException(java.lang.Exception) -> onException
-    558:561:void onSuccess(java.lang.String) -> a
+    604:605:java.lang.String call() -> a
+    610:612:void onException(java.lang.Exception) -> onException
+    616:619:void onSuccess(java.lang.String) -> a
     1:1:java.lang.Object call() -> call
     1:1:void onSuccess(java.lang.Object) -> onSuccess
-tk.djcrazy.MyCC98.PostContentsJSActivity$GetPostContentTask -> tk.djcrazy.MyCC98.af:
+tk.djcrazy.MyCC98.PostContentsJSActivity$GetPostContentTask -> tk.djcrazy.MyCC98.ah:
     android.app.Activity aContext -> b
     java.lang.String aBoardId -> c
     java.lang.String aPostId -> d
     int aPageNum -> e
     tk.djcrazy.MyCC98.PostContentsJSActivity this$0 -> a
-    496:498:void onPreExecute() -> onPreExecute
-    502:502:java.util.List call() -> a
-    507:509:void onException(java.lang.Exception) -> onException
-    513:527:void onSuccess(java.util.List) -> a
-    531:533:void onFinally() -> onFinally
+    553:555:void onPreExecute() -> onPreExecute
+    559:559:java.util.List call() -> a
+    564:566:void onException(java.lang.Exception) -> onException
+    570:585:void onSuccess(java.util.List) -> a
+    589:591:void onFinally() -> onFinally
     1:1:java.lang.Object call() -> call
     1:1:void onSuccess(java.lang.Object) -> onSuccess
 tk.djcrazy.MyCC98.PostListActivity -> tk.djcrazy.MyCC98.PostListActivity:
@@ -12553,23 +13377,23 @@ tk.djcrazy.MyCC98.PostSearchActivity -> tk.djcrazy.MyCC98.PostSearchActivity:
     66:66:void access$16(tk.djcrazy.MyCC98.PostSearchActivity,int) -> b
     61:61:java.lang.String access$17(tk.djcrazy.MyCC98.PostSearchActivity) -> m
     118:118:void access$18(tk.djcrazy.MyCC98.PostSearchActivity,java.lang.String) -> b
-tk.djcrazy.MyCC98.PostSearchActivity$1 -> tk.djcrazy.MyCC98.ag:
+tk.djcrazy.MyCC98.PostSearchActivity$1 -> tk.djcrazy.MyCC98.ai:
     tk.djcrazy.MyCC98.PostSearchActivity this$0 -> a
     78:115:void handleMessage(android.os.Message) -> handleMessage
-tk.djcrazy.MyCC98.PostSearchActivity$2 -> tk.djcrazy.MyCC98.ah:
+tk.djcrazy.MyCC98.PostSearchActivity$2 -> tk.djcrazy.MyCC98.aj:
     tk.djcrazy.MyCC98.PostSearchActivity this$0 -> a
     java.lang.String val$keyWord -> b
     124:135:void run() -> run
-tk.djcrazy.MyCC98.PostSearchActivity$3 -> tk.djcrazy.MyCC98.ai:
+tk.djcrazy.MyCC98.PostSearchActivity$3 -> tk.djcrazy.MyCC98.ak:
     tk.djcrazy.MyCC98.PostSearchActivity this$0 -> a
     214:219:void onCheckedChanged(android.widget.RadioGroup,int) -> onCheckedChanged
-tk.djcrazy.MyCC98.PostSearchActivity$4 -> tk.djcrazy.MyCC98.aj:
+tk.djcrazy.MyCC98.PostSearchActivity$4 -> tk.djcrazy.MyCC98.al:
     tk.djcrazy.MyCC98.PostSearchActivity this$0 -> a
     225:229:void onClick(android.view.View) -> onClick
-tk.djcrazy.MyCC98.PostSearchActivity$5 -> tk.djcrazy.MyCC98.ak:
+tk.djcrazy.MyCC98.PostSearchActivity$5 -> tk.djcrazy.MyCC98.am:
     tk.djcrazy.MyCC98.PostSearchActivity this$0 -> a
     235:239:void onClick(android.view.View) -> onClick
-tk.djcrazy.MyCC98.PostSearchActivity$6 -> tk.djcrazy.MyCC98.al:
+tk.djcrazy.MyCC98.PostSearchActivity$6 -> tk.djcrazy.MyCC98.an:
     tk.djcrazy.MyCC98.PostSearchActivity this$0 -> a
     247:249:void onItemClick(android.widget.AdapterView,android.view.View,int,long) -> onItemClick
 tk.djcrazy.MyCC98.PreviewActivity -> tk.djcrazy.MyCC98.PreviewActivity:
@@ -12587,10 +13411,10 @@ tk.djcrazy.MyCC98.PreviewActivity -> tk.djcrazy.MyCC98.PreviewActivity:
     21:21:java.lang.String access$3(tk.djcrazy.MyCC98.PreviewActivity) -> d
     22:22:void access$4(tk.djcrazy.MyCC98.PreviewActivity,java.lang.String) -> a
     33:33:android.os.Handler access$5(tk.djcrazy.MyCC98.PreviewActivity) -> e
-tk.djcrazy.MyCC98.PreviewActivity$1 -> tk.djcrazy.MyCC98.am:
+tk.djcrazy.MyCC98.PreviewActivity$1 -> tk.djcrazy.MyCC98.ao:
     tk.djcrazy.MyCC98.PreviewActivity this$0 -> a
     36:44:void handleMessage(android.os.Message) -> handleMessage
-tk.djcrazy.MyCC98.PreviewActivity$2 -> tk.djcrazy.MyCC98.an:
+tk.djcrazy.MyCC98.PreviewActivity$2 -> tk.djcrazy.MyCC98.ap:
     tk.djcrazy.MyCC98.PreviewActivity this$0 -> a
     52:59:void run() -> run
 tk.djcrazy.MyCC98.ProfileActivity -> tk.djcrazy.MyCC98.ProfileActivity:
@@ -12627,14 +13451,14 @@ tk.djcrazy.MyCC98.ProfileActivity -> tk.djcrazy.MyCC98.ProfileActivity:
     66:66:java.lang.String access$1(tk.djcrazy.MyCC98.ProfileActivity) -> b
     63:63:void access$2(tk.djcrazy.MyCC98.ProfileActivity,tk.djcrazy.libCC98.data.UserProfileEntity) -> a
     42:42:android.widget.ImageView access$3(tk.djcrazy.MyCC98.ProfileActivity) -> c
-tk.djcrazy.MyCC98.ProfileActivity$GetAvatarTask -> tk.djcrazy.MyCC98.ao:
+tk.djcrazy.MyCC98.ProfileActivity$GetAvatarTask -> tk.djcrazy.MyCC98.aq:
     java.lang.String aUrl -> b
     tk.djcrazy.MyCC98.ProfileActivity this$0 -> a
     189:189:android.graphics.Bitmap call() -> a
     194:196:void onSuccess(android.graphics.Bitmap) -> a
     1:1:java.lang.Object call() -> call
     1:1:void onSuccess(java.lang.Object) -> onSuccess
-tk.djcrazy.MyCC98.ProfileActivity$GetProfileTask -> tk.djcrazy.MyCC98.ap:
+tk.djcrazy.MyCC98.ProfileActivity$GetProfileTask -> tk.djcrazy.MyCC98.ar:
     tk.djcrazy.MyCC98.ProfileActivity this$0 -> a
     161:161:tk.djcrazy.libCC98.data.UserProfileEntity call() -> a
     166:168:void onException(java.lang.Exception) -> onException
@@ -12651,13 +13475,29 @@ tk.djcrazy.MyCC98.SettingsActivity -> tk.djcrazy.MyCC98.SettingsActivity:
     94:101:boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem) -> a
     33:33:android.preference.CheckBoxPreference access$0(tk.djcrazy.MyCC98.SettingsActivity) -> a
     34:34:android.preference.EditTextPreference access$1(tk.djcrazy.MyCC98.SettingsActivity) -> b
-tk.djcrazy.MyCC98.SettingsActivity$1 -> tk.djcrazy.MyCC98.aq:
+tk.djcrazy.MyCC98.SettingsActivity$1 -> tk.djcrazy.MyCC98.as:
     tk.djcrazy.MyCC98.SettingsActivity this$0 -> a
     63:75:boolean onPreferenceChange(android.preference.Preference,java.lang.Object) -> onPreferenceChange
-tk.djcrazy.MyCC98.SettingsActivity$2 -> tk.djcrazy.MyCC98.ar:
+tk.djcrazy.MyCC98.SettingsActivity$2 -> tk.djcrazy.MyCC98.at:
     tk.djcrazy.MyCC98.SettingsActivity this$0 -> a
     82:88:boolean onPreferenceChange(android.preference.Preference,java.lang.Object) -> onPreferenceChange
-tk.djcrazy.MyCC98.adapter.BaseItemListAdapter -> tk.djcrazy.MyCC98.a.a:
+tk.djcrazy.MyCC98.adapter.AccountListAdapter -> tk.djcrazy.MyCC98.a.a:
+    android.view.LayoutInflater mInflater -> a
+    tk.djcrazy.MyCC98.application.MyApplication$UsersInfo mUsersInfo -> b
+    java.util.List mUserBitmaps -> c
+    49:49:int getCount() -> getCount
+    54:54:java.lang.Object getItem(int) -> getItem
+    59:59:long getItemId(int) -> getItemId
+    64:96:android.view.View getView(int,android.view.View,android.view.ViewGroup) -> getView
+tk.djcrazy.MyCC98.adapter.AccountListAdapter$ViewHolder -> tk.djcrazy.MyCC98.a.b:
+    android.widget.ImageView image -> a
+    android.widget.TextView text -> b
+    android.widget.ImageView currentView -> c
+    android.widget.TextView useProxy -> e
+    tk.djcrazy.MyCC98.adapter.AccountListAdapter this$0 -> d
+    37:37:void access$0(tk.djcrazy.MyCC98.adapter.AccountListAdapter$ViewHolder,android.widget.TextView) -> a
+    37:37:android.widget.TextView access$1(tk.djcrazy.MyCC98.adapter.AccountListAdapter$ViewHolder) -> a
+tk.djcrazy.MyCC98.adapter.BaseItemListAdapter -> tk.djcrazy.MyCC98.a.c:
     android.app.Activity context -> a
     java.util.List items -> b
     android.view.LayoutInflater inflater -> c
@@ -12666,27 +13506,13 @@ tk.djcrazy.MyCC98.adapter.BaseItemListAdapter -> tk.djcrazy.MyCC98.a.a:
     36:36:long getItemId(int) -> getItemId
     44:46:void setItems(java.util.List) -> a
     54:57:void unregisterDataSetObserver(android.database.DataSetObserver) -> unregisterDataSetObserver
-tk.djcrazy.MyCC98.adapter.EmotionGridViewAdapter -> tk.djcrazy.MyCC98.a.b:
+tk.djcrazy.MyCC98.adapter.EmotionGridViewAdapter -> tk.djcrazy.MyCC98.a.d:
     android.view.LayoutInflater inflater -> a
     int[] emotion -> b
     22:22:int getCount() -> getCount
     27:27:java.lang.Object getItem(int) -> getItem
     32:32:long getItemId(int) -> getItemId
     38:46:android.view.View getView(int,android.view.View,android.view.ViewGroup) -> getView
-tk.djcrazy.MyCC98.adapter.HomeActionListAdapter -> tk.djcrazy.MyCC98.a.c:
-    java.lang.String mUserName -> b
-    android.graphics.Bitmap mUserAvatar -> c
-    android.view.LayoutInflater mInflater -> a
-    java.lang.String[] mItemName -> d
-    int[] mItemImage -> e
-    46:46:int getCount() -> getCount
-    51:51:java.lang.Object getItem(int) -> getItem
-    56:56:long getItemId(int) -> getItemId
-    61:81:android.view.View getView(int,android.view.View,android.view.ViewGroup) -> getView
-tk.djcrazy.MyCC98.adapter.HomeActionListAdapter$ViewHolder -> tk.djcrazy.MyCC98.a.d:
-    android.widget.ImageView image -> a
-    android.widget.TextView text -> b
-    tk.djcrazy.MyCC98.adapter.HomeActionListAdapter this$0 -> c
 tk.djcrazy.MyCC98.adapter.HomeFragmentPagerAdapter -> tk.djcrazy.MyCC98.a.e:
     android.support.v4.app.FragmentManager mFragment -> a
     java.lang.String[] pageTitle -> b
@@ -12791,14 +13617,21 @@ tk.djcrazy.MyCC98.adapter.SearchBoardListAdapter$ListItemView -> tk.djcrazy.MyCC
     android.widget.ImageView postNumLine -> c
     tk.djcrazy.MyCC98.adapter.SearchBoardListAdapter this$0 -> d
 tk.djcrazy.MyCC98.application.MyApplication -> tk.djcrazy.MyCC98.application.MyApplication:
-    tk.djcrazy.libCC98.data.UserData userData -> a
-    android.graphics.Bitmap userAvatar -> b
-    28:30:void onCreate() -> onCreate
-    37:50:void initUserData() -> d
-    53:77:void storeUserInfo() -> a
-    106:106:tk.djcrazy.libCC98.data.UserData getUserData() -> b
-    121:121:android.graphics.Bitmap getUserAvatar() -> c
-    129:130:void setUserAvatar(android.graphics.Bitmap) -> a
+    tk.djcrazy.MyCC98.application.MyApplication$UsersInfo usersInfo -> a
+    java.util.List userAvatars -> b
+    33:35:void onCreate() -> onCreate
+    42:55:void initUsersInfo() -> f
+    58:82:void storeUsersInfo() -> a
+    88:88:tk.djcrazy.libCC98.data.UserData getCurrentUserData() -> b
+    96:106:void addNewUser(tk.djcrazy.libCC98.data.UserData,android.graphics.Bitmap,boolean) -> a
+    112:115:android.graphics.Bitmap getCurrentUserAvatar() -> c
+    141:141:tk.djcrazy.MyCC98.application.MyApplication$UsersInfo getUsersInfo() -> d
+    145:145:java.util.List getUserAvatars() -> e
+tk.djcrazy.MyCC98.application.MyApplication$UsersInfo -> tk.djcrazy.MyCC98.application.MyApplication$UsersInfo:
+    int currentUserIndex -> a
+    java.util.ArrayList users -> b
+    125:125:java.lang.String toString() -> toString
+    132:135:tk.djcrazy.libCC98.data.UserData getCurrentUserData() -> a
 tk.djcrazy.MyCC98.dialog.AboutDialog -> tk.djcrazy.MyCC98.b.a:
     android.webkit.WebView webView -> a
     android.widget.Button okButton -> b
@@ -12812,25 +13645,54 @@ tk.djcrazy.MyCC98.dialog.AuthDialog -> tk.djcrazy.MyCC98.b.c:
     android.widget.EditText userNameText -> c
     android.widget.EditText passwordText -> d
     android.widget.CheckBox rememberPassword -> e
-    android.content.SharedPreferences setting -> f
-    tk.djcrazy.MyCC98.dialog.AuthDialog$MyAuthDialogListener listener -> g
-    41:58:void onCreate(android.os.Bundle) -> onCreate
-    69:82:void onClick(android.view.View) -> onClick
+    android.widget.RadioGroup mLoginType -> f
+    android.content.SharedPreferences setting -> g
+    tk.djcrazy.MyCC98.dialog.AuthDialog$MyAuthDialogListener listener -> h
+    42:58:void onCreate(android.os.Bundle) -> onCreate
+    69:83:void onClick(android.view.View) -> onClick
 tk.djcrazy.MyCC98.dialog.AuthDialog$MyAuthDialogListener -> tk.djcrazy.MyCC98.b.d:
-    void onOkClick(java.lang.String,java.lang.String,java.lang.Boolean) -> a
+    void onOkClick(java.lang.String,java.lang.String,java.lang.Boolean,tk.djcrazy.libCC98.data.LoginType) -> a
     void onCancelClick() -> a
-tk.djcrazy.MyCC98.fragment.HotTopicFragment -> tk.djcrazy.MyCC98.c.a:
+tk.djcrazy.MyCC98.fragment.HomeBehindMenuFragment -> tk.djcrazy.MyCC98.c.a:
+    android.widget.ListView mAccountListView -> b
+    android.widget.ImageView mAddAccountView -> c
+    android.widget.Button mProfileButton -> d
+    android.widget.Button mAboutButton -> e
+    android.widget.Button mFeedbackButton -> f
+    android.widget.Button mSettingButton -> g
+    tk.djcrazy.libCC98.ICC98Service service -> service
+    tk.djcrazy.MyCC98.adapter.AccountListAdapter adapter -> a
+    58:58:android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
+    63:73:void onViewCreated(android.view.View,android.os.Bundle) -> onViewCreated
+    78:98:void onItemClick(android.widget.AdapterView,android.view.View,int,long) -> onItemClick
+    102:128:void onClick(android.view.View) -> onClick
+    133:152:boolean onItemLongClick(android.widget.AdapterView,android.view.View,int,long) -> onItemLongClick
+    52:52:tk.djcrazy.libCC98.ICC98Service access$0(tk.djcrazy.MyCC98.fragment.HomeBehindMenuFragment) -> a
+tk.djcrazy.MyCC98.fragment.HomeBehindMenuFragment$1 -> tk.djcrazy.MyCC98.c.b:
+    tk.djcrazy.MyCC98.fragment.HomeBehindMenuFragment this$0 -> a
+    84:85:void onClick(android.content.DialogInterface,int) -> onClick
+tk.djcrazy.MyCC98.fragment.HomeBehindMenuFragment$2 -> tk.djcrazy.MyCC98.c.c:
+    tk.djcrazy.MyCC98.fragment.HomeBehindMenuFragment this$0 -> a
+    int val$pos -> b
+    90:94:void onClick(android.content.DialogInterface,int) -> onClick
+tk.djcrazy.MyCC98.fragment.HomeBehindMenuFragment$3 -> tk.djcrazy.MyCC98.c.d:
+    tk.djcrazy.MyCC98.fragment.HomeBehindMenuFragment this$0 -> a
+    139:140:void onClick(android.content.DialogInterface,int) -> onClick
+tk.djcrazy.MyCC98.fragment.HomeBehindMenuFragment$4 -> tk.djcrazy.MyCC98.c.e:
+    tk.djcrazy.MyCC98.fragment.HomeBehindMenuFragment this$0 -> a
+    int val$pos -> b
+    145:148:void onClick(android.content.DialogInterface,int) -> onClick
+tk.djcrazy.MyCC98.fragment.HotTopicFragment -> tk.djcrazy.MyCC98.c.f:
     tk.djcrazy.libCC98.ICC98Service service -> service
     30:33:void onListItemClick(android.widget.ListView,android.view.View,int,long) -> a
     37:37:android.support.v4.content.Loader onCreateLoader(int,android.os.Bundle) -> a
     48:48:tk.djcrazy.MyCC98.adapter.BaseItemListAdapter createAdapter(java.util.List) -> a
-    53:53:void OnLoadMore(int,int) -> a
     25:25:tk.djcrazy.libCC98.ICC98Service access$0(tk.djcrazy.MyCC98.fragment.HotTopicFragment) -> a
-tk.djcrazy.MyCC98.fragment.HotTopicFragment$1 -> tk.djcrazy.MyCC98.c.b:
+tk.djcrazy.MyCC98.fragment.HotTopicFragment$1 -> tk.djcrazy.MyCC98.c.g:
     tk.djcrazy.MyCC98.fragment.HotTopicFragment this$0 -> a
     40:40:java.util.List loadData() -> a
     1:1:java.lang.Object loadData() -> b
-tk.djcrazy.MyCC98.fragment.InboxListFragment -> tk.djcrazy.MyCC98.c.c:
+tk.djcrazy.MyCC98.fragment.InboxListFragment -> tk.djcrazy.MyCC98.c.h:
     tk.djcrazy.libCC98.ICC98Service mService -> mService
     int type -> g
     tk.djcrazy.libCC98.data.InboxInfo inboxInfo -> h
@@ -12840,21 +13702,21 @@ tk.djcrazy.MyCC98.fragment.InboxListFragment -> tk.djcrazy.MyCC98.c.c:
     19:19:tk.djcrazy.libCC98.ICC98Service access$0(tk.djcrazy.MyCC98.fragment.InboxListFragment) -> a
     21:21:tk.djcrazy.libCC98.data.InboxInfo access$1(tk.djcrazy.MyCC98.fragment.InboxListFragment) -> b
     20:20:int access$2(tk.djcrazy.MyCC98.fragment.InboxListFragment) -> c
-tk.djcrazy.MyCC98.fragment.InboxListFragment$1 -> tk.djcrazy.MyCC98.c.d:
+tk.djcrazy.MyCC98.fragment.InboxListFragment$1 -> tk.djcrazy.MyCC98.c.i:
     tk.djcrazy.MyCC98.fragment.InboxListFragment this$0 -> a
     34:41:java.util.List loadData() -> a
     1:1:java.lang.Object loadData() -> b
-tk.djcrazy.MyCC98.fragment.NewTopicFragment -> tk.djcrazy.MyCC98.c.e:
+tk.djcrazy.MyCC98.fragment.NewTopicFragment -> tk.djcrazy.MyCC98.c.j:
     tk.djcrazy.libCC98.ICC98Service service -> service
     35:38:void onListItemClick(android.widget.ListView,android.view.View,int,long) -> a
     43:46:void configureList(android.app.Activity,tk.djcrazy.MyCC98.view.PagedPullToRefreshListView) -> a
     49:49:android.support.v4.content.Loader onCreateLoader(int,android.os.Bundle) -> a
     66:66:tk.djcrazy.MyCC98.adapter.BaseItemListAdapter createAdapter(java.util.List) -> a
-tk.djcrazy.MyCC98.fragment.NewTopicFragment$1 -> tk.djcrazy.MyCC98.c.f:
+tk.djcrazy.MyCC98.fragment.NewTopicFragment$1 -> tk.djcrazy.MyCC98.c.k:
     tk.djcrazy.MyCC98.fragment.NewTopicFragment this$0 -> a
     52:58:java.util.List loadData() -> a
     1:1:java.lang.Object loadData() -> b
-tk.djcrazy.MyCC98.fragment.PagedPullToRefeshListFragment -> tk.djcrazy.MyCC98.c.g:
+tk.djcrazy.MyCC98.fragment.PagedPullToRefeshListFragment -> tk.djcrazy.MyCC98.c.l:
     boolean mIsLoadingMore -> g
     java.util.List items -> a
     tk.djcrazy.MyCC98.view.PagedPullToRefreshListView listView -> b
@@ -12883,20 +13745,19 @@ tk.djcrazy.MyCC98.fragment.PagedPullToRefeshListFragment -> tk.djcrazy.MyCC98.c.
     359:367:void onRefresh() -> e
     371:376:void OnLoadMore(int,int) -> a
     1:1:void onLoadFinished(android.support.v4.content.Loader,java.lang.Object) -> a
-tk.djcrazy.MyCC98.fragment.PagedPullToRefeshListFragment$1 -> tk.djcrazy.MyCC98.c.h:
+tk.djcrazy.MyCC98.fragment.PagedPullToRefeshListFragment$1 -> tk.djcrazy.MyCC98.c.m:
     tk.djcrazy.MyCC98.fragment.PagedPullToRefeshListFragment this$0 -> a
     124:125:void onItemClick(android.widget.AdapterView,android.view.View,int,long) -> onItemClick
-tk.djcrazy.MyCC98.fragment.PersonalBoardFragment -> tk.djcrazy.MyCC98.c.i:
+tk.djcrazy.MyCC98.fragment.PersonalBoardFragment -> tk.djcrazy.MyCC98.c.n:
     tk.djcrazy.libCC98.ICC98Service service -> service
     23:23:android.support.v4.content.Loader onCreateLoader(int,android.os.Bundle) -> a
     34:34:tk.djcrazy.MyCC98.adapter.BaseItemListAdapter createAdapter(java.util.List) -> a
-    40:40:void OnLoadMore(int,int) -> a
     19:19:tk.djcrazy.libCC98.ICC98Service access$0(tk.djcrazy.MyCC98.fragment.PersonalBoardFragment) -> a
-tk.djcrazy.MyCC98.fragment.PersonalBoardFragment$1 -> tk.djcrazy.MyCC98.c.j:
+tk.djcrazy.MyCC98.fragment.PersonalBoardFragment$1 -> tk.djcrazy.MyCC98.c.o:
     tk.djcrazy.MyCC98.fragment.PersonalBoardFragment this$0 -> a
     26:26:java.util.List loadData() -> a
     1:1:java.lang.Object loadData() -> b
-tk.djcrazy.MyCC98.fragment.PostListFragment -> tk.djcrazy.MyCC98.c.k:
+tk.djcrazy.MyCC98.fragment.PostListFragment -> tk.djcrazy.MyCC98.c.p:
     tk.djcrazy.libCC98.ICC98Service service -> service
     java.lang.String boardId -> g
     java.lang.String boardName -> h
@@ -12909,11 +13770,41 @@ tk.djcrazy.MyCC98.fragment.PostListFragment -> tk.djcrazy.MyCC98.c.k:
     90:91:void onConfigurationChanged(android.content.res.Configuration) -> onConfigurationChanged
     34:34:tk.djcrazy.libCC98.ICC98Service access$0(tk.djcrazy.MyCC98.fragment.PostListFragment) -> a
     35:35:java.lang.String access$1(tk.djcrazy.MyCC98.fragment.PostListFragment) -> b
-tk.djcrazy.MyCC98.fragment.PostListFragment$1 -> tk.djcrazy.MyCC98.c.l:
+tk.djcrazy.MyCC98.fragment.PostListFragment$1 -> tk.djcrazy.MyCC98.c.q:
     tk.djcrazy.MyCC98.fragment.PostListFragment this$0 -> a
     64:70:java.util.List loadData() -> a
     1:1:java.lang.Object loadData() -> b
-tk.djcrazy.MyCC98.fragment.SearchBoardFragment -> tk.djcrazy.MyCC98.c.m:
+tk.djcrazy.MyCC98.fragment.PullToRefeshListFragment -> tk.djcrazy.MyCC98.c.r:
+    java.util.List items -> a
+    com.handmark.pulltorefresh.library.PullToRefreshListView listView -> b
+    android.widget.TextView emptyView -> c
+    android.widget.ProgressBar progressBar -> d
+    boolean listShown -> e
+    boolean isClearData -> f
+    91:96:void onActivityCreated(android.os.Bundle) -> onActivityCreated
+    101:101:android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
+    109:114:void onDestroyView() -> onDestroyView
+    118:132:void onViewCreated(android.view.View,android.os.Bundle) -> onViewCreated
+    146:147:void configureList(android.app.Activity,com.handmark.pulltorefresh.library.PullToRefreshListView) -> a
+    151:162:void onLoadFinished(android.support.v4.content.Loader,java.util.List) -> a
+    166:166:void onLoaderReset(android.support.v4.content.Loader) -> a
+    tk.djcrazy.MyCC98.adapter.BaseItemListAdapter createAdapter(java.util.List) -> a
+    180:181:void showList() -> a
+    201:201:java.lang.Exception getException(android.support.v4.content.Loader) -> b
+    210:210:com.handmark.pulltorefresh.library.PullToRefreshListView getListView() -> b
+    220:224:tk.djcrazy.MyCC98.adapter.BaseItemListAdapter getListAdapter() -> c
+    242:248:tk.djcrazy.MyCC98.fragment.PullToRefeshListFragment fadeIn(android.view.View,boolean) -> a
+    252:253:tk.djcrazy.MyCC98.fragment.PullToRefeshListFragment show(android.view.View) -> a
+    257:258:tk.djcrazy.MyCC98.fragment.PullToRefeshListFragment hide(android.view.View) -> b
+    280:307:tk.djcrazy.MyCC98.fragment.PullToRefeshListFragment setListShown(boolean,boolean) -> a
+    343:343:void onListItemClick(android.widget.ListView,android.view.View,int,long) -> a
+    351:351:boolean isUsable() -> d
+    356:359:void onRefresh(com.handmark.pulltorefresh.library.PullToRefreshBase) -> a
+    1:1:void onLoadFinished(android.support.v4.content.Loader,java.lang.Object) -> a
+tk.djcrazy.MyCC98.fragment.PullToRefeshListFragment$1 -> tk.djcrazy.MyCC98.c.s:
+    tk.djcrazy.MyCC98.fragment.PullToRefeshListFragment this$0 -> a
+    125:126:void onItemClick(android.widget.AdapterView,android.view.View,int,long) -> onItemClick
+tk.djcrazy.MyCC98.fragment.SearchBoardFragment -> tk.djcrazy.MyCC98.c.t:
     int position -> a
     java.util.List currentResult -> b
     java.util.List boardList -> c
@@ -12943,35 +13834,37 @@ tk.djcrazy.MyCC98.fragment.SearchBoardFragment -> tk.djcrazy.MyCC98.c.m:
     40:40:java.util.List access$8(tk.djcrazy.MyCC98.fragment.SearchBoardFragment) -> g
     39:39:void access$9(tk.djcrazy.MyCC98.fragment.SearchBoardFragment,java.util.List) -> b
     59:59:android.os.Handler access$10(tk.djcrazy.MyCC98.fragment.SearchBoardFragment) -> h
-tk.djcrazy.MyCC98.fragment.SearchBoardFragment$1 -> tk.djcrazy.MyCC98.c.n:
+tk.djcrazy.MyCC98.fragment.SearchBoardFragment$1 -> tk.djcrazy.MyCC98.c.u:
     tk.djcrazy.MyCC98.fragment.SearchBoardFragment this$0 -> a
     62:79:void handleMessage(android.os.Message) -> handleMessage
-tk.djcrazy.MyCC98.fragment.SearchBoardFragment$2 -> tk.djcrazy.MyCC98.c.o:
+tk.djcrazy.MyCC98.fragment.SearchBoardFragment$2 -> tk.djcrazy.MyCC98.c.v:
     tk.djcrazy.MyCC98.fragment.SearchBoardFragment this$0 -> a
     87:88:void onTextChanged(java.lang.CharSequence,int,int,int) -> onTextChanged
     93:93:void beforeTextChanged(java.lang.CharSequence,int,int,int) -> beforeTextChanged
     97:97:void afterTextChanged(android.text.Editable) -> afterTextChanged
-tk.djcrazy.MyCC98.fragment.SearchBoardFragment$3 -> tk.djcrazy.MyCC98.c.p:
+tk.djcrazy.MyCC98.fragment.SearchBoardFragment$3 -> tk.djcrazy.MyCC98.c.w:
     tk.djcrazy.MyCC98.fragment.SearchBoardFragment this$0 -> a
     132:148:void run() -> run
 tk.djcrazy.MyCC98.helper.HtmlGenHelper -> tk.djcrazy.MyCC98.d.a:
     tk.djcrazy.libCC98.ICC98Service service -> service
     java.lang.String PAGE_OPEN -> a
-    java.lang.String PAGE_CLOSE -> b
-    java.lang.String TAG -> c
-    39:39:java.lang.String addPostInfo(java.lang.String,java.lang.String,java.lang.String,java.lang.String,int,java.lang.String,int) -> a
-    48:50:void postInfo(java.lang.StringBuilder,java.lang.String,java.lang.String,java.lang.String,java.lang.String,int,java.lang.String,int) -> a
-    53:56:java.lang.String addFloorNum(int) -> a
-    61:64:java.lang.String addGender(java.lang.String) -> d
-    69:69:java.lang.String addSenderAvatar(java.lang.String,int) -> a
-    74:74:java.lang.String addTopic(java.lang.String) -> a
-    79:79:java.lang.String addSenderName(java.lang.String) -> b
-    83:83:java.lang.String addSendTime(java.lang.String) -> c
-    88:139:java.lang.String parseInnerLink(java.lang.String,java.lang.String) -> a
-    144:146:void jsBtn(java.lang.StringBuilder,java.lang.String,java.lang.String,java.lang.String[]) -> a
-    150:157:void postContent(java.lang.StringBuilder,java.lang.String,java.lang.String,int) -> a
-    160:161:void btnsBegin(java.lang.StringBuilder) -> a
-    164:165:void btnsEnd(java.lang.StringBuilder) -> b
+    java.lang.String PAGE_PROXY_OPEN -> b
+    java.lang.String PAGE_RVPN_OPEN -> c
+    java.lang.String PAGE_CLOSE -> d
+    java.lang.String TAG -> e
+    60:68:void addPostInfo(java.lang.StringBuilder,java.lang.String,java.lang.String,java.lang.String,java.lang.String,int,java.lang.String,int) -> a
+    73:75:void postInfo(java.lang.StringBuilder,java.lang.String,java.lang.String,java.lang.String,java.lang.String,int,java.lang.String,int) -> b
+    78:80:void addFloorNum(java.lang.StringBuilder,int) -> a
+    83:85:void addGender(java.lang.StringBuilder,java.lang.String) -> d
+    89:91:void addSenderAvatar(java.lang.StringBuilder,java.lang.String,int) -> a
+    94:96:void addTopic(java.lang.StringBuilder,java.lang.String) -> a
+    99:101:void addSenderName(java.lang.StringBuilder,java.lang.String) -> b
+    104:106:void addSendTime(java.lang.StringBuilder,java.lang.String) -> c
+    109:158:java.lang.String parseInnerLink(java.lang.String,java.lang.String) -> a
+    163:165:void jsBtn(java.lang.StringBuilder,java.lang.String,java.lang.String,java.lang.String[]) -> a
+    169:176:void postContent(java.lang.StringBuilder,java.lang.String,java.lang.String,int) -> a
+    179:180:void btnsBegin(java.lang.StringBuilder) -> a
+    183:184:void btnsEnd(java.lang.StringBuilder) -> b
 tk.djcrazy.MyCC98.helper.TextHelper -> tk.djcrazy.MyCC98.d.b:
     8:8:boolean isEmpty(java.lang.String) -> a
 tk.djcrazy.MyCC98.listener.LoadingListener -> tk.djcrazy.MyCC98.e.a:
@@ -13009,41 +13902,45 @@ tk.djcrazy.MyCC98.util.AsyncLoader -> tk.djcrazy.MyCC98.g.a:
     57:62:void onStartLoading() -> onStartLoading
     67:68:void onStopLoading() -> onStopLoading
     72:78:void onReset() -> onReset
-tk.djcrazy.MyCC98.util.Intents -> tk.djcrazy.MyCC98.g.b:
-tk.djcrazy.MyCC98.util.Intents$Builder -> tk.djcrazy.MyCC98.g.c:
+tk.djcrazy.MyCC98.util.DisplayUtil -> tk.djcrazy.MyCC98.g.b:
+    11:13:int dip2px(android.content.Context,float) -> a
+tk.djcrazy.MyCC98.util.Intents -> tk.djcrazy.MyCC98.g.c:
+tk.djcrazy.MyCC98.util.Intents$Builder -> tk.djcrazy.MyCC98.g.d:
     android.content.Intent intent -> a
-    102:102:tk.djcrazy.MyCC98.util.Intents$Builder boardId(java.lang.String) -> a
-    106:106:tk.djcrazy.MyCC98.util.Intents$Builder postId(java.lang.String) -> b
-    110:110:tk.djcrazy.MyCC98.util.Intents$Builder pageNumber(int) -> a
-    113:113:tk.djcrazy.MyCC98.util.Intents$Builder boardName(java.lang.String) -> c
-    116:116:tk.djcrazy.MyCC98.util.Intents$Builder postName(java.lang.String) -> d
-    119:119:tk.djcrazy.MyCC98.util.Intents$Builder replyUserName(java.lang.String) -> e
-    122:122:tk.djcrazy.MyCC98.util.Intents$Builder replyUserPostTime(java.lang.String) -> f
-    125:125:tk.djcrazy.MyCC98.util.Intents$Builder replyContent(java.lang.String) -> g
-    128:128:tk.djcrazy.MyCC98.util.Intents$Builder floorNumber(int) -> b
-    135:135:tk.djcrazy.MyCC98.util.Intents$Builder pmToUser(java.lang.String) -> h
-    139:139:tk.djcrazy.MyCC98.util.Intents$Builder pmTitle(java.lang.String) -> i
-    143:143:tk.djcrazy.MyCC98.util.Intents$Builder pmContent(java.lang.String) -> j
-    147:147:tk.djcrazy.MyCC98.util.Intents$Builder requestType(int) -> c
-    151:151:tk.djcrazy.MyCC98.util.Intents$Builder downloadLink(java.lang.String) -> k
-    154:154:tk.djcrazy.MyCC98.util.Intents$Builder pmSender(java.lang.String) -> l
-    157:157:tk.djcrazy.MyCC98.util.Intents$Builder pmSendTime(java.lang.String) -> m
-    160:160:tk.djcrazy.MyCC98.util.Intents$Builder pmId(int) -> d
-    172:173:tk.djcrazy.MyCC98.util.Intents$Builder add(java.lang.String,java.lang.String) -> a
-    185:186:tk.djcrazy.MyCC98.util.Intents$Builder add(java.lang.String,int) -> a
-    231:231:android.content.Intent toIntent() -> a
-tk.djcrazy.MyCC98.util.ThrowableLoader -> tk.djcrazy.MyCC98.g.d:
+    104:104:tk.djcrazy.MyCC98.util.Intents$Builder boardId(java.lang.String) -> a
+    108:108:tk.djcrazy.MyCC98.util.Intents$Builder postId(java.lang.String) -> b
+    112:112:tk.djcrazy.MyCC98.util.Intents$Builder pageNumber(int) -> a
+    115:115:tk.djcrazy.MyCC98.util.Intents$Builder boardName(java.lang.String) -> c
+    118:118:tk.djcrazy.MyCC98.util.Intents$Builder postName(java.lang.String) -> d
+    121:121:tk.djcrazy.MyCC98.util.Intents$Builder replyUserName(java.lang.String) -> e
+    124:124:tk.djcrazy.MyCC98.util.Intents$Builder replyUserPostTime(java.lang.String) -> f
+    127:127:tk.djcrazy.MyCC98.util.Intents$Builder replyContent(java.lang.String) -> g
+    130:130:tk.djcrazy.MyCC98.util.Intents$Builder floorNumber(int) -> b
+    137:137:tk.djcrazy.MyCC98.util.Intents$Builder pmToUser(java.lang.String) -> h
+    141:141:tk.djcrazy.MyCC98.util.Intents$Builder pmTitle(java.lang.String) -> i
+    145:145:tk.djcrazy.MyCC98.util.Intents$Builder pmContent(java.lang.String) -> j
+    149:149:tk.djcrazy.MyCC98.util.Intents$Builder requestType(int) -> c
+    153:153:tk.djcrazy.MyCC98.util.Intents$Builder downloadLink(java.lang.String) -> k
+    156:156:tk.djcrazy.MyCC98.util.Intents$Builder pmSender(java.lang.String) -> l
+    159:159:tk.djcrazy.MyCC98.util.Intents$Builder pmSendTime(java.lang.String) -> m
+    162:162:tk.djcrazy.MyCC98.util.Intents$Builder pmId(int) -> d
+    165:165:tk.djcrazy.MyCC98.util.Intents$Builder needLogin(boolean) -> a
+    177:178:tk.djcrazy.MyCC98.util.Intents$Builder add(java.lang.String,java.lang.String) -> a
+    190:191:tk.djcrazy.MyCC98.util.Intents$Builder add(java.lang.String,int) -> a
+    226:227:tk.djcrazy.MyCC98.util.Intents$Builder add(java.lang.String,java.io.Serializable) -> a
+    236:236:android.content.Intent toIntent() -> a
+tk.djcrazy.MyCC98.util.ThrowableLoader -> tk.djcrazy.MyCC98.g.e:
     java.lang.Object data -> a
     java.lang.Exception exception -> b
     49:55:java.lang.Object loadInBackground() -> loadInBackground
     java.lang.Object loadData() -> b
-tk.djcrazy.MyCC98.util.ToastUtils -> tk.djcrazy.MyCC98.g.e:
+tk.djcrazy.MyCC98.util.ToastUtils -> tk.djcrazy.MyCC98.g.f:
     39:51:void show(android.app.Activity,java.lang.String) -> a
-tk.djcrazy.MyCC98.util.ToastUtils$1 -> tk.djcrazy.MyCC98.g.f:
+tk.djcrazy.MyCC98.util.ToastUtils$1 -> tk.djcrazy.MyCC98.g.g:
     android.app.Application val$application -> a
     java.lang.String val$message -> b
     48:49:void run() -> run
-tk.djcrazy.MyCC98.util.ViewUtils -> tk.djcrazy.MyCC98.g.g:
+tk.djcrazy.MyCC98.util.ViewUtils -> tk.djcrazy.MyCC98.g.h:
     35:43:void setGone(android.view.View,boolean) -> a
 tk.djcrazy.MyCC98.view.DrawView -> tk.djcrazy.MyCC98.view.DrawView:
     int mod -> a
@@ -13066,8 +13963,6 @@ tk.djcrazy.MyCC98.view.DrawView -> tk.djcrazy.MyCC98.view.DrawView:
     141:148:void contDraw(float,float) -> b
     151:157:void compDraw(float,float) -> c
     161:174:boolean onTouchEvent(android.view.MotionEvent) -> onTouchEvent
-tk.djcrazy.MyCC98.view.MyEditText -> tk.djcrazy.MyCC98.view.MyEditText:
-    27:34:void onSizeChanged(int,int,int,int) -> onSizeChanged
 tk.djcrazy.MyCC98.view.PagedPullToRefreshListView -> tk.djcrazy.MyCC98.view.PagedPullToRefreshListView:
     int currentPage -> a
     int totalPageNumber -> b
@@ -13106,24 +14001,24 @@ tk.djcrazy.MyCC98.view.PullToRefreshListView -> tk.djcrazy.MyCC98.view.PullToRef
     int mRefreshViewHeight -> m
     int mRefreshOriginalTopPadding -> n
     int mLastMotionY -> o
-    80:123:void init(android.content.Context) -> a
-    127:129:void onAttachedToWindow() -> onAttachedToWindow
-    133:135:void setAdapter(android.widget.ListAdapter) -> setAdapter
-    145:146:void setOnScrollListener(android.widget.AbsListView$OnScrollListener) -> setOnScrollListener
-    154:155:void setOnRefreshListener(tk.djcrazy.MyCC98.view.PullToRefreshListView$OnRefreshListener) -> setOnRefreshListener
-    162:168:void setLastUpdated(java.lang.CharSequence) -> setLastUpdated
-    172:202:boolean onTouchEvent(android.view.MotionEvent) -> onTouchEvent
-    277:297:void resetHeader() -> c
-    300:317:void measureView(android.view.View) -> a
-    324:358:void onScroll(android.widget.AbsListView,int,int,int) -> onScroll
-    362:367:void onScrollStateChanged(android.widget.AbsListView,int) -> onScrollStateChanged
-    372:381:void prepareForRefresh() -> d
-    384:387:void onRefresh() -> a
-    402:409:void onRefreshComplete() -> b
-    52:52:int access$0(tk.djcrazy.MyCC98.view.PullToRefreshListView) -> a
+    83:126:void init(android.content.Context) -> a
+    130:132:void onAttachedToWindow() -> onAttachedToWindow
+    136:138:void setAdapter(android.widget.ListAdapter) -> setAdapter
+    148:149:void setOnScrollListener(android.widget.AbsListView$OnScrollListener) -> setOnScrollListener
+    157:158:void setOnRefreshListener(tk.djcrazy.MyCC98.view.PullToRefreshListView$OnRefreshListener) -> setOnRefreshListener
+    165:171:void setLastUpdated(java.lang.CharSequence) -> setLastUpdated
+    175:205:boolean onTouchEvent(android.view.MotionEvent) -> onTouchEvent
+    280:300:void resetHeader() -> c
+    303:320:void measureView(android.view.View) -> a
+    327:361:void onScroll(android.widget.AbsListView,int,int,int) -> onScroll
+    365:370:void onScrollStateChanged(android.widget.AbsListView,int) -> onScrollStateChanged
+    375:384:void prepareForRefresh() -> d
+    387:390:void onRefresh() -> a
+    405:412:void onRefreshComplete() -> b
+    55:55:int access$0(tk.djcrazy.MyCC98.view.PullToRefreshListView) -> a
 tk.djcrazy.MyCC98.view.PullToRefreshListView$OnClickRefreshListener -> tk.djcrazy.MyCC98.view.b:
     tk.djcrazy.MyCC98.view.PullToRefreshListView this$0 -> a
-    420:424:void onClick(android.view.View) -> onClick
+    423:427:void onClick(android.view.View) -> onClick
 tk.djcrazy.MyCC98.view.PullToRefreshListView$OnRefreshListener -> tk.djcrazy.MyCC98.view.c:
     void onRefresh() -> e
 tk.djcrazy.libCC98.CC98ClientImpl -> tk.djcrazy.libCC98.a:
@@ -13133,119 +14028,139 @@ tk.djcrazy.libCC98.CC98ClientImpl -> tk.djcrazy.libCC98.a:
     java.lang.String ID_PASSWD_ERROR_MSG -> c
     java.lang.String SERVER_ERROR -> d
     android.app.Application application -> application
-    tk.djcrazy.libCC98.data.UserData userData -> e
-    ch.boye.httpclientandroidlib.impl.client.DefaultHttpClient client -> f
-    90:93:tk.djcrazy.libCC98.data.UserData getUserData() -> a
-    98:98:android.graphics.Bitmap getUserAvatar() -> b
-    102:128:ch.boye.httpclientandroidlib.impl.client.DefaultHttpClient getHttpClient() -> c
-    142:163:void doLogin(java.lang.String,java.lang.String,java.lang.String) -> a
-    168:187:boolean pushNewPost(java.util.List,java.lang.String) -> a
-    211:231:void submitReply(java.util.List,java.lang.String,java.lang.String) -> a
-    277:287:java.lang.String getPage(java.lang.String) -> a
-    295:349:java.lang.String uploadPictureToCC98(java.io.File) -> a
-    363:363:java.lang.String getOutboxHtml(int) -> a
-    371:377:java.lang.String getUserImgUrl(java.lang.String) -> b
-    383:401:int sendPm(java.lang.String,java.lang.String,java.lang.String) -> b
-    407:432:void addFriend(java.lang.String) -> c
-    451:458:android.graphics.Bitmap getBitmapFromUrl(java.lang.String) -> d
-    469:482:void getLoginUserImgAndGender() -> e
-    487:498:void addHttpBasicAuthorization(java.lang.String,java.lang.String) -> a
-    502:502:java.lang.String getDomain() -> d
-    507:508:void setUseProxy(boolean) -> a
-tk.djcrazy.libCC98.CC98ParserImpl -> tk.djcrazy.libCC98.b:
+    ch.boye.httpclientandroidlib.impl.client.DefaultHttpClient client -> e
+    99:100:tk.djcrazy.libCC98.data.UserData getCurrentUserData() -> a
+    105:105:android.graphics.Bitmap getCurrentUserAvatar() -> b
+    109:110:ch.boye.httpclientandroidlib.impl.client.DefaultHttpClient getHttpClient() -> c
+    114:126:ch.boye.httpclientandroidlib.impl.client.DefaultHttpClient getHttpClient(boolean) -> a
+    135:171:void genHttpClient() -> h
+    180:181:ch.boye.httpclientandroidlib.impl.client.DefaultHttpClient getNoCurrentUserHttpClient() -> d
+    190:224:void doLogin(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,tk.djcrazy.libCC98.data.LoginType) -> a
+    228:246:void authenticateForRVPN(java.lang.String,java.lang.String) -> a
+    251:270:boolean pushNewPost(java.util.List,java.lang.String) -> a
+    294:314:void submitReply(java.util.List,java.lang.String,java.lang.String) -> a
+    360:371:java.lang.String getPage(java.lang.String) -> a
+    379:433:java.lang.String uploadPictureToCC98(java.io.File) -> a
+    447:447:java.lang.String getOutboxHtml(int) -> a
+    455:461:java.lang.String getUserImgUrl(java.lang.String) -> b
+    467:485:int sendPm(java.lang.String,java.lang.String,java.lang.String) -> a
+    491:516:void addFriend(java.lang.String) -> c
+    535:539:android.graphics.Bitmap getBitmapFromUrl(java.lang.String) -> d
+    551:566:android.graphics.Bitmap getLoginUserImgAndGender(tk.djcrazy.libCC98.data.UserData,tk.djcrazy.libCC98.data.LoginType) -> a
+    575:586:void addHttpBasicAuthorization(tk.djcrazy.libCC98.data.UserData,java.lang.String,java.lang.String) -> a
+    590:590:java.lang.String getDomain() -> e
+    595:595:java.lang.String getDomain(tk.djcrazy.libCC98.data.LoginType) -> a
+    600:600:java.util.List getuserAvatars() -> f
+    605:605:tk.djcrazy.MyCC98.application.MyApplication$UsersInfo getusersInfo() -> g
+    610:613:void switchToUser(int) -> b
+    617:628:void deleteUserInfo(int) -> c
+tk.djcrazy.libCC98.CC98ClientImpl$1 -> tk.djcrazy.libCC98.b:
+    tk.djcrazy.libCC98.CC98ClientImpl this$0 -> a
+    142:142:void checkClientTrusted(java.security.cert.X509Certificate[],java.lang.String) -> checkClientTrusted
+    146:146:void checkServerTrusted(java.security.cert.X509Certificate[],java.lang.String) -> checkServerTrusted
+    149:149:java.security.cert.X509Certificate[] getAcceptedIssuers() -> getAcceptedIssuers
+tk.djcrazy.libCC98.CC98ParserImpl -> tk.djcrazy.libCC98.c:
     tk.djcrazy.libCC98.ICC98Client cc98Client -> cc98Client
     tk.djcrazy.libCC98.ICC98UrlManager cc98UrlManager -> cc98UrlManager
-    58:58:java.util.List getPostList(java.lang.String,int) -> a
-    71:71:java.util.List getHotTopicList() -> a
-    84:84:java.util.List getPersonalBoardList() -> b
-    98:98:java.util.List getPostContentList(java.lang.String,java.lang.String,int) -> a
-    111:111:tk.djcrazy.libCC98.data.UserProfileEntity getUserProfile(java.lang.String) -> a
-    124:124:java.util.List getNewPostList(int) -> a
-    155:155:java.lang.String getMsgPageHtml(int) -> c
-    162:163:java.util.List getTodayBoardList() -> c
-    178:224:java.util.List parsePostContentList(java.lang.String) -> c
-    238:266:java.util.List parsePostList(java.lang.String) -> d
-    279:310:java.util.List parsePersonalBoardList(java.lang.String) -> e
-    321:386:tk.djcrazy.libCC98.data.UserProfileEntity parseUserProfile(java.lang.String) -> f
-    391:423:java.util.List parseHotTopicList(java.lang.String) -> g
-    435:453:java.util.List parsePmList(java.lang.String,tk.djcrazy.libCC98.data.InboxInfo) -> a
-    465:481:void getInboxList(java.util.List,java.util.regex.Matcher) -> a
-    491:498:java.lang.String getMsgContent(int) -> b
-    504:511:java.util.List getPmData(int,tk.djcrazy.libCC98.data.InboxInfo,int) -> a
-    528:529:java.util.List searchPost(java.lang.String,java.lang.String,java.lang.String,int) -> a
-    556:587:java.util.List parseQueryResult(java.lang.String) -> b
-    630:645:java.util.List parseTodayBoardList(java.lang.String) -> h
-tk.djcrazy.libCC98.CC98ServiceImpl -> tk.djcrazy.libCC98.c:
+    106:106:java.util.List getPostList(java.lang.String,int) -> a
+    119:119:java.util.List getHotTopicList() -> a
+    132:132:java.util.List getPersonalBoardList() -> b
+    146:146:java.util.List getPostContentList(java.lang.String,java.lang.String,int) -> a
+    159:159:tk.djcrazy.libCC98.data.UserProfileEntity getUserProfile(java.lang.String) -> a
+    172:172:java.util.List getNewPostList(int) -> a
+    203:203:java.lang.String getMsgPageHtml(int) -> c
+    210:211:java.util.List getTodayBoardList() -> c
+    226:272:java.util.List parsePostContentList(java.lang.String) -> c
+    286:314:java.util.List parsePostList(java.lang.String) -> d
+    327:358:java.util.List parsePersonalBoardList(java.lang.String) -> e
+    369:434:tk.djcrazy.libCC98.data.UserProfileEntity parseUserProfile(java.lang.String) -> f
+    439:471:java.util.List parseHotTopicList(java.lang.String) -> g
+    483:501:java.util.List parsePmList(java.lang.String,tk.djcrazy.libCC98.data.InboxInfo) -> a
+    513:529:void getInboxList(java.util.List,java.util.regex.Matcher) -> a
+    539:546:java.lang.String getMsgContent(int) -> b
+    552:559:java.util.List getPmData(int,tk.djcrazy.libCC98.data.InboxInfo,int) -> a
+    576:577:java.util.List searchPost(java.lang.String,java.lang.String,java.lang.String,int) -> a
+    604:636:java.util.List parseQueryResult(java.lang.String) -> b
+    679:694:java.util.List parseTodayBoardList(java.lang.String) -> h
+tk.djcrazy.libCC98.CC98ServiceImpl -> tk.djcrazy.libCC98.d:
     tk.djcrazy.libCC98.ICC98Client cc98Client -> cc98Client
     tk.djcrazy.libCC98.ICC98Parser cc98Parser -> cc98Parser
-    44:45:void addProxyAuthorization(java.lang.String,java.lang.String) -> a
-    49:50:void setUseProxy(boolean) -> a
-    57:58:void doLogin(java.lang.String,java.lang.String,java.lang.String) -> a
-    73:74:void addFriend(java.lang.String) -> a
-    79:79:java.lang.String uploadFile(java.io.File) -> a
-    85:93:void pushNewPost(java.lang.String,java.lang.String,java.lang.String,java.lang.String) -> a
-    98:109:void reply(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String) -> a
-    115:115:java.util.List searchPost(java.lang.String,java.lang.String,java.lang.String,int) -> a
-    121:122:void sendPm(java.lang.String,java.lang.String,java.lang.String) -> b
-    128:128:java.util.List getHotTopicList() -> a
-    134:134:java.lang.String getMsgContent(int) -> a
-    141:141:java.util.List getNewPostList(int) -> b
-    148:148:java.util.List getPersonalBoardList() -> b
-    154:154:java.util.List getPmData(int,tk.djcrazy.libCC98.data.InboxInfo,int) -> a
-    162:162:java.util.List getPostContentList(java.lang.String,java.lang.String,int) -> a
-    169:169:java.util.List getPostList(java.lang.String,int) -> a
-    176:176:java.util.List getTodayBoardList() -> c
-    190:190:tk.djcrazy.libCC98.data.UserProfileEntity getUserProfile(java.lang.String) -> b
-    197:198:java.lang.String getUserImgUrl(java.lang.String) -> c
-    203:203:java.lang.String getDomain() -> d
-    208:208:android.graphics.Bitmap getBitmapFromUrl(java.lang.String) -> d
-    218:218:java.lang.String getUserName() -> e
-    223:223:android.graphics.Bitmap getUserAvatar() -> f
-tk.djcrazy.libCC98.CC98UrlManagerImpl -> tk.djcrazy.libCC98.d:
+    46:47:void doLogin(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,tk.djcrazy.libCC98.data.LoginType) -> a
+    62:63:void addFriend(java.lang.String) -> a
+    68:68:java.lang.String uploadFile(java.io.File) -> a
+    74:82:void pushNewPost(java.lang.String,java.lang.String,java.lang.String,java.lang.String) -> a
+    87:98:void reply(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String) -> a
+    104:104:java.util.List searchPost(java.lang.String,java.lang.String,java.lang.String,int) -> a
+    110:111:void sendPm(java.lang.String,java.lang.String,java.lang.String) -> a
+    117:117:java.util.List getHotTopicList() -> a
+    123:123:java.lang.String getMsgContent(int) -> a
+    130:130:java.util.List getNewPostList(int) -> b
+    137:137:java.util.List getPersonalBoardList() -> b
+    143:143:java.util.List getPmData(int,tk.djcrazy.libCC98.data.InboxInfo,int) -> a
+    151:151:java.util.List getPostContentList(java.lang.String,java.lang.String,int) -> a
+    158:158:java.util.List getPostList(java.lang.String,int) -> a
+    165:165:java.util.List getTodayBoardList() -> c
+    179:179:tk.djcrazy.libCC98.data.UserProfileEntity getUserProfile(java.lang.String) -> b
+    186:187:java.lang.String getUserImgUrl(java.lang.String) -> c
+    192:192:java.lang.String getDomain() -> d
+    197:197:android.graphics.Bitmap getBitmapFromUrl(java.lang.String) -> d
+    207:207:java.lang.String getCurrentUserName() -> e
+    212:212:java.util.List getUserAvatars() -> f
+    222:222:tk.djcrazy.MyCC98.application.MyApplication$UsersInfo getusersInfo() -> g
+    227:227:android.graphics.Bitmap getCurrentUserAvatar() -> h
+    232:233:void switchToUser(int) -> c
+    237:238:void deleteUserInfo(int) -> d
+tk.djcrazy.libCC98.CC98UrlManagerImpl -> tk.djcrazy.libCC98.e:
     java.lang.String CC98 -> a
     java.lang.String LIFETOY -> b
     java.lang.String ZJU_RVPN_HOST -> c
+    java.lang.String ZJU_RVPN_HOST_PREFIX -> d
     android.app.Application application -> application
-    26:29:java.lang.String getClient() -> j
-    34:34:boolean isProxyVersion() -> k
-    59:59:java.lang.String getUploadPictureUrl() -> a
-    64:64:java.lang.String getTodayBoardList() -> b
-    70:75:java.lang.String getSearchUrl(java.lang.String,java.lang.String,java.lang.String,int) -> a
-    80:80:java.lang.String getInboxUrl(int) -> a
-    85:85:java.lang.String getOutboxUrl(int) -> b
-    90:90:java.lang.String getMessagePageUrl(int) -> c
-    95:95:java.lang.String getPersonalBoardUrl() -> c
-    100:100:java.lang.String getClientUrl() -> d
-    105:105:java.lang.String getBoardUrl(java.lang.String,int) -> a
-    115:115:java.lang.String getPostUrl(java.lang.String,java.lang.String,int) -> a
-    121:121:java.lang.String getHotTopicUrl() -> e
-    126:126:java.lang.String getUserProfileUrl(java.lang.String) -> a
-    131:131:java.lang.String getNewPostUrl(int) -> d
-    141:141:java.lang.String getAddFriendUrl() -> f
-    146:146:java.lang.String getAddFriendUrlReferrer() -> g
-    151:151:java.lang.String getLoginUrl() -> h
-    157:157:java.lang.String getSendPmUrl() -> i
-    162:162:java.lang.String getPushNewPostReferer(java.lang.String) -> b
-    167:167:java.lang.String getPushNewPostUrl(java.lang.String) -> c
-    172:172:java.lang.String getSubmitReplyUrl(java.lang.String) -> d
-    178:178:java.lang.String getSubmitReplyReferer(java.lang.String,java.lang.String) -> a
-tk.djcrazy.libCC98.ICC98Client -> tk.djcrazy.libCC98.e:
-    tk.djcrazy.libCC98.data.UserData getUserData() -> a
-    void doLogin(java.lang.String,java.lang.String,java.lang.String) -> a
+    27:32:java.lang.String getClientPrefix() -> i
+    37:42:java.lang.String getClientPrefix(tk.djcrazy.libCC98.data.LoginType) -> c
+    47:47:tk.djcrazy.libCC98.data.LoginType getProxyType() -> j
+    72:72:java.lang.String getUploadPictureUrl() -> a
+    77:77:java.lang.String getTodayBoardList() -> b
+    83:88:java.lang.String getSearchUrl(java.lang.String,java.lang.String,java.lang.String,int) -> a
+    93:93:java.lang.String getInboxUrl(int) -> a
+    98:98:java.lang.String getOutboxUrl(int) -> b
+    103:103:java.lang.String getMessagePageUrl(int) -> c
+    108:108:java.lang.String getPersonalBoardUrl() -> c
+    113:118:java.lang.String getClientUrl() -> d
+    124:124:java.lang.String getBoardUrl(java.lang.String,int) -> a
+    134:134:java.lang.String getPostUrl(java.lang.String,java.lang.String,int) -> a
+    140:140:java.lang.String getHotTopicUrl() -> e
+    145:145:java.lang.String getUserProfileUrl(java.lang.String) -> a
+    150:150:java.lang.String getUserProfileUrl(tk.djcrazy.libCC98.data.LoginType,java.lang.String) -> a
+    155:155:java.lang.String getNewPostUrl(int) -> d
+    165:165:java.lang.String getAddFriendUrl() -> f
+    170:170:java.lang.String getAddFriendUrlReferrer() -> g
+    180:180:java.lang.String getLoginUrl(tk.djcrazy.libCC98.data.LoginType) -> a
+    185:185:java.lang.String getSendPmUrl() -> h
+    190:190:java.lang.String getPushNewPostReferer(java.lang.String) -> b
+    195:195:java.lang.String getPushNewPostUrl(java.lang.String) -> c
+    200:200:java.lang.String getSubmitReplyUrl(java.lang.String) -> d
+    206:206:java.lang.String getSubmitReplyReferer(java.lang.String,java.lang.String) -> a
+    212:217:java.lang.String getClientUrl(tk.djcrazy.libCC98.data.LoginType) -> b
+tk.djcrazy.libCC98.ICC98Client -> tk.djcrazy.libCC98.f:
+    tk.djcrazy.libCC98.data.UserData getCurrentUserData() -> a
+    void doLogin(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,tk.djcrazy.libCC98.data.LoginType) -> a
     boolean pushNewPost(java.util.List,java.lang.String) -> a
     void submitReply(java.util.List,java.lang.String,java.lang.String) -> a
     java.lang.String getPage(java.lang.String) -> a
     java.lang.String uploadPictureToCC98(java.io.File) -> a
     java.lang.String getOutboxHtml(int) -> a
     java.lang.String getUserImgUrl(java.lang.String) -> b
-    int sendPm(java.lang.String,java.lang.String,java.lang.String) -> b
+    int sendPm(java.lang.String,java.lang.String,java.lang.String) -> a
     void addFriend(java.lang.String) -> c
     android.graphics.Bitmap getBitmapFromUrl(java.lang.String) -> d
-    void addHttpBasicAuthorization(java.lang.String,java.lang.String) -> a
-    java.lang.String getDomain() -> d
-    void setUseProxy(boolean) -> a
-    android.graphics.Bitmap getUserAvatar() -> b
-tk.djcrazy.libCC98.ICC98Parser -> tk.djcrazy.libCC98.f:
+    java.lang.String getDomain() -> e
+    android.graphics.Bitmap getCurrentUserAvatar() -> b
+    java.util.List getuserAvatars() -> f
+    tk.djcrazy.MyCC98.application.MyApplication$UsersInfo getusersInfo() -> g
+    void switchToUser(int) -> b
+    void deleteUserInfo(int) -> c
+tk.djcrazy.libCC98.ICC98Parser -> tk.djcrazy.libCC98.g:
     java.util.List getPostList(java.lang.String,int) -> a
     java.util.List getHotTopicList() -> a
     java.util.List getPersonalBoardList() -> b
@@ -13256,18 +14171,17 @@ tk.djcrazy.libCC98.ICC98Parser -> tk.djcrazy.libCC98.f:
     java.util.List getPmData(int,tk.djcrazy.libCC98.data.InboxInfo,int) -> a
     java.util.List searchPost(java.lang.String,java.lang.String,java.lang.String,int) -> a
     java.util.List getTodayBoardList() -> c
-tk.djcrazy.libCC98.ICC98Service -> tk.djcrazy.libCC98.g:
-    void addProxyAuthorization(java.lang.String,java.lang.String) -> a
-    void setUseProxy(boolean) -> a
-    void doLogin(java.lang.String,java.lang.String,java.lang.String) -> a
+tk.djcrazy.libCC98.ICC98Service -> tk.djcrazy.libCC98.h:
+    void doLogin(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,tk.djcrazy.libCC98.data.LoginType) -> a
     void addFriend(java.lang.String) -> a
-    java.lang.String getUserName() -> e
-    android.graphics.Bitmap getUserAvatar() -> f
+    java.lang.String getCurrentUserName() -> e
+    java.util.List getUserAvatars() -> f
+    android.graphics.Bitmap getCurrentUserAvatar() -> h
     java.lang.String uploadFile(java.io.File) -> a
     void pushNewPost(java.lang.String,java.lang.String,java.lang.String,java.lang.String) -> a
     void reply(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String) -> a
     java.util.List searchPost(java.lang.String,java.lang.String,java.lang.String,int) -> a
-    void sendPm(java.lang.String,java.lang.String,java.lang.String) -> b
+    void sendPm(java.lang.String,java.lang.String,java.lang.String) -> a
     java.util.List getHotTopicList() -> a
     java.lang.String getMsgContent(int) -> a
     java.util.List getNewPostList(int) -> b
@@ -13280,7 +14194,10 @@ tk.djcrazy.libCC98.ICC98Service -> tk.djcrazy.libCC98.g:
     java.lang.String getUserImgUrl(java.lang.String) -> c
     java.lang.String getDomain() -> d
     android.graphics.Bitmap getBitmapFromUrl(java.lang.String) -> d
-tk.djcrazy.libCC98.ICC98UrlManager -> tk.djcrazy.libCC98.h:
+    tk.djcrazy.MyCC98.application.MyApplication$UsersInfo getusersInfo() -> g
+    void switchToUser(int) -> c
+    void deleteUserInfo(int) -> d
+tk.djcrazy.libCC98.ICC98UrlManager -> tk.djcrazy.libCC98.i:
     java.lang.String getUploadPictureUrl() -> a
     java.lang.String getTodayBoardList() -> b
     java.lang.String getSearchUrl(java.lang.String,java.lang.String,java.lang.String,int) -> a
@@ -13289,6 +14206,7 @@ tk.djcrazy.libCC98.ICC98UrlManager -> tk.djcrazy.libCC98.h:
     java.lang.String getMessagePageUrl(int) -> c
     java.lang.String getPersonalBoardUrl() -> c
     java.lang.String getClientUrl() -> d
+    java.lang.String getClientUrl(tk.djcrazy.libCC98.data.LoginType) -> b
     java.lang.String getBoardUrl(java.lang.String,int) -> a
     java.lang.String getPostUrl(java.lang.String,java.lang.String,int) -> a
     java.lang.String getHotTopicUrl() -> e
@@ -13296,12 +14214,13 @@ tk.djcrazy.libCC98.ICC98UrlManager -> tk.djcrazy.libCC98.h:
     java.lang.String getNewPostUrl(int) -> d
     java.lang.String getAddFriendUrl() -> f
     java.lang.String getAddFriendUrlReferrer() -> g
-    java.lang.String getLoginUrl() -> h
-    java.lang.String getSendPmUrl() -> i
+    java.lang.String getSendPmUrl() -> h
     java.lang.String getPushNewPostReferer(java.lang.String) -> b
     java.lang.String getPushNewPostUrl(java.lang.String) -> c
     java.lang.String getSubmitReplyUrl(java.lang.String) -> d
     java.lang.String getSubmitReplyReferer(java.lang.String,java.lang.String) -> a
+    java.lang.String getUserProfileUrl(tk.djcrazy.libCC98.data.LoginType,java.lang.String) -> a
+    java.lang.String getLoginUrl(tk.djcrazy.libCC98.data.LoginType) -> a
 tk.djcrazy.libCC98.data.BoardEntity -> tk.djcrazy.libCC98.data.a:
     java.lang.String boardName -> a
     java.lang.String boardID -> b
@@ -13385,6 +14304,13 @@ tk.djcrazy.libCC98.data.InboxInfo -> tk.djcrazy.libCC98.data.d:
     18:19:tk.djcrazy.libCC98.data.InboxInfo setTotalPmIn(int) -> a
     23:24:tk.djcrazy.libCC98.data.InboxInfo setTotalInPage(int) -> b
     33:33:int getTotalInPage() -> a
+tk.djcrazy.libCC98.data.LoginType -> tk.djcrazy.libCC98.data.LoginType:
+    tk.djcrazy.libCC98.data.LoginType NORMAL -> a
+    tk.djcrazy.libCC98.data.LoginType USER_DEFINED -> b
+    tk.djcrazy.libCC98.data.LoginType RVPN -> c
+    tk.djcrazy.libCC98.data.LoginType[] ENUM$VALUES -> d
+    1:1:tk.djcrazy.libCC98.data.LoginType[] values() -> values
+    1:1:tk.djcrazy.libCC98.data.LoginType valueOf(java.lang.String) -> valueOf
 tk.djcrazy.libCC98.data.PmInfo -> tk.djcrazy.libCC98.data.e:
     boolean newPm -> a
     java.lang.String from -> b
@@ -13504,21 +14430,24 @@ tk.djcrazy.libCC98.data.UserData -> tk.djcrazy.libCC98.data.UserData:
     java.lang.String password16 -> c
     java.lang.String proxyUserName -> d
     java.lang.String proxyPassword -> e
-    boolean proxyVersion -> f
+    tk.djcrazy.libCC98.data.LoginType loginType -> f
     ch.boye.httpclientandroidlib.client.CookieStore cookieStore -> g
-    19:19:java.lang.String getUserName() -> a
-    23:24:void setUserName(java.lang.String) -> a
-    27:27:ch.boye.httpclientandroidlib.client.CookieStore getCookieStore() -> b
-    31:32:void setCookieStore(ch.boye.httpclientandroidlib.client.CookieStore) -> a
-    39:39:java.lang.String getPassword16() -> c
-    43:44:void setPassword32(java.lang.String) -> b
-    47:48:void setPassword16(java.lang.String) -> c
-    51:51:boolean isProxyVersion() -> d
-    55:56:void setProxyVersion(boolean) -> a
-    59:59:java.lang.String getProxyUserName() -> e
-    63:64:void setProxyUserName(java.lang.String) -> d
-    67:67:java.lang.String getProxyPassword() -> f
-    71:72:void setProxyPassword(java.lang.String) -> e
+    13:13:java.lang.String toString() -> toString
+    37:37:tk.djcrazy.libCC98.data.LoginType getLoginType() -> a
+    44:45:void setLoginType(tk.djcrazy.libCC98.data.LoginType) -> a
+    48:48:java.lang.String getUserName() -> b
+    56:62:int hashCode() -> hashCode
+    70:84:boolean equals(java.lang.Object) -> equals
+    88:89:void setUserName(java.lang.String) -> a
+    92:92:ch.boye.httpclientandroidlib.client.CookieStore getCookieStore() -> c
+    96:97:void setCookieStore(ch.boye.httpclientandroidlib.client.CookieStore) -> a
+    104:104:java.lang.String getPassword16() -> d
+    108:109:void setPassword32(java.lang.String) -> b
+    112:113:void setPassword16(java.lang.String) -> c
+    116:116:java.lang.String getProxyUserName() -> e
+    120:121:void setProxyUserName(java.lang.String) -> d
+    124:124:java.lang.String getProxyPassword() -> f
+    128:129:void setProxyPassword(java.lang.String) -> e
 tk.djcrazy.libCC98.data.UserProfileEntity -> tk.djcrazy.libCC98.data.j:
     java.lang.String userAvatarLink -> a
     java.lang.String userNickName -> b

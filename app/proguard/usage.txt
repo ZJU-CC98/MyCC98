@@ -1252,7 +1252,6 @@ ch.boye.httpclientandroidlib.cookie.ClientCookie:
 ch.boye.httpclientandroidlib.cookie.Cookie:
     public abstract java.lang.String getComment()
     public abstract java.lang.String getCommentURL()
-    public abstract java.util.Date getExpiryDate()
     public abstract boolean isPersistent()
 ch.boye.httpclientandroidlib.cookie.CookieIdentityComparator:
     private static final long serialVersionUID
@@ -1678,7 +1677,6 @@ ch.boye.httpclientandroidlib.impl.cookie.BasicClientCookie:
     91:92:public void setValue(java.lang.String)
     103:103:public java.lang.String getComment()
     123:123:public java.lang.String getCommentURL()
-    139:139:public java.util.Date getExpiryDate()
     166:166:public boolean isPersistent()
 ch.boye.httpclientandroidlib.impl.cookie.BasicClientCookie2:
     private static final long serialVersionUID
@@ -2056,13 +2054,16 @@ com.actionbarsherlock.app.ActionBar:
     public abstract void setCustomView(android.view.View,com.actionbarsherlock.app.ActionBar$LayoutParams)
     public abstract void setCustomView(int)
     public abstract void setIcon(int)
-    public abstract void setIcon(android.graphics.drawable.Drawable)
+    public abstract void setListNavigationCallbacks(android.widget.SpinnerAdapter,com.actionbarsherlock.app.ActionBar$OnNavigationListener)
     public abstract int getSelectedNavigationIndex()
     public abstract int getNavigationItemCount()
     public abstract void setTitle(int)
     public abstract void setSubtitle(int)
     public abstract void setDisplayOptions(int)
     public abstract void setDisplayOptions(int,int)
+    public abstract void setDisplayUseLogoEnabled(boolean)
+    public abstract void setDisplayShowHomeEnabled(boolean)
+    public abstract void setDisplayShowTitleEnabled(boolean)
     public abstract void setDisplayShowCustomEnabled(boolean)
     public abstract void setBackgroundDrawable(android.graphics.drawable.Drawable)
     435:435:public void setStackedBackgroundDrawable(android.graphics.drawable.Drawable)
@@ -2082,6 +2083,8 @@ com.actionbarsherlock.app.ActionBar:
     public abstract com.actionbarsherlock.app.ActionBar$Tab getSelectedTab()
     public abstract com.actionbarsherlock.app.ActionBar$Tab getTabAt(int)
     public abstract int getTabCount()
+    public abstract int getHeight()
+    public abstract void show()
     public abstract boolean isShowing()
     public abstract void addOnMenuVisibilityListener(com.actionbarsherlock.app.ActionBar$OnMenuVisibilityListener)
     public abstract void removeOnMenuVisibilityListener(com.actionbarsherlock.app.ActionBar$OnMenuVisibilityListener)
@@ -2159,6 +2162,9 @@ com.actionbarsherlock.internal.app.ActionBarImpl:
     250:251:public void addOnMenuVisibilityListener(com.actionbarsherlock.app.ActionBar$OnMenuVisibilityListener)
     254:255:public void removeOnMenuVisibilityListener(com.actionbarsherlock.app.ActionBar$OnMenuVisibilityListener)
     271:272:public void setCustomView(int)
+    276:277:public void setDisplayUseLogoEnabled(boolean)
+    281:282:public void setDisplayShowHomeEnabled(boolean)
+    291:292:public void setDisplayShowTitleEnabled(boolean)
     296:297:public void setDisplayShowCustomEnabled(boolean)
     306:307:public void setTitle(int)
     311:312:public void setSubtitle(int)
@@ -2177,13 +2183,15 @@ com.actionbarsherlock.internal.app.ActionBarImpl:
     473:474:public void removeTab(com.actionbarsherlock.app.ActionBar$Tab)
     478:499:public void removeTabAt(int)
     537:537:public com.actionbarsherlock.app.ActionBar$Tab getSelectedTab()
+    542:542:public int getHeight()
+    547:548:public void show()
     932:933:public void setCustomView(android.view.View)
     937:939:public void setCustomView(android.view.View,com.actionbarsherlock.app.ActionBar$LayoutParams)
+    943:945:public void setListNavigationCallbacks(android.widget.SpinnerAdapter,com.actionbarsherlock.app.ActionBar$OnNavigationListener)
     961:968:public int getNavigationItemCount()
     974:974:public int getTabCount()
     1003:1003:public com.actionbarsherlock.app.ActionBar$Tab getTabAt(int)
     1009:1010:public void setIcon(int)
-    1014:1015:public void setIcon(android.graphics.drawable.Drawable)
     69:69:static synthetic android.content.Context access$7(com.actionbarsherlock.internal.app.ActionBarImpl)
 com.actionbarsherlock.internal.app.ActionBarImpl$ActionModeImpl:
     private java.lang.ref.WeakReference mCustomView
@@ -2215,13 +2223,16 @@ com.actionbarsherlock.internal.app.ActionBarWrapper:
     50:57:public void setCustomView(android.view.View,com.actionbarsherlock.app.ActionBar$LayoutParams)
     61:62:public void setCustomView(int)
     66:67:public void setIcon(int)
-    71:72:public void setIcon(android.graphics.drawable.Drawable)
+    86:88:public void setListNavigationCallbacks(android.widget.SpinnerAdapter,com.actionbarsherlock.app.ActionBar$OnNavigationListener)
     104:104:public int getSelectedNavigationIndex()
     109:109:public int getNavigationItemCount()
     119:120:public void setTitle(int)
     129:130:public void setSubtitle(int)
     134:135:public void setDisplayOptions(int)
     139:140:public void setDisplayOptions(int,int)
+    144:145:public void setDisplayUseLogoEnabled(boolean)
+    149:150:public void setDisplayShowHomeEnabled(boolean)
+    159:160:public void setDisplayShowTitleEnabled(boolean)
     164:165:public void setDisplayShowCustomEnabled(boolean)
     169:170:public void setBackgroundDrawable(android.graphics.drawable.Drawable)
     174:175:public void setStackedBackgroundDrawable(android.graphics.drawable.Drawable)
@@ -2241,6 +2252,8 @@ com.actionbarsherlock.internal.app.ActionBarWrapper:
     417:418:public com.actionbarsherlock.app.ActionBar$Tab getSelectedTab()
     423:424:public com.actionbarsherlock.app.ActionBar$Tab getTabAt(int)
     429:429:public int getTabCount()
+    434:434:public int getHeight()
+    439:440:public void show()
     449:449:public boolean isShowing()
     454:455:public void addOnMenuVisibilityListener(com.actionbarsherlock.app.ActionBar$OnMenuVisibilityListener)
     459:460:public void removeOnMenuVisibilityListener(com.actionbarsherlock.app.ActionBar$OnMenuVisibilityListener)
@@ -2826,11 +2839,102 @@ com.baidu.mobstat.g:
     public void a(int)
     public void a(android.content.Context,com.baidu.mobstat.SendStrategyEnum,int,boolean)
     public void a(boolean,android.content.Context)
+com.example.robosherlocklibrary.R
+com.example.robosherlocklibrary.R$drawable
+com.example.robosherlocklibrary.R$string
+com.example.robosherlocklibrary.R$style
 com.github.rtyley.android.sherlock.android.accounts.SherlockAccountAuthenticatorActivity
 com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockAccountAuthenticatorActivity
 com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockListActivity
 com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockDialogFragment
 com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockListFragment
+com.handmark.pulltorefresh.library.ILoadingLayout:
+    public abstract void setTextTypeface(android.graphics.Typeface)
+com.handmark.pulltorefresh.library.IPullToRefresh
+com.handmark.pulltorefresh.library.LoadingLayoutProxy:
+    69:72:public void setTextTypeface(android.graphics.Typeface)
+com.handmark.pulltorefresh.library.OverscrollHelper:
+    static final java.lang.String LOG_TAG
+    static final float DEFAULT_OVERSCROLL_SCALE
+    26:26:public OverscrollHelper()
+com.handmark.pulltorefresh.library.PullToRefreshBase:
+    static final boolean DEBUG
+    static final boolean USE_HW_LAYERS
+    static final java.lang.String LOG_TAG
+    static final float FRICTION
+    public static final int SMOOTH_SCROLL_DURATION_MS
+    public static final int SMOOTH_SCROLL_LONG_DURATION_MS
+    static final int DEMO_SCROLL_INTERVAL
+    static final java.lang.String STATE_STATE
+    static final java.lang.String STATE_MODE
+    static final java.lang.String STATE_CURRENT_MODE
+    static final java.lang.String STATE_SCROLLING_REFRESHING_ENABLED
+    static final java.lang.String STATE_SHOW_REFRESHING_VIEW
+    static final java.lang.String STATE_SUPER
+    146:154:public final boolean demo()
+    201:201:public final boolean isDisableScrollingWhileRefreshing()
+    222:222:public final boolean isScrollingWhileRefreshingEnabled()
+    412:414:public void setLoadingDrawable(android.graphics.drawable.Drawable,com.handmark.pulltorefresh.library.PullToRefreshBase$Mode)
+    461:462:public void setPullLabel(java.lang.CharSequence,com.handmark.pulltorefresh.library.PullToRefreshBase$Mode)
+    480:481:public final void setRefreshing()
+    503:505:public void setRefreshingLabel(java.lang.CharSequence,com.handmark.pulltorefresh.library.PullToRefreshBase$Mode)
+    1016:1017:protected final void smoothScrollToLonger(int)
+    1280:1287:private final void smoothScrollToAndBack(int)
+    1247:1247:static synthetic void access$5(com.handmark.pulltorefresh.library.PullToRefreshBase,int,long,long,com.handmark.pulltorefresh.library.PullToRefreshBase$OnSmoothScrollFinishedListener)
+com.handmark.pulltorefresh.library.PullToRefreshBase$3
+com.handmark.pulltorefresh.library.PullToRefreshExpandableListView
+com.handmark.pulltorefresh.library.PullToRefreshExpandableListView$InternalExpandableListView
+com.handmark.pulltorefresh.library.PullToRefreshExpandableListView$InternalExpandableListViewSDK9
+com.handmark.pulltorefresh.library.PullToRefreshGridView
+com.handmark.pulltorefresh.library.PullToRefreshGridView$InternalGridView
+com.handmark.pulltorefresh.library.PullToRefreshGridView$InternalGridViewSDK9
+com.handmark.pulltorefresh.library.PullToRefreshHorizontalScrollView
+com.handmark.pulltorefresh.library.PullToRefreshHorizontalScrollView$InternalHorizontalScrollViewSDK9
+com.handmark.pulltorefresh.library.PullToRefreshScrollView
+com.handmark.pulltorefresh.library.PullToRefreshScrollView$InternalScrollViewSDK9
+com.handmark.pulltorefresh.library.PullToRefreshWebView
+com.handmark.pulltorefresh.library.PullToRefreshWebView$1
+com.handmark.pulltorefresh.library.PullToRefreshWebView$2
+com.handmark.pulltorefresh.library.PullToRefreshWebView$InternalWebViewSDK9
+com.handmark.pulltorefresh.library.R:
+    9:9:public R()
+com.handmark.pulltorefresh.library.R$anim:
+    29:29:public R$anim()
+com.handmark.pulltorefresh.library.R$attr
+com.handmark.pulltorefresh.library.R$dimen:
+    97:97:public R$dimen()
+com.handmark.pulltorefresh.library.R$drawable:
+    69:69:public R$drawable()
+com.handmark.pulltorefresh.library.R$id:
+    10:10:public R$id()
+com.handmark.pulltorefresh.library.R$layout:
+    43:43:public R$layout()
+com.handmark.pulltorefresh.library.R$string:
+    35:35:public R$string()
+com.handmark.pulltorefresh.library.R$styleable:
+    47:47:public R$styleable()
+com.handmark.pulltorefresh.library.extras.PullToRefreshWebView2
+com.handmark.pulltorefresh.library.extras.PullToRefreshWebView2$JsValueCallback
+com.handmark.pulltorefresh.library.extras.SoundPullEventListener
+com.handmark.pulltorefresh.library.internal.EmptyViewMethodAccessor:
+    public abstract void setEmptyView(android.view.View)
+com.handmark.pulltorefresh.library.internal.FlipLoadingLayout:
+    static final int FLIP_ANIMATION_DURATION
+com.handmark.pulltorefresh.library.internal.IndicatorLayout:
+    static final int DEFAULT_ROTATION_ANIMATION_DURATION
+com.handmark.pulltorefresh.library.internal.LoadingLayout:
+    static final java.lang.String LOG_TAG
+com.handmark.pulltorefresh.library.internal.RotateLoadingLayout:
+    static final int ROTATION_ANIMATION_DURATION
+com.handmark.pulltorefresh.library.internal.Utils:
+    static final java.lang.String LOG_TAG
+    5:5:public Utils()
+com.handmark.pulltorefresh.library.internal.ViewCompat:
+    25:25:public ViewCompat()
+    44:47:public static void setLayerType(android.view.View,int)
+com.handmark.pulltorefresh.library.internal.ViewCompat$SDK11
+com.handmark.pulltorefresh.library.internal.ViewCompat$SDK16:
+    58:58:ViewCompat$SDK16()
 com.nineoldandroids.animation.Animator:
     72:72:public void end()
     public abstract long getStartDelay()
@@ -2985,8 +3089,6 @@ com.nineoldandroids.view.ViewHelper$Honeycomb
 com.nineoldandroids.view.ViewPropertyAnimator:
     public abstract long getDuration()
     public abstract long getStartDelay()
-    public abstract com.nineoldandroids.view.ViewPropertyAnimator setStartDelay(long)
-    public abstract com.nineoldandroids.view.ViewPropertyAnimator setInterpolator(android.view.animation.Interpolator)
     public abstract com.nineoldandroids.view.ViewPropertyAnimator setListener(com.nineoldandroids.animation.Animator$AnimatorListener)
     public abstract void cancel()
     public abstract com.nineoldandroids.view.ViewPropertyAnimator x(float)
@@ -3022,8 +3124,6 @@ com.nineoldandroids.view.ViewPropertyAnimatorHC:
     private static final int TRANSFORM_MASK
     237:242:public long getDuration()
     248:253:public long getStartDelay()
-    259:265:public com.nineoldandroids.view.ViewPropertyAnimator setStartDelay(long)
-    270:272:public com.nineoldandroids.view.ViewPropertyAnimator setInterpolator(android.view.animation.Interpolator)
     277:278:public com.nineoldandroids.view.ViewPropertyAnimator setListener(com.nineoldandroids.animation.Animator$AnimatorListener)
     288:301:public void cancel()
     305:306:public com.nineoldandroids.view.ViewPropertyAnimator x(float)
@@ -3048,9 +3148,7 @@ com.nineoldandroids.view.ViewPropertyAnimatorHC:
 com.nineoldandroids.view.ViewPropertyAnimatorICS:
     private static final long RETURN_WHEN_NULL
     36:40:public long getDuration()
-    45:49:public com.nineoldandroids.view.ViewPropertyAnimator setStartDelay(long)
     54:58:public long getStartDelay()
-    63:67:public com.nineoldandroids.view.ViewPropertyAnimator setInterpolator(android.view.animation.Interpolator)
     72:100:public com.nineoldandroids.view.ViewPropertyAnimator setListener(com.nineoldandroids.animation.Animator$AnimatorListener)
     113:117:public void cancel()
     121:125:public com.nineoldandroids.view.ViewPropertyAnimator x(float)
@@ -3087,8 +3185,6 @@ com.nineoldandroids.view.ViewPropertyAnimatorPreHC:
     private static final int TRANSFORM_MASK
     244:249:public long getDuration()
     255:260:public long getStartDelay()
-    266:272:public com.nineoldandroids.view.ViewPropertyAnimator setStartDelay(long)
-    277:279:public com.nineoldandroids.view.ViewPropertyAnimator setInterpolator(android.view.animation.Interpolator)
     284:285:public com.nineoldandroids.view.ViewPropertyAnimator setListener(com.nineoldandroids.animation.Animator$AnimatorListener)
     295:308:public void cancel()
     312:313:public com.nineoldandroids.view.ViewPropertyAnimator x(float)
@@ -3119,6 +3215,84 @@ com.nineoldandroids.view.animation.AnimatorProxy:
     163:167:public void setScrollX(int)
     169:173:public int getScrollY()
     176:180:public void setScrollY(int)
+com.slidingmenu.lib.CanvasTransformerBuilder
+com.slidingmenu.lib.CanvasTransformerBuilder$1
+com.slidingmenu.lib.CanvasTransformerBuilder$2
+com.slidingmenu.lib.CanvasTransformerBuilder$3
+com.slidingmenu.lib.CanvasTransformerBuilder$4
+com.slidingmenu.lib.CanvasTransformerBuilder$5
+com.slidingmenu.lib.CanvasTransformerBuilder$6
+com.slidingmenu.lib.CustomViewAbove:
+    private static final java.lang.String TAG
+    private static final boolean DEBUG
+    private static final boolean USE_CACHE
+    private static final int MAX_SETTLE_DURATION
+    private static final int MIN_DISTANCE_FOR_FLING
+    private static final int INVALID_POINTER
+    283:286:public void addIgnoredView(android.view.View)
+    289:290:public void removeIgnoredView(android.view.View)
+    293:294:public void clearIgnoredViews()
+    351:357:public int getChildWidth(int)
+    362:362:public boolean isSlidingEnabled()
+    376:377:void smoothScrollTo(int,int)
+    900:917:protected boolean canScroll(android.view.View,boolean,int,int,int)
+com.slidingmenu.lib.CustomViewAbove$SimpleOnPageChangeListener:
+    147:147:public void onPageScrollStateChanged(int)
+com.slidingmenu.lib.CustomViewBehind:
+    private static final java.lang.String TAG
+    private static final int MARGIN_THRESHOLD
+com.slidingmenu.lib.MenuInterface
+com.slidingmenu.lib.R:
+    9:9:public R()
+com.slidingmenu.lib.R$attr
+com.slidingmenu.lib.R$bool
+com.slidingmenu.lib.R$color
+com.slidingmenu.lib.R$dimen
+com.slidingmenu.lib.R$drawable
+com.slidingmenu.lib.R$id:
+    10:10:public R$id()
+com.slidingmenu.lib.R$integer
+com.slidingmenu.lib.R$layout:
+    180:180:public R$layout()
+com.slidingmenu.lib.R$string
+com.slidingmenu.lib.R$style
+com.slidingmenu.lib.R$styleable:
+    205:205:public R$styleable()
+com.slidingmenu.lib.SlidingMenu:
+    private static final java.lang.String TAG
+    public static final int SLIDING_WINDOW
+    public static final int SLIDING_CONTENT
+    public static final int TOUCHMODE_MARGIN
+    public static final int TOUCHMODE_FULLSCREEN
+    public static final int TOUCHMODE_NONE
+    public static final int LEFT
+    public static final int RIGHT
+    public static final int LEFT_RIGHT
+    434:434:public boolean isSlidingEnabled()
+    479:480:public void showMenu()
+    496:497:public void showSecondaryMenu()
+    852:853:public void addIgnoredView(android.view.View)
+    861:862:public void removeIgnoredView(android.view.View)
+    868:869:public void clearIgnoredViews()
+com.slidingmenu.lib.SlidingMenu$1:
+    public static final int POSITION_OPEN
+    public static final int POSITION_CLOSE
+com.slidingmenu.lib.app.SlidingActivity
+com.slidingmenu.lib.app.SlidingActivityBase
+com.slidingmenu.lib.app.SlidingActivityHelper:
+    96:99:public void setSlidingActionBarEnabled(boolean)
+    150:152:public void setContentView(android.view.View)
+    179:180:public void toggle()
+    193:194:public void showMenu()
+    201:202:public void showSecondaryMenu()
+com.slidingmenu.lib.app.SlidingFragmentActivity:
+    111:112:public void toggle()
+    118:119:public void showContent()
+    125:126:public void showMenu()
+    132:133:public void showSecondaryMenu()
+    139:140:public void setSlidingActionBarEnabled(boolean)
+com.slidingmenu.lib.app.SlidingListActivity
+com.slidingmenu.lib.app.SlidingPreferenceActivity
 com.viewpagerindicator.CirclePageIndicator:
     private static final int INVALID_POINTER
     67:68:public CirclePageIndicator(android.content.Context)
@@ -3142,23 +3316,16 @@ com.viewpagerindicator.PageIndicator:
     public abstract void setCurrentItem(int)
     public abstract void setOnPageChangeListener(android.support.v4.view.ViewPager$OnPageChangeListener)
     public abstract void notifyDataSetChanged()
-com.viewpagerindicator.R:
-    9:9:public R()
-com.viewpagerindicator.R$attr:
-    100:100:public R$attr()
-com.viewpagerindicator.R$bool:
-    131:131:public R$bool()
-com.viewpagerindicator.R$color:
-    27:27:public R$color()
-com.viewpagerindicator.R$dimen:
-    138:138:public R$dimen()
+com.viewpagerindicator.R
+com.viewpagerindicator.R$attr
+com.viewpagerindicator.R$bool
+com.viewpagerindicator.R$color
+com.viewpagerindicator.R$dimen
 com.viewpagerindicator.R$drawable
 com.viewpagerindicator.R$id
-com.viewpagerindicator.R$integer:
-    21:21:public R$integer()
+com.viewpagerindicator.R$integer
 com.viewpagerindicator.R$style
-com.viewpagerindicator.R$styleable:
-    48:48:public R$styleable()
+com.viewpagerindicator.R$styleable
 com.viewpagerindicator.TabPageIndicator
 com.viewpagerindicator.TabPageIndicator$1
 com.viewpagerindicator.TabPageIndicator$2
@@ -3169,8 +3336,14 @@ com.viewpagerindicator.TitlePageIndicator:
     private static final float BOLD_FADE_PERCENTAGE
     private static final java.lang.String EMPTY_TITLE
     private static final int INVALID_POINTER
+    132:133:public TitlePageIndicator(android.content.Context)
+    136:137:public TitlePageIndicator(android.content.Context,android.util.AttributeSet)
+    140:189:public TitlePageIndicator(android.content.Context,android.util.AttributeSet,int)
     249:249:public boolean isSelectedBold()
+    661:663:public void setViewPager(android.support.v4.view.ViewPager,int)
     667:668:public void notifyDataSetChanged()
+com.viewpagerindicator.TitlePageIndicator$IndicatorStyle:
+    88:93:public static com.viewpagerindicator.TitlePageIndicator$IndicatorStyle fromValue(int)
 com.viewpagerindicator.UnderlinePageIndicator:
     private static final int INVALID_POINTER
     private static final int FADE_FRAME_MS
@@ -4344,8 +4517,8 @@ tk.djcrazy.MyCC98.EditActivity:
     private static final int MENU_REPLY_ID
     private boolean isQuoteUser
     private android.view.View mContainer
-    204:209:private void lockContainerHeight(int)
-    212:217:public void unlockContainerHeightDelayed()
+    203:208:private void lockContainerHeight(int)
+    211:216:public void unlockContainerHeightDelayed()
     144:144:static synthetic android.view.View access$4(tk.djcrazy.MyCC98.EditActivity)
 tk.djcrazy.MyCC98.EditActivity$2
 tk.djcrazy.MyCC98.HomeActivity:
@@ -4353,9 +4526,9 @@ tk.djcrazy.MyCC98.HomeActivity:
     private static final java.lang.String TAG
     public static final java.lang.String USERINFO
     public static final java.lang.String AUTOLOGIN
-    127:128:public void refresh()
-    184:186:public void onLoadComplete(int)
-    190:190:public void onLoadFailure(int)
+    142:143:public void refresh()
+    175:177:public void onLoadComplete(int)
+    181:181:public void onLoadFailure(int)
 tk.djcrazy.MyCC98.LoginActivity:
     private static final java.lang.String TAG
     public static final boolean IS_LIFETOY_VERSION
@@ -4369,7 +4542,7 @@ tk.djcrazy.MyCC98.LoginActivity:
     private static final java.lang.String AUTHINFO
 tk.djcrazy.MyCC98.PmViewActivity:
     private static final int MENU_REPLY_ID
-    208:211:public void preview(java.lang.String)
+    206:209:public void preview(java.lang.String)
 tk.djcrazy.MyCC98.PostContentsJSActivity:
     private static final java.lang.String TAG
     private static final java.lang.String JS_INTERFACE
@@ -4399,6 +4572,7 @@ tk.djcrazy.MyCC98.R$dimen
 tk.djcrazy.MyCC98.R$drawable
 tk.djcrazy.MyCC98.R$id
 tk.djcrazy.MyCC98.R$integer
+tk.djcrazy.MyCC98.R$interpolator
 tk.djcrazy.MyCC98.R$layout
 tk.djcrazy.MyCC98.R$menu
 tk.djcrazy.MyCC98.R$string
@@ -4415,6 +4589,8 @@ tk.djcrazy.MyCC98.SettingsActivity:
 tk.djcrazy.MyCC98.adapter.BaseItemListAdapter:
     40:40:public java.util.List getItems()
     49:50:public void setItem(int,java.lang.Object)
+tk.djcrazy.MyCC98.adapter.HomeActionListAdapter
+tk.djcrazy.MyCC98.adapter.HomeActionListAdapter$ViewHolder
 tk.djcrazy.MyCC98.adapter.NewTopicListAdapter:
     private static final java.lang.String TAG
 tk.djcrazy.MyCC98.animation.DropDownAnimation
@@ -4422,16 +4598,15 @@ tk.djcrazy.MyCC98.animation.ExpandCollapseAnimation
 tk.djcrazy.MyCC98.animation.MyScaleAnimation
 tk.djcrazy.MyCC98.application.MyApplication:
     private static final java.lang.String TAG
-    public static final java.lang.String USER_DATA
-    public static final java.lang.String USER_AVATAR
-    114:115:public void setUserData(tk.djcrazy.libCC98.data.UserData)
+    public static final java.lang.String USERS_INFO
+    public static final java.lang.String USER_AVATAR_PREFIX
+    92:92:public java.util.List getAllUserDatas()
+tk.djcrazy.MyCC98.application.MyApplication$UsersInfo:
+    private static final long serialVersionUID
 tk.djcrazy.MyCC98.dialog.AuthDialog:
     private static final java.lang.String USERNAME
     private static final java.lang.String PASSWORD
-    private static final java.lang.String AUTHINFO
-    private static final java.lang.String AUTOLOGIN
     private static final java.lang.String REMEMBERPWD
-    private android.widget.ArrayAdapter adapter
 tk.djcrazy.MyCC98.fragment.HotTopicFragment:
     private static final java.lang.String TAG
 tk.djcrazy.MyCC98.fragment.NewTopicFragment:
@@ -4448,6 +4623,13 @@ tk.djcrazy.MyCC98.fragment.PostListFragment:
     private static final java.lang.String TAG
     private static final java.lang.String BOARD_ID
     private static final java.lang.String BOARD_NAME
+tk.djcrazy.MyCC98.fragment.PullToRefeshListFragment:
+    private static final java.lang.String TAG
+    190:191:protected void showError(java.lang.Exception,int)
+    235:237:protected tk.djcrazy.MyCC98.fragment.PullToRefeshListFragment setListAdapter(tk.djcrazy.MyCC98.adapter.BaseItemListAdapter)
+    268:268:public tk.djcrazy.MyCC98.fragment.PullToRefeshListFragment setListShown(boolean)
+    317:319:protected tk.djcrazy.MyCC98.fragment.PullToRefeshListFragment setEmptyText(java.lang.String)
+    329:331:protected tk.djcrazy.MyCC98.fragment.PullToRefeshListFragment setEmptyText(int)
 tk.djcrazy.MyCC98.fragment.SearchBoardFragment:
     private static final java.lang.String TAG
     private static final int FETCH_SUCC
@@ -4476,7 +4658,9 @@ tk.djcrazy.MyCC98.task.TaskAdapter
 tk.djcrazy.MyCC98.task.TaskListener
 tk.djcrazy.MyCC98.task.TaskManager
 tk.djcrazy.MyCC98.task.TaskParams
-tk.djcrazy.MyCC98.util.DisplayUtil
+tk.djcrazy.MyCC98.util.DisplayUtil:
+    6:6:public DisplayUtil()
+    20:21:public static int px2dip(android.content.Context,float)
 tk.djcrazy.MyCC98.util.Intents:
     public static final java.lang.String INTENT_PREFIX
     public static final java.lang.String INTENT_EXTRA_PREFIX
@@ -4498,12 +4682,12 @@ tk.djcrazy.MyCC98.util.Intents:
     public static final java.lang.String EXTRA_PM_SENDER
     public static final java.lang.String EXTRA_PM_SEND_TIME
     public static final java.lang.String EXTRA_PM_ID
+    public static final java.lang.String EXTRA_NEED_LOGIN
     26:26:public Intents()
 tk.djcrazy.MyCC98.util.Intents$Builder:
-    131:131:public tk.djcrazy.MyCC98.util.Intents$Builder isQuoteUser(boolean)
-    197:198:private tk.djcrazy.MyCC98.util.Intents$Builder add(java.lang.String,int[])
-    209:210:private tk.djcrazy.MyCC98.util.Intents$Builder add(java.lang.String,boolean[])
-    221:222:private tk.djcrazy.MyCC98.util.Intents$Builder add(java.lang.String,java.io.Serializable)
+    133:133:public tk.djcrazy.MyCC98.util.Intents$Builder isQuoteUser(boolean)
+    202:203:private tk.djcrazy.MyCC98.util.Intents$Builder add(java.lang.String,int[])
+    214:215:private tk.djcrazy.MyCC98.util.Intents$Builder add(java.lang.String,boolean[])
 tk.djcrazy.MyCC98.util.ThrowableLoader:
     private static final java.lang.String TAG
     62:62:public java.lang.Exception getException()
@@ -4522,6 +4706,7 @@ tk.djcrazy.MyCC98.view.DrawView:
     50:63:public boolean save(java.lang.String)
     71:73:public void clear()
 tk.djcrazy.MyCC98.view.MyButton
+tk.djcrazy.MyCC98.view.MyEditText
 tk.djcrazy.MyCC98.view.MyWebView
 tk.djcrazy.MyCC98.view.PagedPullToRefreshListView:
     private static final java.lang.String TAG
@@ -4532,49 +4717,50 @@ tk.djcrazy.MyCC98.view.PullToRefreshListView:
     private static final int RELEASE_TO_REFRESH
     private static final int REFRESHING
     private static final java.lang.String TAG
-    206:260:private void applyHeaderPadding(android.view.MotionEvent)
-    266:271:private void resetHeaderPadding()
-    394:396:public void onRefreshComplete(java.lang.CharSequence)
+    209:263:private void applyHeaderPadding(android.view.MotionEvent)
+    269:274:private void resetHeaderPadding()
+    397:399:public void onRefreshComplete(java.lang.CharSequence)
 tk.djcrazy.libCC98.CC98ClientImpl:
     public static final java.lang.String TAG
-    133:135:public void clearLoginInfo()
-    194:204:public boolean editPost(java.util.List,java.lang.String)
-    244:271:public java.lang.String queryPosts(java.lang.String,java.lang.String,java.lang.String,int,java.lang.String)
-    357:357:public java.lang.String getInboxHtml(int)
-    439:445:public java.lang.String getUserProfileHtml(java.lang.String)
-    464:464:public android.graphics.Bitmap getUserImg(java.lang.String)
-    1:1:public bridge synthetic ch.boye.httpclientandroidlib.client.HttpClient getHttpClient()
+    175:177:public void clearLoginInfo()
+    277:287:public boolean editPost(java.util.List,java.lang.String)
+    327:354:public java.lang.String queryPosts(java.lang.String,java.lang.String,java.lang.String,int,java.lang.String)
+    441:441:public java.lang.String getInboxHtml(int)
+    523:529:public java.lang.String getUserProfileHtml(java.lang.String)
+    545:545:public android.graphics.Bitmap getUserImg(java.lang.String)
 tk.djcrazy.libCC98.CC98ParseRepository
 tk.djcrazy.libCC98.CC98ParserImpl:
     private static final java.lang.String TAG
-    137:137:public java.util.List getUserFriendList()
-    544:544:public java.util.List query(java.lang.String,java.lang.String,java.lang.String,int,java.lang.String)
-    593:624:private java.util.List parseUserFriendList(java.lang.String)
-    655:655:public tk.djcrazy.libCC98.ICC98Client getCC98Client()
-    667:668:public void setCC98Client(tk.djcrazy.libCC98.ICC98Client)
-    677:677:public tk.djcrazy.libCC98.ICC98UrlManager getCC98UrlManager()
-    688:689:public void setCC98UrlManager(tk.djcrazy.libCC98.ICC98UrlManager)
+    185:185:public java.util.List getUserFriendList()
+    592:592:public java.util.List query(java.lang.String,java.lang.String,java.lang.String,int,java.lang.String)
+    642:673:private java.util.List parseUserFriendList(java.lang.String)
+    704:704:public tk.djcrazy.libCC98.ICC98Client getCC98Client()
+    716:717:public void setCC98Client(tk.djcrazy.libCC98.ICC98Client)
+    726:726:public tk.djcrazy.libCC98.ICC98UrlManager getCC98UrlManager()
+    737:738:public void setCC98UrlManager(tk.djcrazy.libCC98.ICC98UrlManager)
 tk.djcrazy.libCC98.CC98ServiceImpl:
-    62:63:public void logOut()
-    67:68:public void clearProxy()
-    183:183:public java.util.List getFriendList()
-    213:213:public boolean isUseProxy()
-    228:228:public tk.djcrazy.libCC98.ICC98Client getCC98Client()
+    51:52:public void logOut()
+    56:57:public void clearProxy()
+    172:172:public java.util.List getFriendList()
+    202:202:public boolean isUseProxy()
+    217:217:public tk.djcrazy.libCC98.ICC98Client getCC98Client()
 tk.djcrazy.libCC98.CC98UrlManagerImpl:
-    39:39:public java.lang.String getGetOutboxUrl(java.lang.String)
-    44:44:public java.lang.String getGetInboxUrl(java.lang.String)
-    49:49:public java.lang.String getQueryUrl()
-    54:54:public java.lang.String getQueryReferer()
-    110:110:public java.lang.String getBoardUrl(java.lang.String)
-    136:136:public java.lang.String getUserManagerUrl()
+    52:52:public java.lang.String getGetOutboxUrl(java.lang.String)
+    57:57:public java.lang.String getGetInboxUrl(java.lang.String)
+    62:62:public java.lang.String getQueryUrl()
+    67:67:public java.lang.String getQueryReferer()
+    129:129:public java.lang.String getBoardUrl(java.lang.String)
+    160:160:public java.lang.String getUserManagerUrl()
+    175:175:public java.lang.String getLoginUrl()
 tk.djcrazy.libCC98.ICC98Client:
     public abstract boolean editPost(java.util.List,java.lang.String)
     public abstract java.lang.String queryPosts(java.lang.String,java.lang.String,java.lang.String,int,java.lang.String)
     public abstract java.lang.String getInboxHtml(int)
     public abstract java.lang.String getUserProfileHtml(java.lang.String)
     public abstract android.graphics.Bitmap getUserImg(java.lang.String)
+    public abstract void addHttpBasicAuthorization(tk.djcrazy.libCC98.data.UserData,java.lang.String,java.lang.String)
     public abstract void clearLoginInfo()
-    public abstract ch.boye.httpclientandroidlib.client.HttpClient getHttpClient()
+    public abstract java.lang.String getDomain(tk.djcrazy.libCC98.data.LoginType)
 tk.djcrazy.libCC98.ICC98Parser:
     public abstract java.util.List getUserFriendList()
     public abstract java.util.List query(java.lang.String,java.lang.String,java.lang.String,int,java.lang.String)
@@ -4596,6 +4782,7 @@ tk.djcrazy.libCC98.ICC98UrlManager:
     public abstract java.lang.String getQueryReferer()
     public abstract java.lang.String getBoardUrl(java.lang.String)
     public abstract java.lang.String getUserManagerUrl()
+    public abstract java.lang.String getLoginUrl()
 tk.djcrazy.libCC98.data.BoardEntity:
     43:43:public java.lang.String getBoardIntro()
     91:91:public java.lang.String getBoardMaster()
@@ -4627,7 +4814,7 @@ tk.djcrazy.libCC98.data.PostType
 tk.djcrazy.libCC98.data.SearchDate
 tk.djcrazy.libCC98.data.UserData:
     private static final long serialVersionUID
-    35:35:public java.lang.String getPassword32()
+    100:100:public java.lang.String getPassword32()
 tk.djcrazy.libCC98.data.UserProfileEntity:
     243:243:public java.lang.String getBbsMasterInfo()
 tk.djcrazy.libCC98.data.UserStatueEntity

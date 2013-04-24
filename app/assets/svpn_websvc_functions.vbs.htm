@@ -1,0 +1,14 @@
+
+<!-- saved from url=(0051)https://61.175.193.50/com/svpn_websvc_functions.vbs -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"></head><body>' 
+    'handle script created by xsl
+    'param 
+     '              scriptTxt[String] :  script code
+     '              scriptType[int] :  SF_REWRITE_TYPE_JS | SF_REWRITE_TYPE_VBS
+     'retvalue:no return value
+'
+function SF_FUNC_handle_xslVBScript(scriptTxt)
+	call ExecuteGlobal(SF_FUNC_Svr_Rewrite(scriptTxt,3))
+end function
+
+</body></html>

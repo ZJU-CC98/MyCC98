@@ -2,64 +2,72 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="4dp" >
-
-    <!-- 帖子标题 -->
-
-    <TextView
-        android:id="@+id/hot_topic_name"
-        style="@style/post_title_style"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingBottom="4dp"
-        android:paddingTop="4dp"
-        android:text="【MSTC】微软技术俱乐部2011年秋季纳新面试名单及安排公布" />
+    android:background="#f9f9f9"
+    android:orientation="vertical" >
 
     <LinearLayout
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingBottom="2dp"
-        android:paddingTop="2dp" >
+        android:background="@drawable/abs__list_selector_holo_dark"
+        android:orientation="vertical"
+        android:padding="4dp" >
 
-        <!-- 所属版面名字 -->
-
-        <TextView
-            android:id="@+id/hot_topic_board_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1.0"
-            android:text="MSTC Microsoft Technology Club"
-            android:textColor="#9400D3"
-            android:textSize="11sp" />
-        <!-- 作者 -->
+        <!-- 帖子标题 -->
 
         <TextView
+            android:id="@+id/hot_topic_name"
+            style="@style/post_title_style"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="作者: "
-            android:textColor="#a0a0a0"
-            android:textSize="10sp" />
+            android:paddingBottom="4dp"
+            android:paddingTop="4dp"
+            android:text="" />
 
-        <TextView
-            android:id="@+id/hot_topic_author"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:layout_marginRight="10dp"
-            android:text="MSTC"
-            android:textColor="#777"
-            android:textSize="10sp" />
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingBottom="2dp"
+            android:paddingTop="2dp" >
 
-        <TextView
-            android:id="@+id/hot_topic_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="16小时 之前"
-            android:textColor="#a0a0a0"
-            android:textSize="10sp" />
+            <!-- 所属版面名字 -->
+
+            <TextView
+                android:id="@+id/hot_topic_board_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.0"
+                android:text="MSTC Microsoft Technology Club"
+                android:textColor="#9400D3"
+                android:textSize="11sp" />
+            <!-- 作者 -->
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="作者: "
+                android:textColor="#a0a0a0"
+                android:textSize="10sp" />
+
+            <TextView
+                android:id="@+id/hot_topic_author"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginRight="10dp"
+                android:text="MSTC"
+                android:textColor="#777"
+                android:textSize="10sp" />
+
+            <TextView
+                android:id="@+id/hot_topic_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="16小时 之前"
+                android:textColor="#a0a0a0"
+                android:textSize="10sp" />
+        </LinearLayout>
     </LinearLayout>
 
 </LinearLayout>

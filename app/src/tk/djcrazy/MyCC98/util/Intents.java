@@ -75,6 +75,8 @@ public class Intents {
             + "PM_SEND_TIME";
     public static final String EXTRA_PM_ID = INTENT_EXTRA_PREFIX
             + "PM_ID";
+    public static final String EXTRA_NEED_LOGIN = INTENT_EXTRA_PREFIX
+            + "NEED_LOGIN";
 
      public static class Builder {
 
@@ -158,6 +160,9 @@ public class Intents {
          }
          public Builder pmId(int type) {
              return add(EXTRA_PM_ID, type);
+         }
+         public Builder needLogin(boolean need) {
+             return add(EXTRA_NEED_LOGIN, need);
          }
          
          

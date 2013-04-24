@@ -5,14 +5,14 @@ import java.util.TimerTask;
 
 import org.json.JSONObject;
 
-import roboguice.inject.ContentView;
 import roboguice.inject.InjectView;
 import roboguice.util.RoboAsyncTask;
-import tk.djcrazy.MyCC98.adapter.HomeActionListAdapter;
 import tk.djcrazy.MyCC98.adapter.HomeFragmentPagerAdapter;
 import tk.djcrazy.MyCC98.dialog.AboutDialog;
+import tk.djcrazy.MyCC98.fragment.HomeBehindMenuFragment;
 import tk.djcrazy.MyCC98.listener.LoadingListener;
 import tk.djcrazy.MyCC98.service.NewVersionDownloadService;
+import tk.djcrazy.MyCC98.util.DisplayUtil;
 import tk.djcrazy.MyCC98.util.Intents;
 import tk.djcrazy.MyCC98.util.Intents.Builder;
 import tk.djcrazy.libCC98.ICC98Service;
@@ -24,11 +24,13 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.net.Uri;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.KeyEvent;
 import android.widget.Toast;
 import ch.boye.httpclientandroidlib.HttpResponse;
@@ -37,15 +39,15 @@ import ch.boye.httpclientandroidlib.impl.client.DefaultHttpClient;
 import ch.boye.httpclientandroidlib.util.EntityUtils;
 
 import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.ActionBar.Tab;
+import com.actionbarsherlock.app.ActionBar.TabListener;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockFragmentActivity;
 import com.google.inject.Inject;
-import com.viewpagerindicator.TitlePageIndicator;
+import com.slidingmenu.lib.SlidingMenu;
 
-@ContentView(R.layout.activity_home)
-public class HomeActivity extends BaseFragmentActivity implements
-		LoadingListener, ActionBar.OnNavigationListener {
+public class HomeActivity extends BaseSlidingFragmentActivity implements
+		LoadingListener, TabListener {
 
 	private static final String UPDATE_LINK = "http://mycc98.sinaapp.com/update.json";
 
@@ -53,68 +55,81 @@ public class HomeActivity extends BaseFragmentActivity implements
 	public static final String USERINFO = "USERINFO";
 	public static final String AUTOLOGIN = "AUTOLOGIN";
 
-	@InjectView(R.id.main_pages)
-	private ViewPager viewPager;
-	@InjectView(R.id.main_titles)
-	private TitlePageIndicator indicator;
-
-	@Inject
-	private ICC98Service service;
-
-	@Override
-	public boolean onNavigationItemSelected(int itemPosition, long itemId) {
-		getSupportActionBar().setSelectedNavigationItem(0);
-		switch (itemPosition) {
-		case 0:
- 			break;
-		case 1:
-			goSettings();
-			break;
-		case 2:
-			Intent profiIntent = new Intent();
-			profiIntent.setClass(HomeActivity.this, ProfileActivity.class);
-			profiIntent.putExtra("userName", service.getUserName());
-			startActivity(profiIntent);
-			break;
-		case 3:
-			doSendFeedBack();
-			break;
-		case 4:
-			showAboutInfo();
-			break;
-		case 5:
-			logOut();
-		}
-		return true;
-	}
-
+ 	private ViewPager viewPager;
+ 	
+ 	@Inject
+ 	private ICC98Service service;
+ 
+ 	
+	Fragment mFragment = null;
+ 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_home);	
+ 		setBehindContentView(R.layout.home_behind_view);
 		PreferenceManager.setDefaultValues(this, R.xml.settings, false);
-		configureActionBar();
 		HomeFragmentPagerAdapter adapter = new HomeFragmentPagerAdapter(
 				getSupportFragmentManager());
 		adapter.setLoadingListener(this);
+		viewPager = (ViewPager) findViewById(R.id.main_pages);
 		viewPager.setAdapter(adapter);
-		indicator.setViewPager(viewPager, 0);
+		configureActionBar();
+ 		viewPager.setOnPageChangeListener(new OnPageChangeListener() {
+			@Override
+			public void onPageSelected(int arg0) {
+				switch (arg0) {
+				case 0:
+					getSlidingMenu().setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
+					break;
+				default:
+					getSlidingMenu().setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
+					break;
+				}
+				getSupportActionBar().setSelectedNavigationItem(arg0);
+			}
+			@Override
+			public void onPageScrolled(int arg0, float arg1, int arg2) {
+			}
+			@Override
+			public void onPageScrollStateChanged(int arg0) {
+			}
+		});
+		if (savedInstanceState == null) {
+			FragmentTransaction t = this.getSupportFragmentManager().beginTransaction();
+			mFragment = new HomeBehindMenuFragment();
+ 			t.replace(R.id.home_behind_view, mFragment);
+			t.commit();
+		} else {
+			mFragment = (Fragment)this.getSupportFragmentManager().findFragmentById(R.id.home_behind_view);
+		}
+
+		// customize the SlidingMenu
+		SlidingMenu sm = getSlidingMenu();
+		sm.setShadowWidth(80); 
+		sm.setBehindScrollScale(0f);
+ 		sm.setBehindOffset(DisplayUtil.dip2px(getApplicationContext(), 150));
+		sm.setFadeDegree(0f);
+		viewPager.setCurrentItem(0);
+		sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
+ 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		new CheckUpdateTask(this).execute();
-		
 	}
 
 	/**
 	 * 
 	 */
+	@SuppressWarnings("deprecation")
 	private void configureActionBar() {
 		ActionBar actionBar = getSupportActionBar();
-		HomeActionListAdapter list = new HomeActionListAdapter(actionBar.getThemedContext(),
-				service.getUserName(), service.getUserAvatar());
-		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-		actionBar.setListNavigationCallbacks(list, this);
-		actionBar.setDisplayShowTitleEnabled(false);
-		actionBar.setDisplayUseLogoEnabled(false);
-		actionBar.setDisplayShowHomeEnabled(false);
-
+		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+		actionBar.addTab(actionBar.newTab().setText("我的版面").setTabListener(this));
+		actionBar.addTab(actionBar.newTab().setText("热门话题").setTabListener(this));
+		actionBar.addTab(actionBar.newTab().setText("版面列表").setTabListener(this));
+		actionBar.addTab(actionBar.newTab().setText("查看新帖").setTabListener(this));
+ 		actionBar.setIcon(new BitmapDrawable(service.getCurrentUserAvatar()));
+ 		actionBar.setHomeButtonEnabled(true);
+		actionBar.setTitle(service.getCurrentUserName());
 	}
 
 	@Override
@@ -129,8 +144,10 @@ public class HomeActivity extends BaseFragmentActivity implements
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-
 		switch (item.getItemId()) {
+		case android.R.id.home:
+			getSlidingMenu().toggle();
+			return true;
 		case R.id.menu_search:
 			onSearchRequested();
 			return true;
@@ -152,34 +169,8 @@ public class HomeActivity extends BaseFragmentActivity implements
 		startSearch(null, false, appData, false);
 		return true;
 	}
-
-	//
-	private void goSettings() {
-		Intent intent = new Intent(this, SettingsActivity.class);
-		startActivity(intent);
-	}
-
-	private void doSendFeedBack() {
-		Builder builder = new Intents.Builder(this, EditActivity.class);
-		Intent intent = builder.requestType(EditActivity.REQUEST_PM)
-				.pmToUser("MyCC.98").pmTitle("MyCC98软件反馈").toIntent();
-		startActivity(intent);
-	}
-
-	private void logOut() {
-		getSharedPreferences(USERINFO, 0).edit().putBoolean(AUTOLOGIN, false)
-				.commit();
-		Intent intent = new Intent();
-		intent.setClass(HomeActivity.this, LoginActivity.class);
-		startActivity(intent);
-		finish();
-	}
-
-	private void showAboutInfo() {
-		new AboutDialog(this).show();
-	}
-
-	@Override
+ 
+ 	@Override
 	public void onLoadComplete(int postion) {
 		if (viewPager.getCurrentItem() == postion) {
 		}
@@ -270,5 +261,18 @@ public class HomeActivity extends BaseFragmentActivity implements
 			return packInfo.versionCode;
 		}
  
+	}
+
+	@Override
+	public void onTabSelected(Tab tab, FragmentTransaction ft) {
+		viewPager.setCurrentItem(tab.getPosition());
+	}
+
+	@Override
+	public void onTabUnselected(Tab tab, FragmentTransaction ft) {
+	}
+
+	@Override
+	public void onTabReselected(Tab tab, FragmentTransaction ft) {
 	}
 }

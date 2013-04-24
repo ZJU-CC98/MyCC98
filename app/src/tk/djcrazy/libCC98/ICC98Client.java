@@ -7,6 +7,8 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.regex.PatternSyntaxException;
 
+import tk.djcrazy.MyCC98.application.MyApplication.UsersInfo;
+import tk.djcrazy.libCC98.data.LoginType;
 import tk.djcrazy.libCC98.data.UserData;
 import tk.djcrazy.libCC98.exception.NoUserFoundException;
 import tk.djcrazy.libCC98.exception.ParseContentException;
@@ -19,7 +21,7 @@ import ch.boye.httpclientandroidlib.client.ClientProtocolException;
 import ch.boye.httpclientandroidlib.client.HttpClient;
 
 public interface ICC98Client {
-	public UserData getUserData();
+	public UserData getCurrentUserData();
 
 	/**
 	 * Login method
@@ -34,7 +36,7 @@ public interface ICC98Client {
 	 * @throws ParseException
 	 * @throws NetworkErrorException
 	 */
-	public void doLogin(String id, String pw32, String pw16) throws ClientProtocolException,
+	public void doLogin(String id, String pw32, String pw16, String proxyName, String proxyPwd, LoginType type) throws ClientProtocolException,
 			IOException, IllegalAccessException, ParseException,
 			ParseContentException, NetworkErrorException;
 
@@ -205,15 +207,21 @@ public interface ICC98Client {
 	public Bitmap getUserImg(String userName) throws ClientProtocolException,
 			ParseException, IOException, ParseContentException;
 
-	public void addHttpBasicAuthorization(String authName, String authPassword) ;
+	public void addHttpBasicAuthorization(UserData userData2,String authName, String authPassword) ;
 
 	void clearLoginInfo();
 
 	public String getDomain();
-
-	public void setUseProxy(boolean b);
-
-	public Bitmap getUserAvatar();
+ 
+	public Bitmap getCurrentUserAvatar();
 	
-	public HttpClient getHttpClient();
+	public List<Bitmap> getuserAvatars();
+
+	public UsersInfo getusersInfo();
+
+	public String getDomain(LoginType type);
+
+	public void switchToUser(int index);
+
+	public void deleteUserInfo(int pos);
 }

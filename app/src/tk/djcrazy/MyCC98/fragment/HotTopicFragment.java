@@ -19,7 +19,7 @@ import android.widget.ListView;
 
 import com.google.inject.Inject;
 
-public class HotTopicFragment extends PagedPullToRefeshListFragment<HotTopicEntity> {
+public class HotTopicFragment extends PullToRefeshListFragment<HotTopicEntity> {
 	private static final String TAG = "HotTopicFragment";
 	@Inject
 	private ICC98Service service;
@@ -46,9 +46,5 @@ public class HotTopicFragment extends PagedPullToRefeshListFragment<HotTopicEnti
 	protected BaseItemListAdapter<HotTopicEntity> createAdapter(
 			List<HotTopicEntity> items) {
 		return new HotTopicListAdapter(getActivity(), items);
-	}
-
-	@Override
-	public void OnLoadMore(int currentPage, int pageSize) {
 	}
 }

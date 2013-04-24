@@ -96,19 +96,19 @@ public class EditActivity extends BaseFragmentActivity implements OnClickListene
 	@InjectExtra(Intents.EXTRA_REQUEST_TYPE)
 	private int requestType;
 	@InjectExtra(value = Intents.EXTRA_BOARD_ID, optional = true)
-	private String boardID;
+	private String boardID="";
 	@InjectExtra(value = Intents.EXTRA_BOARD_NAME, optional = true)
-	private String boardName;
+	private String boardName="";
 	@InjectExtra(value = Intents.EXTRA_POST_ID, optional = true)
-	private String postId;
+	private String postId="";
 	@InjectExtra(value = Intents.EXTRA_POST_NAME, optional = true)
-	private String postName;
+	private String postName="";
 	@InjectExtra(value = Intents.EXTRA_REPLY_USER_NAME, optional = true)
-	private String replyUserName;
+	private String replyUserName="";
 	@InjectExtra(value = Intents.EXTRA_REPLY_USER_POST_TIME, optional = true)
-	private String replyUserPostTime;
+	private String replyUserPostTime="";
 	@InjectExtra(value = Intents.EXTRA_REPLY_CONTENT, optional = true)
-	private String replyUserPostContent;
+	private String replyUserPostContent="";
 	@InjectExtra(value = Intents.EXTRA_FLOOR_NUMBER, optional = true)
 	private int quoteFloorNumber;
 	@InjectExtra(value = Intents.EXTRA_PAGE_NUMBER, optional = true)
@@ -116,11 +116,11 @@ public class EditActivity extends BaseFragmentActivity implements OnClickListene
 	@InjectExtra(value = Intents.EXTRA_IS_QUOTE_USER, optional = true)
 	private boolean isQuoteUser;
 	@InjectExtra(value = Intents.EXTRA_PM_TO_USER, optional = true)
-	private String pmReplyName;
+	private String pmReplyName="";
 	@InjectExtra(value = Intents.EXTRA_PM_TITLE, optional = true)
-	private String pmReplyTopic;
+	private String pmReplyTopic="";
 	@InjectExtra(value = Intents.EXTRA_PM_CONTENT, optional = true)
-	private String pmReplyContent;
+	private String pmReplyContent="";
 
 	@InjectView(R.id.reply_title_edit)
 	private EditText replyTitleEditText;
@@ -177,7 +177,7 @@ public class EditActivity extends BaseFragmentActivity implements OnClickListene
 	private void configureActionBar() {
 		ActionBar actionBar = getSupportActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
-		actionBar.setLogo(new BitmapDrawable(service.getUserAvatar()));
+		actionBar.setLogo(new BitmapDrawable(service.getCurrentUserAvatar()));
 		if (requestType == REQUEST_REPLY) {
 			actionBar.setTitle(Html.fromHtml("回复：" + postName));
 			replyContentEditText.requestFocus();
@@ -191,8 +191,7 @@ public class EditActivity extends BaseFragmentActivity implements OnClickListene
 			actionBar.setTitle("发表新话题：" + boardName);
 		} else if (requestType == REQUEST_PM) {
 			actionBar.setTitle(Html.fromHtml("站短：" + pmReplyName));
-			pmReplyTopic = pmReplyTopic == null ? "" : "回复: " + pmReplyTopic;
-			replyContentEditText.setText(Html.fromHtml(pmReplyContent));
+ 			replyContentEditText.setText(Html.fromHtml(pmReplyContent));
 			replyTitleEditText.setText(Html.fromHtml(pmReplyTopic));
 		} else if (requestType == REQUEST_EDIT) {
 			replyContentEditText.setText(Html.fromHtml(editContent));
@@ -268,8 +267,7 @@ public class EditActivity extends BaseFragmentActivity implements OnClickListene
 	 */
 	private void ensure() {
 		String titleString = replyTitleEditText.getText().toString();
-		Spannable spannable = replyContentEditText.getText();
-		String contentString = replyContentEditText.getText().toString()
+ 		String contentString = replyContentEditText.getText().toString()
 				+ appendTail;
 		contentString = replaceAllImage(contentString);
 		if (TextHelper.isEmpty(contentString)) {
@@ -313,7 +311,7 @@ public class EditActivity extends BaseFragmentActivity implements OnClickListene
 		builder.setPositiveButton("是", new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				String pmTitle = "用户：" + service.getUserName() + " 在帖子中回复了你";
+				String pmTitle = "用户：" + service.getCurrentUserName() + " 在帖子中回复了你";
 				String pmContent = "详情请点击："
 						+ manager.getPostUrl(boardID, postId, quotePageNumber)
 						+ "#" + quoteFloorNumber;

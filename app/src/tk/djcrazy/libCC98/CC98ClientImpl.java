@@ -16,16 +16,26 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.UnknownServiceException;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.PatternSyntaxException;
 
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+
 import tk.djcrazy.MyCC98.application.MyApplication;
+import tk.djcrazy.MyCC98.application.MyApplication.UsersInfo;
 import tk.djcrazy.MyCC98.security.Md5;
+import tk.djcrazy.libCC98.data.LoginType;
 import tk.djcrazy.libCC98.data.UserData;
 import tk.djcrazy.libCC98.exception.NoUserFoundException;
 import tk.djcrazy.libCC98.exception.ParseContentException;
 import tk.djcrazy.libCC98.util.RegexUtil;
+import android.R.integer;
 import android.accounts.NetworkErrorException;
 import android.app.Application;
 import android.graphics.Bitmap;
@@ -82,33 +92,71 @@ public class CC98ClientImpl implements ICC98Client {
 
 	@Inject
 	private Application application;
-	private UserData userData;
 	private DefaultHttpClient client;
 
 	@Override
-	public UserData getUserData() {
-		if (userData == null) {
-			userData = ((MyApplication) application).getUserData();
-		}
+	public UserData getCurrentUserData() {
+		UserData userData = ((MyApplication) application).getCurrentUserData();
 		return userData;
 	}
 
 	@Override
-	public Bitmap getUserAvatar() {
-		return ((MyApplication) application).getUserAvatar();
+	public Bitmap getCurrentUserAvatar() {
+		return ((MyApplication) application).getCurrentUserAvatar();
 	}
 
 	public DefaultHttpClient getHttpClient() {
- 		if (client == null) {
+		getHttpClient(false);
+		return client;
+	}
+
+	public DefaultHttpClient getHttpClient(boolean forceRefresh) {
+		if (client == null || forceRefresh) {
+			genHttpClient();
+			if (getCurrentUserData().getCookieStore() != null) {
+				client.setCookieStore(getCurrentUserData().getCookieStore());
+			}
+			if (getCurrentUserData().getLoginType() == LoginType.USER_DEFINED
+					&& (getCurrentUserData().getProxyUserName() != null)) {
+				addHttpBasicAuthorization(getCurrentUserData(),
+						getCurrentUserData().getProxyUserName(),
+						getCurrentUserData().getProxyPassword());
+			}
+		}
+		return client;
+	}
+
+	/**
+	 * @throws NoSuchAlgorithmException
+	 * @throws KeyManagementException
+	 */
+	private void genHttpClient() {
+		try {
 			HttpParams params = new BasicHttpParams();
 			HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
 			HttpProtocolParams.setContentCharset(params, HTTP.UTF_8);
 			HttpProtocolParams.setUseExpectContinue(params, true);
+			X509TrustManager xtm = new X509TrustManager() {
+				public void checkClientTrusted(X509Certificate[] chain,
+						String authType) {
+				}
+
+				public void checkServerTrusted(X509Certificate[] chain,
+						String authType) {
+				}
+
+				public X509Certificate[] getAcceptedIssuers() {
+					return null;
+				}
+			};
+			SSLContext ctx = SSLContext.getInstance("TLS");
+			ctx.init(null, new TrustManager[] { xtm }, null);
+			SSLSocketFactory sf = new SSLSocketFactory(ctx,
+					SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
 			SchemeRegistry schReg = new SchemeRegistry();
 			schReg.register(new Scheme("http", PlainSocketFactory
 					.getSocketFactory(), 80));
-			schReg.register(new Scheme("https", SSLSocketFactory
-					.getSocketFactory(), 443));
+			schReg.register(new Scheme("https", 443, sf));
 			ClientConnectionManager conMgr = new ThreadSafeClientConnManager(
 					params, schReg);
 			client = new DefaultHttpClient(conMgr, params);
@@ -116,16 +164,10 @@ public class CC98ClientImpl implements ICC98Client {
 					CoreConnectionPNames.CONNECTION_TIMEOUT, 30000);
 			client.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT,
 					30000);
-			if (getUserData().getCookieStore() != null) {
-				client.setCookieStore(getUserData().getCookieStore());
-			}
-			if (getUserData().isProxyVersion()
-					&& (getUserData().getProxyUserName() != null)) {
-				addHttpBasicAuthorization(getUserData().getProxyUserName(),
-						getUserData().getProxyPassword());
-			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new IllegalArgumentException("Initial http params failed");
 		}
-		return client;
 	}
 
 	@Override
@@ -134,13 +176,27 @@ public class CC98ClientImpl implements ICC98Client {
 		getHttpClient().getCredentialsProvider().clear();
 	}
 
-	@Override
-	public void doLogin(String id, String pw32, String pw16) throws ClientProtocolException,
-			IOException, IllegalAccessException, ParseException,
-			ParseContentException, NetworkErrorException {
+	public DefaultHttpClient getNoCurrentUserHttpClient() {
+		genHttpClient();
+		return client;
+	}
 
-		HttpPost httpost = new HttpPost(manager.getLoginUrl());
- 		List<NameValuePair> nvps = new ArrayList<NameValuePair>();
+	@Override
+	public void doLogin(String id, String pw32, String pw16, String proxyName,
+			String proxyPwd, LoginType loginType)
+			throws ClientProtocolException, IOException,
+			IllegalAccessException, ParseException, ParseContentException,
+			NetworkErrorException {
+		getNoCurrentUserHttpClient();
+		UserData newUserData = new UserData();
+		if (loginType == LoginType.USER_DEFINED) {
+			addHttpBasicAuthorization(newUserData, proxyName, proxyPwd);
+		} else if (loginType == LoginType.RVPN) {
+			// do rvpn login
+			authenticateForRVPN(proxyName, proxyPwd);
+		}
+		HttpPost httpost = new HttpPost(manager.getLoginUrl(loginType));
+		List<NameValuePair> nvps = new ArrayList<NameValuePair>();
 		nvps.add(new BasicNameValuePair("a", "i"));
 		nvps.add(new BasicNameValuePair("u", id));
 		nvps.add(new BasicNameValuePair("p", pw32));
@@ -151,15 +207,42 @@ public class CC98ClientImpl implements ICC98Client {
 			throw new NetworkErrorException(SERVER_ERROR);
 		}
 		String sysMsg = EntityUtils.toString(response.getEntity());
-		if (sysMsg.contains("密码错误") || sysMsg.contains("论坛错误信息")) {
+ 		if (!sysMsg.contains("9898")) {
 			throw new IllegalAccessException(ID_PASSWD_ERROR_MSG);
 		}
-		getUserData().setUserName(id);
-		getUserData().setPassword16(pw16);
-		getUserData().setPassword32(pw32);
-		getUserData().setCookieStore(getHttpClient().getCookieStore());
-		getLoginUserImgAndGender();
-		((MyApplication) application).storeUserInfo();
+		newUserData.setUserName(id);
+		newUserData.setPassword16(pw16);
+		newUserData.setPassword32(pw32); 
+		newUserData.setLoginType(loginType);
+		newUserData.setProxyUserName(proxyName);
+		newUserData.setProxyPassword(proxyPwd);
+		newUserData.setCookieStore(getHttpClient().getCookieStore());
+		Bitmap bitmap = getLoginUserImgAndGender(newUserData, loginType);
+		System.out.println("bit map null:"+( bitmap==null));
+		((MyApplication) application).addNewUser(newUserData, bitmap, true);
+		((MyApplication) application).storeUsersInfo();
+	}
+
+	private void authenticateForRVPN(String proxyName, String proxyPwd) {
+		try {
+			String initUrl = "https://61.175.193.50//por/login_auth.csp?dev=android-phone&language=zh_CN";
+			String initPage = getPage(initUrl);
+		    List<NameValuePair> nvps = new ArrayList<NameValuePair>();
+			nvps.add(new BasicNameValuePair("svpn_name", proxyName));
+			nvps.add(new BasicNameValuePair("svpn_rand_code", ""));
+			nvps.add(new BasicNameValuePair("svpn_password", proxyPwd));
+			HttpPost post = new HttpPost("https://61.175.193.50//por/login_psw.csp?type=cs&dev=android-phone&dev=android-phone&language=zh_CN");
+			post.setEntity(new UrlEncodedFormEntity(nvps, HTTP.UTF_8));
+			HttpResponse response = client.execute(post);
+			String result = EntityUtils.toString(response.getEntity());
+			System.err.println("authenticateForRVPN result：" + result);
+			if (!result.contains("<Result>1</Result>")) {
+				throw new IllegalArgumentException("RVPN 用户名或密码不正确!");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new IllegalArgumentException("do rvpn authenticate failed");
+		}
 	}
 
 	@Override
@@ -171,9 +254,9 @@ public class CC98ClientImpl implements ICC98Client {
 		HttpResponse response = null;
 		String html = null;
 		httpPost.addHeader("Referer", manager.getPushNewPostReferer(boardID));
-		nvpsList.add(new BasicNameValuePair("username", getUserData()
+		nvpsList.add(new BasicNameValuePair("username", getCurrentUserData()
 				.getUserName()));
-		nvpsList.add(new BasicNameValuePair("passwd", getUserData()
+		nvpsList.add(new BasicNameValuePair("passwd", getCurrentUserData()
 				.getPassword16()));
 		httpPost.setEntity(new UrlEncodedFormEntity(nvpsList, HTTP.UTF_8));
 		response = getHttpClient().execute(httpPost);
@@ -214,12 +297,12 @@ public class CC98ClientImpl implements ICC98Client {
 
 		httpPost.addHeader("Referer",
 				manager.getSubmitReplyReferer(boardID, rootID));
-		nvpsList.add(new BasicNameValuePair("username", getUserData()
+		nvpsList.add(new BasicNameValuePair("username", getCurrentUserData()
 				.getUserName()));
-		nvpsList.add(new BasicNameValuePair("passwd", getUserData()
+		nvpsList.add(new BasicNameValuePair("passwd", getCurrentUserData()
 				.getPassword16()));
 		httpPost.setEntity(new UrlEncodedFormEntity(nvpsList, HTTP.UTF_8));
-//		Log.d(TAG, "request: "+EntityUtils.toString(httpPost.getEntity()));
+		// Log.d(TAG, "request: "+EntityUtils.toString(httpPost.getEntity()));
 		response = getHttpClient().execute(httpPost);
 		entity = response.getEntity();
 		if (entity != null) {
@@ -275,15 +358,16 @@ public class CC98ClientImpl implements ICC98Client {
 	public String getPage(String link) throws ClientProtocolException,
 			IOException, ParseException {
 		HttpGet get = new HttpGet(link);
-//		Log.d(TAG, "get page: " + link);
+		 Log.d(TAG, "get page: " + link);
 		HttpResponse rsp = null;
 		rsp = getHttpClient().execute(get);
 		int mCode = rsp.getStatusLine().getStatusCode();
 		if (mCode != 200) {
-			throw new IOException("服务器有误！");
+ 			throw new IOException("服务器有误！");
 		}
 		HttpEntity entity = rsp.getEntity();
 		String content = EntityUtils.toString(entity);
+//		System.out.println(content);
 		return content;
 	}
 
@@ -448,14 +532,11 @@ public class CC98ClientImpl implements ICC98Client {
 
 	@Override
 	public Bitmap getBitmapFromUrl(String url) throws IOException {
-		BufferedInputStream bis = null;
-		URL img_url = new URL(url);
-		URLConnection conn = img_url.openConnection();
-		conn.setConnectTimeout(5000);
-		conn.connect();
-		InputStream in = conn.getInputStream();
-		bis = new BufferedInputStream(in);
-		return BitmapFactory.decodeStream(bis);
+		System.out.println("avatar utl:"+url);
+		System.out.println("getBitmapFromUrl");
+		HttpGet get = new HttpGet(url);
+		HttpResponse response = getHttpClient().execute(get);
+		return BitmapFactory.decodeStream(response.getEntity().getContent());
 	}
 
 	@Override
@@ -464,33 +545,40 @@ public class CC98ClientImpl implements ICC98Client {
 		return getBitmapFromUrl(getUserImgUrl(userName));
 	}
 
-	private void getLoginUserImgAndGender() throws ClientProtocolException,
-			ParseException, IOException, ParseContentException {
-		String html = getPage(manager.getUserProfileUrl(getUserData()
-				.getUserName()));
+	private Bitmap getLoginUserImgAndGender(UserData userData2, LoginType type)
+			throws ClientProtocolException, ParseException, IOException,
+			ParseContentException {
+		String html = getPage(manager.getUserProfileUrl(type,
+				userData2.getUserName()));
+		System.out.println("profile url:"+manager.getUserProfileUrl(type,
+				userData2.getUserName()));
+//		System.out.println(html);
 		try {
 			String url = RegexUtil.getMatchedString(
 					CC98ParseRepository.USER_PROFILE_AVATAR_REGEX, html);
 			if (!url.startsWith("http") && !url.startsWith("ftp")) {
-				url = getDomain() + url;
+				url = manager.getClientUrl(type) + url;
 			}
-			((MyApplication) application).setUserAvatar(getBitmapFromUrl(url));
+			System.out.println("avatar utl:"+url);
+			return getBitmapFromUrl(url);
 		} catch (Exception e) {
-			((MyApplication) application).setUserAvatar(BitmapFactory
-					.decodeFile("file:///android_asset/pic/no_avatar.jpg"));
+			e.printStackTrace();
+			return BitmapFactory
+					.decodeFile("file:///android_asset/pic/no_avatar.jpg");
 		}
 	}
 
 	@Override
-	public void addHttpBasicAuthorization(String authName, String authPassword) {
+	public void addHttpBasicAuthorization(UserData userData2, String authName,
+			String authPassword) {
 		try {
-			URI uri = new URI(getDomain());
+			URI uri = new URI(getDomain(LoginType.USER_DEFINED));
 			getHttpClient().getCredentialsProvider().setCredentials(
 					new AuthScope(uri.getHost(), uri.getPort(),
 							AuthScope.ANY_SCHEME),
 					new UsernamePasswordCredentials(authName, authPassword));
-			getUserData().setProxyUserName(authName);
-			getUserData().setProxyPassword(authPassword);
+			userData2.setProxyUserName(authName);
+			userData2.setProxyPassword(authPassword);
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
 			throw new Error("Very bad error:(", e);
@@ -503,7 +591,39 @@ public class CC98ClientImpl implements ICC98Client {
 	}
 
 	@Override
-	public void setUseProxy(boolean b) {
-		getUserData().setProxyVersion(b);
+	public String getDomain(LoginType type) {
+		return manager.getClientUrl(type);
+	}
+
+	@Override
+	public List<Bitmap> getuserAvatars() {
+		return ((MyApplication) application).getUserAvatars();
+	}
+
+	@Override
+	public UsersInfo getusersInfo() {
+		return ((MyApplication) application).getUsersInfo();
+	}
+
+	@Override
+	public void switchToUser(int index) {
+		getusersInfo().currentUserIndex = index;
+		((MyApplication) application).storeUsersInfo();
+		getHttpClient(true);
+	}
+
+	@Override
+	public void deleteUserInfo(int pos) {
+		if (pos!=getusersInfo().currentUserIndex) {
+			Log.d(TAG, "to delete:"+pos);
+			UsersInfo info = getusersInfo();
+			List<Bitmap> avatars = getuserAvatars();
+			UserData currentUser = getCurrentUserData();
+			info.users.remove(pos);
+			avatars.remove(pos);
+			int newPos = info.users.indexOf(currentUser);
+			info.currentUserIndex = newPos;
+			((MyApplication) application).storeUsersInfo();
+		}
 	}
 }

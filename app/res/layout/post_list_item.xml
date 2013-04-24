@@ -2,104 +2,113 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:background="@color/board_info_background"
-    android:orientation="vertical"
-    android:padding="2dp" >
+    android:background="#f9f9f9"
+    android:orientation="vertical" >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical" >
+        android:background="@drawable/abs__list_selector_holo_dark"
+        android:orientation="vertical"
+        android:padding="2dp" >
 
-        <TextView
-            android:id="@+id/post_title"
-            style="@style/post_title_style"
-            android:gravity="left|center_vertical"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="2dp"
-            android:layout_weight="1.0"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp"
-            android:background="@drawable/listview_selector"
-             android:text="Test post topic, 要长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长" />
-            <Button android:layout_height="0.1dp"
-                android:layout_width="0.1dp" 
-                android:alpha="0"/>
-        
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" 
-            android:layout_marginRight="5dp">
+            android:gravity="center_vertical" >
 
             <TextView
-                android:id="@+id/post_list_reply_num"
+                android:id="@+id/post_title"
+                style="@style/post_title_style"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="2dp"
+                android:layout_weight="1.0"
+                android:background="@drawable/listview_selector"
+                android:gravity="left|center_vertical"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp"
+                android:text="Test post topic, 要长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长" />
+
+            <Button
+                android:layout_width="0.1dp"
+                android:layout_height="0.1dp"
+                android:alpha="0" />
+
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="12379/11000"
-                android:textSize="11sp" />
-        </LinearLayout>
-    </LinearLayout>
+                android:layout_marginRight="5dp" >
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal" >
+                <TextView
+                    android:id="@+id/post_list_reply_num"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="12379/11000"
+                    android:textSize="11sp" />
+            </LinearLayout>
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1.0"
+            android:layout_marginLeft="10dp"
+            android:gravity="center_vertical"
             android:orientation="horizontal" >
 
-            <TextView
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.0"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="作者: "
+                    android:textColor="#999"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/post_author"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="DJ"
+                    android:textColor="@color/post_list_title"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/post_last_reply_clickable"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="作者: "
-                android:textColor="#999"
-                android:textSize="12sp" />
+                android:background="@drawable/listview_selector"
+                android:padding="8dp" >
 
-            <TextView
-                android:id="@+id/post_author"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="DJ"
-                android:textColor="@color/post_list_title"
-                android:textSize="12sp" />
-        </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="最后回复: "
+                    android:textColor="@color/post_list_last_reply_text_color"
+                    android:textSize="11sp" />
 
-        <LinearLayout
-            android:id="@+id/post_last_reply_clickable"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/listview_selector"
-            android:padding="8dp" >
+                <TextView
+                    android:id="@+id/post_last_reply_author"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="黑一"
+                    android:textColor="@color/post_list_last_reply_text_color"
+                    android:textSize="11sp" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="最后回复: "
-                android:textColor="@color/post_list_last_reply_text_color"
-                android:textSize="11sp" />
-
-            <TextView
-                android:id="@+id/post_last_reply_author"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="黑一"
-                android:textColor="@color/post_list_last_reply_text_color"
-                android:textSize="11sp" />
-
-            <TextView
-                android:id="@+id/post_last_reply_time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:text="2010-01-21"
-                android:textColor="@color/post_list_last_reply_text_color"
-                android:textSize="11sp" />
+                <TextView
+                    android:id="@+id/post_last_reply_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:text="2010-01-21"
+                    android:textColor="@color/post_list_last_reply_text_color"
+                    android:textSize="11sp" />
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 

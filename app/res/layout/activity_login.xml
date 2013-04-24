@@ -5,10 +5,10 @@
     android:background="@color/white" >
 
     <LinearLayout
-         android:layout_width="match_parent"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_gravity="center"
         android:gravity="center"
-				android:layout_gravity="center"
         android:orientation="vertical" >
 
         <ImageView
@@ -18,20 +18,20 @@
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
             android:layout_marginTop="5dp"
-            android:translationY="100dp"
             android:scaleType="fitXY"
-            android:src="@drawable/login_top" />
+            android:src="@drawable/login_top"
+            android:translationY="100dp" />
 
         <LinearLayout
             android:id="@+id/login_field"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-             android:layout_marginLeft="20dip"
+            android:layout_marginLeft="20dip"
             android:layout_marginRight="20dip"
+            android:alpha="0"
             android:orientation="vertical"
-            android:alpha="1"
-            android:padding="10dip"  >
+            android:padding="10dip" >
 
             <LinearLayout
                 android:layout_width="fill_parent"
@@ -45,22 +45,25 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/white"
-                    android:orientation="horizontal" >
+                    android:orientation="horizontal"
+                    android:padding="5dp" >
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:scaleType="fitStart"
-                        android:src="@drawable/userid_signin_icon" />
+                        android:src="@drawable/social_person" />
 
                     <EditText
                         android:id="@+id/username"
                         android:layout_width="fill_parent"
                         android:layout_height="match_parent"
+                        android:layout_marginLeft="15dp"
                         android:background="@color/white"
                         android:hint="用户名"
                         android:singleLine="true"
                         android:textColor="@color/login_text_color"
+                        android:textCursorDrawable="@null"
                         android:textSize="15sp" />
                 </LinearLayout>
 
@@ -73,51 +76,34 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/white"
-                    android:orientation="horizontal" >
+                    android:orientation="horizontal"
+                    android:padding="5dp" >
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:scaleType="fitStart"
-                        android:src="@drawable/password_signin_icon" />
+                        android:src="@drawable/login_pwd" />
 
                     <EditText
                         android:id="@+id/password"
                         android:layout_width="fill_parent"
                         android:layout_height="match_parent"
+                        android:layout_marginLeft="15dp"
                         android:background="@color/white"
                         android:hint="密码"
                         android:password="true"
                         android:singleLine="true"
                         android:textColor="@color/login_text_color"
-                        android:textSize="15sp" />
+                        android:textCursorDrawable="@null"
+                         android:textSize="15sp" />
                 </LinearLayout>
             </LinearLayout>
 
-            <LinearLayout
+             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
-
-                <CheckBox
-                    android:id="@+id/remember_password"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                     android:text="@string/rem_pw"
-                    android:textColor="@color/login_text_color" />
-
-                <CheckBox
-                    android:id="@+id/auto_login"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/auto_login"
-                    android:textColor="@color/login_text_color" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="32dp" >
+                android:layout_height="32dp" 
+                android:layout_marginTop="30dp">
 
                 <Button
                     android:id="@+id/proxy_setting"

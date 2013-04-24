@@ -5,5 +5,4 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:background="@color/post_list_background">
-
  </LinearLayout>

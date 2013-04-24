@@ -45,7 +45,7 @@ public class PmActivity extends BaseFragmentActivity implements OnPageChangeList
 	private void configureActionBar() {
 		ActionBar actionBar = getSupportActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
-		actionBar.setLogo(new BitmapDrawable(service.getUserAvatar()));
+		actionBar.setLogo(new BitmapDrawable(service.getCurrentUserAvatar()));
 		actionBar.setTitle("论坛短消息");
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 		actionBar.addTab(actionBar.newTab().setText("收件箱").setTabListener(this));

@@ -17,14 +17,16 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent" 
-    android:background="#f9f9f9">
+    android:background="@drawable/dark_main_background">
 
     <tk.djcrazy.MyCC98.view.PagedPullToRefreshListView
         android:id="@android:id/list"
         style="@style/listview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone" />
+        android:visibility="gone" 
+        android:headerDividersEnabled="false"
+        android:footerDividersEnabled="false"/>
 
     <TextView
         android:id="@android:id/empty"

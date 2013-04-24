@@ -14,7 +14,7 @@
         android:text="点击加载更多"
         android:paddingLeft="30dp"
         android:paddingRight="30dp"
-         android:textColor="#a0a0a0"
+        android:textColor="#a0a0a0"
         android:layout_centerInParent="true"
         android:background="@drawable/listview_selector" />
     <ProgressBar

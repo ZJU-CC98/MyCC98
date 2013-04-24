@@ -6,6 +6,13 @@
     android:layout_height="fill_parent"
     android:scrollbars="vertical"
     android:background="@color/postcontent_background">
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#f9f9f9"
+        android:orientation="vertical" >
+    
     <TableRow  
     android:layout_height="wrap_content"
     android:layout_width="match_parent" > 
@@ -42,4 +49,5 @@
     android:textColor="@color/reply_content"/>
      
     </TableRow>
+</LinearLayout>
 </LinearLayout>
