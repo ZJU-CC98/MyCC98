@@ -611,4 +611,19 @@ public class CC98ClientImpl implements ICC98Client {
 		((MyApplication) application).storeUsersInfo();
 		getHttpClient(true);
 	}
+
+	@Override
+	public void deleteUserInfo(int pos) {
+		if (pos!=getusersInfo().currentUserIndex) {
+			Log.d(TAG, "to delete:"+pos);
+			UsersInfo info = getusersInfo();
+			List<Bitmap> avatars = getuserAvatars();
+			UserData currentUser = getCurrentUserData();
+			info.users.remove(pos);
+			avatars.remove(pos);
+			int newPos = info.users.indexOf(currentUser);
+			info.currentUserIndex = newPos;
+			((MyApplication) application).storeUsersInfo();
+		}
+	}
 }

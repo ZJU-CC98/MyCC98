@@ -231,4 +231,9 @@ public class CC98ServiceImpl implements ICC98Service {
 	public void switchToUser(int index) {
 		cc98Client.switchToUser(index);
 	}
+
+	@Override
+	public void deleteUserInfo(int pos) {
+		cc98Client.deleteUserInfo(pos);
+	}
 }

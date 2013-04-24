@@ -222,4 +222,6 @@ public interface ICC98Client {
 	public String getDomain(LoginType type);
 
 	public void switchToUser(int index);
+
+	public void deleteUserInfo(int pos);
 }

@@ -42,7 +42,8 @@
 	        android:layout_height="wrap_content"
 	        android:layout_width="match_parent"
 	        android:layout_weight="1.0"
-	        android:text="其他代理"/>
+	        android:text="其他代理"
+	        android:checked="true"/>
 	    
 	</RadioGroup>
  	<CheckBox 

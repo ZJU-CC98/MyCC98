@@ -118,4 +118,6 @@ public interface ICC98Service {
 	
 	public void switchToUser(int index);
 
+	public void deleteUserInfo(int pos);
+
 }

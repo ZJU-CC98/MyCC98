@@ -11,6 +11,7 @@ import tk.djcrazy.MyCC98.adapter.AccountListAdapter;
 import tk.djcrazy.MyCC98.dialog.AboutDialog;
 import tk.djcrazy.MyCC98.util.Intents;
 import tk.djcrazy.libCC98.ICC98Service;
+import android.R.integer;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
@@ -20,17 +21,19 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnLongClickListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 
 import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
 import com.google.inject.Inject;
  
-public class HomeBehindMenuFragment extends RoboSherlockFragment implements OnItemClickListener, android.view.View.OnClickListener {
+public class HomeBehindMenuFragment extends RoboSherlockFragment implements OnItemLongClickListener, OnItemClickListener, android.view.View.OnClickListener {
 
 	@InjectView(R.id.home_behind_listview)
 	private ListView mAccountListView;
@@ -47,6 +50,7 @@ public class HomeBehindMenuFragment extends RoboSherlockFragment implements OnIt
 	private Button mSettingButton;
 	@Inject
 	private ICC98Service service;
+	AccountListAdapter adapter;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -57,13 +61,15 @@ public class HomeBehindMenuFragment extends RoboSherlockFragment implements OnIt
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
- 		mAccountListView.setAdapter(new AccountListAdapter(getActivity(), service.getusersInfo(),service.getUserAvatars()));
+		adapter = new AccountListAdapter(getActivity(), service.getusersInfo(),service.getUserAvatars());
+ 		mAccountListView.setAdapter(adapter);
  		mAccountListView.setOnItemClickListener(this);
  		mAddAccountView.setOnClickListener(this);
  		mProfileButton.setOnClickListener(this);
  		mFeedbackButton.setOnClickListener(this);
  		mSettingButton.setOnClickListener(this);
  		mAboutButton.setOnClickListener(this);
+ 		mAccountListView.setOnItemLongClickListener(this);
 	}
 
 	@Override
@@ -119,5 +125,30 @@ public class HomeBehindMenuFragment extends RoboSherlockFragment implements OnIt
 		default:
 			break;
 		}
+	}
+
+	@Override
+	public boolean onItemLongClick(AdapterView<?> parent, View view,
+			int position, long id) {
+		final int pos = position;
+		if (pos!=service.getusersInfo().currentUserIndex) {
+			AlertDialog.Builder  builder = new Builder(getActivity());
+			builder.setTitle("提醒").setMessage("确认删除账号？").setNegativeButton("取消", new OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					dialog.dismiss();
+				}
+			});
+			builder.setPositiveButton("确定", new OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					service.deleteUserInfo(pos);
+					adapter.notifyDataSetChanged();
+ 					dialog.dismiss();
+ 				}
+			});
+			builder.create().show();
+		}
+		return true;
 	}
 }
