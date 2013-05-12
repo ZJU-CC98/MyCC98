@@ -8,6 +8,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import roboguice.service.RoboIntentService;
+import roboguice.util.RoboAsyncTask;
 import tk.djcrazy.MyCC98.R;
 import tk.djcrazy.MyCC98.util.Intents;
 import android.app.Activity;
@@ -53,41 +54,69 @@ public class NewVersionDownloadService extends RoboIntentService {
 	protected void onHandleIntent(Intent arg0) {
 		link = arg0.getStringExtra(Intents.EXTRA_DOWNLOAD_LINK);
 		createNotification();
-		FileOutputStream fileOutputStream = null;
-		try {
-			HttpURLConnection connection = (HttpURLConnection) new URL(link)
-					.openConnection();
-			fileOutputStream = new FileOutputStream(saveFile);
-			int length = Integer.parseInt(connection.getHeaderField("Content-Length"));
- 			mBuilder.setContentText("软件包大小："+(length/1024)+"KB");
-			mBuilder.setProgress(length, 0, false);
-			InputStream inputStream = connection.getInputStream();
-			int temp = 0;
-			int count = 0;
-			byte[] data = new byte[10240];
-			while ((temp = inputStream.read(data)) != -1) {
-				fileOutputStream.write(data, 0, temp);
-				count+=temp;
-				mBuilder.setProgress(length, count, false);
-				Notification notification = mBuilder.build();
-				notification.flags = Notification.FLAG_NO_CLEAR;
-				mNotificationManager.notify(NODIFICATION_ID, mBuilder.build());
+		new DownloadTask(this).execute();
+	}
+	
+	private class DownloadTask extends RoboAsyncTask<String> {
+
+		protected DownloadTask(Context context) {
+			super(context);
+		}
+		
+		@Override
+		public String call() throws Exception {
+			FileOutputStream fileOutputStream = null;
+			try {
+				HttpURLConnection connection = (HttpURLConnection) new URL(link)
+						.openConnection();
+				fileOutputStream = new FileOutputStream(saveFile);
+				int length = Integer.parseInt(connection.getHeaderField("Content-Length"));
+	 			mBuilder.setContentText("软件包大小："+(length/1024)+"KB");
+				mBuilder.setProgress(length, 0, false);
+				InputStream inputStream = connection.getInputStream();
+				int temp = 0;
+				int count = 0;
+				byte[] data = new byte[10240];
+				while ((temp = inputStream.read(data)) != -1) {
+					fileOutputStream.write(data, 0, temp);
+					count+=temp;
+					mBuilder.setProgress(length, count, false);
+					Notification notification = mBuilder.build();
+					notification.flags = Notification.FLAG_NO_CLEAR;
+					mNotificationManager.notify(NODIFICATION_ID, mBuilder.build());
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				try {
+					fileOutputStream.flush();
+					fileOutputStream.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
+			return null;
+		}
+		
+		
+		@Override
+		protected void onException(Exception e) throws RuntimeException {
+			super.onException(e);
+			mNotificationManager.cancel(NODIFICATION_ID);
+		}
+		
+		@Override
+		protected void onSuccess(String t) throws Exception {
+ 			super.onSuccess(t);
 	 		Uri uri = Uri.fromFile(saveFile); 
 			Intent intent = new Intent(Intent.ACTION_VIEW); 
 			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			intent.setDataAndType(uri, "application/vnd.android.package-archive"); 
 			startActivity(intent);
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				fileOutputStream.flush();
-				fileOutputStream.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		mNotificationManager.cancel(NODIFICATION_ID);
+			NotificationCompat.Builder builder = new NotificationCompat.Builder(getContext()).setSmallIcon(
+					R.drawable.icon).setTicker("下载成功");
+			mNotificationManager.notify(NODIFICATION_ID, builder.build());
+			mNotificationManager.cancel(NODIFICATION_ID);
+		} 
 	}
 }

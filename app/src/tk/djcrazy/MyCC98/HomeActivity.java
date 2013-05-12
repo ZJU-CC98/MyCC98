@@ -49,7 +49,9 @@ import com.slidingmenu.lib.SlidingMenu;
 public class HomeActivity extends BaseSlidingFragmentActivity implements
 		LoadingListener, TabListener {
 
+	
 	private static final String UPDATE_LINK = "http://mycc98.sinaapp.com/update.json";
+	private static final String UPDATE_LINK_PROXY = "http://mycc98.sinaapp.com/update_proxy.json";
 
 	private static final String TAG = "HomeActivity";
 	public static final String USERINFO = "USERINFO";
@@ -217,7 +219,7 @@ public class HomeActivity extends BaseSlidingFragmentActivity implements
 		@Override
 		public String call() throws Exception {
 			DefaultHttpClient client = new DefaultHttpClient();
-			HttpGet get = new HttpGet(UPDATE_LINK);
+			HttpGet get = new HttpGet(LoginActivity.IS_PROXY_VERSION?UPDATE_LINK_PROXY:UPDATE_LINK);
 			HttpResponse response = client.execute(get);
 			return EntityUtils.toString(response.getEntity(), "UTF-8");
  		}

@@ -54,7 +54,7 @@ public class LoginActivity extends BaseFragmentActivity implements
 		OnClickListener {
 	private static final String TAG = "MyCC98";
 
-	public static final boolean IS_LIFETOY_VERSION = false;
+	public static final boolean IS_PROXY_VERSION = false;
 
 	public static final String USERNAME = "USERNAME";
 	public static final String PASSWORD32 = "PASSWORD32";
@@ -162,7 +162,7 @@ public class LoginActivity extends BaseFragmentActivity implements
 					}
 				});
 		authBuilder.setCancelable(false);
-		if (IS_LIFETOY_VERSION) {
+		if (IS_PROXY_VERSION) {
 			authBuilder.show();
 		} else {
 			showLoginField();

@@ -58,7 +58,7 @@ public class PostListViewAdapter extends BaseItemListAdapter<PostEntity> {
 			listItemView = (ListItemView) convertView.getTag();
 		}
 
-		listItemView.postName.setText(Html.fromHtml(entity.getPostName()));
+		listItemView.postName.setText( entity.getPostName( ));
 		listItemView.postAuthor.setText(entity.getPostAuthorName());
 		listItemView.lastReplyAuthor.setText(entity.getLastReplyAuthor());
 		listItemView.lastReplyTime.setText(DateFormatUtil.convertDateToString(

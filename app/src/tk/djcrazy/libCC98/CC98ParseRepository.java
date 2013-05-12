@@ -34,21 +34,20 @@ public class CC98ParseRepository {
  	public static final String POST_LIST_POST_ENTITY_REGEX  = "(?<=<tr style=\"vertical-align: middle;\">).*?(?=</script>)";
 
  	//personal board list
- 	public static final String P_BOARD_OUTER_WRAAPER_REGEX = "var customboards_disp = new Array.*?var moveup=''";
- 	public static final String P_BOARD_SINGLE_BOARD_WRAPPER_REGEX = "</a>-->.*?(?=</td></tr></table></TD>)";
- 	public static final String P_BOARD_NAME_REGEX = "(?<=<font color=#000066>).*?(?=</font>)";
+  	public static final String P_BOARD_SINGLE_BOARD_WRAPPER_REGEX = "<!--版面名字-->.*?</table>";
+ 	public static final String P_BOARD_NAME_REGEX = "(?<=<font color=\"#000066\">).*?(?=</font></a>)";
  	public static final String P_BOARD_ID_REGEX = "(?<=<a href=\"list.asp\\?boardid=)[0-9]+(?=\">)";
- 	public static final String P_BOARD_INTRO_REGEX = "(?<=<img src=pic/Forum_readme.gif align=middle>).*?(?=</FONT></TD></TR>)";
- 	public static final String P_BOARD_LAST_REPLY_TOPIC_ID_REGEX= "(?<=&ID=)\\d*?(?=\">)";
- 	public static final String P_BOARD_LAST_REPLY_TOPIC_NAME_REGEX = "(?<=ID=\\d{0,10}\">).*?(?=</a><BR>作者)";
- 	public static final String P_BOARD_LAST_REPLY_AUTHOR_REGEX = "(?<=blank>).*?(?=</a><BR>)|(?<=<BR>作者：)匿名(?=<BR>)";
- 	public static final String P_BOARD_LAST_REPLY_TIME_REGEX = "(?<=bottom\">).*?(?=</a>)";
- 	public static final String P_BOARD_LAST_REPLY_LINK_REGEX = "(?<=日期：<a href=\").*?(?=#bottom\")";
- 	public static final String P_BOARD_BOARD_MASTER_REGEX = "版主：.*?(?=</a>&nbsp;</TD>)";
- 	public static final String P_BOARD_POST_NUMBER_TODAY = "(?<=<font color=#FF0000>).*?(?=</font></td>)";
+// 	public static final String P_BOARD_INTRO_REGEX = "(?<=<img src=pic/Forum_readme.gif align=middle>).*?(?=</FONT></TD></TR>)";
+ 	public static final String P_BOARD_LAST_REPLY_TOPIC_ID_REGEX= "(?<=&ID=)\\d*?(?=&star=1\">)";
+ 	public static final String P_BOARD_LAST_REPLY_TOPIC_NAME_REGEX = "(?<=&star=1\">).*?(?=</a><br />)";
+ 	public static final String P_BOARD_LAST_REPLY_AUTHOR_REGEX = "(?<=target=\"_blank\">).*?(?=</a><br />)|(?<=作者：)匿名(?=<br />)";
+ 	public static final String P_BOARD_LAST_REPLY_TIME_REGEX = "(?<=bottom\">).*?(?=&nbsp;</a>)";
+// 	public static final String P_BOARD_LAST_REPLY_LINK_REGEX = "(?<=日期：<a href=\").*?(?=#bottom\")";
+// 	public static final String P_BOARD_BOARD_MASTER_REGEX = "版主：.*?(?=</a>&nbsp;</TD>)";
+ 	public static final String P_BOARD_POST_NUMBER_TODAY = "(?<=<font color=\"#FF0000\">).*?(?=</font></td>)";
  	
  	//user profile
- 	public static final String USER_PROFILE_AVATAR_REGEX = "(?<=&nbsp;\\<img src=).*?(?= )";
+ 	public static final String USER_PROFILE_AVATAR_REGEX = "(?<=&nbsp;<img src=).*?(?= )";
  	public static final String USER_PROFILE_GENERAL_PROFILE_REGEX = "用户头衔：.*?最后登录：.*?<br>";
  	public static final String USER_PROFILE_PERSON_PROFILE_REGEX = "性 别.*?主 页.*?</font>";
  	public static final String USER_PROFILE_BBS_MASTER_INFO_REGEX = "(?<=<font align=left>)论坛职务：</font><br>.*?(?=<td  class=tablebody1)";
