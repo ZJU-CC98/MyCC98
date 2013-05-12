@@ -35,6 +35,7 @@ import android.util.Log;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.webkit.HttpAuthHandler;
+import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebSettings.LayoutAlgorithm;
 import android.webkit.WebView;
@@ -369,7 +370,7 @@ public class PostContentsJSActivity extends BaseActivity {
 		startActivityForResult(intent, 1);
 	}
 
-	public void showContentDialog(final int index, int which) {
+ 	public void showContentDialog(final int index, int which) {
 		final PostContentEntity item = mContentEntities.get(index);
 		switch (which) {
 		case 0: {

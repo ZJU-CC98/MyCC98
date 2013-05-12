@@ -13071,40 +13071,40 @@ tk.djcrazy.MyCC98.HomeActivity -> tk.djcrazy.MyCC98.HomeActivity:
     java.lang.Boolean hasTask -> h
     java.util.Timer tExit -> d
     java.util.TimerTask task -> e
-    68:117:void onCreate(android.os.Bundle) -> onCreate
-    124:133:void configureActionBar() -> e
-    137:138:boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu) -> a
-    147:161:boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem) -> a
-    166:170:boolean onSearchRequested() -> onSearchRequested
-    196:208:boolean onKeyUp(int,android.view.KeyEvent) -> onKeyUp
-    268:269:void onTabSelected(com.actionbarsherlock.app.ActionBar$Tab,android.support.v4.app.FragmentTransaction) -> a
-    273:273:void onTabUnselected(com.actionbarsherlock.app.ActionBar$Tab,android.support.v4.app.FragmentTransaction) -> b
-    277:277:void onTabReselected(com.actionbarsherlock.app.ActionBar$Tab,android.support.v4.app.FragmentTransaction) -> c
-    183:183:void access$0(java.lang.Boolean) -> a
-    184:184:void access$1(java.lang.Boolean) -> b
+    70:119:void onCreate(android.os.Bundle) -> onCreate
+    126:135:void configureActionBar() -> e
+    139:140:boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu) -> a
+    149:163:boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem) -> a
+    168:172:boolean onSearchRequested() -> onSearchRequested
+    198:210:boolean onKeyUp(int,android.view.KeyEvent) -> onKeyUp
+    270:271:void onTabSelected(com.actionbarsherlock.app.ActionBar$Tab,android.support.v4.app.FragmentTransaction) -> a
+    275:275:void onTabUnselected(com.actionbarsherlock.app.ActionBar$Tab,android.support.v4.app.FragmentTransaction) -> b
+    279:279:void onTabReselected(com.actionbarsherlock.app.ActionBar$Tab,android.support.v4.app.FragmentTransaction) -> c
+    185:185:void access$0(java.lang.Boolean) -> a
+    186:186:void access$1(java.lang.Boolean) -> b
 tk.djcrazy.MyCC98.HomeActivity$1 -> tk.djcrazy.MyCC98.o:
     tk.djcrazy.MyCC98.HomeActivity this$0 -> a
-    190:192:void run() -> run
+    192:194:void run() -> run
 tk.djcrazy.MyCC98.HomeActivity$2 -> tk.djcrazy.MyCC98.p:
     tk.djcrazy.MyCC98.HomeActivity this$0 -> a
-    81:90:void onPageSelected(int) -> a
-    93:93:void onPageScrolled(int,float,int) -> a
-    96:96:void onPageScrollStateChanged(int) -> b
+    83:92:void onPageSelected(int) -> a
+    95:95:void onPageScrolled(int,float,int) -> a
+    98:98:void onPageScrollStateChanged(int) -> b
 tk.djcrazy.MyCC98.HomeActivity$CheckUpdateTask -> tk.djcrazy.MyCC98.q:
     tk.djcrazy.MyCC98.HomeActivity this$0 -> a
-    219:222:java.lang.String call() -> a
-    227:253:void onSuccess(java.lang.String) -> a
-    257:261:int getVersionCode() -> b
+    221:224:java.lang.String call() -> a
+    229:255:void onSuccess(java.lang.String) -> a
+    259:263:int getVersionCode() -> b
     1:1:java.lang.Object call() -> call
     1:1:void onSuccess(java.lang.Object) -> onSuccess
-    211:211:tk.djcrazy.MyCC98.HomeActivity access$2(tk.djcrazy.MyCC98.HomeActivity$CheckUpdateTask) -> a
+    213:213:tk.djcrazy.MyCC98.HomeActivity access$2(tk.djcrazy.MyCC98.HomeActivity$CheckUpdateTask) -> a
 tk.djcrazy.MyCC98.HomeActivity$CheckUpdateTask$1 -> tk.djcrazy.MyCC98.r:
     tk.djcrazy.MyCC98.HomeActivity$CheckUpdateTask this$1 -> a
     java.lang.String val$downloadLink -> b
-    242:243:void onClick(android.content.DialogInterface,int) -> onClick
+    244:245:void onClick(android.content.DialogInterface,int) -> onClick
 tk.djcrazy.MyCC98.HomeActivity$CheckUpdateTask$2 -> tk.djcrazy.MyCC98.s:
     tk.djcrazy.MyCC98.HomeActivity$CheckUpdateTask this$1 -> a
-    248:249:void onClick(android.content.DialogInterface,int) -> onClick
+    250:251:void onClick(android.content.DialogInterface,int) -> onClick
 tk.djcrazy.MyCC98.LoginActivity -> tk.djcrazy.MyCC98.LoginActivity:
     android.widget.EditText mUsernameEdit -> d
     android.widget.EditText mPasswordEdit -> e
@@ -13237,74 +13237,74 @@ tk.djcrazy.MyCC98.PostContentsJSActivity -> tk.djcrazy.MyCC98.PostContentsJSActi
     tk.djcrazy.libCC98.ICC98Service service -> service
     tk.djcrazy.MyCC98.helper.HtmlGenHelper helper -> k
     com.actionbarsherlock.view.Menu mOptionsMenu -> l
-    83:83:android.content.Intent createIntent(java.lang.String,java.lang.String,int) -> createIntent
-    88:88:android.content.Intent createIntent(java.lang.String,java.lang.String) -> createIntent
-    93:104:void onCreate(android.os.Bundle) -> onCreate
-    108:113:void onNewIntent(android.content.Intent) -> onNewIntent
-    116:174:java.lang.String assemblyContent(java.util.List) -> a
-    178:180:void onPause() -> onPause
-    183:185:void onResume() -> onResume
-    188:203:void callHiddenWebViewMethod(java.lang.String) -> a
-    206:209:void configureActionBar() -> b
-    213:215:boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu) -> onCreateOptionsMenu
-    220:245:boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem) -> onOptionsItemSelected
-    250:291:void configureWebView() -> c
-    294:297:void onLoadDone() -> d
-    300:304:void jumpTo(int) -> jumpTo
-    307:311:void prevPage() -> prevPage
-    314:316:void refreshPage() -> refreshPage
-    319:323:void nextPage() -> nextPage
-    326:362:void jumpDialog() -> jumpDialog
-    365:370:void reply() -> reply
-    373:424:void showContentDialog(int,int) -> showContentDialog
-    439:440:void addFriend(java.lang.String) -> b
-    443:446:void viewUserInfo(java.lang.String) -> c
-    449:453:void sendPm(java.lang.String) -> d
-    457:464:void quoteReply(java.lang.String,java.lang.String,java.lang.String,int,int) -> a
-    468:475:void onActivityResult(int,int,android.content.Intent) -> onActivityResult
-    490:503:void setRefreshActionButtonState(boolean) -> a
-    509:533:void synCookies() -> synCookies
-    489:489:void access$0(tk.djcrazy.MyCC98.PostContentsJSActivity,boolean) -> a
-    76:76:tk.djcrazy.libCC98.ICC98Service access$1(tk.djcrazy.MyCC98.PostContentsJSActivity) -> a
-    74:74:void access$2(tk.djcrazy.MyCC98.PostContentsJSActivity,java.util.List) -> a
-    72:72:void access$3(tk.djcrazy.MyCC98.PostContentsJSActivity,int) -> a
-    70:70:int access$4(tk.djcrazy.MyCC98.PostContentsJSActivity) -> b
-    72:72:int access$5(tk.djcrazy.MyCC98.PostContentsJSActivity) -> c
-    70:70:void access$6(tk.djcrazy.MyCC98.PostContentsJSActivity,int) -> b
-    62:62:void access$7(tk.djcrazy.MyCC98.PostContentsJSActivity,java.lang.String) -> a
-    68:68:void access$8(tk.djcrazy.MyCC98.PostContentsJSActivity,java.lang.String) -> b
-    59:59:android.webkit.WebView access$9(tk.djcrazy.MyCC98.PostContentsJSActivity) -> d
-    115:115:java.lang.String access$10(tk.djcrazy.MyCC98.PostContentsJSActivity,java.util.List) -> b
-    68:68:java.lang.String access$11(tk.djcrazy.MyCC98.PostContentsJSActivity) -> e
-    66:66:java.lang.String access$12(tk.djcrazy.MyCC98.PostContentsJSActivity) -> f
-    64:64:java.lang.String access$13(tk.djcrazy.MyCC98.PostContentsJSActivity) -> g
-    293:293:void access$14(tk.djcrazy.MyCC98.PostContentsJSActivity) -> h
-    438:438:void access$15(tk.djcrazy.MyCC98.PostContentsJSActivity,java.lang.String) -> c
+    84:84:android.content.Intent createIntent(java.lang.String,java.lang.String,int) -> createIntent
+    89:89:android.content.Intent createIntent(java.lang.String,java.lang.String) -> createIntent
+    94:105:void onCreate(android.os.Bundle) -> onCreate
+    109:114:void onNewIntent(android.content.Intent) -> onNewIntent
+    117:175:java.lang.String assemblyContent(java.util.List) -> a
+    179:181:void onPause() -> onPause
+    184:186:void onResume() -> onResume
+    189:204:void callHiddenWebViewMethod(java.lang.String) -> a
+    207:210:void configureActionBar() -> b
+    214:216:boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu) -> onCreateOptionsMenu
+    221:246:boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem) -> onOptionsItemSelected
+    251:292:void configureWebView() -> c
+    295:298:void onLoadDone() -> d
+    301:305:void jumpTo(int) -> jumpTo
+    308:312:void prevPage() -> prevPage
+    315:317:void refreshPage() -> refreshPage
+    320:324:void nextPage() -> nextPage
+    327:363:void jumpDialog() -> jumpDialog
+    366:371:void reply() -> reply
+    374:425:void showContentDialog(int,int) -> showContentDialog
+    440:441:void addFriend(java.lang.String) -> b
+    444:447:void viewUserInfo(java.lang.String) -> c
+    450:454:void sendPm(java.lang.String) -> d
+    458:465:void quoteReply(java.lang.String,java.lang.String,java.lang.String,int,int) -> a
+    469:476:void onActivityResult(int,int,android.content.Intent) -> onActivityResult
+    491:504:void setRefreshActionButtonState(boolean) -> a
+    510:534:void synCookies() -> synCookies
+    490:490:void access$0(tk.djcrazy.MyCC98.PostContentsJSActivity,boolean) -> a
+    77:77:tk.djcrazy.libCC98.ICC98Service access$1(tk.djcrazy.MyCC98.PostContentsJSActivity) -> a
+    75:75:void access$2(tk.djcrazy.MyCC98.PostContentsJSActivity,java.util.List) -> a
+    73:73:void access$3(tk.djcrazy.MyCC98.PostContentsJSActivity,int) -> a
+    71:71:int access$4(tk.djcrazy.MyCC98.PostContentsJSActivity) -> b
+    73:73:int access$5(tk.djcrazy.MyCC98.PostContentsJSActivity) -> c
+    71:71:void access$6(tk.djcrazy.MyCC98.PostContentsJSActivity,int) -> b
+    63:63:void access$7(tk.djcrazy.MyCC98.PostContentsJSActivity,java.lang.String) -> a
+    69:69:void access$8(tk.djcrazy.MyCC98.PostContentsJSActivity,java.lang.String) -> b
+    60:60:android.webkit.WebView access$9(tk.djcrazy.MyCC98.PostContentsJSActivity) -> d
+    116:116:java.lang.String access$10(tk.djcrazy.MyCC98.PostContentsJSActivity,java.util.List) -> b
+    69:69:java.lang.String access$11(tk.djcrazy.MyCC98.PostContentsJSActivity) -> e
+    67:67:java.lang.String access$12(tk.djcrazy.MyCC98.PostContentsJSActivity) -> f
+    65:65:java.lang.String access$13(tk.djcrazy.MyCC98.PostContentsJSActivity) -> g
+    294:294:void access$14(tk.djcrazy.MyCC98.PostContentsJSActivity) -> h
+    439:439:void access$15(tk.djcrazy.MyCC98.PostContentsJSActivity,java.lang.String) -> c
 tk.djcrazy.MyCC98.PostContentsJSActivity$1 -> tk.djcrazy.MyCC98.ab:
     tk.djcrazy.MyCC98.PostContentsJSActivity this$0 -> a
-    100:102:void run() -> run
+    101:103:void run() -> run
 tk.djcrazy.MyCC98.PostContentsJSActivity$2 -> tk.djcrazy.MyCC98.ac:
     tk.djcrazy.MyCC98.PostContentsJSActivity this$0 -> a
-    267:270:void onPageFinished(android.webkit.WebView,java.lang.String) -> onPageFinished
-    274:280:boolean shouldOverrideUrlLoading(android.webkit.WebView,java.lang.String) -> shouldOverrideUrlLoading
-    286:289:void onReceivedHttpAuthRequest(android.webkit.WebView,android.webkit.HttpAuthHandler,java.lang.String,java.lang.String) -> onReceivedHttpAuthRequest
+    268:271:void onPageFinished(android.webkit.WebView,java.lang.String) -> onPageFinished
+    275:281:boolean shouldOverrideUrlLoading(android.webkit.WebView,java.lang.String) -> shouldOverrideUrlLoading
+    287:290:void onReceivedHttpAuthRequest(android.webkit.WebView,android.webkit.HttpAuthHandler,java.lang.String,java.lang.String) -> onReceivedHttpAuthRequest
 tk.djcrazy.MyCC98.PostContentsJSActivity$3 -> tk.djcrazy.MyCC98.ad:
     tk.djcrazy.MyCC98.PostContentsJSActivity this$0 -> a
     android.widget.EditText val$jumpEditText -> b
-    340:360:void onClick(android.content.DialogInterface,int) -> onClick
+    341:361:void onClick(android.content.DialogInterface,int) -> onClick
 tk.djcrazy.MyCC98.PostContentsJSActivity$4 -> tk.djcrazy.MyCC98.ae:
     tk.djcrazy.MyCC98.PostContentsJSActivity this$0 -> a
     tk.djcrazy.libCC98.data.PostContentEntity val$item -> b
-    397:398:void onClick(android.content.DialogInterface,int) -> onClick
+    398:399:void onClick(android.content.DialogInterface,int) -> onClick
 tk.djcrazy.MyCC98.PostContentsJSActivity$5 -> tk.djcrazy.MyCC98.af:
     tk.djcrazy.MyCC98.PostContentsJSActivity this$0 -> a
-    404:404:void onClick(android.content.DialogInterface,int) -> onClick
+    405:405:void onClick(android.content.DialogInterface,int) -> onClick
 tk.djcrazy.MyCC98.PostContentsJSActivity$AddFriendTask -> tk.djcrazy.MyCC98.ag:
     java.lang.String aUserName -> d
     tk.djcrazy.MyCC98.PostContentsJSActivity this$0 -> a
-    604:605:java.lang.String call() -> a
-    610:612:void onException(java.lang.Exception) -> onException
-    616:619:void onSuccess(java.lang.String) -> a
+    605:606:java.lang.String call() -> a
+    611:613:void onException(java.lang.Exception) -> onException
+    617:620:void onSuccess(java.lang.String) -> a
     1:1:java.lang.Object call() -> call
     1:1:void onSuccess(java.lang.Object) -> onSuccess
 tk.djcrazy.MyCC98.PostContentsJSActivity$GetPostContentTask -> tk.djcrazy.MyCC98.ah:
@@ -13313,25 +13313,25 @@ tk.djcrazy.MyCC98.PostContentsJSActivity$GetPostContentTask -> tk.djcrazy.MyCC98
     java.lang.String aPostId -> d
     int aPageNum -> e
     tk.djcrazy.MyCC98.PostContentsJSActivity this$0 -> a
-    553:555:void onPreExecute() -> onPreExecute
-    559:559:java.util.List call() -> a
-    564:566:void onException(java.lang.Exception) -> onException
-    570:585:void onSuccess(java.util.List) -> a
-    589:591:void onFinally() -> onFinally
+    554:556:void onPreExecute() -> onPreExecute
+    560:560:java.util.List call() -> a
+    565:567:void onException(java.lang.Exception) -> onException
+    571:586:void onSuccess(java.util.List) -> a
+    590:592:void onFinally() -> onFinally
     1:1:java.lang.Object call() -> call
     1:1:void onSuccess(java.lang.Object) -> onSuccess
 tk.djcrazy.MyCC98.PostListActivity -> tk.djcrazy.MyCC98.PostListActivity:
     java.lang.String boardName -> c
     java.lang.String boardId -> d
     tk.djcrazy.libCC98.ICC98Service service -> service
-    36:38:android.content.Intent createIntent(java.lang.String,java.lang.String) -> a
-    43:52:void onCreate(android.os.Bundle) -> onCreate
-    55:59:void configureActionBar() -> d
-    62:66:void sendNewPost() -> e
-    71:82:boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem) -> a
-    88:89:boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu) -> a
-    94:98:boolean onSearchRequested() -> onSearchRequested
-    103:104:void onConfigurationChanged(android.content.res.Configuration) -> onConfigurationChanged
+    37:39:android.content.Intent createIntent(java.lang.String,java.lang.String) -> a
+    44:53:void onCreate(android.os.Bundle) -> onCreate
+    56:60:void configureActionBar() -> d
+    63:67:void sendNewPost() -> e
+    72:83:boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem) -> a
+    89:90:boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu) -> a
+    95:99:boolean onSearchRequested() -> onSearchRequested
+    104:105:void onConfigurationChanged(android.content.res.Configuration) -> onConfigurationChanged
 tk.djcrazy.MyCC98.PostSearchActivity -> tk.djcrazy.MyCC98.PostSearchActivity:
     android.view.View vNext -> c
     android.view.View vPrev -> d
@@ -13442,27 +13442,27 @@ tk.djcrazy.MyCC98.ProfileActivity -> tk.djcrazy.MyCC98.ProfileActivity:
     tk.djcrazy.libCC98.data.UserProfileEntity profileEntity -> x
     java.lang.String mUserName -> y
     tk.djcrazy.libCC98.ICC98Service service -> service
-    73:80:void onCreate(android.os.Bundle) -> onCreate
-    84:87:boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu) -> a
-    92:102:boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem) -> a
-    106:127:void findViews() -> e
-    130:150:void setContents() -> d
-    69:69:tk.djcrazy.libCC98.ICC98Service access$0(tk.djcrazy.MyCC98.ProfileActivity) -> a
-    66:66:java.lang.String access$1(tk.djcrazy.MyCC98.ProfileActivity) -> b
-    63:63:void access$2(tk.djcrazy.MyCC98.ProfileActivity,tk.djcrazy.libCC98.data.UserProfileEntity) -> a
-    42:42:android.widget.ImageView access$3(tk.djcrazy.MyCC98.ProfileActivity) -> c
+    74:81:void onCreate(android.os.Bundle) -> onCreate
+    85:88:boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu) -> a
+    93:103:boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem) -> a
+    107:128:void findViews() -> e
+    131:151:void setContents() -> d
+    70:70:tk.djcrazy.libCC98.ICC98Service access$0(tk.djcrazy.MyCC98.ProfileActivity) -> a
+    67:67:java.lang.String access$1(tk.djcrazy.MyCC98.ProfileActivity) -> b
+    64:64:void access$2(tk.djcrazy.MyCC98.ProfileActivity,tk.djcrazy.libCC98.data.UserProfileEntity) -> a
+    43:43:android.widget.ImageView access$3(tk.djcrazy.MyCC98.ProfileActivity) -> c
 tk.djcrazy.MyCC98.ProfileActivity$GetAvatarTask -> tk.djcrazy.MyCC98.aq:
     java.lang.String aUrl -> b
     tk.djcrazy.MyCC98.ProfileActivity this$0 -> a
-    189:189:android.graphics.Bitmap call() -> a
-    194:196:void onSuccess(android.graphics.Bitmap) -> a
+    190:190:android.graphics.Bitmap call() -> a
+    195:197:void onSuccess(android.graphics.Bitmap) -> a
     1:1:java.lang.Object call() -> call
     1:1:void onSuccess(java.lang.Object) -> onSuccess
 tk.djcrazy.MyCC98.ProfileActivity$GetProfileTask -> tk.djcrazy.MyCC98.ar:
     tk.djcrazy.MyCC98.ProfileActivity this$0 -> a
-    161:161:tk.djcrazy.libCC98.data.UserProfileEntity call() -> a
-    166:168:void onException(java.lang.Exception) -> onException
-    172:176:void onSuccess(tk.djcrazy.libCC98.data.UserProfileEntity) -> a
+    162:162:tk.djcrazy.libCC98.data.UserProfileEntity call() -> a
+    167:169:void onException(java.lang.Exception) -> onException
+    173:177:void onSuccess(tk.djcrazy.libCC98.data.UserProfileEntity) -> a
     1:1:java.lang.Object call() -> call
     1:1:void onSuccess(java.lang.Object) -> onSuccess
 tk.djcrazy.MyCC98.SettingsActivity -> tk.djcrazy.MyCC98.SettingsActivity:
@@ -13545,21 +13545,21 @@ tk.djcrazy.MyCC98.adapter.NewTopicListAdapter$ListItemView -> tk.djcrazy.MyCC98.
     android.widget.ImageView postType -> d
     tk.djcrazy.MyCC98.adapter.NewTopicListAdapter this$0 -> e
 tk.djcrazy.MyCC98.adapter.PersonalboardListAdapter -> tk.djcrazy.MyCC98.a.k:
-    46:81:android.view.View getView(int,android.view.View,android.view.ViewGroup) -> getView
-    90:106:void findViews(android.view.View,tk.djcrazy.MyCC98.adapter.PersonalboardListAdapter$ListItemView) -> a
-    114:145:void setListeners(int,tk.djcrazy.MyCC98.adapter.PersonalboardListAdapter$ListItemView) -> a
+    47:82:android.view.View getView(int,android.view.View,android.view.ViewGroup) -> getView
+    91:107:void findViews(android.view.View,tk.djcrazy.MyCC98.adapter.PersonalboardListAdapter$ListItemView) -> a
+    115:146:void setListeners(int,tk.djcrazy.MyCC98.adapter.PersonalboardListAdapter$ListItemView) -> a
 tk.djcrazy.MyCC98.adapter.PersonalboardListAdapter$1 -> tk.djcrazy.MyCC98.a.l:
     tk.djcrazy.MyCC98.adapter.PersonalboardListAdapter this$0 -> a
     int val$clickPosition -> b
-    118:121:void onClick(android.view.View) -> onClick
+    119:122:void onClick(android.view.View) -> onClick
 tk.djcrazy.MyCC98.adapter.PersonalboardListAdapter$2 -> tk.djcrazy.MyCC98.a.m:
     tk.djcrazy.MyCC98.adapter.PersonalboardListAdapter this$0 -> a
     int val$clickPosition -> b
-    128:132:void onClick(android.view.View) -> onClick
+    129:133:void onClick(android.view.View) -> onClick
 tk.djcrazy.MyCC98.adapter.PersonalboardListAdapter$3 -> tk.djcrazy.MyCC98.a.n:
     tk.djcrazy.MyCC98.adapter.PersonalboardListAdapter this$0 -> a
     int val$clickPosition -> b
-    139:143:void onClick(android.view.View) -> onClick
+    140:144:void onClick(android.view.View) -> onClick
 tk.djcrazy.MyCC98.adapter.PersonalboardListAdapter$ListItemView -> tk.djcrazy.MyCC98.a.o:
     android.widget.TextView boardName -> a
     android.widget.TextView lastReplyTopicName -> b
@@ -13878,9 +13878,18 @@ tk.djcrazy.MyCC98.service.NewVersionDownloadService -> tk.djcrazy.MyCC98.service
     android.support.v4.app.NotificationCompat$Builder mBuilder -> a
     java.lang.String link -> d
     android.app.NotificationManager mNotificationManager -> b
-    30:30:android.content.Intent createIntent(android.app.Activity,java.lang.String) -> a
-    41:50:void createNotification() -> a
-    54:92:void onHandleIntent(android.content.Intent) -> onHandleIntent
+    31:31:android.content.Intent createIntent(android.app.Activity,java.lang.String) -> a
+    42:51:void createNotification() -> a
+    55:58:void onHandleIntent(android.content.Intent) -> onHandleIntent
+    38:38:java.lang.String access$0(tk.djcrazy.MyCC98.service.NewVersionDownloadService) -> a
+    36:36:java.io.File access$1(tk.djcrazy.MyCC98.service.NewVersionDownloadService) -> b
+tk.djcrazy.MyCC98.service.NewVersionDownloadService$DownloadTask -> tk.djcrazy.MyCC98.service.a:
+    tk.djcrazy.MyCC98.service.NewVersionDownloadService this$0 -> a
+    68:98:java.lang.String call() -> a
+    104:106:void onException(java.lang.Exception) -> onException
+    110:120:void onSuccess(java.lang.String) -> a
+    1:1:java.lang.Object call() -> call
+    1:1:void onSuccess(java.lang.Object) -> onSuccess
 tk.djcrazy.MyCC98.task.ProgressRoboAsyncTask -> tk.djcrazy.MyCC98.task.a:
     android.app.ProgressDialog dialog -> b
     android.app.Activity context -> c
@@ -14062,26 +14071,26 @@ tk.djcrazy.libCC98.CC98ClientImpl$1 -> tk.djcrazy.libCC98.b:
 tk.djcrazy.libCC98.CC98ParserImpl -> tk.djcrazy.libCC98.c:
     tk.djcrazy.libCC98.ICC98Client cc98Client -> cc98Client
     tk.djcrazy.libCC98.ICC98UrlManager cc98UrlManager -> cc98UrlManager
-    106:106:java.util.List getPostList(java.lang.String,int) -> a
-    119:119:java.util.List getHotTopicList() -> a
-    132:132:java.util.List getPersonalBoardList() -> b
-    146:146:java.util.List getPostContentList(java.lang.String,java.lang.String,int) -> a
-    159:159:tk.djcrazy.libCC98.data.UserProfileEntity getUserProfile(java.lang.String) -> a
-    172:172:java.util.List getNewPostList(int) -> a
-    203:203:java.lang.String getMsgPageHtml(int) -> c
-    210:211:java.util.List getTodayBoardList() -> c
-    226:272:java.util.List parsePostContentList(java.lang.String) -> c
-    286:314:java.util.List parsePostList(java.lang.String) -> d
-    327:358:java.util.List parsePersonalBoardList(java.lang.String) -> e
-    369:434:tk.djcrazy.libCC98.data.UserProfileEntity parseUserProfile(java.lang.String) -> f
-    439:471:java.util.List parseHotTopicList(java.lang.String) -> g
-    483:501:java.util.List parsePmList(java.lang.String,tk.djcrazy.libCC98.data.InboxInfo) -> a
-    513:529:void getInboxList(java.util.List,java.util.regex.Matcher) -> a
-    539:546:java.lang.String getMsgContent(int) -> b
-    552:559:java.util.List getPmData(int,tk.djcrazy.libCC98.data.InboxInfo,int) -> a
-    576:577:java.util.List searchPost(java.lang.String,java.lang.String,java.lang.String,int) -> a
-    604:636:java.util.List parseQueryResult(java.lang.String) -> b
-    679:694:java.util.List parseTodayBoardList(java.lang.String) -> h
+    105:105:java.util.List getPostList(java.lang.String,int) -> a
+    118:118:java.util.List getHotTopicList() -> a
+    131:131:java.util.List getPersonalBoardList() -> b
+    145:145:java.util.List getPostContentList(java.lang.String,java.lang.String,int) -> a
+    158:158:tk.djcrazy.libCC98.data.UserProfileEntity getUserProfile(java.lang.String) -> a
+    171:171:java.util.List getNewPostList(int) -> a
+    202:202:java.lang.String getMsgPageHtml(int) -> c
+    209:210:java.util.List getTodayBoardList() -> c
+    225:271:java.util.List parsePostContentList(java.lang.String) -> c
+    285:313:java.util.List parsePostList(java.lang.String) -> d
+    326:351:java.util.List parsePersonalBoardList(java.lang.String) -> e
+    362:427:tk.djcrazy.libCC98.data.UserProfileEntity parseUserProfile(java.lang.String) -> f
+    432:464:java.util.List parseHotTopicList(java.lang.String) -> g
+    476:494:java.util.List parsePmList(java.lang.String,tk.djcrazy.libCC98.data.InboxInfo) -> a
+    506:522:void getInboxList(java.util.List,java.util.regex.Matcher) -> a
+    532:539:java.lang.String getMsgContent(int) -> b
+    545:552:java.util.List getPmData(int,tk.djcrazy.libCC98.data.InboxInfo,int) -> a
+    569:570:java.util.List searchPost(java.lang.String,java.lang.String,java.lang.String,int) -> a
+    597:629:java.util.List parseQueryResult(java.lang.String) -> b
+    672:687:java.util.List parseTodayBoardList(java.lang.String) -> h
 tk.djcrazy.libCC98.CC98ServiceImpl -> tk.djcrazy.libCC98.d:
     tk.djcrazy.libCC98.ICC98Client cc98Client -> cc98Client
     tk.djcrazy.libCC98.ICC98Parser cc98Parser -> cc98Parser
@@ -14235,14 +14244,12 @@ tk.djcrazy.libCC98.data.BoardEntity -> tk.djcrazy.libCC98.data.a:
     28:29:void setBoardName(java.lang.String) -> a
     31:31:java.lang.String getBoardID() -> b
     37:38:void setBoardID(java.lang.String) -> b
-    49:50:void setBoardIntro(java.lang.String) -> c
     55:55:java.lang.String getLastReplyTopicName() -> c
-    61:62:void setLastReplyTopicName(java.lang.String) -> d
+    61:62:void setLastReplyTopicName(java.lang.String) -> c
     67:67:java.lang.String getLastReplyTopicID() -> d
-    73:74:void setLastReplyTopicID(java.lang.String) -> e
+    73:74:void setLastReplyTopicID(java.lang.String) -> d
     79:79:java.lang.String getLastReplyAuthor() -> e
-    85:86:void setLastReplyAuthor(java.lang.String) -> f
-    97:98:void setBoardMaster(java.lang.String) -> g
+    85:86:void setLastReplyAuthor(java.lang.String) -> e
     103:103:int getPostNumberToday() -> f
     109:110:void setPostNumberToday(int) -> a
     115:115:java.util.Date getLastReplyTime() -> g

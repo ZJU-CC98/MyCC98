@@ -10,7 +10,6 @@ import java.security.NoSuchAlgorithmException;
 public class Md5 {
 	public static final int T32 = 0;
 	public static final int T16 = 1;
-
 	public static String MyMD5(final String password, int type) {
 		MessageDigest mDigest = null;
 		try {

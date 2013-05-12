@@ -14,6 +14,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -55,7 +56,7 @@ public class PostListActivity extends BaseFragmentActivity {
 		ActionBar actionBar = getSupportActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		actionBar.setLogo(new BitmapDrawable(service.getCurrentUserAvatar()));
-		actionBar.setTitle(boardName);
+		actionBar.setTitle(Html.fromHtml(boardName));
 	}
 
 	private void sendNewPost() {

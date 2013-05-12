@@ -23,6 +23,7 @@ import android.net.ParseException;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Html;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -158,7 +159,7 @@ public class ProfileActivity extends BaseFragmentActivity {
 
 		@Override
 		public UserProfileEntity call() throws Exception {
-			return service.getUserProfile(mUserName);
+			return service.getUserProfile(Html.fromHtml(mUserName).toString());
 		}
 
 		@Override

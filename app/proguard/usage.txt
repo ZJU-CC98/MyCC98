@@ -4523,15 +4523,16 @@ tk.djcrazy.MyCC98.EditActivity:
 tk.djcrazy.MyCC98.EditActivity$2
 tk.djcrazy.MyCC98.HomeActivity:
     private static final java.lang.String UPDATE_LINK
+    private static final java.lang.String UPDATE_LINK_PROXY
     private static final java.lang.String TAG
     public static final java.lang.String USERINFO
     public static final java.lang.String AUTOLOGIN
-    142:143:public void refresh()
-    175:177:public void onLoadComplete(int)
-    181:181:public void onLoadFailure(int)
+    144:145:public void refresh()
+    177:179:public void onLoadComplete(int)
+    183:183:public void onLoadFailure(int)
 tk.djcrazy.MyCC98.LoginActivity:
     private static final java.lang.String TAG
-    public static final boolean IS_LIFETOY_VERSION
+    public static final boolean IS_PROXY_VERSION
     public static final java.lang.String USERNAME
     public static final java.lang.String PASSWORD32
     public static final java.lang.String PASSWORD16
@@ -4731,13 +4732,13 @@ tk.djcrazy.libCC98.CC98ClientImpl:
 tk.djcrazy.libCC98.CC98ParseRepository
 tk.djcrazy.libCC98.CC98ParserImpl:
     private static final java.lang.String TAG
-    185:185:public java.util.List getUserFriendList()
-    592:592:public java.util.List query(java.lang.String,java.lang.String,java.lang.String,int,java.lang.String)
-    642:673:private java.util.List parseUserFriendList(java.lang.String)
-    704:704:public tk.djcrazy.libCC98.ICC98Client getCC98Client()
-    716:717:public void setCC98Client(tk.djcrazy.libCC98.ICC98Client)
-    726:726:public tk.djcrazy.libCC98.ICC98UrlManager getCC98UrlManager()
-    737:738:public void setCC98UrlManager(tk.djcrazy.libCC98.ICC98UrlManager)
+    184:184:public java.util.List getUserFriendList()
+    585:585:public java.util.List query(java.lang.String,java.lang.String,java.lang.String,int,java.lang.String)
+    635:666:private java.util.List parseUserFriendList(java.lang.String)
+    697:697:public tk.djcrazy.libCC98.ICC98Client getCC98Client()
+    709:710:public void setCC98Client(tk.djcrazy.libCC98.ICC98Client)
+    719:719:public tk.djcrazy.libCC98.ICC98UrlManager getCC98UrlManager()
+    730:731:public void setCC98UrlManager(tk.djcrazy.libCC98.ICC98UrlManager)
 tk.djcrazy.libCC98.CC98ServiceImpl:
     51:52:public void logOut()
     56:57:public void clearProxy()
@@ -4785,7 +4786,9 @@ tk.djcrazy.libCC98.ICC98UrlManager:
     public abstract java.lang.String getLoginUrl()
 tk.djcrazy.libCC98.data.BoardEntity:
     43:43:public java.lang.String getBoardIntro()
+    49:50:public void setBoardIntro(java.lang.String)
     91:91:public java.lang.String getBoardMaster()
+    97:98:public void setBoardMaster(java.lang.String)
 tk.djcrazy.libCC98.data.BoardStatus:
     50:50:public int getTotalPostToday()
     62:62:public int getRating()

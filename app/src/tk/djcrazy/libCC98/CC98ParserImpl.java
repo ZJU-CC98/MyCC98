@@ -34,15 +34,12 @@ import static tk.djcrazy.libCC98.CC98ParseRepository.POST_LIST_POST_NAME_REGEX;
 import static tk.djcrazy.libCC98.CC98ParseRepository.POST_LIST_POST_PAGE_NUMBER_REGEX;
 import static tk.djcrazy.libCC98.CC98ParseRepository.POST_LIST_POST_TYPE_REGEX;
 import static tk.djcrazy.libCC98.CC98ParseRepository.POST_LIST_REPLY_NUM_REGEX;
-import static tk.djcrazy.libCC98.CC98ParseRepository.P_BOARD_BOARD_MASTER_REGEX;
 import static tk.djcrazy.libCC98.CC98ParseRepository.P_BOARD_ID_REGEX;
-import static tk.djcrazy.libCC98.CC98ParseRepository.P_BOARD_INTRO_REGEX;
 import static tk.djcrazy.libCC98.CC98ParseRepository.P_BOARD_LAST_REPLY_AUTHOR_REGEX;
 import static tk.djcrazy.libCC98.CC98ParseRepository.P_BOARD_LAST_REPLY_TIME_REGEX;
 import static tk.djcrazy.libCC98.CC98ParseRepository.P_BOARD_LAST_REPLY_TOPIC_ID_REGEX;
 import static tk.djcrazy.libCC98.CC98ParseRepository.P_BOARD_LAST_REPLY_TOPIC_NAME_REGEX;
 import static tk.djcrazy.libCC98.CC98ParseRepository.P_BOARD_NAME_REGEX;
-import static tk.djcrazy.libCC98.CC98ParseRepository.P_BOARD_OUTER_WRAAPER_REGEX;
 import static tk.djcrazy.libCC98.CC98ParseRepository.P_BOARD_POST_NUMBER_TODAY;
 import static tk.djcrazy.libCC98.CC98ParseRepository.P_BOARD_SINGLE_BOARD_WRAPPER_REGEX;
 import static tk.djcrazy.libCC98.CC98ParseRepository.TODAY_BOARD_ENTITY_REGEX;
@@ -85,6 +82,8 @@ import tk.djcrazy.libCC98.exception.NoUserFoundException;
 import tk.djcrazy.libCC98.exception.ParseContentException;
 import tk.djcrazy.libCC98.util.DateFormatUtil;
 import tk.djcrazy.libCC98.util.StringUtil;
+
+import android.text.Html;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -229,7 +228,7 @@ public class CC98ParserImpl implements ICC98Parser {
 				POST_CONTENT_INFO_REGEX, html, 3);
 		PostContentEntity postInfoEntity = new PostContentEntity();
 		postInfoEntity.setPostTopic(filterHtmlDecode(postInfoList.get(0)));
-		postInfoEntity.setBoardName(postInfoList.get(1));
+		postInfoEntity.setBoardName(Html.fromHtml(postInfoList.get(1)).toString());
 		postInfoEntity.setTotalPage((int) Math.ceil(Integer.parseInt(postInfoList.get(2))/10.0));
 		list.add(postInfoEntity);
 		// get each reply info
@@ -237,8 +236,8 @@ public class CC98ParserImpl implements ICC98Parser {
 				POST_CONTENT_WHOLE_REGEX, html, -1);
 		for (String reply : contentHtml) {
 			PostContentEntity entity = new PostContentEntity();
- 			entity.setUserName(getMatchedString(POST_CONTENT_USERNAME_REGEX,
-						reply));
+ 			entity.setUserName(Html.fromHtml(getMatchedString(POST_CONTENT_USERNAME_REGEX,
+						reply)).toString());
  			entity.setPostContent(getMatchedString(
 					POST_CONTENT_POST_CONTENT_REGEX, reply));
 			entity.setPostTitle(getMatchedString(POST_CONTENT_POST_TITLE_REGEX,
@@ -288,8 +287,8 @@ public class CC98ParserImpl implements ICC98Parser {
 				POST_LIST_POST_ENTITY_REGEX, html, -1);
 		for (String post : contentList) {
 			PostEntity entity = new PostEntity();
-			entity.setPostName(filterHtmlDecode(getMatchedString(
-					POST_LIST_POST_NAME_REGEX, post)));
+			entity.setPostName(Html.fromHtml(getMatchedString(
+					POST_LIST_POST_NAME_REGEX, post)).toString());
 			try {
 				entity.setPostPageNumber(Integer.parseInt(getMatchedString(
 						POST_LIST_POST_PAGE_NUMBER_REGEX, post)));
@@ -299,10 +298,10 @@ public class CC98ParserImpl implements ICC98Parser {
 			entity.setPostType(getMatchedString(POST_LIST_POST_TYPE_REGEX, post));
 			entity.setReplyNumber(getMatchedString(POST_LIST_REPLY_NUM_REGEX,
 					post).replaceAll("<.*?>", ""));
-			entity.setPostAuthorName(getMatchedString(
-					POST_LIST_POST_AUTHOR_NAME_REGEX, post));
-			entity.setLastReplyAuthor(getMatchedString(
-					POST_LIST_LAST_REPLY_AUTHOR_REGEX, post));
+			entity.setPostAuthorName(Html.fromHtml(getMatchedString(
+					POST_LIST_POST_AUTHOR_NAME_REGEX, post)).toString());
+			entity.setLastReplyAuthor(Html.fromHtml(getMatchedString(
+					POST_LIST_LAST_REPLY_AUTHOR_REGEX, post)).toString());
 			entity.setLastReplyTime(DateFormatUtil
 					.convertStringToDateInPostList(getMatchedString(
 							POST_LIST_LAST_REPLY_TIME_REGEX, post)));
@@ -325,35 +324,29 @@ public class CC98ParserImpl implements ICC98Parser {
 			throws ParseContentException, java.text.ParseException {
 
 		List<BoardEntity> nList = new ArrayList<BoardEntity>();
-		String boardinfo = getMatchedString(P_BOARD_OUTER_WRAAPER_REGEX, html);
+		String boardinfo = html;
 		List<String> board = getMatchedStringList(
 				P_BOARD_SINGLE_BOARD_WRAPPER_REGEX, boardinfo, 0);
 		for (String string : board) {
 			BoardEntity entity = new BoardEntity();
-			entity.setBoardName(getMatchedString(P_BOARD_NAME_REGEX, string));
-			entity.setBoardIntro(getMatchedString(P_BOARD_INTRO_REGEX, string));
-			entity.setBoardID(getMatchedString(P_BOARD_ID_REGEX, string));
+			entity.setBoardName(Html.fromHtml(getMatchedString(P_BOARD_NAME_REGEX, string)).toString());
+ 			entity.setBoardID(getMatchedString(P_BOARD_ID_REGEX, string));
 			try {
-				entity.setBoardMaster(getMatchedString(
-						P_BOARD_BOARD_MASTER_REGEX, string));
-			} catch (ParseContentException e) {
-				entity.setBoardMaster("暂无");
-			}
-			try {
-			entity.setLastReplyAuthor(getMatchedString(
-					P_BOARD_LAST_REPLY_AUTHOR_REGEX, string));
+
+ 			entity.setLastReplyAuthor(Html.fromHtml(getMatchedString(
+					P_BOARD_LAST_REPLY_AUTHOR_REGEX, string)).toString());
 			entity.setLastReplyTime(DateFormatUtil
 					.convertStrToDateInPBoard(getMatchedString(
 							P_BOARD_LAST_REPLY_TIME_REGEX, string)));
 			entity.setLastReplyTopicID(getMatchedString(
 					P_BOARD_LAST_REPLY_TOPIC_ID_REGEX, string));
-			entity.setLastReplyTopicName(filterHtmlDecode(getMatchedString(
-					P_BOARD_LAST_REPLY_TOPIC_NAME_REGEX, string)));
+			entity.setLastReplyTopicName(Html.fromHtml(getMatchedString(
+					P_BOARD_LAST_REPLY_TOPIC_NAME_REGEX, string)).toString());
 			entity.setPostNumberToday(Integer.parseInt(getMatchedString(
 					P_BOARD_POST_NUMBER_TODAY, string)));
-			} catch(Exception e) {
- 			}
-			nList.add(entity);
+			} catch (Exception e) {
+			}
+ 			nList.add(entity);
 		}
 		return nList;
 	}

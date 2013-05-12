@@ -179,10 +179,10 @@ public class EditActivity extends BaseFragmentActivity implements OnClickListene
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		actionBar.setLogo(new BitmapDrawable(service.getCurrentUserAvatar()));
 		if (requestType == REQUEST_REPLY) {
-			actionBar.setTitle(Html.fromHtml("回复：" + postName));
+			actionBar.setTitle("回复：" + postName);
 			replyContentEditText.requestFocus();
 		} else if (requestType == REQUEST_QUOTE_REPLY) {
-			actionBar.setTitle(Html.fromHtml("回复：" + postName));
+			actionBar.setTitle("回复：" + postName);
 			replyContentEditText.requestFocus();
 			replyUserPostContent = replyUserPostContent.replaceAll(
 					"<.*?>|searchubb.*?;", "");
@@ -190,12 +190,12 @@ public class EditActivity extends BaseFragmentActivity implements OnClickListene
 		} else if (requestType == REQUEST_NEW_POST) {
 			actionBar.setTitle("发表新话题：" + boardName);
 		} else if (requestType == REQUEST_PM) {
-			actionBar.setTitle(Html.fromHtml("站短：" + pmReplyName));
- 			replyContentEditText.setText(Html.fromHtml(pmReplyContent));
-			replyTitleEditText.setText(Html.fromHtml(pmReplyTopic));
+			actionBar.setTitle("站短：" + pmReplyName);
+ 			replyContentEditText.setText(pmReplyContent);
+			replyTitleEditText.setText(pmReplyTopic);
 		} else if (requestType == REQUEST_EDIT) {
-			replyContentEditText.setText(Html.fromHtml(editContent));
-			replyTitleEditText.setText(Html.fromHtml(editTopic));
+			replyContentEditText.setText( editContent) ;
+			replyTitleEditText.setText( editTopic) ;
 		}
 	}
 
@@ -307,7 +307,7 @@ public class EditActivity extends BaseFragmentActivity implements OnClickListene
 			final String contentString) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(EditActivity.this);
 		builder.setTitle("提示");
-		builder.setMessage("是否给用户：" + replyUserName + " 发送引用通知？");
+		builder.setMessage(Html.fromHtml("是否给用户：" + replyUserName + " 发送引用通知？"));
 		builder.setPositiveButton("是", new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
@@ -341,7 +341,7 @@ public class EditActivity extends BaseFragmentActivity implements OnClickListene
 	private String generateQuoteContent() {
 		return "[quote][b]以下是引用[i]" + replyUserName + "在" + replyUserPostTime
 				+ "[/i]的发言：[/b]\n"
-				+ replyUserPostContent.replaceAll("<BR>|<br>", "\r\n")
+				+ replyUserPostContent
 				+ "[/quote]\n";
 	}
 
