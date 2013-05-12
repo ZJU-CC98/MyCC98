@@ -2,22 +2,21 @@ MyCC98 For Android
 ===========
 A client for cc98@Zhejiang University
 
-开发人员：
 Developed By
------------- 
+--------
 * DJ (djq2272@gmail.com)
 * zsy (zsy056@gmail.com)
 
 本程序的一些UI元素采用了网络上的素材。其中，浅色风格登录界面采用了“雪球君”设计的98吉祥物照片；部分素材来自于网络上的免费资源，首页左划账号管理的设计参考自[Fuubo][1]。如果您觉得这侵犯了您的权益，请联系我们。同时我们还用到了一些Android开源库：
-This project includes some resources from Inernet, so if you find something not suitable, please contact us immadiately, thanks.
+This project includes some resources from Inernet, so if you find something not suitable, please contact us immadiately, thanks:
 * [JakeWharton/ActionBarSherlock][2] 
-* [chrisbanes/Android-PullToRefresh[3] 
-* [Nineoldandroids]
-* [jfeinstein10/SlidingMenu]
+* [chrisbanes/Android-PullToRefresh][3] 
+* [Nineoldandroids][4]
+* [jfeinstein10/SlidingMenu][5]
 
 MyCC98的开发过程离不开这些开源项目作者们的努力成果，对以上各个开源项目的贡献者表示最衷心的感谢！ 
-Special thanks for the above project developers!				 
-				 
+
+Special thanks for the above project developers!				 				 
 
 License
 -------
