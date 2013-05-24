@@ -13,11 +13,8 @@ import android.support.v4.view.ViewPager.OnPageChangeListener;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.app.ActionBar.TabListener;
-import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockFragmentActivity;
 import com.google.inject.Inject;
-import com.viewpagerindicator.TabPageIndicator;
-import com.viewpagerindicator.TitlePageIndicator;
- 
+  
 @ContentView(R.layout.activity_pm)
 public class PmActivity extends BaseFragmentActivity implements OnPageChangeListener, TabListener{
 

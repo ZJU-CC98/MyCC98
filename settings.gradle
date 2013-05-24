@@ -1,0 +1,8 @@
+rootProject.name = "MyCC98"
+
+include "app"
+include "Robosherlock"
+include "SlidingMenuLibrary"
+include "ActionBarSherklockLibrary"
+include "AndroidPullToRefreshLibrary"
+include "NineOldAndroidLibrary"

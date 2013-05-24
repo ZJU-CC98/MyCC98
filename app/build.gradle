@@ -1,0 +1,62 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:0.4'
+    }
+}
+apply plugin: "android"
+
+dependencies {
+	compile  fileTree(dir: 'libs', include: '*.jar')	
+ 	compile  (project(":SlidingMenuLibrary"))
+	compile  (project(":NineOldAndroidLibrary"))
+	compile  (project(":AndroidPullToRefreshLibrary"))
+}
+	
+android {
+    compileSdkVersion 17
+    buildToolsVersion "17"
+
+    defaultConfig {
+	    versionCode 25
+        versionName "2.0.4"
+        minSdkVersion 7
+        targetSdkVersion 17
+    }
+    signingConfigs {
+		myConfig {
+            storeFile file("MyCC98.keystore")
+            storePassword "66957860"
+            keyAlias "androidkey"
+            keyPassword "66957860"
+        }
+    }
+
+    buildTypes {
+		debug {
+ 		}
+		release {
+		    runProguard true
+			proguardFile ('proguard-project.txt')
+ 		}
+	}
+	
+	sourceSets {
+        main {
+            manifest.srcFile './AndroidManifest.xml'
+            java.srcDirs = ['src']
+            resources.srcDirs = ['src']
+            aidl.srcDirs = ['src']
+            renderscript.srcDirs = ['src']
+            res.srcDirs = ['res']
+            assets.srcDirs = ['assets']
+        }
+
+        instrumentTest.setRoot('tests')
+    }
+
+}
+
+	
