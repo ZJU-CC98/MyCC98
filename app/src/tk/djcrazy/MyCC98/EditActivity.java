@@ -57,7 +57,6 @@ import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 
 import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.google.inject.Inject;
 
@@ -86,8 +85,7 @@ public class EditActivity extends BaseFragmentActivity implements OnClickListene
 	/* 拍照的照片存储位置 */
 	private static final File PHOTO_DIR = new File(
 			Environment.getExternalStorageDirectory() + "/Camera");
-	private static final int MENU_REPLY_ID = 87356;
-
+ 
 	@InjectExtra(Intents.EXTRA_REQUEST_TYPE)
 	private int requestType;
 	@InjectExtra(value = Intents.EXTRA_BOARD_ID, optional = true)
@@ -137,9 +135,7 @@ public class EditActivity extends BaseFragmentActivity implements OnClickListene
 	private GridView mEmotionGrid;
 	@InjectView(R.id.reply_container)
 	private View mContainer;
-	@InjectView(R.id.edit_btn_delete)
-	private Button mDeleteBtn;
-	private String editContent;
+ 	private String editContent;
 	private String editTopic;
 	private File mCurrentPhotoFile;
 	private String faceGroupChooseString = "face7.gif";
@@ -192,6 +188,7 @@ public class EditActivity extends BaseFragmentActivity implements OnClickListene
 			replyContentEditText.setText( editContent) ;
 			replyTitleEditText.setText( editTopic) ;
 		}
+		replyContentEditText.setSelection(replyContentEditText.getText().length());
 	}
 
 	private void lockContainerHeight(int paramInt) {
@@ -231,7 +228,7 @@ public class EditActivity extends BaseFragmentActivity implements OnClickListene
 					+ "[/color][/right]";
 		}
 	}
- 
+	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
@@ -334,8 +331,7 @@ public class EditActivity extends BaseFragmentActivity implements OnClickListene
 		mPhotoBtn.setOnClickListener(this);
 		mSubmitBtn.setOnClickListener(this);
 		replyTitleEditText.setOnClickListener(this);
-		mDeleteBtn.setOnClickListener(this);
-		replyContentEditText
+ 		replyContentEditText
 				.setOnFocusChangeListener(new OnFocusChangeListener() {
 					@Override
 					public void onFocusChange(View v, boolean hasFocus) {
@@ -464,8 +460,7 @@ public class EditActivity extends BaseFragmentActivity implements OnClickListene
 			replyContentEditText.getText().insert(cursor, "@");
 			break;
 		case R.id.edit_btn_emotion:
-			getSupportActionBar().hide();
-			if (mEmotionGrid.getVisibility() == View.GONE) {
+ 			if (mEmotionGrid.getVisibility() == View.GONE) {
 				hideKeyBoard();
 				mEmotionBtn.postDelayed((new Runnable() {
 					@Override
@@ -483,13 +478,7 @@ public class EditActivity extends BaseFragmentActivity implements OnClickListene
 		case R.id.reply_title_edit:
 			ViewUtils.setGone(mEmotionGrid, true);
 			break;
-		case R.id.edit_btn_delete:
-			if (replyContentEditText.getText().length() > 0) {
-				replyContentEditText.getText().delete(
-						replyContentEditText.getText().length() - 1,
-						replyContentEditText.getText().length());
-			}
-		default:
+ 		default:
 			break;
 		}
 	}
