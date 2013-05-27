@@ -6,13 +6,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
-import tk.djcrazy.MyCC98.R.drawable;
 import tk.djcrazy.MyCC98.adapter.EmotionGridViewAdapter;
 import tk.djcrazy.MyCC98.helper.TextHelper;
 import tk.djcrazy.MyCC98.task.ProgressRoboAsyncTask;
@@ -43,9 +40,7 @@ import android.provider.MediaStore;
 import android.text.Html;
 import android.text.Html.ImageGetter;
 import android.text.Spannable;
-import android.text.Spanned;
 import android.text.style.ImageSpan;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -236,27 +231,14 @@ public class EditActivity extends BaseFragmentActivity implements OnClickListene
 					+ "[/color][/right]";
 		}
 	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu optionMenu) {
-		optionMenu.add(android.view.Menu.NONE, MENU_REPLY_ID, 1, "预览")
-				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-		return true;
-	}
-
+ 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			finish();
 			return true;
-		case MENU_REPLY_ID:
-			startActivity(new Intent(EditActivity.this, PreviewActivity.class)
-					.putExtra(PreviewActivity.CONTENT,
-							replaceAllImage(replyContentEditText.getText()
-									.toString())));
-			return true;
-		default:
+ 		default:
 			break;
 		}
 		return false;

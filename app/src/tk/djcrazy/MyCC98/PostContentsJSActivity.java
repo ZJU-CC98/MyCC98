@@ -34,11 +34,6 @@ import android.preference.PreferenceManager;
 import android.text.Html;
 import android.text.InputType;
 import android.util.Log;
-import android.view.GestureDetector;
-import android.view.GestureDetector.OnGestureListener;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.View.OnTouchListener;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.webkit.HttpAuthHandler;
@@ -72,7 +67,7 @@ public class PostContentsJSActivity extends BaseActivity implements OnScrollChan
 	@InjectExtra(Intents.EXTRA_BOARD_ID)
 	private String boardId;
 	@InjectExtra(value = Intents.EXTRA_POST_NAME, optional = true)
-	private String postName;
+	private String postName="";
 	@InjectExtra(value = Intents.EXTRA_PAGE_NUMBER, optional = true)
 	private int currPageNum = 1;
 
