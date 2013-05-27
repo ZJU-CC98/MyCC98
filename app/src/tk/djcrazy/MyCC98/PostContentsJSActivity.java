@@ -14,6 +14,8 @@ import tk.djcrazy.MyCC98.task.ProgressRoboAsyncTask;
 import tk.djcrazy.MyCC98.util.Intents;
 import tk.djcrazy.MyCC98.util.Intents.Builder;
 import tk.djcrazy.MyCC98.util.ToastUtils;
+import tk.djcrazy.MyCC98.view.ObservableWebView;
+import tk.djcrazy.MyCC98.view.ObservableWebView.OnScrollChangedCallback;
 import tk.djcrazy.libCC98.ICC98Service;
 import tk.djcrazy.libCC98.data.Gender;
 import tk.djcrazy.libCC98.data.LoginType;
@@ -32,10 +34,14 @@ import android.preference.PreferenceManager;
 import android.text.Html;
 import android.text.InputType;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.GestureDetector.OnGestureListener;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.View.OnTouchListener;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.webkit.HttpAuthHandler;
-import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebSettings.LayoutAlgorithm;
 import android.webkit.WebView;
@@ -50,14 +56,14 @@ import com.actionbarsherlock.view.MenuItem;
 import com.google.inject.Inject;
 
 @ContentView(R.layout.activity_post_contents)
-public class PostContentsJSActivity extends BaseActivity {
+public class PostContentsJSActivity extends BaseActivity implements OnScrollChangedCallback{
 	private static final String TAG = "PostContentsJSActivity";
 	private static final String JS_INTERFACE = "PostContentsJSActivity";
 
 	public static final int LAST_PAGE = 32767;
 
 	@InjectView(R.id.post_contents)
-	private WebView webView;
+	private ObservableWebView webView;
 
 	@InjectExtra(value = Intents.EXTRA_BOARD_NAME, optional = true)
 	private String boardName = "";
@@ -95,7 +101,7 @@ public class PostContentsJSActivity extends BaseActivity {
 
 		configureActionBar();
 		configureWebView();
-		webView.postDelayed(new Runnable() {
+ 		webView.postDelayed(new Runnable() {
 			@Override
 			public void run() {
 				new GetPostContentTask(PostContentsJSActivity.this, boardId,
@@ -188,7 +194,7 @@ public class PostContentsJSActivity extends BaseActivity {
 	private void callHiddenWebViewMethod(String name) {
 		if (webView != null) {
 			try {
-				Method method = WebView.class.getMethod(name);
+				Method method = ObservableWebView.class.getMethod(name);
 				method.invoke(webView);
 			} catch (NoSuchMethodException e) {
 				e.printStackTrace();
@@ -261,13 +267,14 @@ public class PostContentsJSActivity extends BaseActivity {
 		webSettings.setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
 		webSettings.setAppCacheEnabled(enableCache);
 		webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
+ 		webView.setOnScrollChangedCallback(this);
 		webView.addJavascriptInterface(this, JS_INTERFACE);
 		webView.setWebViewClient(new WebViewClient() {
 			@Override
 			public void onPageFinished(WebView view, String url) {
 				webView.getSettings().setBlockNetworkImage(false);
 				onLoadDone();
-				super.onPageFinished(view, url);
+ 				super.onPageFinished(view, url);
 			}
 
 			@Override
@@ -620,4 +627,23 @@ public class PostContentsJSActivity extends BaseActivity {
 		}
 	}
 
-}
+	
+	private int hideStartPos=0;
+	private int showStartPos=0;
+	private final int TRIGER_DIS = 100;
+	@Override
+	public void onScroll(int pre, int curr) {
+ 		if (curr>pre) {
+ 			showStartPos = curr;
+ 			if (curr-hideStartPos>TRIGER_DIS) {
+ 				getSupportActionBar().hide();
+			} 
+		} else {
+			hideStartPos = curr;
+ 			if (showStartPos-curr>TRIGER_DIS) {
+ 				getSupportActionBar().show();
+			} 
+		}
+	}
+
+ }

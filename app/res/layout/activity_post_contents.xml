@@ -5,7 +5,7 @@
     android:background="#ececec"
     android:orientation="vertical" >
 
-        <WebView
+        <tk.djcrazy.MyCC98.view.ObservableWebView
             android:id="@+id/post_contents"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"

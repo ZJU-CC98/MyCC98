@@ -3,7 +3,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.4'
+        classpath 'com.android.tools.build:gradle:0.4.1'
     }
 }
 apply plugin: "android"
@@ -26,7 +26,7 @@ android {
         targetSdkVersion 17
     }
     signingConfigs {
-		myConfig {
+		releaseConfig {
             storeFile file("MyCC98.keystore")
             storePassword "66957860"
             keyAlias "androidkey"
@@ -40,6 +40,7 @@ android {
 		release {
 		    runProguard true
 			proguardFile ('proguard-project.txt')
+			signingConfig signingConfigs.releaseConfig
  		}
 	}
 	
