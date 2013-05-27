@@ -19,6 +19,15 @@ public abstract class ProgressRoboAsyncTask<ResultT> extends RoboAsyncTask<Resul
 		dialog.show();
 		super.onPreExecute();
 	}
+	
+	@Override
+	protected void onException(Exception e) throws RuntimeException {
+		dialog.dismiss();
+	}
+	@Override
+	protected void onSuccess(ResultT t) throws Exception {
+		dialog.dismiss();
+	};
 	@Override
 	protected void onFinally() throws RuntimeException {
 		if (dialog.isShowing()) {

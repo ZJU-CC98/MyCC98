@@ -19,6 +19,7 @@ import tk.djcrazy.libCC98.data.PostEntity;
 import tk.djcrazy.libCC98.data.SearchResultEntity;
 import tk.djcrazy.libCC98.data.UserProfileEntity;
 import tk.djcrazy.libCC98.data.UserStatueEntity;
+import tk.djcrazy.libCC98.exception.CC98Exception;
 import tk.djcrazy.libCC98.exception.NoUserFoundException;
 import tk.djcrazy.libCC98.exception.ParseContentException;
 import android.accounts.NetworkErrorException;
@@ -106,7 +107,7 @@ public class CC98ServiceImpl implements ICC98Service {
 
 	@Override
 	public void sendPm(String toUser, String title, String content)
-			throws ClientProtocolException, IOException {
+			throws ClientProtocolException, IOException, CC98Exception {
 		cc98Client.sendPm(toUser, title, content);
 	}
 

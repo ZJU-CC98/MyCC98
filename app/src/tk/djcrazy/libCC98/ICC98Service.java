@@ -19,6 +19,7 @@ import tk.djcrazy.libCC98.data.PostEntity;
 import tk.djcrazy.libCC98.data.SearchResultEntity;
 import tk.djcrazy.libCC98.data.UserProfileEntity;
 import tk.djcrazy.libCC98.data.UserStatueEntity;
+import tk.djcrazy.libCC98.exception.CC98Exception;
 import tk.djcrazy.libCC98.exception.NoUserFoundException;
 import tk.djcrazy.libCC98.exception.ParseContentException;
 import android.accounts.NetworkErrorException;
@@ -64,7 +65,7 @@ public interface ICC98Service {
 			ParseContentException, java.text.ParseException;
 
 	public void sendPm(String toUser, String title, String content)
-			throws ClientProtocolException, IOException;
+			throws ClientProtocolException, IOException, CC98Exception;
 
 	public List<HotTopicEntity> getHotTopicList()
 			throws ClientProtocolException, ParseException, IOException,

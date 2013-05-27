@@ -32,6 +32,7 @@ import tk.djcrazy.MyCC98.application.MyApplication.UsersInfo;
 import tk.djcrazy.MyCC98.security.Md5;
 import tk.djcrazy.libCC98.data.LoginType;
 import tk.djcrazy.libCC98.data.UserData;
+import tk.djcrazy.libCC98.exception.CC98Exception;
 import tk.djcrazy.libCC98.exception.NoUserFoundException;
 import tk.djcrazy.libCC98.exception.ParseContentException;
 import tk.djcrazy.libCC98.util.RegexUtil;
@@ -84,9 +85,6 @@ public class CC98ClientImpl implements ICC98Client {
 	@Inject
 	private ICC98UrlManager manager;
 
-	public final int PM_SEND_FAIL = -1;
-	public final int PM_SEND_SUCC = 0;
-
 	public final String ID_PASSWD_ERROR_MSG = "用户名/密码错误";
 	public final String SERVER_ERROR = "CC98服务器异常！";
 
@@ -130,21 +128,20 @@ public class CC98ClientImpl implements ICC98Client {
 	 * @throws NoSuchAlgorithmException
 	 * @throws KeyManagementException
 	 */
+	@SuppressWarnings("deprecation")
 	private void genHttpClient() {
 		try {
 			HttpParams params = new BasicHttpParams();
 			HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
-			HttpProtocolParams.setContentCharset(params, HTTP.UTF_8);
+			HttpProtocolParams.setContentCharset(params, "UTF-8");
 			HttpProtocolParams.setUseExpectContinue(params, true);
 			X509TrustManager xtm = new X509TrustManager() {
 				public void checkClientTrusted(X509Certificate[] chain,
 						String authType) {
 				}
-
 				public void checkServerTrusted(X509Certificate[] chain,
 						String authType) {
 				}
-
 				public X509Certificate[] getAcceptedIssuers() {
 					return null;
 				}
@@ -201,7 +198,7 @@ public class CC98ClientImpl implements ICC98Client {
 		nvps.add(new BasicNameValuePair("u", id));
 		nvps.add(new BasicNameValuePair("p", pw32));
 		nvps.add(new BasicNameValuePair("userhidden", "2"));
-		httpost.setEntity(new UrlEncodedFormEntity(nvps, HTTP.UTF_8));
+		httpost.setEntity(new UrlEncodedFormEntity(nvps, "UTF-8"));
 		HttpResponse response = getHttpClient().execute(httpost);
 		if (response.getStatusLine().getStatusCode() != 200) {
 			throw new NetworkErrorException(SERVER_ERROR);
@@ -232,7 +229,7 @@ public class CC98ClientImpl implements ICC98Client {
 			nvps.add(new BasicNameValuePair("svpn_rand_code", ""));
 			nvps.add(new BasicNameValuePair("svpn_password", proxyPwd));
 			HttpPost post = new HttpPost("https://61.175.193.50//por/login_psw.csp?type=cs&dev=android-phone&dev=android-phone&language=zh_CN");
-			post.setEntity(new UrlEncodedFormEntity(nvps, HTTP.UTF_8));
+			post.setEntity(new UrlEncodedFormEntity(nvps, "UTF-8"));
 			HttpResponse response = client.execute(post);
 			String result = EntityUtils.toString(response.getEntity());
 			System.err.println("authenticateForRVPN result：" + result);
@@ -258,7 +255,7 @@ public class CC98ClientImpl implements ICC98Client {
 				.getUserName()));
 		nvpsList.add(new BasicNameValuePair("passwd", getCurrentUserData()
 				.getPassword16()));
-		httpPost.setEntity(new UrlEncodedFormEntity(nvpsList, HTTP.UTF_8));
+		httpPost.setEntity(new UrlEncodedFormEntity(nvpsList, "UTF-8"));
 		response = getHttpClient().execute(httpPost);
 		entity = response.getEntity();
 		if (entity != null) {
@@ -275,7 +272,7 @@ public class CC98ClientImpl implements ICC98Client {
 			throws ClientProtocolException, IOException {
 		HttpEntity entity;
 		HttpPost httpPost = new HttpPost(link);
-		httpPost.setEntity(new UrlEncodedFormEntity(nvpsList, HTTP.UTF_8));
+		httpPost.setEntity(new UrlEncodedFormEntity(nvpsList, "UTF-8"));
 		HttpResponse response = getHttpClient().execute(httpPost);
 		entity = response.getEntity();
 		if (entity != null) {
@@ -301,7 +298,7 @@ public class CC98ClientImpl implements ICC98Client {
 				.getUserName()));
 		nvpsList.add(new BasicNameValuePair("passwd", getCurrentUserData()
 				.getPassword16()));
-		httpPost.setEntity(new UrlEncodedFormEntity(nvpsList, HTTP.UTF_8));
+		httpPost.setEntity(new UrlEncodedFormEntity(nvpsList, "UTF-8"));
 		// Log.d(TAG, "request: "+EntityUtils.toString(httpPost.getEntity()));
 		response = getHttpClient().execute(httpPost);
 		entity = response.getEntity();
@@ -337,7 +334,7 @@ public class CC98ClientImpl implements ICC98Client {
 				.valueOf(boardArea)));
 		nvpsList.add(new BasicNameValuePair("serType", String.valueOf(boardID)));
 
-		httpPost.setEntity(new UrlEncodedFormEntity(nvpsList, HTTP.UTF_8));
+		httpPost.setEntity(new UrlEncodedFormEntity(nvpsList, "UTF-8"));
 		response = getHttpClient().execute(httpPost);
 		entity = response.getEntity();
 
@@ -462,28 +459,23 @@ public class CC98ClientImpl implements ICC98Client {
 	}
 
 	@Override
-	public int sendPm(String touser, String title, String message)
-			throws ClientProtocolException, IOException {
+	public void sendPm(String touser, String title, String message)
+			throws ClientProtocolException, IOException, CC98Exception {
 		HttpPost post = new HttpPost(manager.getSendPmUrl());
 		List<NameValuePair> msgInfo = new ArrayList<NameValuePair>();
 		msgInfo.add(new BasicNameValuePair("touser", touser));
 		msgInfo.add(new BasicNameValuePair("title", title));
 		msgInfo.add(new BasicNameValuePair("message", message));
-		HttpResponse response = null;
-		int flag = PM_SEND_FAIL;
-
-		post.setEntity(new UrlEncodedFormEntity(msgInfo, HTTP.UTF_8));
-		response = getHttpClient().execute(post);
+ 		post.setEntity(new UrlEncodedFormEntity(msgInfo, "UTF-8"));
+		HttpResponse response = getHttpClient().execute(post);
 
 		HttpEntity entity = response.getEntity();
-
-		if (entity != null
-				&& EntityUtils.toString(response.getEntity()).contains("论坛成功")) {
-			flag = PM_SEND_SUCC;
-		}
-
-		return flag;
-	}
+		Log.d(TAG, EntityUtils.toString(response.getEntity()));
+		if (entity == null
+				|| !EntityUtils.toString(response.getEntity()).contains("发送短信成功")) {
+			throw new CC98Exception("send pm failed, reply content is: "+EntityUtils.toString(response.getEntity()));
+ 		}
+ 	}
 
 	@Override
 	public void addFriend(String userId) throws ParseException,
@@ -497,7 +489,7 @@ public class CC98ClientImpl implements ICC98Client {
 		nvpsList.add(new BasicNameValuePair("todo", "saveF"));
 		nvpsList.add(new BasicNameValuePair("touser", userId));
 		nvpsList.add(new BasicNameValuePair("Submit", "保存"));
-		httpPost.setEntity(new UrlEncodedFormEntity(nvpsList, HTTP.UTF_8));
+		httpPost.setEntity(new UrlEncodedFormEntity(nvpsList, "UTF-8"));
 		HttpResponse response = getHttpClient().execute(httpPost);
 		if (response.getStatusLine().getStatusCode() != 200) {
 			throw new ConnectException("服务器返回错误！");

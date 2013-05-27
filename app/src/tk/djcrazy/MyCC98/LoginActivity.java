@@ -43,7 +43,7 @@ public class LoginActivity extends BaseFragmentActivity implements
 		OnClickListener {
 	private static final String TAG = "MyCC98";
 
-	public static final boolean IS_PROXY_VERSION = true;
+	public static final boolean IS_PROXY_VERSION = false;
 
 	public static final String USERNAME = "USERNAME";
 	public static final String PASSWORD32 = "PASSWORD32";

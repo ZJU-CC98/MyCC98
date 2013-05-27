@@ -294,7 +294,7 @@ public class EditActivity extends BaseFragmentActivity implements OnClickListene
 				String pmContent = "详情请点击："
 						+ manager.getPostUrl(boardID, postId, quotePageNumber)
 						+ "#" + quoteFloorNumber;
-				new SendPMTask(EditActivity.this, pmReplyName, pmTitle,
+				new SendPMTask(EditActivity.this, replyUserName, pmTitle,
 						pmContent).execute();
 				PushReplyTask task = new PushReplyTask(EditActivity.this,
 						postId, boardID, contentString, titleString,
@@ -456,6 +456,7 @@ public class EditActivity extends BaseFragmentActivity implements OnClickListene
 			ensure();
 			break;
 		case R.id.edit_btn_at:
+			ToastUtils.show(this, "@功能暂未完成");
 			int cursor = replyContentEditText.getSelectionStart();
 			replyContentEditText.getText().insert(cursor, "@");
 			break;
