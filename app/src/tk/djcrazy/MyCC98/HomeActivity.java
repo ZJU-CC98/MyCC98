@@ -1,21 +1,16 @@
 package tk.djcrazy.MyCC98;
 
-import java.io.File;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import org.json.JSONObject;
 
-import roboguice.inject.InjectView;
 import roboguice.util.RoboAsyncTask;
 import tk.djcrazy.MyCC98.adapter.HomeFragmentPagerAdapter;
-import tk.djcrazy.MyCC98.dialog.AboutDialog;
 import tk.djcrazy.MyCC98.fragment.HomeBehindMenuFragment;
 import tk.djcrazy.MyCC98.listener.LoadingListener;
 import tk.djcrazy.MyCC98.service.NewVersionDownloadService;
 import tk.djcrazy.MyCC98.util.DisplayUtil;
-import tk.djcrazy.MyCC98.util.Intents;
-import tk.djcrazy.MyCC98.util.Intents.Builder;
 import tk.djcrazy.libCC98.ICC98Service;
 import android.app.AlertDialog;
 import android.content.Context;

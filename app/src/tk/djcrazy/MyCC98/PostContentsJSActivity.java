@@ -1,5 +1,6 @@
 package tk.djcrazy.MyCC98;
 
+import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Date;
@@ -10,6 +11,7 @@ import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
 import roboguice.util.RoboAsyncTask;
 import tk.djcrazy.MyCC98.helper.HtmlGenHelper;
+import tk.djcrazy.MyCC98.helper.StringCacheHelper;
 import tk.djcrazy.MyCC98.task.ProgressRoboAsyncTask;
 import tk.djcrazy.MyCC98.util.Intents;
 import tk.djcrazy.MyCC98.util.Intents.Builder;
@@ -17,6 +19,7 @@ import tk.djcrazy.MyCC98.util.ToastUtils;
 import tk.djcrazy.MyCC98.view.ObservableWebView;
 import tk.djcrazy.MyCC98.view.ObservableWebView.OnScrollChangedCallback;
 import tk.djcrazy.libCC98.ICC98Service;
+import tk.djcrazy.libCC98.SerializableCache;
 import tk.djcrazy.libCC98.data.Gender;
 import tk.djcrazy.libCC98.data.LoginType;
 import tk.djcrazy.libCC98.data.PostContentEntity;
@@ -24,14 +27,12 @@ import tk.djcrazy.libCC98.data.UserData;
 import tk.djcrazy.libCC98.util.DateFormatUtil;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Debug;
 import android.preference.PreferenceManager;
 import android.text.Html;
 import android.text.InputType;
@@ -43,7 +44,6 @@ import android.webkit.WebSettings;
 import android.webkit.WebSettings.LayoutAlgorithm;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.webkit.WebStorage;
 import android.widget.EditText;
 import android.widget.Toast;
 import ch.boye.httpclientandroidlib.cookie.Cookie;
@@ -54,13 +54,14 @@ import com.actionbarsherlock.view.MenuItem;
 import com.google.inject.Inject;
 
 @ContentView(R.layout.activity_post_contents)
-public class PostContentsJSActivity extends BaseActivity implements OnScrollChangedCallback{
+public class PostContentsJSActivity extends BaseActivity implements
+		OnScrollChangedCallback {
 	private static final String TAG = "PostContentsJSActivity";
 	private static final String JS_INTERFACE = "PostContentsJSActivity";
 
 	public static final int LAST_PAGE = 32767;
 	// WebView cache max size, in bytes
-	private static final long CACHE_SIZE = 32*1024*1024;
+	private static final long CACHE_SIZE = 32 * 1024 * 1024;
 
 	@InjectView(R.id.post_contents)
 	private ObservableWebView webView;
@@ -72,7 +73,7 @@ public class PostContentsJSActivity extends BaseActivity implements OnScrollChan
 	@InjectExtra(Intents.EXTRA_BOARD_ID)
 	private String boardId;
 	@InjectExtra(value = Intents.EXTRA_POST_NAME, optional = true)
-	private String postName="";
+	private String postName = "";
 	@InjectExtra(value = Intents.EXTRA_PAGE_NUMBER, optional = true)
 	private int currPageNum = 1;
 
@@ -101,7 +102,7 @@ public class PostContentsJSActivity extends BaseActivity implements OnScrollChan
 
 		configureActionBar();
 		configureWebView();
- 		webView.postDelayed(new Runnable() {
+		webView.postDelayed(new Runnable() {
 			@Override
 			public void run() {
 				new GetPostContentTask(PostContentsJSActivity.this, boardId,
@@ -122,11 +123,11 @@ public class PostContentsJSActivity extends BaseActivity implements OnScrollChan
 	private String assemblyContent(List<PostContentEntity> list) {
 		int tmpNum = (currPageNum == LAST_PAGE) ? totalPageNum : currPageNum;
 		StringBuilder builder = new StringBuilder(5000);
-		if (service.getusersInfo().getCurrentUserData().getLoginType()==LoginType.NORMAL) {
+		if (service.getusersInfo().getCurrentUserData().getLoginType() == LoginType.NORMAL) {
 			Log.d(TAG, "add Normal page open...");
 			builder.append(helper.PAGE_OPEN).append(
 					"<a href=\"javascript:;\" id=\"showAllImages\"></a>");
-		} else if (service.getusersInfo().getCurrentUserData().getLoginType()==LoginType.USER_DEFINED) {
+		} else if (service.getusersInfo().getCurrentUserData().getLoginType() == LoginType.USER_DEFINED) {
 			Log.d(TAG, "add proxy page open...");
 			builder.append(helper.PAGE_PROXY_OPEN).append(
 					"<a href=\"javascript:;\" id=\"showAllImages\"></a>");
@@ -266,14 +267,15 @@ public class PostContentsJSActivity extends BaseActivity implements OnScrollChan
 		webSettings.setLoadsImagesAutomatically(showImage);
 		webSettings.setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
 		webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
- 		if (enableCache) {
- 			webSettings.setAppCacheMaxSize(CACHE_SIZE);
- 			webSettings.setAllowFileAccess(true);
- 			webView.getSettings().setDomStorageEnabled(true);
- 			webSettings.setAppCachePath(getApplicationContext().getCacheDir().getPath());
- 			webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
- 		}
- 		webSettings.setAppCacheEnabled(enableCache);
+		if (enableCache) {
+			webSettings.setAppCacheMaxSize(CACHE_SIZE);
+			webSettings.setAllowFileAccess(true);
+			webView.getSettings().setDomStorageEnabled(true);
+			webSettings.setAppCachePath(getApplicationContext().getCacheDir()
+					.getPath());
+			webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
+		}
+		webSettings.setAppCacheEnabled(enableCache);
 		webView.setOnScrollChangedCallback(this);
 		webView.addJavascriptInterface(this, JS_INTERFACE);
 		webView.setWebViewClient(new WebViewClient() {
@@ -281,7 +283,7 @@ public class PostContentsJSActivity extends BaseActivity implements OnScrollChan
 			public void onPageFinished(WebView view, String url) {
 				webView.getSettings().setBlockNetworkImage(false);
 				onLoadDone();
- 				super.onPageFinished(view, url);
+				super.onPageFinished(view, url);
 			}
 
 			@Override
@@ -384,7 +386,7 @@ public class PostContentsJSActivity extends BaseActivity implements OnScrollChan
 		startActivityForResult(intent, 1);
 	}
 
- 	public void showContentDialog(final int index, int which) {
+	public void showContentDialog(final int index, int which) {
 		final PostContentEntity item = mContentEntities.get(index);
 		switch (which) {
 		case 0: {
@@ -526,10 +528,10 @@ public class PostContentsJSActivity extends BaseActivity implements OnScrollChan
 		cookieManager.setAcceptCookie(true);
 		cookieManager.removeSessionCookie();
 		UserData userData = service.getusersInfo().getCurrentUserData();
-//		if (userData.getLoginType() == LoginType.USER_DEFINED) {
-//			webView.setHttpAuthUsernamePassword(service.getDomain(), "",
-//					userData.getProxyUserName(), userData.getProxyPassword());
-//		}
+		// if (userData.getLoginType() == LoginType.USER_DEFINED) {
+		// webView.setHttpAuthUsernamePassword(service.getDomain(), "",
+		// userData.getProxyUserName(), userData.getProxyPassword());
+		// }
 		for (Cookie cookie : service.getusersInfo().getCurrentUserData()
 				.getCookieStore().getCookies()) {
 			cookieManager.setCookie(service.getDomain(),
@@ -569,9 +571,22 @@ public class PostContentsJSActivity extends BaseActivity implements OnScrollChan
 			setRefreshActionButtonState(true);
 		}
 
+		@SuppressWarnings("unchecked")
 		@Override
 		public List<PostContentEntity> call() throws Exception {
-			return service.getPostContentList(aBoardId, aPostId, aPageNum);
+			String keyString = StringCacheHelper.postPageToString(aBoardId,
+					aPostId, aPageNum);
+			Serializable obj = SerializableCache.getInstance(aContext).get(
+					keyString);
+			List<PostContentEntity> list = null;
+			if (obj == null) {
+				list = service.getPostContentList(aBoardId, aPostId, aPageNum);
+				SerializableCache.getInstance(aContext).put(keyString,
+						(Serializable) list);
+			} else if (obj instanceof List) {
+				list = (List<PostContentEntity>) obj;
+			}
+			return list;
 		}
 
 		@Override
@@ -634,23 +649,23 @@ public class PostContentsJSActivity extends BaseActivity implements OnScrollChan
 		}
 	}
 
-	
-	private int hideStartPos=0;
-	private int showStartPos=0;
+	private int hideStartPos = 0;
+	private int showStartPos = 0;
 	private final int TRIGER_DIS = 100;
+
 	@Override
 	public void onScroll(int pre, int curr) {
- 		if (curr>pre) {
- 			showStartPos = curr;
- 			if (curr-hideStartPos>TRIGER_DIS) {
- 				getSupportActionBar().hide();
-			} 
+		if (curr > pre) {
+			showStartPos = curr;
+			if (curr - hideStartPos > TRIGER_DIS) {
+				getSupportActionBar().hide();
+			}
 		} else {
 			hideStartPos = curr;
- 			if (showStartPos-curr>TRIGER_DIS) {
- 				getSupportActionBar().show();
-			} 
+			if (showStartPos - curr > TRIGER_DIS) {
+				getSupportActionBar().show();
+			}
 		}
 	}
 
- }
+}

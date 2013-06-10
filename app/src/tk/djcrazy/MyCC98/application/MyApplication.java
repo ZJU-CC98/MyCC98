@@ -27,12 +27,18 @@ public class MyApplication extends Application {
 
  	private UsersInfo usersInfo;
  	private List<Bitmap> userAvatars = new ArrayList<Bitmap>();
+ 	private static Context context;
  	
 	@Override
 	public void onCreate() {
 		super.onCreate();
 		initUsersInfo();
+		MyApplication.context = getApplicationContext();
 	} 
+	
+	public static Context getAppContext() {
+		return MyApplication.context;
+	}
 
 	/**
 	 * 
