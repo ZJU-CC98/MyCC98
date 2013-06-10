@@ -1,6 +1,6 @@
 package tk.djcrazy.MyCC98.helper;
 
-public class StringCacheHelper {
+public class SerializableCacheHelper {
 	private static final String POST = "post://";
 
 	public static String postPageToString(String boardId, String postId, int pageNum) {

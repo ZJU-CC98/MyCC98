@@ -58,7 +58,7 @@ public abstract class AbstractCache<KeyT, ValT> implements Map<KeyT, ValT> {
     public static final int DISK_CACHE_INTERNAL = 0;
     public static final int DISK_CACHE_SDCARD = 1;
 
-    private static final String LOG_TAG = "Droid-Fu[CacheFu]";
+    private static final String LOG_TAG = "MyCC98[CacheFu]";
 
     private boolean isDiskCacheEnabled;
 

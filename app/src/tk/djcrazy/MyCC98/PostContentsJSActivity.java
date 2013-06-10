@@ -11,7 +11,7 @@ import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
 import roboguice.util.RoboAsyncTask;
 import tk.djcrazy.MyCC98.helper.HtmlGenHelper;
-import tk.djcrazy.MyCC98.helper.StringCacheHelper;
+import tk.djcrazy.MyCC98.helper.SerializableCacheHelper;
 import tk.djcrazy.MyCC98.task.ProgressRoboAsyncTask;
 import tk.djcrazy.MyCC98.util.Intents;
 import tk.djcrazy.MyCC98.util.Intents.Builder;
@@ -328,6 +328,10 @@ public class PostContentsJSActivity extends BaseActivity implements
 	}
 
 	public void refreshPage() {
+		String keyString = SerializableCacheHelper.postPageToString(boardId,
+				postId, currPageNum);
+		SerializableCache.getInstance(getApplicationContext())
+				.remove(keyString);
 		startActivity(PostContentsJSActivity.createIntent(boardId, postId,
 				currPageNum));
 	}
@@ -574,8 +578,8 @@ public class PostContentsJSActivity extends BaseActivity implements
 		@SuppressWarnings("unchecked")
 		@Override
 		public List<PostContentEntity> call() throws Exception {
-			String keyString = StringCacheHelper.postPageToString(aBoardId,
-					aPostId, aPageNum);
+			String keyString = SerializableCacheHelper.postPageToString(
+					aBoardId, aPostId, aPageNum);
 			Serializable obj = SerializableCache.getInstance(aContext).get(
 					keyString);
 			List<PostContentEntity> list = null;
@@ -587,6 +591,39 @@ public class PostContentsJSActivity extends BaseActivity implements
 				list = (List<PostContentEntity>) obj;
 			}
 			return list;
+		}
+
+		private void fetch(String boardId, String postId, int pageNum) {
+			String keyString = SerializableCacheHelper.postPageToString(
+					boardId, postId, pageNum);
+			Serializable obj = SerializableCache.getInstance(aContext).get(
+					keyString);
+			if (obj == null) {
+				try {
+					List<PostContentEntity> list = service.getPostContentList(boardId, postId, pageNum);
+					SerializableCache.getInstance(aContext).put(keyString,
+							(Serializable) list);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		private void prefetch() {
+			if (currPageNum < totalPageNum) {
+				new Thread(){
+					public void run() {
+						fetch(aBoardId, aPostId, currPageNum+1);
+					}
+				}.start();
+			}
+			if (currPageNum > 1) {
+				new Thread() {
+					public void run() {
+						fetch(aBoardId, aPostId, currPageNum-1);
+					}
+				}.start();
+			}
 		}
 
 		@Override
@@ -612,6 +649,7 @@ public class PostContentsJSActivity extends BaseActivity implements
 			getSupportActionBar().setTitle(postName);
 			getSupportActionBar().setSubtitle(
 					"第" + currPageNum + "页 | " + "共" + totalPageNum + "页");
+			prefetch();
 		}
 
 		@Override
