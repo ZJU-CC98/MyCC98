@@ -1,6 +1,7 @@
 package tk.djcrazy.MyCC98;
 
 import java.io.IOException;
+import java.io.Serializable;
 
 import org.apache.http.ParseException;
 import org.apache.http.client.ClientProtocolException;
@@ -9,8 +10,10 @@ import roboguice.inject.ContentView;
 import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
 import tk.djcrazy.MyCC98.helper.HtmlGenHelper;
+import tk.djcrazy.MyCC98.helper.SerializableCacheHelper;
 import tk.djcrazy.MyCC98.util.Intents;
 import tk.djcrazy.libCC98.ICC98Service;
+import tk.djcrazy.libCC98.SerializableCache;
 import tk.djcrazy.libCC98.exception.ParseContentException;
 import android.content.Intent;
 import android.graphics.Color;
@@ -161,22 +164,32 @@ public class PmViewActivity extends BaseFragmentActivity {
 		new Thread() {
 			@Override
 			public void run() {
- 				StringBuilder builder = new StringBuilder(1000);
+				StringBuilder builder = new StringBuilder(1000);
 				if (pmId != -1) { // in reply mod
 					try {
-						pmContent = service.getMsgContent(pmId);
+						String keyString = SerializableCacheHelper.pmKey(pmId);
+						SerializableCache cache = SerializableCache.getInstance(getApplicationContext());
+						Object obj = cache.get(keyString);
+						if (obj instanceof String) {
+							pmContent = (String) obj;
+						} else {
+							pmContent = service.getMsgContent(pmId);
+							cache.put(keyString, (Serializable) pmContent);
+						}
 						try {
 							senderAvatarUrl = service.getUserImgUrl(sender);
 						} catch (ParseContentException e) {
 							e.printStackTrace();
 						}
-						 HtmlGenHelper.addPostInfo(builder, readTopic,
+						HtmlGenHelper.addPostInfo(builder, readTopic,
 								senderAvatarUrl, sender, "", -1, sendTime, -1);
-						 builder.append("<div class=\"post-content\"><span id=\"ubbcode\">") 
-								.append( "<div class=\"post-content\"><span id=\"ubbcode\">")
-								.append(helper.parseInnerLink(pmContent, "PmReply"))
+						builder.append(
+								"<div class=\"post-content\"><span id=\"ubbcode\">")
+								.append("<div class=\"post-content\"><span id=\"ubbcode\">")
+								.append(helper.parseInnerLink(pmContent,
+										"PmReply"))
 								.append("</span><script>searchubb('ubbcode',1,'tablebody2');</script></div>");
-					} catch (ClientProtocolException e) { 
+					} catch (ClientProtocolException e) {
 
 						e.printStackTrace();
 					} catch (ParseException e) {
@@ -187,15 +200,15 @@ public class PmViewActivity extends BaseFragmentActivity {
 						e.printStackTrace();
 					}
 				} else {
- 					if (sender == null) {
+					if (sender == null) {
 						sender = "";
 					}
 					if (readTopic == null) {
 						readTopic = "";
 					}
 				}
-				pageString = helper.PAGE_OPEN + builder.toString() 
- 						+ helper.PAGE_CLOSE;
+				pageString = helper.PAGE_OPEN + builder.toString()
+						+ helper.PAGE_CLOSE;
 				handler.sendEmptyMessage(0);
 			}
 		}.start();
@@ -203,9 +216,9 @@ public class PmViewActivity extends BaseFragmentActivity {
 	}
 
 	public void preview(String content) {
- 		Intent intent = new Intent(this, PreviewActivity.class);
+		Intent intent = new Intent(this, PreviewActivity.class);
 		intent.putExtra("content", content);
 		startActivity(intent);
 	}
 
- }
+}

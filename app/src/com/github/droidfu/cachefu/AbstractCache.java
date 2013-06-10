@@ -228,7 +228,7 @@ public abstract class AbstractCache<KeyT, ValT> implements Map<KeyT, ValT> {
         File file = new File(diskCacheDirectory + "/" + getFileNameForKey(key));
         try {
             file.createNewFile();
-            file.deleteOnExit();
+            //file.deleteOnExit();
 
             writeValueToDisk(file, value);
 

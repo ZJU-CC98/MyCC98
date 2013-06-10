@@ -328,7 +328,7 @@ public class PostContentsJSActivity extends BaseActivity implements
 	}
 
 	public void refreshPage() {
-		String keyString = SerializableCacheHelper.postPageToString(boardId,
+		String keyString = SerializableCacheHelper.postPageKey(boardId,
 				postId, currPageNum);
 		SerializableCache.getInstance(getApplicationContext())
 				.remove(keyString);
@@ -578,7 +578,7 @@ public class PostContentsJSActivity extends BaseActivity implements
 		@SuppressWarnings("unchecked")
 		@Override
 		public List<PostContentEntity> call() throws Exception {
-			String keyString = SerializableCacheHelper.postPageToString(
+			String keyString = SerializableCacheHelper.postPageKey(
 					aBoardId, aPostId, aPageNum);
 			Serializable obj = SerializableCache.getInstance(aContext).get(
 					keyString);
@@ -594,7 +594,7 @@ public class PostContentsJSActivity extends BaseActivity implements
 		}
 
 		private void fetch(String boardId, String postId, int pageNum) {
-			String keyString = SerializableCacheHelper.postPageToString(
+			String keyString = SerializableCacheHelper.postPageKey(
 					boardId, postId, pageNum);
 			Serializable obj = SerializableCache.getInstance(aContext).get(
 					keyString);
