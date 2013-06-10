@@ -24,12 +24,14 @@ import tk.djcrazy.libCC98.data.UserData;
 import tk.djcrazy.libCC98.util.DateFormatUtil;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Debug;
 import android.preference.PreferenceManager;
 import android.text.Html;
 import android.text.InputType;
@@ -41,6 +43,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebSettings.LayoutAlgorithm;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.webkit.WebStorage;
 import android.widget.EditText;
 import android.widget.Toast;
 import ch.boye.httpclientandroidlib.cookie.Cookie;
@@ -56,6 +59,8 @@ public class PostContentsJSActivity extends BaseActivity implements OnScrollChan
 	private static final String JS_INTERFACE = "PostContentsJSActivity";
 
 	public static final int LAST_PAGE = 32767;
+	// WebView cache max size, in bytes
+	private static final long CACHE_SIZE = 32*1024*1024;
 
 	@InjectView(R.id.post_contents)
 	private ObservableWebView webView;
@@ -260,9 +265,16 @@ public class PostContentsJSActivity extends BaseActivity implements OnScrollChan
 		webSettings.setDefaultFontSize(14);
 		webSettings.setLoadsImagesAutomatically(showImage);
 		webSettings.setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
-		webSettings.setAppCacheEnabled(enableCache);
 		webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
- 		webView.setOnScrollChangedCallback(this);
+ 		if (enableCache) {
+ 			webSettings.setAppCacheMaxSize(CACHE_SIZE);
+ 			webSettings.setAllowFileAccess(true);
+ 			webView.getSettings().setDomStorageEnabled(true);
+ 			webSettings.setAppCachePath(getApplicationContext().getCacheDir().getPath());
+ 			webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
+ 		}
+ 		webSettings.setAppCacheEnabled(enableCache);
+		webView.setOnScrollChangedCallback(this);
 		webView.addJavascriptInterface(this, JS_INTERFACE);
 		webView.setWebViewClient(new WebViewClient() {
 			@Override

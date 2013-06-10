@@ -1,5 +1,6 @@
 package tk.djcrazy.MyCC98;
 
+import java.io.File;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -65,6 +66,11 @@ public class HomeActivity extends BaseSlidingFragmentActivity implements
  	
 	Fragment mFragment = null;
  
+	protected void onStop() {
+		super.onStop();
+		flushCache();
+	}
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -116,6 +122,19 @@ public class HomeActivity extends BaseSlidingFragmentActivity implements
 		sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
  		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		new CheckUpdateTask(this).execute();
+	}
+	
+	private void flushCache() {
+		try {
+			Object cache = Class.forName("android.net.http.HttpResponseCache")
+					.getMethod("getInstalled").invoke(null);
+			if (cache != null) {
+				Class.forName("android.net.http.HttpResponseCache")
+				.getMethod("flush").invoke(cache);
+			}
+		} catch (Exception httpResponseCacheNotAvailable) {
+			
+		}
 	}
 
 	/**

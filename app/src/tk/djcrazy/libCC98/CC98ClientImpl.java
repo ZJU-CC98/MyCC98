@@ -60,6 +60,8 @@ import ch.boye.httpclientandroidlib.conn.scheme.SchemeRegistry;
 import ch.boye.httpclientandroidlib.conn.ssl.SSLSocketFactory;
 import ch.boye.httpclientandroidlib.cookie.Cookie;
 import ch.boye.httpclientandroidlib.impl.client.DefaultHttpClient;
+import ch.boye.httpclientandroidlib.impl.client.cache.CacheConfig;
+import ch.boye.httpclientandroidlib.impl.client.cache.CachingHttpClient;
 import ch.boye.httpclientandroidlib.impl.conn.tsccm.ThreadSafeClientConnManager;
 import ch.boye.httpclientandroidlib.message.BasicNameValuePair;
 import ch.boye.httpclientandroidlib.params.BasicHttpParams;
@@ -67,6 +69,7 @@ import ch.boye.httpclientandroidlib.params.CoreConnectionPNames;
 import ch.boye.httpclientandroidlib.params.HttpParams;
 import ch.boye.httpclientandroidlib.params.HttpProtocolParams;
 import ch.boye.httpclientandroidlib.protocol.HTTP;
+import ch.boye.httpclientandroidlib.protocol.HttpContext;
 import ch.boye.httpclientandroidlib.util.EntityUtils;
 
 import com.google.inject.Inject;
@@ -91,6 +94,7 @@ public class CC98ClientImpl implements ICC98Client {
 	@Inject
 	private Application application;
 	private DefaultHttpClient client;
+	private CachingHttpClient cachingHttpClient;
 
 	@Override
 	public UserData getCurrentUserData() {
@@ -106,6 +110,11 @@ public class CC98ClientImpl implements ICC98Client {
 	public DefaultHttpClient getHttpClient() {
 		getHttpClient(false);
 		return client;
+	}
+	
+	public CachingHttpClient getCachingHttpClient() {
+		getHttpClient(false);
+		return cachingHttpClient;
 	}
 
 	public DefaultHttpClient getHttpClient(boolean forceRefresh) {
@@ -157,6 +166,10 @@ public class CC98ClientImpl implements ICC98Client {
 			ClientConnectionManager conMgr = new ThreadSafeClientConnManager(
 					params, schReg);
 			client = new DefaultHttpClient(conMgr, params);
+			CacheConfig cacheConfig = new CacheConfig();
+			cacheConfig.setMaxCacheEntries(1000);
+			cacheConfig.setMaxObjectSizeBytes(8192);
+			cachingHttpClient = new CachingHttpClient(client, cacheConfig);
 			client.getParams().setParameter(
 					CoreConnectionPNames.CONNECTION_TIMEOUT, 30000);
 			client.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT,
@@ -199,7 +212,7 @@ public class CC98ClientImpl implements ICC98Client {
 		nvps.add(new BasicNameValuePair("p", pw32));
 		nvps.add(new BasicNameValuePair("userhidden", "2"));
 		httpost.setEntity(new UrlEncodedFormEntity(nvps, "UTF-8"));
-		HttpResponse response = getHttpClient().execute(httpost);
+		HttpResponse response = getCachingHttpClient().execute(httpost);
 		if (response.getStatusLine().getStatusCode() != 200) {
 			throw new NetworkErrorException(SERVER_ERROR);
 		}
@@ -256,7 +269,7 @@ public class CC98ClientImpl implements ICC98Client {
 		nvpsList.add(new BasicNameValuePair("passwd", getCurrentUserData()
 				.getPassword16()));
 		httpPost.setEntity(new UrlEncodedFormEntity(nvpsList, "UTF-8"));
-		response = getHttpClient().execute(httpPost);
+		response = getCachingHttpClient().execute(httpPost);
 		entity = response.getEntity();
 		if (entity != null) {
 			html = EntityUtils.toString(entity);
@@ -273,7 +286,7 @@ public class CC98ClientImpl implements ICC98Client {
 		HttpEntity entity;
 		HttpPost httpPost = new HttpPost(link);
 		httpPost.setEntity(new UrlEncodedFormEntity(nvpsList, "UTF-8"));
-		HttpResponse response = getHttpClient().execute(httpPost);
+		HttpResponse response = getCachingHttpClient().execute(httpPost);
 		entity = response.getEntity();
 		if (entity != null) {
 			String html = EntityUtils.toString(entity);
@@ -300,7 +313,7 @@ public class CC98ClientImpl implements ICC98Client {
 				.getPassword16()));
 		httpPost.setEntity(new UrlEncodedFormEntity(nvpsList, "UTF-8"));
 		// Log.d(TAG, "request: "+EntityUtils.toString(httpPost.getEntity()));
-		response = getHttpClient().execute(httpPost);
+		response = getCachingHttpClient().execute(httpPost);
 		entity = response.getEntity();
 		if (entity != null) {
 			html = EntityUtils.toString(entity);
@@ -335,7 +348,7 @@ public class CC98ClientImpl implements ICC98Client {
 		nvpsList.add(new BasicNameValuePair("serType", String.valueOf(boardID)));
 
 		httpPost.setEntity(new UrlEncodedFormEntity(nvpsList, "UTF-8"));
-		response = getHttpClient().execute(httpPost);
+		response = getCachingHttpClient().execute(httpPost);
 		entity = response.getEntity();
 
 		if (entity != null) {
@@ -357,7 +370,7 @@ public class CC98ClientImpl implements ICC98Client {
 		HttpGet get = new HttpGet(link);
 		 Log.d(TAG, "get page: " + link);
 		HttpResponse rsp = null;
-		rsp = getHttpClient().execute(get);
+		rsp = getCachingHttpClient().execute(get);
 		int mCode = rsp.getStatusLine().getStatusCode();
 		if (mCode != 200) {
  			throw new IOException("服务器有误！");
@@ -467,7 +480,7 @@ public class CC98ClientImpl implements ICC98Client {
 		msgInfo.add(new BasicNameValuePair("title", title));
 		msgInfo.add(new BasicNameValuePair("message", message));
  		post.setEntity(new UrlEncodedFormEntity(msgInfo, "UTF-8"));
-		HttpResponse response = getHttpClient().execute(post);
+		HttpResponse response = getCachingHttpClient().execute(post);
 
 		HttpEntity entity = response.getEntity();
 		Log.d(TAG, EntityUtils.toString(response.getEntity()));
@@ -490,7 +503,7 @@ public class CC98ClientImpl implements ICC98Client {
 		nvpsList.add(new BasicNameValuePair("touser", userId));
 		nvpsList.add(new BasicNameValuePair("Submit", "保存"));
 		httpPost.setEntity(new UrlEncodedFormEntity(nvpsList, "UTF-8"));
-		HttpResponse response = getHttpClient().execute(httpPost);
+		HttpResponse response = getCachingHttpClient().execute(httpPost);
 		if (response.getStatusLine().getStatusCode() != 200) {
 			throw new ConnectException("服务器返回错误！");
 		}
@@ -527,7 +540,7 @@ public class CC98ClientImpl implements ICC98Client {
 		System.out.println("avatar utl:"+url);
 		System.out.println("getBitmapFromUrl");
 		HttpGet get = new HttpGet(url);
-		HttpResponse response = getHttpClient().execute(get);
+		HttpResponse response = getCachingHttpClient().execute(get);
 		return BitmapFactory.decodeStream(response.getEntity().getContent());
 	}
 
