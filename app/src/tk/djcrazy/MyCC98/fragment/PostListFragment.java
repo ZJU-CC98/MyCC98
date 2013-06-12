@@ -67,6 +67,9 @@ public class PostListFragment extends PagedPullToRefeshListFragment<PostEntity> 
 
 	@Override
 	public Loader<List<PostEntity>> onCreateLoader(int arg0, Bundle arg1) {
+		// Cache behavior:
+		//      Use cache if exists until refresh.
+		//      When refresh, remove all post list cache of the board.
 		return new ThrowableLoader<List<PostEntity>>(getActivity(), items) {
 			@SuppressWarnings("unchecked")
 			@Override
