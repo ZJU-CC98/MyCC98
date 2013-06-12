@@ -27,24 +27,32 @@ import tk.djcrazy.libCC98.data.UserData;
 import tk.djcrazy.libCC98.util.DateFormatUtil;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.BitmapDrawable;
-import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Html;
 import android.text.InputType;
 import android.util.Log;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.webkit.HttpAuthHandler;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebSettings.LayoutAlgorithm;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 import ch.boye.httpclientandroidlib.cookie.Cookie;
 
@@ -277,6 +285,7 @@ public class PostContentsJSActivity extends BaseActivity implements
 		webSettings.setAppCacheEnabled(enableCache);
 		webView.setOnScrollChangedCallback(this);
 		webView.addJavascriptInterface(this, JS_INTERFACE);
+		webView.setWebChromeClient( new FullscreenableChromeClient(this));
 		webView.setWebViewClient(new WebViewClient() {
 			@Override
 			public void onPageFinished(WebView view, String url) {
@@ -703,5 +712,88 @@ public class PostContentsJSActivity extends BaseActivity implements
 			}
 		}
 	}
-
 }
+
+class FullscreenableChromeClient extends WebChromeClient {
+    protected Activity mActivity = null;
+
+    private View mCustomView;
+    private WebChromeClient.CustomViewCallback mCustomViewCallback;
+    private int mOriginalOrientation;
+
+    private FrameLayout mContentView;
+    private FrameLayout mFullscreenContainer;
+
+    private static final FrameLayout.LayoutParams COVER_SCREEN_PARAMS = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+
+    public FullscreenableChromeClient(Activity activity) {
+        this.mActivity = activity;
+    }
+
+    @Override
+    public void onShowCustomView(View view, int requestedOrientation, WebChromeClient.CustomViewCallback callback) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+            if (mCustomView != null) {
+                callback.onCustomViewHidden();
+                return;
+            }
+
+            mOriginalOrientation = mActivity.getRequestedOrientation();
+            FrameLayout decor = (FrameLayout) mActivity.getWindow().getDecorView();
+            mFullscreenContainer = new FullscreenHolder(mActivity);
+            mFullscreenContainer.addView(view, COVER_SCREEN_PARAMS);
+            decor.addView(mFullscreenContainer, COVER_SCREEN_PARAMS);
+            mCustomView = view;
+            setFullscreen(true);
+            mCustomViewCallback = callback;
+            mActivity.setRequestedOrientation(requestedOrientation);
+        }
+
+        super.onShowCustomView(view, requestedOrientation, callback);
+    }
+
+    @Override
+    public void onHideCustomView() {
+        if (mCustomView == null) {
+            return;
+        }
+
+        setFullscreen(false);
+        FrameLayout decor = (FrameLayout) mActivity.getWindow().getDecorView();
+        decor.removeView(mFullscreenContainer);
+        mFullscreenContainer = null;
+        mCustomView = null;
+        mCustomViewCallback.onCustomViewHidden();
+        mActivity.setRequestedOrientation(mOriginalOrientation);
+    }
+
+    private void setFullscreen(boolean enabled) {
+        Window win = mActivity.getWindow();
+        WindowManager.LayoutParams winParams = win.getAttributes();
+        final int bits = WindowManager.LayoutParams.FLAG_FULLSCREEN;
+        if (enabled) {
+            winParams.flags |= bits;
+        } else {
+            winParams.flags &= ~bits;
+            if (mCustomView != null) {
+                mCustomView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
+            } else {
+                mContentView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
+            }
+        }
+        win.setAttributes(winParams);
+    }
+
+    private static class FullscreenHolder extends FrameLayout {
+        public FullscreenHolder(Context ctx) {
+            super(ctx);
+            setBackgroundColor(ctx.getResources().getColor(android.R.color.black));
+        }
+
+        @Override
+        public boolean onTouchEvent(MotionEvent evt) {
+        return true;
+    }
+}
+}
+
