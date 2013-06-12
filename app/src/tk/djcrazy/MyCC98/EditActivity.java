@@ -10,6 +10,7 @@ import java.util.Date;
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
+import tk.djcrazy.MyCC98.R.id;
 import tk.djcrazy.MyCC98.adapter.EmotionGridViewAdapter;
 import tk.djcrazy.MyCC98.helper.TextHelper;
 import tk.djcrazy.MyCC98.task.ProgressRoboAsyncTask;
@@ -71,6 +72,7 @@ public class EditActivity extends BaseFragmentActivity implements OnClickListene
 
 	public static final String TAIL = "\n\n[right][color=gray]From  "
 			+ Build.MODEL + " via MyCC98[/color][/right]";
+	public static final String XINLING_TAIL = "\n\n[right][color=gray][匿了]via MyCC98[/匿了][/color][/right]";
 
 	private String appendTail = TAIL;
 
@@ -221,6 +223,8 @@ public class EditActivity extends BaseFragmentActivity implements OnClickListene
 				SettingsActivity.CUSTOM_TAIL_CONTENT, "");
 		if (!showTail) {
 			appendTail = "";
+		} else if ("182".equals(boardID)) {
+			appendTail = XINLING_TAIL;
 		} else if (!useCustomTail) {
 			appendTail = TAIL;
 		} else {
@@ -246,7 +250,7 @@ public class EditActivity extends BaseFragmentActivity implements OnClickListene
 	 */
 	private void ensure() {
 		String titleString = replyTitleEditText.getText().toString();
- 		String contentString = replyContentEditText.getText().toString()
+		String contentString = replyContentEditText.getText().toString()
 				+ appendTail;
 		contentString = replaceAllImage(contentString);
 		if (TextHelper.isEmpty(contentString)) {
