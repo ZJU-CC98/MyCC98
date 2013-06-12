@@ -99,7 +99,6 @@ public class PostContentsJSActivity extends BaseActivity implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
 		configureActionBar();
 		configureWebView();
 		webView.postDelayed(new Runnable() {
@@ -288,13 +287,12 @@ public class PostContentsJSActivity extends BaseActivity implements
 
 			@Override
 			public boolean shouldOverrideUrlLoading(WebView view, String url) {
-				if (url.startsWith("dispbbs")) {
-					url = service.getDomain() + url;
+				if (url.endsWith(".jpg")|url.endsWith(".png")|url.endsWith(".bmp")) {
+ 	 				startActivity(PhotoViewActivity.createIntent(url));
+	 				return true;
+				} else {
+					return false;
 				}
-				Intent i = new Intent(Intent.ACTION_VIEW);
-				i.setData(Uri.parse(url));
-				startActivity(i);
-				return true;
 			}
 
 			@Override
