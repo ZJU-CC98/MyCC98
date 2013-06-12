@@ -12,7 +12,6 @@ import tk.djcrazy.libCC98.ICC98Service;
 import tk.djcrazy.libCC98.SerializableCache;
 import tk.djcrazy.libCC98.data.BoardEntity;
 import android.os.Bundle;
-import android.renderscript.Script.KernelID;
 import android.support.v4.content.Loader;
 
 import com.google.inject.Inject;
