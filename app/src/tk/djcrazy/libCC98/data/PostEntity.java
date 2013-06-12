@@ -3,13 +3,18 @@
  */
 package tk.djcrazy.libCC98.data;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * @author DJ
  *
  */
-public class PostEntity {
+public class PostEntity implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7632981725488779596L;
 	/**
 	 * @return the postType
 	 */
