@@ -1,13 +1,18 @@
 package tk.djcrazy.MyCC98.fragment;
 
+import java.io.Serializable;
 import java.util.List;
 
 import tk.djcrazy.MyCC98.PostContentsJSActivity;
 import tk.djcrazy.MyCC98.R;
 import tk.djcrazy.MyCC98.adapter.BaseItemListAdapter;
 import tk.djcrazy.MyCC98.adapter.HotTopicListAdapter;
+import tk.djcrazy.MyCC98.application.MyApplication;
+import tk.djcrazy.MyCC98.helper.SerializableCacheHelper;
 import tk.djcrazy.MyCC98.util.ThrowableLoader;
 import tk.djcrazy.libCC98.ICC98Service;
+import tk.djcrazy.libCC98.SerializableCache;
+import tk.djcrazy.libCC98.data.BoardEntity;
 import tk.djcrazy.libCC98.data.HotTopicEntity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -23,6 +28,7 @@ public class HotTopicFragment extends PullToRefeshListFragment<HotTopicEntity> {
 	private static final String TAG = "HotTopicFragment";
 	@Inject
 	private ICC98Service service;
+	private boolean initload = true;
  
 	 
 	@Override
@@ -37,7 +43,24 @@ public class HotTopicFragment extends PullToRefeshListFragment<HotTopicEntity> {
 		return new ThrowableLoader<List<HotTopicEntity>>(getActivity(), items) {
 			@Override
 			public List<HotTopicEntity> loadData() throws Exception {
-				return service.getHotTopicList();
+				List<HotTopicEntity> ret = null;
+				SerializableCache cache = SerializableCache
+						.getInstance(MyApplication.getAppContext());
+				String keyString = SerializableCacheHelper
+						.hottopicKey();
+				// initial load, using cache if possible.
+				if (initload) {
+					Object object = cache.get(keyString);
+					if (object instanceof List) {
+						ret = (List<HotTopicEntity>) ret;
+					}
+				}
+				if (ret == null) {
+					ret = service.getHotTopicList();
+					cache.put(keyString, (Serializable) ret);
+				}
+				initload = false;
+				return ret;
 			}
 		};
 	}

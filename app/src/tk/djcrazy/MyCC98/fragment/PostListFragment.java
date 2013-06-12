@@ -68,36 +68,33 @@ public class PostListFragment extends PagedPullToRefeshListFragment<PostEntity> 
 	@Override
 	public Loader<List<PostEntity>> onCreateLoader(int arg0, Bundle arg1) {
 		// Cache behavior:
-		//      Use cache if exists until refresh.
-		//      When refresh, remove all post list cache of the board.
+		// Use cache if exists until refresh.
+		// When refresh, remove all post list cache of the board.
 		return new ThrowableLoader<List<PostEntity>>(getActivity(), items) {
 			@SuppressWarnings("unchecked")
 			@Override
 			public List<PostEntity> loadData() throws Exception {
 				List<PostEntity> list = null;
+				int pagenum = getListView().getCurrentPage() + 1;
+				String keyString = SerializableCacheHelper.postListKey(boardId,
+						pagenum);
 				if (isClearData) {
-					list = service.getPostList(boardId, getListView()
-							.getCurrentPage() + 1);
+					list = service.getPostList(boardId, pagenum);
 					items = list;
 					// invalidate all cache of this board
 					SerializableCache cache = SerializableCache
 							.getInstance(MyApplication.getAppContext());
 					cache.removeAllWithPrefix(SerializableCacheHelper
 							.postListKey(boardId));
-					cache.put(SerializableCacheHelper.postListKey(boardId,
-							getListView().getCurrentPage() + 1),
-							(Serializable) list);
+					cache.put(keyString, (Serializable) list);
 				} else {
 					SerializableCache cache = SerializableCache
 							.getInstance(MyApplication.getAppContext());
-					String keyString = SerializableCacheHelper.postListKey(
-							boardId, getListView().getCurrentPage() + 1);
 					Object object = cache.get(keyString);
 					if (object instanceof List) {
 						items.addAll((List<PostEntity>) object);
 					} else {
-						list = service.getPostList(boardId, getListView()
-								.getCurrentPage() + 1);
+						list = service.getPostList(boardId, pagenum);
 						items.addAll(list);
 						cache.put(keyString, (Serializable) list);
 					}
