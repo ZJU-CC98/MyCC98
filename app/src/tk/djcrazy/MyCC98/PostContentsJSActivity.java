@@ -32,6 +32,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -300,7 +301,9 @@ public class PostContentsJSActivity extends BaseActivity implements
  	 				startActivity(PhotoViewActivity.createIntent(url));
 	 				return true;
 				} else {
-					return false;
+					 Intent it = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+					 startActivity(it);
+					return true;
 				}
 			}
 

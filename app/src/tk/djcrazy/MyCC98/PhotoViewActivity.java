@@ -13,11 +13,13 @@ import tk.djcrazy.MyCC98.util.ViewUtils;
 import tk.djcrazy.libCC98.ICC98Service;
 import uk.co.senab.photoview.PhotoViewAttacher;
 import uk.co.senab.photoview.PhotoViewAttacher.OnViewTapListener;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
@@ -88,10 +90,13 @@ public class PhotoViewActivity extends BaseActivity {
 		protected void onSuccess(Bitmap t) throws Exception {
 			super.onSuccess(t);
 			ViewUtils.setGone(mProgressBar, true);
+			if(Build.VERSION.SDK_INT >= 11){
+ 				changeRenderTypeIfNessary(t); 
+	        }
 			mImageView.setImageBitmap(t);
 			ViewUtils.setGone(mImageView, false);
 		    mAttacher = new PhotoViewAttacher(mImageView);
- 		    mAttacher.setMaxScale(30L);
+ 		    mAttacher.setMaxScale(Math.max(t.getHeight(), t.getWidth())/100);
  		    mAttacher.setOnViewTapListener(new OnViewTapListener() {
 				@Override
 				public void onViewTap(View view, float x, float y) {
@@ -102,12 +107,25 @@ public class PhotoViewActivity extends BaseActivity {
 					}
 				}
 			});
+			getActionBar().hide();
 		}
+
+		/**
+		 * OpenGL max bitmap supoorts 2048*2048, see http://stackoverflow.com/questions/10271020/bitmap-too-large-to-be-uploaded-into-a-texture
+		 */
+		@TargetApi(11)
+		private void changeRenderTypeIfNessary(Bitmap t) {
+			if (t.getHeight()>2048||t.getWidth()>2048) {
+			    mImageView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+			    ToastUtils.show(PhotoViewActivity.this, "图片过大，关闭硬件加速");
+			}
+		}
+		
 		@Override
 		protected void onException(Exception e) throws RuntimeException {
 			super.onException(e);
 			Log.e("DownloadPhotoTask", "DownloadPhotoTask failed", e);
-			ToastUtils.show((Activity) getContext(), "图片下载失败，请重试");
+			ToastUtils.show(PhotoViewActivity.this, "图片下载失败，请重试");
 		}
 	}
 }
