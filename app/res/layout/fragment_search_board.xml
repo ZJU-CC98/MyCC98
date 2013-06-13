@@ -16,17 +16,16 @@
         android:id="@+id/search_board_search_area"
         android:layout_width="match_parent"
         android:layout_height="30dp"
-        android:background="@drawable/search_bar_bg"
+        android:background="@android:color/background_light"
         android:gravity="center_vertical"
-        android:visibility="gone" >
+        android:visibility="visible" >
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="25dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:background="@drawable/search_area_bg"
-            android:gravity="center_vertical" >
+             android:gravity="center_vertical" >
 
             <ImageView
                 android:layout_width="18dp"
@@ -45,13 +44,6 @@
                 android:hint="请输入关键词"
                 android:singleLine="true"
                 android:textSize="13sp" />
-
-            <Button
-                android:id="@+id/post_search_clear_input"
-                android:layout_width="18dp"
-                android:layout_height="18dp"
-                android:layout_marginRight="2dp"
-                android:background="@drawable/search_clear_input_icon" />
         </LinearLayout>
     </LinearLayout>
 
