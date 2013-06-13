@@ -629,7 +629,7 @@ public class PostContentsJSActivity extends BaseActivity implements OnScrollChan
 			webView.loadDataWithBaseURL(null, assemblyContent(t), "text/html", "utf-8", null);
 			getSupportActionBar().setTitle(postName);
 			getSupportActionBar()
-					.setSubtitle("第" + currPageNum + "页 | " + "共" + totalPageNum + "页");
+					.setSubtitle("第" + currPageNum + "页 | " + "共" + totalPageNum + "页    "+boardName);
 			prefetch();
 		}
 
