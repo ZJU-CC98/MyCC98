@@ -704,7 +704,7 @@ public class PostContentsJSActivity extends BaseActivity implements OnScrollChan
 				nextPage();	
 			else if (-distX > FLING_MIN_DISTANCE && Math.abs(velocityX) > FLING_MIN_VELOCITY
 					&& distY < FLING_MAX_Y_DISTANCE)
-				prevPage();
+				prevPage(); 
 			return false;
 		}
 	}
