@@ -34,7 +34,7 @@
         android:hardwareAccelerated="true"
         android:icon="@drawable/icon"
         android:label="@string/app_name"
-        android:theme="@style/Theme.MyCC98" >
+        android:theme="@style/Theme.Mycc98" >
         <meta-data
             android:name="BaiduMobAd_CHANNEL"
             android:value="General" />
@@ -104,11 +104,10 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="false"
             android:launchMode="singleTop"
-            android:theme="@style/Theme.MyCC98.OverLay"
+            android:theme="@style/Theme.Mycc98.OverLay"
             android:uiOptions="splitActionBarWhenNarrow" >
             <intent-filter>
                 <action android:name="tk.djcrazy.mycc98.post_content.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>

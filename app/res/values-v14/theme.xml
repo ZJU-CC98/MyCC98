@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="Theme.MyCC98" parent="Theme.Sherlock.Light.DarkActionBar">
+    <style name="Theme.MyCC98.bak" parent="Theme.Sherlock.Light.DarkActionBar">
         <item name="android:actionBarStyle">@style/Theme.MyCC98.ActionBar</item>
         <item name="@android:windowAnimationStyle">@style/ActivityAnimStyle</item>
      </style>
     
     <style name="Theme.MyCC98.ActionBar" parent="Widget.Sherlock.Light.ActionBar.Solid.Inverse">
-        <item name="android:background">@drawable/actionbar_background</item>
+        <item name="android:background">@drawable/ab_solid_example</item>
      </style>
 
-    <style name="Theme.MyCC98.OverLay" parent="Theme.Sherlock">
+    <style name="Theme.MyCC98.OverLay.bak" parent="Theme.Sherlock">
         <item name="android:actionBarStyle">@style/Theme.MyCC98.OverLay.ActionBar</item>
         <item name="android:windowActionBarOverlay">true</item>
         <item name="@android:windowAnimationStyle">@style/ActivityAnimStyle</item>
@@ -22,8 +22,6 @@
          <item name="android:background">@drawable/actionbar_background</item>
          <item name="android:backgroundSplit">#ee000000</item>
          <item name="android:subtitleTextStyle">@style/MyCC98.OverLay.TextAppearance.ActionBar.Subtitle</item>
-         
-         
     </style>
 
     <style name="MyCC98.OverLay.TextAppearance.ActionBar.Subtitle" parent="@style/TextAppearance.Sherlock.Widget.ActionBar.Subtitle">

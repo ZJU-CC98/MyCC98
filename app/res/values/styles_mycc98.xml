@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- File created by the Android Action Bar Style Generator
+
+     Copyright (C) 2011 The Android Open Source Project
+     Copyright (C) 2012 readyState Software Ltd
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+  
+          http://www.apache.org/licenses/LICENSE-2.0
+  
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+
+<resources>
+
+    <style name="Theme.Mycc98" parent="@style/Theme.Sherlock.Light.DarkActionBar">
+        <item name="actionBarItemBackground">@drawable/selectable_background_mycc98</item>
+        <item name="popupMenuStyle">@style/PopupMenu.Mycc98</item>
+        <item name="dropDownListViewStyle">@style/DropDownListView.Mycc98</item>
+        <item name="actionBarTabStyle">@style/ActionBarTabStyle.Mycc98</item>
+        <item name="actionDropDownStyle">@style/DropDownNav.Mycc98</item>
+        <item name="actionBarStyle">@style/ActionBar.Solid.Mycc98</item>
+        <item name="actionModeBackground">@drawable/cab_background_top_mycc98</item>
+        <item name="actionModeSplitBackground">@drawable/cab_background_bottom_mycc98</item>
+        <item name="actionModeCloseButtonStyle">@style/ActionButton.CloseMode.Mycc98</item>
+                <!-- Light.DarkActionBar specific -->
+        <item name="actionBarWidgetTheme">@style/Theme.Mycc98.Widget</item>
+
+    </style>
+
+    <style name="ActionBar.Solid.Mycc98" parent="@style/Widget.Sherlock.Light.ActionBar.Solid.Inverse">
+        <item name="background">@drawable/ab_solid_mycc98</item>
+        <item name="backgroundStacked">@drawable/ab_stacked_solid_mycc98</item>
+        <item name="backgroundSplit">#ee000000</item>
+        <item name="progressBarStyle">@style/ProgressBar.Mycc98</item>
+    </style>
+
+    <style name="ActionBar.Transparent.Mycc98" parent="@style/Widget.Sherlock.ActionBar">
+        <item name="background">@drawable/ab_transparent_mycc98</item>
+        <item name="progressBarStyle">@style/ProgressBar.Mycc98</item>
+    </style>
+	
+    <style name="PopupMenu.Mycc98" parent="@style/Widget.Sherlock.ListPopupWindow">	
+        <item name="android:popupBackground">@drawable/menu_dropdown_panel_mycc98</item>	
+    </style>
+	
+    <style name="DropDownListView.Mycc98" parent="@style/Widget.Sherlock.ListView.DropDown">
+        <item name="android:listSelector">@drawable/selectable_background_mycc98</item>
+    </style>
+
+    <style name="ActionBarTabStyle.Mycc98" parent="@style/Widget.Sherlock.ActionBar.TabView">
+        <item name="android:background">@drawable/tab_indicator_ab_mycc98</item>
+    </style>
+	
+    <style name="DropDownNav.Mycc98" parent="@style/Widget.Sherlock.Spinner.DropDown.ActionBar">
+        <item name="android:background">@drawable/spinner_background_ab_mycc98</item>
+        <item name="android:popupBackground">@drawable/menu_dropdown_panel_mycc98</item>
+        <item name="android:dropDownSelector">@drawable/selectable_background_mycc98</item>
+    </style>
+    
+    <style name="ProgressBar.Mycc98" parent="@style/Widget.Sherlock.ProgressBar.Horizontal">
+        <item name="android:progressDrawable">@drawable/progress_horizontal_mycc98</item>
+    </style>
+    
+    <style name="ActionButton.CloseMode.Mycc98" parent="@style/Widget.Sherlock.ActionButton.CloseMode">
+        <item name="android:background">@drawable/btn_cab_done_mycc98</item>
+    </style>
+    
+    <!-- this style is only referenced in a Light.DarkActionBar based theme -->
+    <style name="Theme.Mycc98.Widget" parent="@style/Theme.Sherlock">
+        <item name="popupMenuStyle">@style/PopupMenu.Mycc98</item>
+        <item name="dropDownListViewStyle">@style/DropDownListView.Mycc98</item>
+    </style>
+
+</resources>
