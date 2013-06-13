@@ -3,8 +3,11 @@ package tk.djcrazy.MyCC98;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
 
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectExtra;
@@ -13,6 +16,7 @@ import roboguice.util.RoboAsyncTask;
 import tk.djcrazy.MyCC98.helper.HtmlGenHelper;
 import tk.djcrazy.MyCC98.helper.SerializableCacheHelper;
 import tk.djcrazy.MyCC98.task.ProgressRoboAsyncTask;
+import tk.djcrazy.MyCC98.util.DisplayUtil;
 import tk.djcrazy.MyCC98.util.Intents;
 import tk.djcrazy.MyCC98.util.Intents.Builder;
 import tk.djcrazy.MyCC98.util.ToastUtils;
@@ -25,6 +29,7 @@ import tk.djcrazy.libCC98.data.LoginType;
 import tk.djcrazy.libCC98.data.PostContentEntity;
 import tk.djcrazy.libCC98.data.UserData;
 import tk.djcrazy.libCC98.util.DateFormatUtil;
+import android.R.integer;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -39,8 +44,11 @@ import android.preference.PreferenceManager;
 import android.text.Html;
 import android.text.InputType;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
@@ -63,8 +71,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.google.inject.Inject;
 
 @ContentView(R.layout.activity_post_contents)
-public class PostContentsJSActivity extends BaseActivity implements
-		OnScrollChangedCallback {
+public class PostContentsJSActivity extends BaseActivity implements OnScrollChangedCallback {
 	private static final String TAG = "PostContentsJSActivity";
 	private static final String JS_INTERFACE = "PostContentsJSActivity";
 
@@ -94,9 +101,9 @@ public class PostContentsJSActivity extends BaseActivity implements
 
 	private HtmlGenHelper helper = new HtmlGenHelper();
 	private Menu mOptionsMenu;
+	private GestureDetector gestureDetector;
 
-	public static Intent createIntent(String boardId, String postId,
-			int pageNumber) {
+	public static Intent createIntent(String boardId, String postId, int pageNumber) {
 		return new Builder("post_content.VIEW").boardId(boardId).postId(postId)
 				.pageNumber(pageNumber).toIntent();
 	}
@@ -110,11 +117,12 @@ public class PostContentsJSActivity extends BaseActivity implements
 		super.onCreate(savedInstanceState);
 		configureActionBar();
 		configureWebView();
+		gestureDetector = new GestureDetector(this, new DefaultGestureDetector());
 		webView.postDelayed(new Runnable() {
 			@Override
 			public void run() {
-				new GetPostContentTask(PostContentsJSActivity.this, boardId,
-						postId, currPageNum).execute();
+				new GetPostContentTask(PostContentsJSActivity.this, boardId, postId, currPageNum)
+						.execute();
 			}
 		}, 50);
 	}
@@ -122,6 +130,7 @@ public class PostContentsJSActivity extends BaseActivity implements
 	@Override
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
+		getSupportActionBar().show();
 		postId = intent.getStringExtra(Intents.EXTRA_POST_ID);
 		boardId = intent.getStringExtra(Intents.EXTRA_BOARD_ID);
 		currPageNum = intent.getIntExtra(Intents.EXTRA_PAGE_NUMBER, 1);
@@ -165,22 +174,17 @@ public class PostContentsJSActivity extends BaseActivity implements
 			}
 			StringBuilder mBuilder = new StringBuilder(300);
 			mBuilder.append(HtmlGenHelper.ITEM_OPEN);
-			HtmlGenHelper.postInfo(mBuilder, postTitle, avatarUrl, author,
-					gender.getName(), floorNum,
-					DateFormatUtil.convertDateToString(postTime, true), i);
+			HtmlGenHelper.postInfo(mBuilder, postTitle, avatarUrl, author, gender.getName(),
+					floorNum, DateFormatUtil.convertDateToString(postTime, true), i);
 			HtmlGenHelper.postContent(mBuilder, postFace, content, i);
 			HtmlGenHelper.btnsBegin(mBuilder);
-			HtmlGenHelper.jsBtn(mBuilder, "吐槽",
-					"PostContentsJSActivity.showContentDialog",
+			HtmlGenHelper.jsBtn(mBuilder, "吐槽", "PostContentsJSActivity.showContentDialog",
 					String.valueOf(i), "0");
-			HtmlGenHelper.jsBtn(mBuilder, "站短",
-					"PostContentsJSActivity.showContentDialog",
+			HtmlGenHelper.jsBtn(mBuilder, "站短", "PostContentsJSActivity.showContentDialog",
 					String.valueOf(i), "1");
-			HtmlGenHelper.jsBtn(mBuilder, "查看",
-					"PostContentsJSActivity.showContentDialog",
+			HtmlGenHelper.jsBtn(mBuilder, "查看", "PostContentsJSActivity.showContentDialog",
 					String.valueOf(i), "3");
-			HtmlGenHelper.jsBtn(mBuilder, "加好友",
-					"PostContentsJSActivity.showContentDialog",
+			HtmlGenHelper.jsBtn(mBuilder, "加好友", "PostContentsJSActivity.showContentDialog",
 					String.valueOf(i), "2");
 			HtmlGenHelper.btnsEnd(mBuilder);
 			mBuilder.append(HtmlGenHelper.ITEM_CLOSE);
@@ -262,12 +266,9 @@ public class PostContentsJSActivity extends BaseActivity implements
 	}
 
 	private void configureWebView() {
-		SharedPreferences sharedPref = PreferenceManager
-				.getDefaultSharedPreferences(this);
-		boolean enableCache = sharedPref.getBoolean(
-				SettingsActivity.ENABLE_CACHE, true);
-		boolean showImage = sharedPref.getBoolean(SettingsActivity.SHOW_IMAGE,
-				true);
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+		boolean enableCache = sharedPref.getBoolean(SettingsActivity.ENABLE_CACHE, true);
+		boolean showImage = sharedPref.getBoolean(SettingsActivity.SHOW_IMAGE, true);
 		WebSettings webSettings = webView.getSettings();
 		webSettings.setJavaScriptEnabled(true);
 		webSettings.setPluginsEnabled(true);
@@ -279,77 +280,75 @@ public class PostContentsJSActivity extends BaseActivity implements
 			webSettings.setAppCacheMaxSize(CACHE_SIZE);
 			webSettings.setAllowFileAccess(true);
 			webView.getSettings().setDomStorageEnabled(true);
-			webSettings.setAppCachePath(getApplicationContext().getCacheDir()
-					.getPath());
+			webSettings.setAppCachePath(getApplicationContext().getCacheDir().getPath());
 			webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
 		}
 		webSettings.setAppCacheEnabled(enableCache);
 		webView.setOnScrollChangedCallback(this);
 		webView.addJavascriptInterface(this, JS_INTERFACE);
-		webView.setWebChromeClient( new FullscreenableChromeClient(this));
+		webView.setWebChromeClient(new FullscreenableChromeClient(this));
 		webView.setWebViewClient(new WebViewClient() {
 			@Override
 			public void onPageFinished(WebView view, String url) {
-				webView.getSettings().setBlockNetworkImage(false);
-				onLoadDone();
-				super.onPageFinished(view, url);
+  				super.onPageFinished(view, url);
 			}
 
 			@Override
 			public boolean shouldOverrideUrlLoading(WebView view, String url) {
-				if (url.endsWith(".jpg")|url.endsWith(".png")|url.endsWith(".bmp")) {
- 	 				startActivity(PhotoViewActivity.createIntent(url));
-	 				return true;
+				Log.i(TAG, "shouldOverrideUrlLoading:" + url);
+				if (!url.startsWith("http")) {
+					url = service.getDomain() + url;
+				}
+				if (url.endsWith(".jpg") | url.endsWith(".png") | url.endsWith(".bmp")) {
+					startActivity(PhotoViewActivity.createIntent(url));
+					return true;
 				} else {
-					 Intent it = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-					 startActivity(it);
+					Intent it = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+					startActivity(it);
 					return true;
 				}
 			}
 
 			@Override
-			public void onReceivedHttpAuthRequest(WebView view,
-					HttpAuthHandler handler, String host, String realm) {
-				handler.proceed(service.getusersInfo().getCurrentUserData()
-						.getProxyUserName(), service.getusersInfo()
-						.getCurrentUserData().getProxyPassword());
+			public void onReceivedHttpAuthRequest(WebView view, HttpAuthHandler handler,
+					String host, String realm) {
+				handler.proceed(service.getusersInfo().getCurrentUserData().getProxyUserName(),
+						service.getusersInfo().getCurrentUserData().getProxyPassword());
+			}
+		});
+		webView.setOnTouchListener(new OnTouchListener() {
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				return gestureDetector.onTouchEvent(event);
 			}
 		});
 	}
 
-	private void onLoadDone() {
-		mOptionsMenu.findItem(R.id.menu_pre_page).setEnabled(currPageNum != 1);
-		mOptionsMenu.findItem(R.id.menu_next_page).setEnabled(
-				currPageNum != totalPageNum);
-	}
-
 	public void jumpTo(int pageNum) {
 		if (pageNum <= totalPageNum) {
-			startActivity(PostContentsJSActivity.createIntent(boardId, postId,
-					pageNum));
+			startActivity(PostContentsJSActivity.createIntent(boardId, postId, pageNum));
 		}
 	}
 
 	public void prevPage() {
 		if (currPageNum >= 2) {
-			startActivity(PostContentsJSActivity.createIntent(boardId, postId,
-					currPageNum - 1));
+			startActivity(PostContentsJSActivity.createIntent(boardId, postId, currPageNum - 1));
+		}else {
+			ToastUtils.show(this, "已经到第一页啦");
 		}
 	}
 
 	public void refreshPage() {
-		String keyString = SerializableCacheHelper.postPageKey(boardId,
-				postId, currPageNum);
-		SerializableCache.getInstance(getApplicationContext())
-				.remove(keyString);
-		startActivity(PostContentsJSActivity.createIntent(boardId, postId,
-				currPageNum));
+		String keyString = SerializableCacheHelper.postPageKey(boardId, postId, currPageNum);
+		SerializableCache.getInstance(getApplicationContext()).remove(keyString);
+		startActivity(PostContentsJSActivity.createIntent(boardId, postId, currPageNum));
 	}
 
 	public void nextPage() {
 		if (currPageNum + 1 <= totalPageNum) {
-			startActivity(PostContentsJSActivity.createIntent(boardId, postId,
-					currPageNum + 1));
+			startActivity(PostContentsJSActivity.createIntent(boardId, postId, currPageNum + 1));
+		} else {
+			ToastUtils.show(this, "已经到最后一页啦");
 		}
 	}
 
@@ -359,44 +358,34 @@ public class PostContentsJSActivity extends BaseActivity implements
 		jumpEditText.setFocusableInTouchMode(true);
 		// set numeric touch pad
 		jumpEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
-		new AlertDialog.Builder(this)
-				.setTitle(R.string.jump_dialog_title)
-				.setIcon(android.R.drawable.ic_dialog_info)
-				.setView(jumpEditText)
-				.setPositiveButton(R.string.jump_button,
-						new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog,
-									int which) {
-								int jumpNum = 1;
-								try {
-									jumpNum = Integer.parseInt(jumpEditText
-											.getText().toString());
-									if (jumpNum <= 0 || jumpNum > totalPageNum) {
-										Toast.makeText(
-												PostContentsJSActivity.this,
-												R.string.search_input_error,
-												Toast.LENGTH_SHORT).show();
-									} else {
-										jumpTo(jumpNum);
-									}
-								} catch (NumberFormatException e) {
-									Log.e(PostContentsJSActivity.TAG,
-											e.toString());
-									Toast.makeText(PostContentsJSActivity.this,
-											R.string.search_input_error,
-											Toast.LENGTH_SHORT).show();
-								}
-
+		new AlertDialog.Builder(this).setTitle(R.string.jump_dialog_title)
+				.setIcon(android.R.drawable.ic_dialog_info).setView(jumpEditText)
+				.setPositiveButton(R.string.jump_button, new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						int jumpNum = 1;
+						try {
+							jumpNum = Integer.parseInt(jumpEditText.getText().toString());
+							if (jumpNum <= 0 || jumpNum > totalPageNum) {
+								Toast.makeText(PostContentsJSActivity.this,
+										R.string.search_input_error, Toast.LENGTH_SHORT).show();
+							} else {
+								jumpTo(jumpNum);
 							}
-						}).setNegativeButton(R.string.go_back, null).show();
+						} catch (NumberFormatException e) {
+							Log.e(PostContentsJSActivity.TAG, e.toString());
+							Toast.makeText(PostContentsJSActivity.this,
+									R.string.search_input_error, Toast.LENGTH_SHORT).show();
+						}
+
+					}
+				}).setNegativeButton(R.string.go_back, null).show();
 	}
 
 	public void reply() {
 		Intents.Builder builder = new Intents.Builder(this, EditActivity.class);
-		Intent intent = builder.requestType(EditActivity.REQUEST_REPLY)
-				.postId(postId).postName(postName).boardId(boardId)
-				.boardName(boardName).toIntent();
+		Intent intent = builder.requestType(EditActivity.REQUEST_REPLY).postId(postId)
+				.postName(postName).boardId(boardId).boardName(boardName).toIntent();
 		startActivityForResult(intent, 1);
 	}
 
@@ -406,8 +395,9 @@ public class PostContentsJSActivity extends BaseActivity implements
 		case 0: {
 			// quote & reply
 			String tmp = item.getPostContent().replaceAll("(<br>|<BR>)", "\n");
-			quoteReply(item.getUserName(), DateFormatUtil.convertDateToString(
-					item.getPostTime(), false), tmp, index, currPageNum);
+			quoteReply(item.getUserName(),
+					DateFormatUtil.convertDateToString(item.getPostTime(), false), tmp, index,
+					currPageNum);
 		}
 			break;
 		case 1:
@@ -415,25 +405,21 @@ public class PostContentsJSActivity extends BaseActivity implements
 			sendPm(item.getUserName());
 			break;
 		case 2:
-			AlertDialog.Builder builder = new AlertDialog.Builder(
-					PostContentsJSActivity.this);
+			AlertDialog.Builder builder = new AlertDialog.Builder(PostContentsJSActivity.this);
 			builder.setTitle("提示");
-			builder.setMessage(Html.fromHtml("确认添加 " + item.getUserName()
-					+ " 为好友？"));
-			builder.setPositiveButton("确定",
-					new DialogInterface.OnClickListener() {
+			builder.setMessage(Html.fromHtml("确认添加 " + item.getUserName() + " 为好友？"));
+			builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
 
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							addFriend(item.getUserName());
-						}
-					});
-			builder.setNegativeButton("取消",
-					new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-						}
-					});
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					addFriend(item.getUserName());
+				}
+			});
+			builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+				}
+			});
 			builder.create().show();
 			break;
 		case 3:
@@ -478,19 +464,17 @@ public class PostContentsJSActivity extends BaseActivity implements
 
 	private void sendPm(String target) {
 		Intents.Builder builder = new Builder(this, EditActivity.class);
-		Intent intent = builder.requestType(EditActivity.REQUEST_PM)
-				.pmToUser(target).toIntent();
+		Intent intent = builder.requestType(EditActivity.REQUEST_PM).pmToUser(target).toIntent();
 		startActivity(intent);
 	}
 
-	private void quoteReply(String sender, String postTime, String postContent,
-			int floorNum, int pageNum) {
+	private void quoteReply(String sender, String postTime, String postContent, int floorNum,
+			int pageNum) {
 		Intents.Builder builder = new Builder(this, EditActivity.class);
-		Intent intent = builder.requestType(EditActivity.REQUEST_QUOTE_REPLY)
-				.boardId(boardId).boardName(boardName).postId(postId)
-				.postName(postName).replyUserName(sender)
-				.replyUserPostTime(postTime).replyContent(postContent)
-				.floorNumber(floorNum).pageNumber(pageNum).toIntent();
+		Intent intent = builder.requestType(EditActivity.REQUEST_QUOTE_REPLY).boardId(boardId)
+				.boardName(boardName).postId(postId).postName(postName).replyUserName(sender)
+				.replyUserPostTime(postTime).replyContent(postContent).floorNumber(floorNum)
+				.pageNumber(pageNum).toIntent();
 		startActivityForResult(intent, 1);
 	}
 
@@ -525,8 +509,7 @@ public class PostContentsJSActivity extends BaseActivity implements
 		final MenuItem refreshItem = mOptionsMenu.findItem(R.id.refresh);
 		if (refreshItem != null) {
 			if (refreshing) {
-				refreshItem
-						.setActionView(R.layout.actionbar_indeterminate_progress);
+				refreshItem.setActionView(R.layout.actionbar_indeterminate_progress);
 			} else {
 				refreshItem.setActionView(null);
 			}
@@ -546,32 +529,26 @@ public class PostContentsJSActivity extends BaseActivity implements
 		// webView.setHttpAuthUsernamePassword(service.getDomain(), "",
 		// userData.getProxyUserName(), userData.getProxyPassword());
 		// }
-		for (Cookie cookie : service.getusersInfo().getCurrentUserData()
-				.getCookieStore().getCookies()) {
-			cookieManager.setCookie(service.getDomain(),
-					"version=" + cookie.getVersion());
-			cookieManager.setCookie(service.getDomain(), cookie.getName() + "="
-					+ cookie.getValue());
-			cookieManager.setCookie(service.getDomain(),
-					"domain=" + cookie.getDomain());
-			cookieManager.setCookie(service.getDomain(),
-					"path=" + cookie.getPath());
-			cookieManager.setCookie(service.getDomain(),
-					"expiry=" + cookie.getExpiryDate());
+		for (Cookie cookie : service.getusersInfo().getCurrentUserData().getCookieStore()
+				.getCookies()) {
+			cookieManager.setCookie(service.getDomain(), "version=" + cookie.getVersion());
+			cookieManager
+					.setCookie(service.getDomain(), cookie.getName() + "=" + cookie.getValue());
+			cookieManager.setCookie(service.getDomain(), "domain=" + cookie.getDomain());
+			cookieManager.setCookie(service.getDomain(), "path=" + cookie.getPath());
+			cookieManager.setCookie(service.getDomain(), "expiry=" + cookie.getExpiryDate());
 			Log.d(TAG, cookie.toString());
 		}
 		CookieSyncManager.getInstance().sync();
 	}
 
-	private class GetPostContentTask extends
-			RoboAsyncTask<List<PostContentEntity>> {
+	private class GetPostContentTask extends RoboAsyncTask<List<PostContentEntity>> {
 		private Activity aContext;
 		private String aBoardId;
 		private String aPostId;
 		private int aPageNum;
 
-		protected GetPostContentTask(Activity context, String boardId,
-				String postId, int pageNum) {
+		protected GetPostContentTask(Activity context, String boardId, String postId, int pageNum) {
 			super(context);
 			aContext = context;
 			aBoardId = boardId;
@@ -588,15 +565,12 @@ public class PostContentsJSActivity extends BaseActivity implements
 		@SuppressWarnings("unchecked")
 		@Override
 		public List<PostContentEntity> call() throws Exception {
-			String keyString = SerializableCacheHelper.postPageKey(
-					aBoardId, aPostId, aPageNum);
-			Serializable obj = SerializableCache.getInstance(aContext).get(
-					keyString);
+			String keyString = SerializableCacheHelper.postPageKey(aBoardId, aPostId, aPageNum);
+			Serializable obj = SerializableCache.getInstance(aContext).get(keyString);
 			List<PostContentEntity> list = null;
 			if (obj == null) {
 				list = service.getPostContentList(aBoardId, aPostId, aPageNum);
-				SerializableCache.getInstance(aContext).put(keyString,
-						(Serializable) list);
+				SerializableCache.getInstance(aContext).put(keyString, (Serializable) list);
 			} else if (obj instanceof List) {
 				list = (List<PostContentEntity>) obj;
 			}
@@ -604,33 +578,31 @@ public class PostContentsJSActivity extends BaseActivity implements
 		}
 
 		private void fetch(String boardId, String postId, int pageNum) {
-			String keyString = SerializableCacheHelper.postPageKey(
-					boardId, postId, pageNum);
-			Serializable obj = SerializableCache.getInstance(aContext).get(
-					keyString);
+			String keyString = SerializableCacheHelper.postPageKey(boardId, postId, pageNum);
+			Serializable obj = SerializableCache.getInstance(aContext).get(keyString);
 			if (obj == null) {
 				try {
-					List<PostContentEntity> list = service.getPostContentList(boardId, postId, pageNum);
-					SerializableCache.getInstance(aContext).put(keyString,
-							(Serializable) list);
+					List<PostContentEntity> list = service.getPostContentList(boardId, postId,
+							pageNum);
+					SerializableCache.getInstance(aContext).put(keyString, (Serializable) list);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
 		}
-		
+
 		private void prefetch() {
 			if (currPageNum < totalPageNum) {
-				new Thread(){
+				new Thread() {
 					public void run() {
-						fetch(aBoardId, aPostId, currPageNum+1);
+						fetch(aBoardId, aPostId, currPageNum + 1);
 					}
 				}.start();
 			}
 			if (currPageNum > 1) {
 				new Thread() {
 					public void run() {
-						fetch(aBoardId, aPostId, currPageNum-1);
+						fetch(aBoardId, aPostId, currPageNum - 1);
 					}
 				}.start();
 			}
@@ -654,11 +626,10 @@ public class PostContentsJSActivity extends BaseActivity implements
 			boardName = (String) info.getBoardName();
 			postName = (String) info.getPostTopic();
 			synCookies();
-			webView.loadDataWithBaseURL(null, assemblyContent(t), "text/html",
-					"utf-8", null);
+			webView.loadDataWithBaseURL(null, assemblyContent(t), "text/html", "utf-8", null);
 			getSupportActionBar().setTitle(postName);
-			getSupportActionBar().setSubtitle(
-					"第" + currPageNum + "页 | " + "共" + totalPageNum + "页");
+			getSupportActionBar()
+					.setSubtitle("第" + currPageNum + "页 | " + "共" + totalPageNum + "页");
 			prefetch();
 		}
 
@@ -715,88 +686,111 @@ public class PostContentsJSActivity extends BaseActivity implements
 			}
 		}
 	}
+
+	public class DefaultGestureDetector extends SimpleOnGestureListener {
+		final int FLING_MIN_DISTANCE = DisplayUtil.dip2px(PostContentsJSActivity.this, 150); 
+		final int FLING_MIN_VELOCITY =  DisplayUtil.dip2px(PostContentsJSActivity.this, 100); 
+		final int FLING_MAX_Y_DISTANCE = DisplayUtil.dip2px(PostContentsJSActivity.this, 50);
+
+		@Override
+		public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+			Log.i("DefaultGestureDetector",
+					StringUtils.join(Arrays.asList(e1.getX(), e1.getY(), e2.getX(), e2.getY(),
+							velocityX, velocityY), ","));
+			float distX = e1.getX() - e2.getX();
+			float distY = Math.abs(e1.getY() - e2.getY());
+			if (distX > FLING_MIN_DISTANCE && Math.abs(velocityX) > FLING_MIN_VELOCITY
+					&& distY < FLING_MAX_Y_DISTANCE)
+				nextPage();	
+			else if (-distX > FLING_MIN_DISTANCE && Math.abs(velocityX) > FLING_MIN_VELOCITY
+					&& distY < FLING_MAX_Y_DISTANCE)
+				prevPage();
+			return false;
+		}
+	}
 }
 
 class FullscreenableChromeClient extends WebChromeClient {
-    protected Activity mActivity = null;
+	protected Activity mActivity = null;
 
-    private View mCustomView;
-    private WebChromeClient.CustomViewCallback mCustomViewCallback;
-    private int mOriginalOrientation;
+	private View mCustomView;
+	private WebChromeClient.CustomViewCallback mCustomViewCallback;
+	private int mOriginalOrientation;
 
-    private FrameLayout mContentView;
-    private FrameLayout mFullscreenContainer;
+	private FrameLayout mContentView;
+	private FrameLayout mFullscreenContainer;
 
-    private static final FrameLayout.LayoutParams COVER_SCREEN_PARAMS = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+	private static final FrameLayout.LayoutParams COVER_SCREEN_PARAMS = new FrameLayout.LayoutParams(
+			ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 
-    public FullscreenableChromeClient(Activity activity) {
-        this.mActivity = activity;
-    }
+	public FullscreenableChromeClient(Activity activity) {
+		this.mActivity = activity;
+	}
 
-    @Override
-    public void onShowCustomView(View view, int requestedOrientation, WebChromeClient.CustomViewCallback callback) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-            if (mCustomView != null) {
-                callback.onCustomViewHidden();
-                return;
-            }
+	@Override
+	public void onShowCustomView(View view, int requestedOrientation,
+			WebChromeClient.CustomViewCallback callback) {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+			if (mCustomView != null) {
+				callback.onCustomViewHidden();
+				return;
+			}
 
-            mOriginalOrientation = mActivity.getRequestedOrientation();
-            FrameLayout decor = (FrameLayout) mActivity.getWindow().getDecorView();
-            mFullscreenContainer = new FullscreenHolder(mActivity);
-            mFullscreenContainer.addView(view, COVER_SCREEN_PARAMS);
-            decor.addView(mFullscreenContainer, COVER_SCREEN_PARAMS);
-            mCustomView = view;
-            setFullscreen(true);
-            mCustomViewCallback = callback;
-            mActivity.setRequestedOrientation(requestedOrientation);
-        }
+			mOriginalOrientation = mActivity.getRequestedOrientation();
+			FrameLayout decor = (FrameLayout) mActivity.getWindow().getDecorView();
+			mFullscreenContainer = new FullscreenHolder(mActivity);
+			mFullscreenContainer.addView(view, COVER_SCREEN_PARAMS);
+			decor.addView(mFullscreenContainer, COVER_SCREEN_PARAMS);
+			mCustomView = view;
+			setFullscreen(true);
+			mCustomViewCallback = callback;
+			mActivity.setRequestedOrientation(requestedOrientation);
+		}
 
-        super.onShowCustomView(view, requestedOrientation, callback);
-    }
+		super.onShowCustomView(view, requestedOrientation, callback);
+	}
 
-    @Override
-    public void onHideCustomView() {
-        if (mCustomView == null) {
-            return;
-        }
+	@Override
+	public void onHideCustomView() {
+		if (mCustomView == null) {
+			return;
+		}
 
-        setFullscreen(false);
-        FrameLayout decor = (FrameLayout) mActivity.getWindow().getDecorView();
-        decor.removeView(mFullscreenContainer);
-        mFullscreenContainer = null;
-        mCustomView = null;
-        mCustomViewCallback.onCustomViewHidden();
-        mActivity.setRequestedOrientation(mOriginalOrientation);
-    }
+		setFullscreen(false);
+		FrameLayout decor = (FrameLayout) mActivity.getWindow().getDecorView();
+		decor.removeView(mFullscreenContainer);
+		mFullscreenContainer = null;
+		mCustomView = null;
+		mCustomViewCallback.onCustomViewHidden();
+		mActivity.setRequestedOrientation(mOriginalOrientation);
+	}
 
-    private void setFullscreen(boolean enabled) {
-        Window win = mActivity.getWindow();
-        WindowManager.LayoutParams winParams = win.getAttributes();
-        final int bits = WindowManager.LayoutParams.FLAG_FULLSCREEN;
-        if (enabled) {
-            winParams.flags |= bits;
-        } else {
-            winParams.flags &= ~bits;
-            if (mCustomView != null) {
-                mCustomView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
-            } else {
-                mContentView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
-            }
-        }
-        win.setAttributes(winParams);
-    }
+	private void setFullscreen(boolean enabled) {
+		Window win = mActivity.getWindow();
+		WindowManager.LayoutParams winParams = win.getAttributes();
+		final int bits = WindowManager.LayoutParams.FLAG_FULLSCREEN;
+		if (enabled) {
+			winParams.flags |= bits;
+		} else {
+			winParams.flags &= ~bits;
+			if (mCustomView != null) {
+				mCustomView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
+			} else {
+				mContentView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
+			}
+		}
+		win.setAttributes(winParams);
+	}
 
-    private static class FullscreenHolder extends FrameLayout {
-        public FullscreenHolder(Context ctx) {
-            super(ctx);
-            setBackgroundColor(ctx.getResources().getColor(android.R.color.black));
-        }
+	private static class FullscreenHolder extends FrameLayout {
+		public FullscreenHolder(Context ctx) {
+			super(ctx);
+			setBackgroundColor(ctx.getResources().getColor(android.R.color.black));
+		}
 
-        @Override
-        public boolean onTouchEvent(MotionEvent evt) {
-        return true;
-    }
+		@Override
+		public boolean onTouchEvent(MotionEvent evt) {
+			return true;
+		}
+	}
 }
-}
-
