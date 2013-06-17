@@ -570,6 +570,10 @@ public class PostContentsJSActivity extends BaseActivity implements OnScrollChan
 			List<PostContentEntity> list = null;
 			if (obj == null) {
 				list = service.getPostContentList(aBoardId, aPostId, aPageNum);
+				if (aPageNum == LAST_PAGE) {
+					aPageNum = list.get(0).getTotalPage();
+				}
+				keyString = SerializableCacheHelper.postPageKey(aBoardId, aPostId, aPageNum);
 				SerializableCache.getInstance(aContext).put(keyString, (Serializable) list);
 			} else if (obj instanceof List) {
 				list = (List<PostContentEntity>) obj;
@@ -620,7 +624,7 @@ public class PostContentsJSActivity extends BaseActivity implements OnScrollChan
 			mContentEntities = t;
 			PostContentEntity info = t.get(0);
 			totalPageNum = info.getTotalPage();
-			if (currPageNum > totalPageNum) {
+			if (currPageNum > totalPageNum || currPageNum == LAST_PAGE) {
 				currPageNum = totalPageNum;
 			}
 			boardName = (String) info.getBoardName();
