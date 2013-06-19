@@ -76,7 +76,7 @@
             android:name=".PhotoViewActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:hardwareAccelerated="true"
-            android:theme="@style/Theme.MyCC98.OverLay">
+            android:theme="@style/Theme.Mycc98.OverLay">
             <intent-filter>
                 <action android:name="tk.djcrazy.mycc98.photo.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
