@@ -41,7 +41,7 @@
     <style name="ActionBar.Solid.Mycc98" parent="@style/Widget.Sherlock.Light.ActionBar.Solid.Inverse">
         <item name="android:background">@drawable/ab_solid_mycc98</item>
         <item name="android:backgroundStacked">@drawable/ab_stacked_solid_mycc98</item>
-        <item name="android:backgroundSplit">@android:color/background_dark</item>
+        <item name="android:backgroundSplit">@drawable/ab_stacked_solid_mycc98</item>
         <item name="android:progressBarStyle">@style/ProgressBar.Mycc98</item>
     </style>
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="Theme.MyCC98" parent="Theme.Sherlock.Light.DarkActionBar">
+    <style name="Theme.MyCC98.bak" parent="Theme.Sherlock.Light.DarkActionBar">
          <item name="actionBarStyle">@style/Theme.MyCC98.ActionBar</item>
           <item name="android:windowAnimationStyle">@style/ActivityAnimStyle</item>
          </style>
@@ -10,7 +10,7 @@
          <item name="background">@drawable/actionbar_background</item>
     </style>
 
-    <style name="Theme.MyCC98.OverLay" parent="Theme.Sherlock">
+    <style name="Theme.MyCC98.OverLay.bak" parent="Theme.Sherlock">
         <item name="actionBarStyle">@style/Theme.MyCC98.OverLay.ActionBar</item>
         <item name="windowActionBarOverlay">true</item>
          <item name="android:windowAnimationStyle">@style/ActivityAnimStyle</item>
