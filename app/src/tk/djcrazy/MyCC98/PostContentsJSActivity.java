@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -13,9 +12,9 @@ import roboguice.inject.ContentView;
 import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
 import roboguice.util.RoboAsyncTask;
-import tk.djcrazy.MyCC98.helper.HtmlGenHelper;
 import tk.djcrazy.MyCC98.helper.SerializableCacheHelper;
 import tk.djcrazy.MyCC98.task.ProgressRoboAsyncTask;
+import tk.djcrazy.MyCC98.template.PostContentTemplateFactory;
 import tk.djcrazy.MyCC98.util.DisplayUtil;
 import tk.djcrazy.MyCC98.util.Intents;
 import tk.djcrazy.MyCC98.util.Intents.Builder;
@@ -24,12 +23,10 @@ import tk.djcrazy.MyCC98.view.ObservableWebView;
 import tk.djcrazy.MyCC98.view.ObservableWebView.OnScrollChangedCallback;
 import tk.djcrazy.libCC98.ICC98Service;
 import tk.djcrazy.libCC98.SerializableCache;
-import tk.djcrazy.libCC98.data.Gender;
 import tk.djcrazy.libCC98.data.LoginType;
 import tk.djcrazy.libCC98.data.PostContentEntity;
 import tk.djcrazy.libCC98.data.UserData;
 import tk.djcrazy.libCC98.util.DateFormatUtil;
-import android.R.integer;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -99,8 +96,7 @@ public class PostContentsJSActivity extends BaseActivity implements OnScrollChan
 	@Inject
 	private ICC98Service service;
 
-	private HtmlGenHelper helper = new HtmlGenHelper();
-	private Menu mOptionsMenu;
+ 	private Menu mOptionsMenu;
 	private GestureDetector gestureDetector;
 	private boolean isRefreshing = false;
 
@@ -138,64 +134,7 @@ public class PostContentsJSActivity extends BaseActivity implements OnScrollChan
 		new GetPostContentTask(this, boardId, postId, currPageNum).execute();
 	}
 
-	private String assemblyContent(List<PostContentEntity> list) {
-		int tmpNum = (currPageNum == LAST_PAGE) ? totalPageNum : currPageNum;
-		StringBuilder builder = new StringBuilder(5000);
-		if (service.getusersInfo().getCurrentUserData().getLoginType() == LoginType.NORMAL) {
-			Log.d(TAG, "add Normal page open...");
-			builder.append(helper.PAGE_OPEN).append(
-					"<a href=\"javascript:;\" id=\"showAllImages\"></a>");
-		} else if (service.getusersInfo().getCurrentUserData().getLoginType() == LoginType.USER_DEFINED) {
-			Log.d(TAG, "add proxy page open...");
-			builder.append(helper.PAGE_PROXY_OPEN).append(
-					"<a href=\"javascript:;\" id=\"showAllImages\"></a>");
-		} else {
-			Log.d(TAG, "add rvpn page open...");
-			builder.append(helper.PAGE_RVPN_OPEN).append(
-					"<a href=\"javascript:;\" id=\"showAllImages\"></a>");
-		}
-		for (int i = 1; i < list.size(); ++i) {
-			PostContentEntity item = list.get(i);
-			String author = item.getUserName();
-			// String content = helper.parseInnerLink(
-			// item.getPostContent(), JS_INTERFACE);
-			String content = item.getPostContent();
-			String avatar = item.getUserAvatarLink();
-			Gender gender = item.getGender();
-			String postTitle = item.getPostTitle();
-			Date postTime = item.getPostTime();
-			String postFace = item.getPostFace();
-			int floorNum = (tmpNum - 1) * 10 + i;
-			String avatarUrl = "";
-			if (avatar != null) {
-				avatarUrl = avatar.toString();
-			}
-			if (avatarUrl.equals("")) {
-				avatarUrl = service.getDomain() + "face/deaduser.gif";
-			}
-			StringBuilder mBuilder = new StringBuilder(300);
-			mBuilder.append(HtmlGenHelper.ITEM_OPEN);
-			HtmlGenHelper.postInfo(mBuilder, postTitle, avatarUrl, author, gender.getName(),
-					floorNum, DateFormatUtil.convertDateToString(postTime, true), i);
-			HtmlGenHelper.postContent(mBuilder, postFace, content, i);
-			HtmlGenHelper.btnsBegin(mBuilder);
-			HtmlGenHelper.jsBtn(mBuilder, "吐槽", "PostContentsJSActivity.showContentDialog",
-					String.valueOf(i), "0");
-			HtmlGenHelper.jsBtn(mBuilder, "站短", "PostContentsJSActivity.showContentDialog",
-					String.valueOf(i), "1");
-			HtmlGenHelper.jsBtn(mBuilder, "查看", "PostContentsJSActivity.showContentDialog",
-					String.valueOf(i), "3");
-			HtmlGenHelper.jsBtn(mBuilder, "加好友", "PostContentsJSActivity.showContentDialog",
-					String.valueOf(i), "2");
-			HtmlGenHelper.btnsEnd(mBuilder);
-			mBuilder.append(HtmlGenHelper.ITEM_CLOSE);
-			builder.append(mBuilder.toString());
-		}
-		builder.append(helper.PAGE_CLOSE);
-		return builder.toString();
-	}
-
-	public void onPause() {
+ 	public void onPause() {
 		super.onPause();
 		this.callHiddenWebViewMethod("onPause");
 	}
@@ -487,6 +426,24 @@ public class PostContentsJSActivity extends BaseActivity implements OnScrollChan
 		}
 		if (resultCode == Activity.RESULT_CANCELED) {
 
+		}
+	}
+	
+	private String assemblyContent(List<PostContentEntity> list) {
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+		boolean showUserAvatar = sharedPref.getBoolean(SettingsActivity.SHOW_USER_AVATAR, false);
+
+		int tmpNum = (currPageNum == LAST_PAGE) ? totalPageNum : currPageNum;
+		if (service.getusersInfo().getCurrentUserData().getLoginType() == LoginType.NORMAL) {
+			if (showUserAvatar) {
+				return PostContentTemplateFactory.getDefault().genContent(getApplicationContext(), list, tmpNum);
+			} else {
+				return PostContentTemplateFactory.getSimple().genContent(getApplicationContext(), list, tmpNum);
+			}
+		} else if (service.getusersInfo().getCurrentUserData().getLoginType() == LoginType.USER_DEFINED) {
+			return PostContentTemplateFactory.getLifetoy().genContent(getApplicationContext(), list, tmpNum);
+ 		} else {
+ 			return PostContentTemplateFactory.getDefault().genContent(getApplicationContext(), list, tmpNum);
 		}
 	}
 

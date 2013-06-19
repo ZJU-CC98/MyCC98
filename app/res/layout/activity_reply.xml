@@ -8,7 +8,7 @@
 
     <LinearLayout
         android:id="@+id/reply_container"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1.0"
         android:orientation="vertical" >
@@ -38,13 +38,13 @@
             <EditText
                 android:id="@+id/reply_content"
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
+                android:layout_height="0dp"
                 android:layout_weight="1"
                 android:gravity="top"
                 android:hint="@string/moto_of_zju"
                 android:inputType="textMultiLine"
                 android:textColor="#444444"
-                android:textSize="15sp" />
+                android:textSize="13sp" />
         </LinearLayout>
 
         <LinearLayout

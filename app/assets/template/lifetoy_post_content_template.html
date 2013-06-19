@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+</head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link rel="stylesheet" href="file:///android_asset/custom.css" />
+	<link rel="stylesheet" href="file:///android_asset/bootstrap.css" />
+	<script type="text/javascript" src="file:///android_asset/mootools.core.js"></script>
+	<script type="text/javascript" src="file:///android_asset/tools.js"></script>
+	<script type="text/javascript" src="file:///android_asset/clientubb_proxy.js"></script>
+	<meta name="viewport" content="width=device-width, user-scalable=no" />
+</head>
+<body>
+	<div  class="bg-wrapper">
+		<a href="javascript:;" id="showAllImages"></a>
+		$foreach$
+		<div class="post">
+			<div class="post-content-wrapper">
+				<div class="post-info">
+					<div class="topic" >
+						<big><strong>${title}</strong></big>
+					</div>
+					<br /><img class="img-avatar" src="${avatar}" height=64/>
+					<div class="name">${author}</div><br />
+					<div class="floor-num">${floor}</div>
+					<img class="img-gender" src="file:///android_asset/pic/${gender}.gif"/>
+					<div class="time"><small>${time}</small></div><br />
+				</div>
+				<img class="post-face" src="file:///android_asset/pic/${face}" /><br />
+				<div class="post-content">
+					${content}	
+				</div>
+			</div>
+			<div class="btn-group">
+				<a class="btn" onclick="PostContentsJSActivity.showContentDialog(${i},0);">吐槽</a>
+				<a class="btn" onclick="PostContentsJSActivity.showContentDialog(${i},1);">站短</a>
+				<a class="btn" onclick="PostContentsJSActivity.showContentDialog(${i},3);">查看</a>
+				<a class="btn" onclick="PostContentsJSActivity.showContentDialog(${i},2);">加好友</a>
+			</div>
+		</div>
+		$endeach$
+ 	</div> 
+</body>
+</html>

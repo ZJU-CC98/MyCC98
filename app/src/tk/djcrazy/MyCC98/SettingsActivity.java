@@ -8,9 +8,6 @@ import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
-import android.view.KeyEvent;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.MenuItem;
@@ -25,6 +22,7 @@ public class SettingsActivity extends RoboSherlockPreferenceActivity {
 	public static final String SETTINGS = "settings";
 	public static final String SHOW_TAIL = "show_tail";
 	public static final String ENABLE_CACHE = "enable_cache";
+	public static final String SHOW_USER_AVATAR = "show_user_avatar";
 	public static final String USE_CUSTOM_TAIL = "use_custom_tail";
 	public static final String CUSTOM_TAIL_CONTENT = "custom_tail_content";
 	public static final String SHOW_IMAGE = "enable_load_image";

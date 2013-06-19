@@ -24,22 +24,21 @@
     <item
         android:icon="@drawable/ic_action_overflow"
         android:showAsAction="ifRoom">
-        <menu>
-            <item
-                android:id="@+id/menu_return_list"
-                android:icon="@drawable/return_list"
-                android:showAsAction="ifRoom"
-                android:title="返回所在版面"/>
-            <item
-                android:id="@+id/show_all_image"
-                android:icon="@drawable/show_pic"
-                android:showAsAction="ifRoom"
-                android:title="显示图片"/>
-            <item
-                android:id="@+id/menu_jump"
-                android:icon="@drawable/jump"
-                android:showAsAction="ifRoom"
-                android:title="跳转"/>
-        </menu>
+        <item
+            android:id="@+id/menu_return_list"
+            android:icon="@drawable/return_list"
+            android:showAsAction="ifRoom"
+            android:title="返回所在版面"/>
+        <item
+            android:id="@+id/show_all_image"
+            android:icon="@drawable/show_pic"
+            android:showAsAction="ifRoom"
+            android:title="显示图片"/>
+        <item
+            android:id="@+id/menu_jump"
+            android:icon="@drawable/jump"
+            android:showAsAction="ifRoom"
+            android:title="跳转"/>
     </item>
+
 </menu>
