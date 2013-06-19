@@ -102,6 +102,7 @@ public class PostContentsJSActivity extends BaseActivity implements OnScrollChan
 	private HtmlGenHelper helper = new HtmlGenHelper();
 	private Menu mOptionsMenu;
 	private GestureDetector gestureDetector;
+	private boolean isRefreshing = false;
 
 	public static Intent createIntent(String boardId, String postId, int pageNumber) {
 		return new Builder("post_content.VIEW").boardId(boardId).postId(postId)
@@ -502,10 +503,10 @@ public class PostContentsJSActivity extends BaseActivity implements OnScrollChan
 	// }
 
 	private void setRefreshActionButtonState(boolean refreshing) {
+		isRefreshing = refreshing;
 		if (mOptionsMenu == null) {
 			return;
 		}
-
 		final MenuItem refreshItem = mOptionsMenu.findItem(R.id.refresh);
 		if (refreshItem != null) {
 			if (refreshing) {
@@ -680,7 +681,7 @@ public class PostContentsJSActivity extends BaseActivity implements OnScrollChan
 	public void onScroll(int pre, int curr) {
 		if (curr > pre) {
 			showStartPos = curr;
-			if (curr - hideStartPos > TRIGER_DIS) {
+			if (curr - hideStartPos > TRIGER_DIS&&!isRefreshing) {
 				getSupportActionBar().hide();
 			}
 		} else {
