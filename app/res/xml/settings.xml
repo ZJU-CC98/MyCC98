@@ -25,4 +25,8 @@
     <EditTextPreference 
         android:key="custom_tail_content"
         android:title="自定义尾巴内容" />
+    <ListPreference 
+        android:key="post_theme"
+        android:title="帖子主题"
+        android:summary="更改帖子的外观" />
 </PreferenceScreen>

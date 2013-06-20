@@ -85,6 +85,12 @@ public class PostContentFactory {
 	public void addStyle(String stylePath) {
 		styles.add(new Style(stylePath));
 	}
+	
+	public void addAllStyle(String[] stylePaths) {
+		for (String stylePath : stylePaths) {
+			styles.add(new Style(stylePath));
+		}
+	}
 
 	public PostContentFactory(List<PostContentEntity> list, int page) {
 		this.list = list;

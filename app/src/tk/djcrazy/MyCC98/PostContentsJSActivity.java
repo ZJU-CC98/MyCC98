@@ -8,6 +8,8 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.xml.transform.sax.TemplatesHandler;
+
 import org.apache.commons.lang3.StringUtils;
 
 import roboguice.inject.ContentView;
@@ -15,6 +17,7 @@ import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
 import roboguice.util.RoboAsyncTask;
 import tk.djcrazy.MyCC98.helper.SerializableCacheHelper;
+import tk.djcrazy.MyCC98.helper.ThemeHelper;
 import tk.djcrazy.MyCC98.task.ProgressRoboAsyncTask;
 import tk.djcrazy.MyCC98.template.PostContentFactory;
 import tk.djcrazy.MyCC98.template.PostContentTemplateFactory;
@@ -466,27 +469,30 @@ public class PostContentsJSActivity extends BaseActivity implements
 			throws IOException {
 		SharedPreferences sharedPref = PreferenceManager
 				.getDefaultSharedPreferences(this);
-		boolean showUserAvatar = sharedPref.getBoolean(
-				SettingsActivity.SHOW_USER_AVATAR, false);
 		int tmpNum = (currPageNum == LAST_PAGE) ? totalPageNum : currPageNum;
 		PostContentFactory pMustache = new PostContentFactory(list, tmpNum);
-		pMustache.addStyle(PostContentFactory.CLASSICAL_STYLE);
+
 		InputStream templateIn = null;
+		String theme = sharedPref.getString(SettingsActivity.THEME,
+				SettingsActivity.THEME_DEFAULT);
+		if (!theme.equals(SettingsActivity.THEME_DEFAULT)) {
+			String[] stylePaths = ThemeHelper.getStyleSheets(theme);
+			templateIn = ThemeHelper.getTemplateStream(theme);
+			if (stylePaths != null && templateIn != null) {
+				pMustache.addAllStyle(stylePaths);
+			}
+		}
+		if (templateIn == null) {
+			pMustache.addStyle(PostContentFactory.CLASSICAL_STYLE);
+			templateIn = getAssets().open(PostContentFactory.DEFAULT_TEMPLATE);
+		}
+
 		if (service.getusersInfo().getCurrentUserData().getLoginType() == LoginType.NORMAL) {
 			pMustache.addScript(PostContentFactory.DEFAULT_UBB_SCRIPT);
-			if (showUserAvatar) {
-				templateIn = getAssets().open(
-						PostContentFactory.DEFAULT_TEMPLATE);
-			} else {
-				templateIn = getAssets().open(
-						PostContentFactory.SIMPLE_TEMPLATE);
-			}
 		} else if (service.getusersInfo().getCurrentUserData().getLoginType() == LoginType.USER_DEFINED) {
 			pMustache.addScript(PostContentFactory.LIFETOY_UBB_SCRIPT);
-			templateIn = getAssets().open(PostContentFactory.DEFAULT_TEMPLATE);
 		} else {
 			pMustache.addScript(PostContentFactory.DEFAULT_UBB_SCRIPT);
-			templateIn = getAssets().open(PostContentFactory.DEFAULT_TEMPLATE);
 		}
 		return pMustache.genContent(templateIn);
 	}
