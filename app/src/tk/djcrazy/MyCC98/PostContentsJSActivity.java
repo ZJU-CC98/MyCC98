@@ -14,6 +14,7 @@ import roboguice.inject.InjectView;
 import roboguice.util.RoboAsyncTask;
 import tk.djcrazy.MyCC98.helper.SerializableCacheHelper;
 import tk.djcrazy.MyCC98.task.ProgressRoboAsyncTask;
+import tk.djcrazy.MyCC98.template.PostContentFactory;
 import tk.djcrazy.MyCC98.template.PostContentTemplateFactory;
 import tk.djcrazy.MyCC98.util.DisplayUtil;
 import tk.djcrazy.MyCC98.util.Intents;
@@ -434,17 +435,19 @@ public class PostContentsJSActivity extends BaseActivity implements OnScrollChan
 		boolean showUserAvatar = sharedPref.getBoolean(SettingsActivity.SHOW_USER_AVATAR, false);
 
 		int tmpNum = (currPageNum == LAST_PAGE) ? totalPageNum : currPageNum;
-		if (service.getusersInfo().getCurrentUserData().getLoginType() == LoginType.NORMAL) {
-			if (showUserAvatar) {
-				return PostContentTemplateFactory.getDefault().genContent(getApplicationContext(), list, tmpNum);
-			} else {
-				return PostContentTemplateFactory.getSimple().genContent(getApplicationContext(), list, tmpNum);
-			}
-		} else if (service.getusersInfo().getCurrentUserData().getLoginType() == LoginType.USER_DEFINED) {
-			return PostContentTemplateFactory.getLifetoy().genContent(getApplicationContext(), list, tmpNum);
- 		} else {
- 			return PostContentTemplateFactory.getDefault().genContent(getApplicationContext(), list, tmpNum);
-		}
+//		if (service.getusersInfo().getCurrentUserData().getLoginType() == LoginType.NORMAL) {
+//			if (showUserAvatar) {
+//				return PostContentTemplateFactory.getDefault().genContent(getApplicationContext(), list, tmpNum);
+//			} else {
+//				return PostContentTemplateFactory.getSimple().genContent(getApplicationContext(), list, tmpNum);
+//			}
+//		} else if (service.getusersInfo().getCurrentUserData().getLoginType() == LoginType.USER_DEFINED) {
+//			return PostContentTemplateFactory.getLifetoy().genContent(getApplicationContext(), list, tmpNum);
+// 		} else {
+// 			return PostContentTemplateFactory.getDefault().genContent(getApplicationContext(), list, tmpNum);
+//		}
+		PostContentFactory pMustache = new PostContentFactory(getApplicationContext(), list, tmpNum);
+		return pMustache.genContent();
 	}
 
 	//

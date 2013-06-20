@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007 Google Inc.
+ * Copyright (C) 2009 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,22 +14,13 @@
  * limitations under the License.
  */
 
-package com.google.common.base;
+package com.github.droidfu.com.google.common.collect;
+
+import java.util.Timer;
 
 /**
- * Implemented by references that have code to run after garbage collection of
- * their referents.
- *
- * @see FinalizableReferenceQueue
- * @author Bob Lee
+ * Timer used for entry expiration in MapMaker.
  */
-public interface FinalizableReference {
-
-  /**
-   * Invoked on a background thread after the referent has been garbage
-   * collected unless security restrictions prevented starting a background
-   * thread, in which case this method is invoked when new references
-   * are created.
-   */
-  void finalizeReferent();
+class ExpirationTimer {
+  static Timer instance = new Timer(true);
 }

@@ -14,13 +14,21 @@
  * limitations under the License.
  */
 
-package com.google.common.collect;
+package com.github.droidfu.com.google.common.collect;
 
-import java.util.Timer;
+import com.google.common.collect.ComputationException;
 
 /**
- * Timer used for entry expiration in MapMaker.
+ * Wraps an exception that occured during a computation in a different thread.
+ *
+ * @author Bob Lee
  */
-class ExpirationTimer {
-  static Timer instance = new Timer(true);
+public class AsynchronousComputationException extends ComputationException {
+  /**
+   * Creates a new instance with the given cause.
+   */
+  public AsynchronousComputationException(Throwable cause) {
+    super(cause);
+  }
+  private static final long serialVersionUID = 0;
 }
