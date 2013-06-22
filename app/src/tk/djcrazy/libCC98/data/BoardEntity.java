@@ -3,14 +3,19 @@
  */
 package tk.djcrazy.libCC98.data;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * @author DJ
  *
  */
-public class BoardEntity {
+public class BoardEntity implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String boardName="";
 	private String boardID="0";
 	private String BoardIntro="";

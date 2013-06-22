@@ -14,27 +14,30 @@
  * limitations under the License.
  */
 
-package com.google.common.base;
+package com.github.droidfu.com.google.common.base;
 
-import java.lang.ref.WeakReference;
+import java.lang.ref.SoftReference;
+
+import com.github.droidfu.com.google.common.base.FinalizableReference;
+import com.github.droidfu.com.google.common.base.FinalizableReferenceQueue;
 
 /**
- * Weak reference with a {@code finalizeReferent()} method which a background
+ * Soft reference with a {@code finalizeReferent()} method which a background
  * thread invokes after the garbage collector reclaims the referent. This is a
  * simpler alternative to using a {@link java.lang.ref.ReferenceQueue}.
  *
  * @author Bob Lee
  */
-public abstract class FinalizableWeakReference<T> extends WeakReference<T>
+public abstract class FinalizableSoftReference<T> extends SoftReference<T>
     implements FinalizableReference {
 
   /**
-   * Constructs a new finalizable weak reference.
+   * Constructs a new finalizable soft reference.
    *
-   * @param referent to weakly reference
+   * @param referent to softly reference
    * @param queue that should finalize the referent
    */
-  protected FinalizableWeakReference(T referent,
+  protected FinalizableSoftReference(T referent,
       FinalizableReferenceQueue queue) {
     super(referent, queue.queue);
     queue.cleanUp();

@@ -29,8 +29,8 @@ import android.content.Context;
 import android.os.Environment;
 import android.util.Log;
 
+import com.github.droidfu.com.google.common.collect.MapMaker;
 import com.github.droidfu.support.StringSupport;
-import com.google.common.collect.MapMaker;
 
 /**
  * <p>

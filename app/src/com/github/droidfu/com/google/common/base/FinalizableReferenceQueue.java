@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.common.base;
+package com.github.droidfu.com.google.common.base;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -25,6 +25,9 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import com.github.droidfu.com.google.common.base.FinalizableReference;
+import com.github.droidfu.com.google.common.base.FinalizableReferenceQueue;
 
 /**
  * A reference queue with an associated background thread that dequeues

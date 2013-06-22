@@ -9,11 +9,11 @@
  * governing permissions and limitations under the License.
  */
 
-package com.google.common.collect;
+package com.github.droidfu.com.google.common.collect;
 
 import java.util.Map.Entry;
 
-import com.google.common.base.Objects;
+import com.github.droidfu.com.google.common.base.Objects;
 
 /**
  * Implementation of the {@code equals}, {@code hashCode}, and {@code toString}

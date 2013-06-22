@@ -1,10 +1,14 @@
 package tk.djcrazy.MyCC98;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
+
+import javax.xml.transform.sax.TemplatesHandler;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -13,7 +17,9 @@ import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
 import roboguice.util.RoboAsyncTask;
 import tk.djcrazy.MyCC98.helper.SerializableCacheHelper;
+import tk.djcrazy.MyCC98.helper.ThemeHelper;
 import tk.djcrazy.MyCC98.task.ProgressRoboAsyncTask;
+import tk.djcrazy.MyCC98.template.PostContentFactory;
 import tk.djcrazy.MyCC98.template.PostContentTemplateFactory;
 import tk.djcrazy.MyCC98.util.DisplayUtil;
 import tk.djcrazy.MyCC98.util.Intents;
@@ -68,7 +74,8 @@ import com.actionbarsherlock.view.MenuItem;
 import com.google.inject.Inject;
 
 @ContentView(R.layout.activity_post_contents)
-public class PostContentsJSActivity extends BaseActivity implements OnScrollChangedCallback {
+public class PostContentsJSActivity extends BaseActivity implements
+		OnScrollChangedCallback {
 	private static final String TAG = "PostContentsJSActivity";
 	private static final String JS_INTERFACE = "PostContentsJSActivity";
 
@@ -96,11 +103,12 @@ public class PostContentsJSActivity extends BaseActivity implements OnScrollChan
 	@Inject
 	private ICC98Service service;
 
- 	private Menu mOptionsMenu;
+	private Menu mOptionsMenu;
 	private GestureDetector gestureDetector;
 	private boolean isRefreshing = false;
 
-	public static Intent createIntent(String boardId, String postId, int pageNumber) {
+	public static Intent createIntent(String boardId, String postId,
+			int pageNumber) {
 		return new Builder("post_content.VIEW").boardId(boardId).postId(postId)
 				.pageNumber(pageNumber).toIntent();
 	}
@@ -114,12 +122,13 @@ public class PostContentsJSActivity extends BaseActivity implements OnScrollChan
 		super.onCreate(savedInstanceState);
 		configureActionBar();
 		configureWebView();
-		gestureDetector = new GestureDetector(this, new DefaultGestureDetector());
+		gestureDetector = new GestureDetector(this,
+				new DefaultGestureDetector());
 		webView.postDelayed(new Runnable() {
 			@Override
 			public void run() {
-				new GetPostContentTask(PostContentsJSActivity.this, boardId, postId, currPageNum)
-						.execute();
+				new GetPostContentTask(PostContentsJSActivity.this, boardId,
+						postId, currPageNum).execute();
 			}
 		}, 50);
 	}
@@ -134,7 +143,7 @@ public class PostContentsJSActivity extends BaseActivity implements OnScrollChan
 		new GetPostContentTask(this, boardId, postId, currPageNum).execute();
 	}
 
- 	public void onPause() {
+	public void onPause() {
 		super.onPause();
 		this.callHiddenWebViewMethod("onPause");
 	}
@@ -206,9 +215,12 @@ public class PostContentsJSActivity extends BaseActivity implements OnScrollChan
 	}
 
 	private void configureWebView() {
-		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-		boolean enableCache = sharedPref.getBoolean(SettingsActivity.ENABLE_CACHE, true);
-		boolean showImage = sharedPref.getBoolean(SettingsActivity.SHOW_IMAGE, true);
+		SharedPreferences sharedPref = PreferenceManager
+				.getDefaultSharedPreferences(this);
+		boolean enableCache = sharedPref.getBoolean(
+				SettingsActivity.ENABLE_CACHE, true);
+		boolean showImage = sharedPref.getBoolean(SettingsActivity.SHOW_IMAGE,
+				true);
 		WebSettings webSettings = webView.getSettings();
 		webSettings.setJavaScriptEnabled(true);
 		webSettings.setPluginsEnabled(true);
@@ -220,7 +232,8 @@ public class PostContentsJSActivity extends BaseActivity implements OnScrollChan
 			webSettings.setAppCacheMaxSize(CACHE_SIZE);
 			webSettings.setAllowFileAccess(true);
 			webView.getSettings().setDomStorageEnabled(true);
-			webSettings.setAppCachePath(getApplicationContext().getCacheDir().getPath());
+			webSettings.setAppCachePath(getApplicationContext().getCacheDir()
+					.getPath());
 			webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
 		}
 		webSettings.setAppCacheEnabled(enableCache);
@@ -230,7 +243,7 @@ public class PostContentsJSActivity extends BaseActivity implements OnScrollChan
 		webView.setWebViewClient(new WebViewClient() {
 			@Override
 			public void onPageFinished(WebView view, String url) {
-  				super.onPageFinished(view, url);
+				super.onPageFinished(view, url);
 			}
 
 			@Override
@@ -239,7 +252,8 @@ public class PostContentsJSActivity extends BaseActivity implements OnScrollChan
 				if (!url.startsWith("http")) {
 					url = service.getDomain() + url;
 				}
-				if (url.endsWith(".jpg") | url.endsWith(".png") | url.endsWith(".bmp")) {
+				if (url.endsWith(".jpg") | url.endsWith(".png")
+						| url.endsWith(".bmp")) {
 					startActivity(PhotoViewActivity.createIntent(url));
 					return true;
 				} else {
@@ -250,10 +264,11 @@ public class PostContentsJSActivity extends BaseActivity implements OnScrollChan
 			}
 
 			@Override
-			public void onReceivedHttpAuthRequest(WebView view, HttpAuthHandler handler,
-					String host, String realm) {
-				handler.proceed(service.getusersInfo().getCurrentUserData().getProxyUserName(),
-						service.getusersInfo().getCurrentUserData().getProxyPassword());
+			public void onReceivedHttpAuthRequest(WebView view,
+					HttpAuthHandler handler, String host, String realm) {
+				handler.proceed(service.getusersInfo().getCurrentUserData()
+						.getProxyUserName(), service.getusersInfo()
+						.getCurrentUserData().getProxyPassword());
 			}
 		});
 		webView.setOnTouchListener(new OnTouchListener() {
@@ -266,27 +281,33 @@ public class PostContentsJSActivity extends BaseActivity implements OnScrollChan
 
 	public void jumpTo(int pageNum) {
 		if (pageNum <= totalPageNum) {
-			startActivity(PostContentsJSActivity.createIntent(boardId, postId, pageNum));
+			startActivity(PostContentsJSActivity.createIntent(boardId, postId,
+					pageNum));
 		}
 	}
 
 	public void prevPage() {
 		if (currPageNum >= 2) {
-			startActivity(PostContentsJSActivity.createIntent(boardId, postId, currPageNum - 1));
-		}else {
+			startActivity(PostContentsJSActivity.createIntent(boardId, postId,
+					currPageNum - 1));
+		} else {
 			ToastUtils.show(this, "已经到第一页啦");
 		}
 	}
 
 	public void refreshPage() {
-		String keyString = SerializableCacheHelper.postPageKey(boardId, postId, currPageNum);
-		SerializableCache.getInstance(getApplicationContext()).remove(keyString);
-		startActivity(PostContentsJSActivity.createIntent(boardId, postId, currPageNum));
+		String keyString = SerializableCacheHelper.postPageKey(boardId, postId,
+				currPageNum);
+		SerializableCache.getInstance(getApplicationContext())
+				.remove(keyString);
+		startActivity(PostContentsJSActivity.createIntent(boardId, postId,
+				currPageNum));
 	}
 
 	public void nextPage() {
 		if (currPageNum + 1 <= totalPageNum) {
-			startActivity(PostContentsJSActivity.createIntent(boardId, postId, currPageNum + 1));
+			startActivity(PostContentsJSActivity.createIntent(boardId, postId,
+					currPageNum + 1));
 		} else {
 			ToastUtils.show(this, "已经到最后一页啦");
 		}
@@ -298,34 +319,44 @@ public class PostContentsJSActivity extends BaseActivity implements OnScrollChan
 		jumpEditText.setFocusableInTouchMode(true);
 		// set numeric touch pad
 		jumpEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
-		new AlertDialog.Builder(this).setTitle(R.string.jump_dialog_title)
-				.setIcon(android.R.drawable.ic_dialog_info).setView(jumpEditText)
-				.setPositiveButton(R.string.jump_button, new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						int jumpNum = 1;
-						try {
-							jumpNum = Integer.parseInt(jumpEditText.getText().toString());
-							if (jumpNum <= 0 || jumpNum > totalPageNum) {
-								Toast.makeText(PostContentsJSActivity.this,
-										R.string.search_input_error, Toast.LENGTH_SHORT).show();
-							} else {
-								jumpTo(jumpNum);
-							}
-						} catch (NumberFormatException e) {
-							Log.e(PostContentsJSActivity.TAG, e.toString());
-							Toast.makeText(PostContentsJSActivity.this,
-									R.string.search_input_error, Toast.LENGTH_SHORT).show();
-						}
+		new AlertDialog.Builder(this)
+				.setTitle(R.string.jump_dialog_title)
+				.setIcon(android.R.drawable.ic_dialog_info)
+				.setView(jumpEditText)
+				.setPositiveButton(R.string.jump_button,
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								int jumpNum = 1;
+								try {
+									jumpNum = Integer.parseInt(jumpEditText
+											.getText().toString());
+									if (jumpNum <= 0 || jumpNum > totalPageNum) {
+										Toast.makeText(
+												PostContentsJSActivity.this,
+												R.string.search_input_error,
+												Toast.LENGTH_SHORT).show();
+									} else {
+										jumpTo(jumpNum);
+									}
+								} catch (NumberFormatException e) {
+									Log.e(PostContentsJSActivity.TAG,
+											e.toString());
+									Toast.makeText(PostContentsJSActivity.this,
+											R.string.search_input_error,
+											Toast.LENGTH_SHORT).show();
+								}
 
-					}
-				}).setNegativeButton(R.string.go_back, null).show();
+							}
+						}).setNegativeButton(R.string.go_back, null).show();
 	}
 
 	public void reply() {
 		Intents.Builder builder = new Intents.Builder(this, EditActivity.class);
-		Intent intent = builder.requestType(EditActivity.REQUEST_REPLY).postId(postId)
-				.postName(postName).boardId(boardId).boardName(boardName).toIntent();
+		Intent intent = builder.requestType(EditActivity.REQUEST_REPLY)
+				.postId(postId).postName(postName).boardId(boardId)
+				.boardName(boardName).toIntent();
 		startActivityForResult(intent, 1);
 	}
 
@@ -335,9 +366,8 @@ public class PostContentsJSActivity extends BaseActivity implements OnScrollChan
 		case 0: {
 			// quote & reply
 			String tmp = item.getPostContent().replaceAll("(<br>|<BR>)", "\n");
-			quoteReply(item.getUserName(),
-					DateFormatUtil.convertDateToString(item.getPostTime(), false), tmp, index,
-					currPageNum);
+			quoteReply(item.getUserName(), DateFormatUtil.convertDateToString(
+					item.getPostTime(), false), tmp, index, currPageNum);
 		}
 			break;
 		case 1:
@@ -345,21 +375,25 @@ public class PostContentsJSActivity extends BaseActivity implements OnScrollChan
 			sendPm(item.getUserName());
 			break;
 		case 2:
-			AlertDialog.Builder builder = new AlertDialog.Builder(PostContentsJSActivity.this);
+			AlertDialog.Builder builder = new AlertDialog.Builder(
+					PostContentsJSActivity.this);
 			builder.setTitle("提示");
-			builder.setMessage(Html.fromHtml("确认添加 " + item.getUserName() + " 为好友？"));
-			builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+			builder.setMessage(Html.fromHtml("确认添加 " + item.getUserName()
+					+ " 为好友？"));
+			builder.setPositiveButton("确定",
+					new DialogInterface.OnClickListener() {
 
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					addFriend(item.getUserName());
-				}
-			});
-			builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-				}
-			});
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							addFriend(item.getUserName());
+						}
+					});
+			builder.setNegativeButton("取消",
+					new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+						}
+					});
 			builder.create().show();
 			break;
 		case 3:
@@ -404,17 +438,19 @@ public class PostContentsJSActivity extends BaseActivity implements OnScrollChan
 
 	private void sendPm(String target) {
 		Intents.Builder builder = new Builder(this, EditActivity.class);
-		Intent intent = builder.requestType(EditActivity.REQUEST_PM).pmToUser(target).toIntent();
+		Intent intent = builder.requestType(EditActivity.REQUEST_PM)
+				.pmToUser(target).toIntent();
 		startActivity(intent);
 	}
 
-	private void quoteReply(String sender, String postTime, String postContent, int floorNum,
-			int pageNum) {
+	private void quoteReply(String sender, String postTime, String postContent,
+			int floorNum, int pageNum) {
 		Intents.Builder builder = new Builder(this, EditActivity.class);
-		Intent intent = builder.requestType(EditActivity.REQUEST_QUOTE_REPLY).boardId(boardId)
-				.boardName(boardName).postId(postId).postName(postName).replyUserName(sender)
-				.replyUserPostTime(postTime).replyContent(postContent).floorNumber(floorNum)
-				.pageNumber(pageNum).toIntent();
+		Intent intent = builder.requestType(EditActivity.REQUEST_QUOTE_REPLY)
+				.boardId(boardId).boardName(boardName).postId(postId)
+				.postName(postName).replyUserName(sender)
+				.replyUserPostTime(postTime).replyContent(postContent)
+				.floorNumber(floorNum).pageNumber(pageNum).toIntent();
 		startActivityForResult(intent, 1);
 	}
 
@@ -428,23 +464,37 @@ public class PostContentsJSActivity extends BaseActivity implements OnScrollChan
 
 		}
 	}
-	
-	private String assemblyContent(List<PostContentEntity> list) {
-		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-		boolean showUserAvatar = sharedPref.getBoolean(SettingsActivity.SHOW_USER_AVATAR, false);
 
+	private String assemblyContent(List<PostContentEntity> list)
+			throws IOException {
+		SharedPreferences sharedPref = PreferenceManager
+				.getDefaultSharedPreferences(this);
 		int tmpNum = (currPageNum == LAST_PAGE) ? totalPageNum : currPageNum;
-		if (service.getusersInfo().getCurrentUserData().getLoginType() == LoginType.NORMAL) {
-			if (showUserAvatar) {
-				return PostContentTemplateFactory.getDefault().genContent(getApplicationContext(), list, tmpNum);
-			} else {
-				return PostContentTemplateFactory.getSimple().genContent(getApplicationContext(), list, tmpNum);
+		PostContentFactory pMustache = new PostContentFactory(list, tmpNum);
+
+		InputStream templateIn = null;
+		String theme = sharedPref.getString(SettingsActivity.THEME,
+				SettingsActivity.THEME_DEFAULT);
+		if (!theme.equals(SettingsActivity.THEME_DEFAULT)) {
+			String[] stylePaths = ThemeHelper.getStyleSheets(theme);
+			templateIn = ThemeHelper.getTemplateStream(theme);
+			if (stylePaths != null && templateIn != null) {
+				pMustache.addAllStyle(stylePaths);
 			}
-		} else if (service.getusersInfo().getCurrentUserData().getLoginType() == LoginType.USER_DEFINED) {
-			return PostContentTemplateFactory.getLifetoy().genContent(getApplicationContext(), list, tmpNum);
- 		} else {
- 			return PostContentTemplateFactory.getDefault().genContent(getApplicationContext(), list, tmpNum);
 		}
+		if (templateIn == null) {
+			pMustache.addStyle(PostContentFactory.CLASSICAL_STYLE);
+			templateIn = getAssets().open(PostContentFactory.DEFAULT_TEMPLATE);
+		}
+
+		if (service.getusersInfo().getCurrentUserData().getLoginType() == LoginType.NORMAL) {
+			pMustache.addScript(PostContentFactory.DEFAULT_UBB_SCRIPT);
+		} else if (service.getusersInfo().getCurrentUserData().getLoginType() == LoginType.USER_DEFINED) {
+			pMustache.addScript(PostContentFactory.LIFETOY_UBB_SCRIPT);
+		} else {
+			pMustache.addScript(PostContentFactory.DEFAULT_UBB_SCRIPT);
+		}
+		return pMustache.genContent(templateIn);
 	}
 
 	//
@@ -467,7 +517,8 @@ public class PostContentsJSActivity extends BaseActivity implements OnScrollChan
 		final MenuItem refreshItem = mOptionsMenu.findItem(R.id.refresh);
 		if (refreshItem != null) {
 			if (refreshing) {
-				refreshItem.setActionView(R.layout.actionbar_indeterminate_progress);
+				refreshItem
+						.setActionView(R.layout.actionbar_indeterminate_progress);
 			} else {
 				refreshItem.setActionView(null);
 			}
@@ -487,26 +538,32 @@ public class PostContentsJSActivity extends BaseActivity implements OnScrollChan
 		// webView.setHttpAuthUsernamePassword(service.getDomain(), "",
 		// userData.getProxyUserName(), userData.getProxyPassword());
 		// }
-		for (Cookie cookie : service.getusersInfo().getCurrentUserData().getCookieStore()
-				.getCookies()) {
-			cookieManager.setCookie(service.getDomain(), "version=" + cookie.getVersion());
-			cookieManager
-					.setCookie(service.getDomain(), cookie.getName() + "=" + cookie.getValue());
-			cookieManager.setCookie(service.getDomain(), "domain=" + cookie.getDomain());
-			cookieManager.setCookie(service.getDomain(), "path=" + cookie.getPath());
-			cookieManager.setCookie(service.getDomain(), "expiry=" + cookie.getExpiryDate());
+		for (Cookie cookie : service.getusersInfo().getCurrentUserData()
+				.getCookieStore().getCookies()) {
+			cookieManager.setCookie(service.getDomain(),
+					"version=" + cookie.getVersion());
+			cookieManager.setCookie(service.getDomain(), cookie.getName() + "="
+					+ cookie.getValue());
+			cookieManager.setCookie(service.getDomain(),
+					"domain=" + cookie.getDomain());
+			cookieManager.setCookie(service.getDomain(),
+					"path=" + cookie.getPath());
+			cookieManager.setCookie(service.getDomain(),
+					"expiry=" + cookie.getExpiryDate());
 			Log.d(TAG, cookie.toString());
 		}
 		CookieSyncManager.getInstance().sync();
 	}
 
-	private class GetPostContentTask extends RoboAsyncTask<List<PostContentEntity>> {
+	private class GetPostContentTask extends
+			RoboAsyncTask<List<PostContentEntity>> {
 		private Activity aContext;
 		private String aBoardId;
 		private String aPostId;
 		private int aPageNum;
 
-		protected GetPostContentTask(Activity context, String boardId, String postId, int pageNum) {
+		protected GetPostContentTask(Activity context, String boardId,
+				String postId, int pageNum) {
 			super(context);
 			aContext = context;
 			aBoardId = boardId;
@@ -523,16 +580,20 @@ public class PostContentsJSActivity extends BaseActivity implements OnScrollChan
 		@SuppressWarnings("unchecked")
 		@Override
 		public List<PostContentEntity> call() throws Exception {
-			String keyString = SerializableCacheHelper.postPageKey(aBoardId, aPostId, aPageNum);
-			Serializable obj = SerializableCache.getInstance(aContext).get(keyString);
+			String keyString = SerializableCacheHelper.postPageKey(aBoardId,
+					aPostId, aPageNum);
+			Serializable obj = SerializableCache.getInstance(aContext).get(
+					keyString);
 			List<PostContentEntity> list = null;
 			if (obj == null) {
 				list = service.getPostContentList(aBoardId, aPostId, aPageNum);
 				if (aPageNum == LAST_PAGE) {
 					aPageNum = list.get(0).getTotalPage();
 				}
-				keyString = SerializableCacheHelper.postPageKey(aBoardId, aPostId, aPageNum);
-				SerializableCache.getInstance(aContext).put(keyString, (Serializable) list);
+				keyString = SerializableCacheHelper.postPageKey(aBoardId,
+						aPostId, aPageNum);
+				SerializableCache.getInstance(aContext).put(keyString,
+						(Serializable) list);
 			} else if (obj instanceof List) {
 				list = (List<PostContentEntity>) obj;
 			}
@@ -540,13 +601,16 @@ public class PostContentsJSActivity extends BaseActivity implements OnScrollChan
 		}
 
 		private void fetch(String boardId, String postId, int pageNum) {
-			String keyString = SerializableCacheHelper.postPageKey(boardId, postId, pageNum);
-			Serializable obj = SerializableCache.getInstance(aContext).get(keyString);
+			String keyString = SerializableCacheHelper.postPageKey(boardId,
+					postId, pageNum);
+			Serializable obj = SerializableCache.getInstance(aContext).get(
+					keyString);
 			if (obj == null) {
 				try {
-					List<PostContentEntity> list = service.getPostContentList(boardId, postId,
-							pageNum);
-					SerializableCache.getInstance(aContext).put(keyString, (Serializable) list);
+					List<PostContentEntity> list = service.getPostContentList(
+							boardId, postId, pageNum);
+					SerializableCache.getInstance(aContext).put(keyString,
+							(Serializable) list);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -588,10 +652,12 @@ public class PostContentsJSActivity extends BaseActivity implements OnScrollChan
 			boardName = (String) info.getBoardName();
 			postName = (String) info.getPostTopic();
 			synCookies();
-			webView.loadDataWithBaseURL(null, assemblyContent(t), "text/html", "utf-8", null);
+			webView.loadDataWithBaseURL(null, assemblyContent(t), "text/html",
+					"utf-8", null);
 			getSupportActionBar().setTitle(postName);
-			getSupportActionBar()
-					.setSubtitle("第" + currPageNum + "页 | " + "共" + totalPageNum + "页    "+boardName);
+			getSupportActionBar().setSubtitle(
+					"第" + currPageNum + "页 | " + "共" + totalPageNum + "页    "
+							+ boardName);
 			prefetch();
 		}
 
@@ -638,7 +704,7 @@ public class PostContentsJSActivity extends BaseActivity implements OnScrollChan
 	public void onScroll(int pre, int curr) {
 		if (curr > pre) {
 			showStartPos = curr;
-			if (curr - hideStartPos > TRIGER_DIS&&!isRefreshing) {
+			if (curr - hideStartPos > TRIGER_DIS && !isRefreshing) {
 				getSupportActionBar().hide();
 			}
 		} else {
@@ -650,23 +716,30 @@ public class PostContentsJSActivity extends BaseActivity implements OnScrollChan
 	}
 
 	public class DefaultGestureDetector extends SimpleOnGestureListener {
-		final int FLING_MIN_DISTANCE = DisplayUtil.dip2px(PostContentsJSActivity.this, 150); 
-		final int FLING_MIN_VELOCITY =  DisplayUtil.dip2px(PostContentsJSActivity.this, 100); 
-		final int FLING_MAX_Y_DISTANCE = DisplayUtil.dip2px(PostContentsJSActivity.this, 50);
+		final int FLING_MIN_DISTANCE = DisplayUtil.dip2px(
+				PostContentsJSActivity.this, 150);
+		final int FLING_MIN_VELOCITY = DisplayUtil.dip2px(
+				PostContentsJSActivity.this, 100);
+		final int FLING_MAX_Y_DISTANCE = DisplayUtil.dip2px(
+				PostContentsJSActivity.this, 50);
 
 		@Override
-		public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+		public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
+				float velocityY) {
 			Log.i("DefaultGestureDetector",
-					StringUtils.join(Arrays.asList(e1.getX(), e1.getY(), e2.getX(), e2.getY(),
-							velocityX, velocityY), ","));
+					StringUtils.join(
+							Arrays.asList(e1.getX(), e1.getY(), e2.getX(),
+									e2.getY(), velocityX, velocityY), ","));
 			float distX = e1.getX() - e2.getX();
 			float distY = Math.abs(e1.getY() - e2.getY());
-			if (distX > FLING_MIN_DISTANCE && Math.abs(velocityX) > FLING_MIN_VELOCITY
+			if (distX > FLING_MIN_DISTANCE
+					&& Math.abs(velocityX) > FLING_MIN_VELOCITY
 					&& distY < FLING_MAX_Y_DISTANCE)
-				nextPage();	
-			else if (-distX > FLING_MIN_DISTANCE && Math.abs(velocityX) > FLING_MIN_VELOCITY
+				nextPage();
+			else if (-distX > FLING_MIN_DISTANCE
+					&& Math.abs(velocityX) > FLING_MIN_VELOCITY
 					&& distY < FLING_MAX_Y_DISTANCE)
-				prevPage(); 
+				prevPage();
 			return false;
 		}
 	}
@@ -683,7 +756,8 @@ class FullscreenableChromeClient extends WebChromeClient {
 	private FrameLayout mFullscreenContainer;
 
 	private static final FrameLayout.LayoutParams COVER_SCREEN_PARAMS = new FrameLayout.LayoutParams(
-			ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+			ViewGroup.LayoutParams.MATCH_PARENT,
+			ViewGroup.LayoutParams.MATCH_PARENT);
 
 	public FullscreenableChromeClient(Activity activity) {
 		this.mActivity = activity;
@@ -699,7 +773,8 @@ class FullscreenableChromeClient extends WebChromeClient {
 			}
 
 			mOriginalOrientation = mActivity.getRequestedOrientation();
-			FrameLayout decor = (FrameLayout) mActivity.getWindow().getDecorView();
+			FrameLayout decor = (FrameLayout) mActivity.getWindow()
+					.getDecorView();
 			mFullscreenContainer = new FullscreenHolder(mActivity);
 			mFullscreenContainer.addView(view, COVER_SCREEN_PARAMS);
 			decor.addView(mFullscreenContainer, COVER_SCREEN_PARAMS);
@@ -747,7 +822,8 @@ class FullscreenableChromeClient extends WebChromeClient {
 	private static class FullscreenHolder extends FrameLayout {
 		public FullscreenHolder(Context ctx) {
 			super(ctx);
-			setBackgroundColor(ctx.getResources().getColor(android.R.color.black));
+			setBackgroundColor(ctx.getResources().getColor(
+					android.R.color.black));
 		}
 
 		@Override

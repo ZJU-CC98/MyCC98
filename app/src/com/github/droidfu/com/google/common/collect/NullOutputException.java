@@ -14,19 +14,18 @@
  * limitations under the License.
  */
 
-package com.google.common.collect;
+package com.github.droidfu.com.google.common.collect;
 
 /**
- * Wraps an exception that occured during a computation in a different thread.
+ * Thrown when a computer function returns null. This subclass exists so
+ * that our ReferenceCache adapter can differentiate null output from null
+ * keys, but we don't want to make this public otherwise.
  *
  * @author Bob Lee
  */
-public class AsynchronousComputationException extends ComputationException {
-  /**
-   * Creates a new instance with the given cause.
-   */
-  public AsynchronousComputationException(Throwable cause) {
-    super(cause);
+class NullOutputException extends NullPointerException {
+  public NullOutputException(String s) {
+    super(s);
   }
   private static final long serialVersionUID = 0;
 }

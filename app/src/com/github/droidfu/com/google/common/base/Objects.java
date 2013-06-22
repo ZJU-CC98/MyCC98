@@ -9,7 +9,7 @@
  * governing permissions and limitations under the License.
  */
 
-package com.google.common.base;
+package com.github.droidfu.com.google.common.base;
 
 import java.util.Arrays;
 

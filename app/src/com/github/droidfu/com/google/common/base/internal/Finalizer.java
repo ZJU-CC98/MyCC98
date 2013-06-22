@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.common.base.internal;
+package com.github.droidfu.com.google.common.base.internal;
 
 import java.lang.ref.PhantomReference;
 import java.lang.ref.Reference;
@@ -24,6 +24,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import com.github.droidfu.com.google.common.base.internal.Finalizer;
 
 /**
  * Thread that finalizes referents. All references should implement
