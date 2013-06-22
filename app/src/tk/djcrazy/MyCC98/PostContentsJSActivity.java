@@ -494,7 +494,7 @@ public class PostContentsJSActivity extends BaseActivity implements
 		} else {
 			pMustache.addScript(PostContentFactory.DEFAULT_UBB_SCRIPT);
 		}
-		return pMustache.genContent(templateIn);
+ 		return pMustache.genContent(templateIn);
 	}
 
 	//

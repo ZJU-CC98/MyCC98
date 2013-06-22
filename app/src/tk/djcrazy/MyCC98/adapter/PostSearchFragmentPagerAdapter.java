@@ -1,6 +1,8 @@
 package tk.djcrazy.MyCC98.adapter;
 
+import tk.djcrazy.MyCC98.fragment.InboxListFragment;
 import tk.djcrazy.MyCC98.fragment.PostSearchListFragment;
+import tk.djcrazy.MyCC98.fragment.SearchBoardFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
