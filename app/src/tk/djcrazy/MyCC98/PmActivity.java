@@ -24,8 +24,6 @@ public class PmActivity extends BaseFragmentActivity implements OnPageChangeList
 
 	@InjectView(R.id.pm_main_pages)
 	private ViewPager viewPager;
-//	@InjectView(R.id.pm_main_titles)
-//	private TitlePageIndicator indicator;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -36,7 +34,6 @@ public class PmActivity extends BaseFragmentActivity implements OnPageChangeList
 				getSupportFragmentManager());
 		viewPager.setAdapter(adapter);
 		viewPager.setOnPageChangeListener(this);
-//		indicator.setViewPager(viewPager);
 	}
 
 	private void configureActionBar() {

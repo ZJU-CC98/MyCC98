@@ -118,8 +118,7 @@
         <activity
             android:name=".PostSearchActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:exported="false"
-            android:launchMode="singleTop" >
+            android:exported="false" >
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
