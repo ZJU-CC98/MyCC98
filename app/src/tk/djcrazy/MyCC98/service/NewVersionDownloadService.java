@@ -41,7 +41,7 @@ public class NewVersionDownloadService extends RoboIntentService {
 	private void createNotification() {
 		mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		mBuilder = new NotificationCompat.Builder(this).setSmallIcon(
-				R.drawable.icon).setContentTitle("正在下载更新").setTicker("正在下载更新...");
+				R.drawable.ic_launcher).setContentTitle("正在下载更新").setTicker("正在下载更新...");
  		// mId allows you to update the notification later on.
  		File storeDir = new File(Environment.getExternalStorageDirectory(), "MyCC98");
 		if (!storeDir.exists()) {
@@ -114,7 +114,7 @@ public class NewVersionDownloadService extends RoboIntentService {
 			intent.setDataAndType(uri, "application/vnd.android.package-archive"); 
 			startActivity(intent);
 			NotificationCompat.Builder builder = new NotificationCompat.Builder(getContext()).setSmallIcon(
-					R.drawable.icon).setTicker("下载成功");
+					R.drawable.ic_launcher).setTicker("下载成功");
 			mNotificationManager.notify(NODIFICATION_ID, builder.build());
 			mNotificationManager.cancel(NODIFICATION_ID);
 		} 

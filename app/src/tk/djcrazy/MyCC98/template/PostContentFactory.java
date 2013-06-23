@@ -1,24 +1,17 @@
 package tk.djcrazy.MyCC98.template;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
+
+import tk.djcrazy.libCC98.data.PostContentEntity;
+import tk.djcrazy.libCC98.util.DateFormatUtil;
 
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
-
-import tk.djcrazy.MyCC98.util.StreamUtils;
-import tk.djcrazy.libCC98.data.PostContentEntity;
-import tk.djcrazy.libCC98.util.DateFormatUtil;
-import android.content.Context;
-import android.util.Log;
 
 public class PostContentFactory {
 

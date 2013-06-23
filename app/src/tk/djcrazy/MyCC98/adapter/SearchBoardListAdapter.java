@@ -62,24 +62,24 @@ public class SearchBoardListAdapter extends BaseItemListAdapter<BoardStatus> {
 		listItemView.boardName.setText(entity.getBoardName());
 		listItemView.postNum
 				.setText(String.valueOf(entity.getPostNumberToday()));
-		listItemView.postNumLine.getLayoutParams().width = (int) (entity
-				.getPostNumberPercentage() * dispWidth);
+		listItemView.postNumLine.getLayoutParams().width = 
+				(int) (entity.getPostNumberToday()*1.0/items.get(0).getPostNumberToday() * dispWidth *0.9);
 		/**
 		 * 日帖数达到1000帖我们给予红色条，300-999给予黄色条，100-299给予绿色条，<100给予蓝色条，
 		 * 条的长度代表发帖量占全站的发帖量比例
 		 */
 		if (entity.getPostNumberToday() > 999) {
 			listItemView.postNumLine
-					.setImageResource(R.drawable.status_line_red);
+					.setImageResource(R.drawable.post_num_line_red);
 		} else if(entity.getPostNumberToday() > 299) {
 			listItemView.postNumLine
-			.setImageResource(R.drawable.status_line_yellow);
+			.setImageResource(R.drawable.post_num_line_yellow);
 		} else if (entity.getPostNumberToday()>99) {
 			listItemView.postNumLine
-			.setImageResource(R.drawable.status_line_green);
+			.setImageResource(R.drawable.post_num_line_green);
 		} else {
 			listItemView.postNumLine
-			.setImageResource(R.drawable.status_line_blue);
+			.setImageResource(R.drawable.post_num_line_blue);
 		}
 		convertView.setTag(listItemView);
 		return convertView;

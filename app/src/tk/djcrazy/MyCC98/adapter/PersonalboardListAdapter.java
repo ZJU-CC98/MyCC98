@@ -99,7 +99,7 @@ public class PersonalboardListAdapter extends BaseItemListAdapter<BoardEntity> {
 		listItemView.postNumberToday = (TextView) convertView
 				.findViewById(R.id.topic_number_today);
 		listItemView.boardNameClickable = convertView
-				.findViewById(R.id.board_name);
+				.findViewById(R.id.board_name_clickable);
 		listItemView.lastReplyNameClickable = convertView
 				.findViewById(R.id.last_reply_topic_name);
 		listItemView.lastReplyTimeClickable = convertView

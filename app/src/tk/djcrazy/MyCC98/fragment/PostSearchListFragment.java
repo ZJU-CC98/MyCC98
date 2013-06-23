@@ -2,6 +2,7 @@ package tk.djcrazy.MyCC98.fragment;
 
 import java.util.List;
 
+import tk.djcrazy.MyCC98.PostContentsJSActivity;
 import tk.djcrazy.MyCC98.adapter.BaseItemListAdapter;
 import tk.djcrazy.MyCC98.adapter.NewTopicListAdapter;
 import tk.djcrazy.MyCC98.util.ThrowableLoader;
@@ -10,6 +11,7 @@ import tk.djcrazy.libCC98.data.SearchResultEntity;
 import android.os.Bundle;
 import android.support.v4.content.Loader;
 import android.view.View;
+import android.widget.ListView;
 
 import com.google.inject.Inject;
 
@@ -59,6 +61,12 @@ public class PostSearchListFragment extends PagedPullToRefeshListFragment<Search
 				return items;
 			}
 		};
+	}
+	
+	@Override
+	public void onListItemClick(ListView l, View v, int position, long id) {
+		super.onListItemClick(l, v, position, id);
+		startActivity(PostContentsJSActivity.createIntent(items.get(position-1).getBoardId(), items.get(position-1).getPostId()));
 	}
 
 	@Override

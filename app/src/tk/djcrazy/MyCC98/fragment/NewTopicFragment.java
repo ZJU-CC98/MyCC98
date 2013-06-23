@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.List;
 
 import tk.djcrazy.MyCC98.PostContentsJSActivity;
-import tk.djcrazy.MyCC98.R;
 import tk.djcrazy.MyCC98.adapter.BaseItemListAdapter;
 import tk.djcrazy.MyCC98.adapter.NewTopicListAdapter;
 import tk.djcrazy.MyCC98.application.MyApplication;
@@ -13,13 +12,10 @@ import tk.djcrazy.MyCC98.util.ThrowableLoader;
 import tk.djcrazy.MyCC98.view.PagedPullToRefreshListView;
 import tk.djcrazy.libCC98.ICC98Service;
 import tk.djcrazy.libCC98.SerializableCache;
-import tk.djcrazy.libCC98.data.PostEntity;
 import tk.djcrazy.libCC98.data.SearchResultEntity;
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.Loader;
-import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 

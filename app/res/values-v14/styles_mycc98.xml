@@ -17,7 +17,7 @@
      limitations under the License.
 -->
 
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="Theme.Mycc98" parent="@style/Theme.Sherlock.Light.DarkActionBar">
         <item name="android:actionBarItemBackground">@drawable/selectable_background_mycc98</item>
@@ -36,6 +36,7 @@
     </style>
     <style name="Theme.Mycc98.OverLay" parent="Theme.Mycc98">
          <item name="android:windowActionBarOverlay">true</item>
+         <item name="android:actionBarStyle">@style/ActionBar.Overlay.Mycc98</item>
      </style>
     
     <style name="ActionBar.Solid.Mycc98" parent="@style/Widget.Sherlock.Light.ActionBar.Solid.Inverse">
@@ -43,10 +44,19 @@
         <item name="android:backgroundStacked">@drawable/ab_stacked_solid_mycc98</item>
         <item name="android:backgroundSplit">@drawable/ab_stacked_solid_mycc98</item>
         <item name="android:progressBarStyle">@style/ProgressBar.Mycc98</item>
+        <item name="android:subtitleTextStyle">@style/TextAppearance.mycc98.ActionBar.Subtitle</item>
+        
     </style>
-
+		<style name="TextAppearance.mycc98.ActionBar.Subtitle" parent="TextAppearance.Sherlock.Widget.ActionBar.Subtitle.Inverse">
+		    <item name="android:textColor">@android:color/white</item>
+		</style>
     <style name="ActionBar.Transparent.Mycc98" parent="@style/Widget.Sherlock.ActionBar">
         <item name="android:background">@drawable/ab_transparent_mycc98</item>
+        <item name="android:progressBarStyle">@style/ProgressBar.Mycc98</item>
+    </style>
+    	
+    <style name="ActionBar.Overlay.Mycc98" parent="@style/ActionBar.Solid.Mycc98">
+        <item name="android:background">@drawable/ab_overlay_mycc98</item>
         <item name="android:progressBarStyle">@style/ProgressBar.Mycc98</item>
     </style>
     
