@@ -1,49 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@color/card_list_bg"
-    android:gravity="center"
-    android:orientation="vertical" >
+    android:background="@color/card_list_bg" >
 
     <ProgressBar
         android:id="@+id/search_board_loading_bar"
         style="@style/Spinner"
         android:layout_width="64dp"
-        android:layout_height="64dp" />
+        android:layout_height="64dp"
+        android:layout_centerInParent="true" />
 
     <LinearLayout
-        android:id="@+id/search_board_search_area"
+        android:id="@+id/search_board_main_container"
         android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:background="@android:color/background_light"
-        android:gravity="center_vertical"
-        android:visibility="visible" >
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:orientation="vertical"
+        android:visibility="gone" >
 
-        <ImageView
-            android:layout_width="18dp"
-            android:layout_height="18dp"
-            android:layout_marginLeft="5dp"
-            android:src="@drawable/sear_icon_small" />
+        <LinearLayout
+             android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:background="@android:color/background_light"
+            android:gravity="center_vertical" >
 
-        <EditText
-            android:id="@+id/search_board_bar"
-            android:layout_width="match_parent"
-            android:layout_height="20dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_weight="1.0"
-            android:background="@null"
-            android:hint="请输入关键词"
-            android:singleLine="true"
-            android:textSize="13sp" />
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_marginLeft="5dp"
+                android:src="@drawable/sear_icon_small" />
+
+            <EditText
+                android:id="@+id/search_board_bar"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1.0"
+                android:background="@null"
+                android:hint="请输入关键词"
+                android:singleLine="true"
+                android:textSize="13sp" />
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/search_board_result_list"
+            style="@style/listview"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" />
     </LinearLayout>
 
-    <ListView
-        android:id="@+id/search_board_result_list"
-        style="@style/listview"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+    <TextView
+        android:id="@android:id/empty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:drawableBottom="@drawable/reload"
+        android:text="加载失败\n点击重试"
+        android:textColor="#777"
         android:visibility="gone" />
 
-</LinearLayout>
+</RelativeLayout>

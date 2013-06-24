@@ -1,4 +1,4 @@
-package tk.djcrazy.MyCC98.task;
+package tk.djcrazy.MyCC98.util;
 
 import roboguice.util.RoboAsyncTask;
 import android.app.Activity;
