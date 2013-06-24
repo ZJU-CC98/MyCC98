@@ -119,12 +119,8 @@ public class PostListViewAdapter extends BaseItemListAdapter<PostEntity> {
 
 		 				context.startActivity(PostContentsJSActivity.createIntent(items
 								.get(clickPosition).getBoardId(),
-<<<<<<< HEAD
 								items.get(clickPosition).getPostId(), 32767, false));
 
-=======
-								items.get(clickPosition).getPostId(), 32767));
->>>>>>> 7d66653806d6165d4f004f584bb2a36db92b84cc
 					}
 				});
 	}
