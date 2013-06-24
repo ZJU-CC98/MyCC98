@@ -3,7 +3,7 @@ package tk.djcrazy.MyCC98;
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectView;
 import tk.djcrazy.MyCC98.adapter.InboxFragmentPagerAdapter;
-import tk.djcrazy.libCC98.ICC98Service;
+import tk.djcrazy.libCC98.CachedCC98Service;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
@@ -20,7 +20,7 @@ public class PmActivity extends BaseFragmentActivity implements OnPageChangeList
 
 	private static String TAG = "PmActivity";
 	@Inject
-	private ICC98Service service;
+	private CachedCC98Service service;
 
 	@InjectView(R.id.pm_main_pages)
 	private ViewPager viewPager;

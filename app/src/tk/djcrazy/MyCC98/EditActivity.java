@@ -17,7 +17,7 @@ import tk.djcrazy.MyCC98.util.Intents;
 import tk.djcrazy.MyCC98.util.ProgressRoboAsyncTask;
 import tk.djcrazy.MyCC98.util.ToastUtils;
 import tk.djcrazy.MyCC98.util.ViewUtils;
-import tk.djcrazy.libCC98.ICC98Service;
+import tk.djcrazy.libCC98.CachedCC98Service;
 import tk.djcrazy.libCC98.ICC98UrlManager;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -143,7 +143,7 @@ public class EditActivity extends BaseFragmentActivity implements OnClickListene
 	private String faceGroupChooseString = "face7.gif";
 	private String picLink;
 	@Inject
-	private ICC98Service service;
+	private CachedCC98Service service;
 	@Inject
 	private ICC98UrlManager manager;
 	private ImageGetter getter = new ImageGetter() {
@@ -630,7 +630,7 @@ public class EditActivity extends BaseFragmentActivity implements OnClickListene
 	private class UpLoadPictureTask extends ProgressRoboAsyncTask<String> {
 		private File mUploadFile;
 		@Inject
-		private ICC98Service mService;
+		private CachedCC98Service mService;
 
 		protected UpLoadPictureTask(Activity context, File file) {
 			super(context);
@@ -670,7 +670,7 @@ public class EditActivity extends BaseFragmentActivity implements OnClickListene
 		private String mFaceExpression;
 		private boolean mIsNewPost;
 		@Inject
-		private ICC98Service mService;
+		private CachedCC98Service mService;
 
 		protected PushReplyTask(Activity context, String postId,
 				String boardId, String content, String title, String face,
@@ -721,7 +721,7 @@ public class EditActivity extends BaseFragmentActivity implements OnClickListene
 		private String mContent;
 		private String mTitle;
 		@Inject
-		private ICC98Service mService;
+		private CachedCC98Service mService;
 
 		protected SendPMTask(Activity context, String toUser, String title,
 				String content) {

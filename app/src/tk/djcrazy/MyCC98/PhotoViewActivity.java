@@ -10,9 +10,10 @@ import roboguice.util.RoboAsyncTask;
 import tk.djcrazy.MyCC98.util.Intents;
 import tk.djcrazy.MyCC98.util.ToastUtils;
 import tk.djcrazy.MyCC98.util.ViewUtils;
-import tk.djcrazy.libCC98.ICC98Service;
+import tk.djcrazy.libCC98.CachedCC98Service;
 import uk.co.senab.photoview.PhotoViewAttacher;
 import uk.co.senab.photoview.PhotoViewAttacher.OnViewTapListener;
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
@@ -40,7 +41,7 @@ public class PhotoViewActivity extends BaseActivity {
 	private ImageView mImageView;
 	PhotoViewAttacher mAttacher;
 	@Inject
-	private ICC98Service  service;
+	private CachedCC98Service  service;
 	
 	public static Intent createIntent(String url) {
 		Log.i("PhotoViewActivity", "Load url:"+url);
@@ -86,6 +87,7 @@ public class PhotoViewActivity extends BaseActivity {
 			return service.getBitmapFromUrl(aUrl);
 		}
 		
+		@SuppressLint("NewApi")
 		@Override
 		protected void onSuccess(Bitmap t) throws Exception {
 			super.onSuccess(t);
@@ -98,6 +100,7 @@ public class PhotoViewActivity extends BaseActivity {
 		    mAttacher = new PhotoViewAttacher(mImageView);
  		    mAttacher.setMaxScale(Math.max(t.getHeight(), t.getWidth())/100);
  		    mAttacher.setOnViewTapListener(new OnViewTapListener() {
+				@SuppressLint("NewApi")
 				@Override
 				public void onViewTap(View view, float x, float y) {
 					if (getActionBar().isShowing()) {

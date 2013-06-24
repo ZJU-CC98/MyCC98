@@ -10,11 +10,12 @@ import roboguice.inject.ContentView;
 import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
 import tk.djcrazy.MyCC98.helper.HtmlGenHelper;
-import tk.djcrazy.MyCC98.helper.SerializableCacheHelper;
+import tk.djcrazy.MyCC98.template.PmContentFactory;
 import tk.djcrazy.MyCC98.util.Intents;
-import tk.djcrazy.libCC98.ICC98Service;
+import tk.djcrazy.libCC98.CachedCC98Service;
 import tk.djcrazy.libCC98.SerializableCache;
 import tk.djcrazy.libCC98.exception.ParseContentException;
+import tk.djcrazy.libCC98.util.SerializableCacheUtil;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
@@ -55,11 +56,10 @@ public class PmViewActivity extends BaseFragmentActivity {
 	private int pmId = -1;
 
 	private String pageString;
-	private String senderAvatarUrl;
 	private String faceChoosedString;
 	private String pmContent;
 	@Inject
-	private ICC98Service service;
+	private CachedCC98Service service;
 
 	private HtmlGenHelper helper = new HtmlGenHelper();
 
@@ -164,31 +164,13 @@ public class PmViewActivity extends BaseFragmentActivity {
 		new Thread() {
 			@Override
 			public void run() {
-				StringBuilder builder = new StringBuilder(1000);
 				if (pmId != -1) { // in reply mod
 					try {
-						String keyString = SerializableCacheHelper.pmKey(pmId);
-						SerializableCache cache = SerializableCache.getInstance(getApplicationContext());
-						Object obj = cache.get(keyString);
-						if (obj instanceof String) {
-							pmContent = (String) obj;
-						} else {
-							pmContent = service.getMsgContent(pmId);
-							cache.put(keyString, (Serializable) pmContent);
-						}
-						try {
-							senderAvatarUrl = service.getUserImgUrl(sender);
-						} catch (ParseContentException e) {
-							e.printStackTrace();
-						}
-						HtmlGenHelper.addPostInfo(builder, readTopic,
-								senderAvatarUrl, sender, "", -1, sendTime, -1);
-						builder.append(
-								"<div class=\"post-content\"><span id=\"ubbcode\">")
-								.append("<div class=\"post-content\"><span id=\"ubbcode\">")
-								.append(helper.parseInnerLink(pmContent,
-										"PmReply"))
-								.append("</span><script>searchubb('ubbcode',1,'tablebody2');</script></div>");
+						pmContent = service.getMsgContent(pmId, false);
+						pageString = (new PmContentFactory(readTopic,
+								service.getUserImgUrl(sender), sender, sendTime, pmContent))
+								.getConent();
+						Log.d(TAG, pageString);
 					} catch (ClientProtocolException e) {
 
 						e.printStackTrace();
@@ -197,6 +179,9 @@ public class PmViewActivity extends BaseFragmentActivity {
 						e.printStackTrace();
 					} catch (IOException e) {
 
+						e.printStackTrace();
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				} else {
@@ -207,8 +192,6 @@ public class PmViewActivity extends BaseFragmentActivity {
 						readTopic = "";
 					}
 				}
-				pageString = helper.PAGE_OPEN + builder.toString()
-						+ helper.PAGE_CLOSE;
 				handler.sendEmptyMessage(0);
 			}
 		}.start();

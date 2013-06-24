@@ -9,7 +9,6 @@ import tk.djcrazy.MyCC98.PostListActivity;
 import tk.djcrazy.MyCC98.R;
 import tk.djcrazy.MyCC98.util.ViewUtils;
 import tk.djcrazy.libCC98.CC98ClientImpl;
-import tk.djcrazy.libCC98.ICC98Service;
 import tk.djcrazy.libCC98.data.BoardEntity;
 import tk.djcrazy.libCC98.util.DateFormatUtil;
 import android.app.Activity;
@@ -129,7 +128,7 @@ public class PersonalboardListAdapter extends BaseItemListAdapter<BoardEntity> {
 						context.startActivity(PostContentsJSActivity
 								.createIntent(items.get(clickPosition)
 										.getBoardID(), items.get(clickPosition)
-										.getLastReplyTopicID(), 1));
+										.getLastReplyTopicID(), 1, false));
 					}
 				});
 
@@ -140,7 +139,7 @@ public class PersonalboardListAdapter extends BaseItemListAdapter<BoardEntity> {
 						context.startActivity(PostContentsJSActivity
 								.createIntent(items.get(clickPosition)
 										.getBoardID(), items.get(clickPosition)
-										.getLastReplyTopicID(), 32767));
+										.getLastReplyTopicID(), 32767, false));
 					}
 				});
 	}

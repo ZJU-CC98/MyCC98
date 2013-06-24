@@ -11,7 +11,7 @@ import tk.djcrazy.MyCC98.fragment.HomeBehindMenuFragment;
 import tk.djcrazy.MyCC98.listener.LoadingListener;
 import tk.djcrazy.MyCC98.service.NewVersionDownloadService;
 import tk.djcrazy.MyCC98.util.DisplayUtil;
-import tk.djcrazy.libCC98.ICC98Service;
+import tk.djcrazy.libCC98.CachedCC98Service;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -56,7 +56,7 @@ public class HomeActivity extends BaseSlidingFragmentActivity implements
  	private ViewPager viewPager;
  	
  	@Inject
- 	private ICC98Service service;
+ 	private CachedCC98Service service;
  
  	
 	Fragment mFragment = null;

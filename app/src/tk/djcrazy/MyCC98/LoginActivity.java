@@ -19,7 +19,7 @@ import tk.djcrazy.MyCC98.security.Md5;
 import tk.djcrazy.MyCC98.util.Intents;
 import tk.djcrazy.MyCC98.util.ProgressRoboAsyncTask;
 import tk.djcrazy.MyCC98.util.ToastUtils;
-import tk.djcrazy.libCC98.ICC98Service;
+import tk.djcrazy.libCC98.CachedCC98Service;
 import tk.djcrazy.libCC98.data.LoginType;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -79,7 +79,7 @@ public class LoginActivity extends BaseFragmentActivity implements
 	private static final String AUTHINFO = "AUTHINFO";
 
 	@Inject
-	private ICC98Service service;
+	private CachedCC98Service service;
 
 	MyAuthDialogListener listener = new MyAuthDialogListener() {
 		@Override

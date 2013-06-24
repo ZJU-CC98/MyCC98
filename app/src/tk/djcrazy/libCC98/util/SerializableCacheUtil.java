@@ -1,12 +1,22 @@
-package tk.djcrazy.MyCC98.helper;
+package tk.djcrazy.libCC98.util;
 
-public class SerializableCacheHelper {
+public class SerializableCacheUtil {
 	private static final String POST = "post://";
 	private static final String PM = "pm://";
 	private static final String POST_LIST = "posts://";
 	private static final String PERSONAL_BOARD = "personalboard://";
 	private static final String HOT_TOPIC = "hottopics";
 	private static final String NEW_TOPIC = "newtopic://";
+	private static final String AVATAR = "avatar://";
+	private static final String MSG = "msg://";
+	
+	public static String msgKey(int pmid) {
+		return MSG + String.valueOf(pmid);
+	}
+	
+	public static String avatarKey(String username) {
+		return AVATAR + username;
+	}
 
 	public static String postPageKey(String boardId, String postId, int pageNum) {
 		StringBuilder builder = new StringBuilder(POST);

@@ -9,7 +9,7 @@ import tk.djcrazy.MyCC98.PostListActivity;
 import tk.djcrazy.MyCC98.R;
 import tk.djcrazy.MyCC98.adapter.SearchBoardListAdapter;
 import tk.djcrazy.MyCC98.util.ViewUtils;
-import tk.djcrazy.libCC98.ICC98Service;
+import tk.djcrazy.libCC98.CachedCC98Service;
 import tk.djcrazy.libCC98.data.BoardStatus;
 import android.content.Context;
 import android.os.Bundle;
@@ -48,7 +48,7 @@ public class SearchBoardFragment extends RoboSherlockFragment implements
  	@InjectView(android.R.id.empty)
  	private TextView emptyView;
 	@Inject
-	private ICC98Service service;
+	private CachedCC98Service service;
 
 	private SearchBoardListAdapter listAdapter;
   

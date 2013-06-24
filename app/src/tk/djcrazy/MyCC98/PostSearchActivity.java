@@ -4,6 +4,7 @@ import roboguice.inject.ContentView;
 import roboguice.inject.InjectView;
 import tk.djcrazy.MyCC98.adapter.InboxFragmentPagerAdapter;
 import tk.djcrazy.MyCC98.adapter.PostSearchFragmentPagerAdapter;
+import tk.djcrazy.libCC98.CachedCC98Service;
 import tk.djcrazy.libCC98.ICC98Service;
 import android.app.SearchManager;
 import android.content.Intent;
@@ -24,13 +25,13 @@ public class PostSearchActivity extends BaseFragmentActivity implements OnPageCh
 
 	public static final String BOARD_ID = "boardid";
 	public static final String BOARD_NAME = "boardname";
-    
 	private String boardId;
 	private String boardName;
 	private String mQueryString;
 
+
  	@Inject
-	private ICC98Service service;
+	private CachedCC98Service service;
  	
 	@InjectView(R.id.post_search_main_pages)
 	private ViewPager viewPager;
@@ -55,7 +56,7 @@ public class PostSearchActivity extends BaseFragmentActivity implements OnPageCh
 	@Override
 	public boolean onCreateOptionsMenu(Menu optionMenu) {
 		getSupportMenuInflater().inflate(R.menu.post_search, optionMenu);
- 		return true;
+		return true;
 	}
 
 	@Override
@@ -64,7 +65,7 @@ public class PostSearchActivity extends BaseFragmentActivity implements OnPageCh
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			finish();
- 			return true;
+			return true;
 		case R.id.post_search_action:
 			onSearchRequested();
 			return true;
@@ -72,6 +73,7 @@ public class PostSearchActivity extends BaseFragmentActivity implements OnPageCh
 			return super.onOptionsItemSelected(item);
 		}
 	}
+
  	@Override
  	public boolean onSearchRequested() {
  	     Bundle appData = new Bundle();
