@@ -10,6 +10,7 @@ import roboguice.inject.ContentView;
 import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
 import tk.djcrazy.MyCC98.helper.HtmlGenHelper;
+import tk.djcrazy.MyCC98.template.PmContentFactory;
 import tk.djcrazy.MyCC98.util.Intents;
 import tk.djcrazy.libCC98.CachedCC98Service;
 import tk.djcrazy.libCC98.SerializableCache;
@@ -55,7 +56,6 @@ public class PmViewActivity extends BaseFragmentActivity {
 	private int pmId = -1;
 
 	private String pageString;
-	private String senderAvatarUrl;
 	private String faceChoosedString;
 	private String pmContent;
 	@Inject
@@ -164,18 +164,13 @@ public class PmViewActivity extends BaseFragmentActivity {
 		new Thread() {
 			@Override
 			public void run() {
-				StringBuilder builder = new StringBuilder(1000);
 				if (pmId != -1) { // in reply mod
 					try {
 						pmContent = service.getMsgContent(pmId, false);
-						HtmlGenHelper.addPostInfo(builder, readTopic,
-								senderAvatarUrl, sender, "", -1, sendTime, -1);
-						builder.append(
-								"<div class=\"post-content\"><span id=\"ubbcode\">")
-								.append("<div class=\"post-content\"><span id=\"ubbcode\">")
-								.append(helper.parseInnerLink(pmContent,
-										"PmReply"))
-								.append("</span><script>searchubb('ubbcode',1,'tablebody2');</script></div>");
+						pageString = (new PmContentFactory(readTopic,
+								service.getUserImgUrl(sender), sender, sendTime, pmContent))
+								.getConent();
+						Log.d(TAG, pageString);
 					} catch (ClientProtocolException e) {
 
 						e.printStackTrace();
@@ -197,8 +192,6 @@ public class PmViewActivity extends BaseFragmentActivity {
 						readTopic = "";
 					}
 				}
-				pageString = helper.PAGE_OPEN + builder.toString()
-						+ helper.PAGE_CLOSE;
 				handler.sendEmptyMessage(0);
 			}
 		}.start();

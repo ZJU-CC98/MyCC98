@@ -19,7 +19,6 @@ import roboguice.util.RoboAsyncTask;
 import tk.djcrazy.MyCC98.helper.ThemeHelper;
 import tk.djcrazy.MyCC98.task.ProgressRoboAsyncTask;
 import tk.djcrazy.MyCC98.template.PostContentFactory;
-import tk.djcrazy.MyCC98.template.PostContentTemplateFactory;
 import tk.djcrazy.MyCC98.util.DisplayUtil;
 import tk.djcrazy.MyCC98.util.Intents;
 import tk.djcrazy.MyCC98.util.Intents.Builder;
