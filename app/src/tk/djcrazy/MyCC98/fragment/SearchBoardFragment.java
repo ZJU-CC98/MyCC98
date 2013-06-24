@@ -1,11 +1,7 @@
 package tk.djcrazy.MyCC98.fragment;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.apache.http.ParseException;
-import org.apache.http.client.ClientProtocolException;
 
 import roboguice.inject.InjectView;
 import roboguice.util.RoboAsyncTask;
@@ -15,16 +11,14 @@ import tk.djcrazy.MyCC98.adapter.SearchBoardListAdapter;
 import tk.djcrazy.MyCC98.util.ViewUtils;
 import tk.djcrazy.libCC98.ICC98Service;
 import tk.djcrazy.libCC98.data.BoardStatus;
-import tk.djcrazy.libCC98.exception.ParseContentException;
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;

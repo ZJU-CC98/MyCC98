@@ -303,9 +303,9 @@ public abstract class PagedPullToRefeshListFragment<E> extends
 				// List has already been shown so hide/show the empty view with
 				// no fade effect
 				if (items.isEmpty())
-					hide(listView).show(emptyView);
+					hide(listView).hide(progressBar).show(emptyView);
 				else
-					hide(emptyView).show(listView);
+					hide(emptyView).hide(progressBar).show(listView);
 			return this;
 		}
 
