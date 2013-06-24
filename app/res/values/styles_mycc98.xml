@@ -36,6 +36,7 @@
     
     <style name="Theme.Mycc98.OverLay" parent="Theme.Mycc98">
          <item name="windowActionBarOverlay">true</item>
+         <item name="actionBarStyle">@style/ActionBar.Overlay.Mycc98</item>
      </style>
     
     <style name="ActionBar.Solid.Mycc98" parent="@style/Widget.Sherlock.Light.ActionBar.Solid.Inverse">
@@ -43,10 +44,21 @@
         <item name="backgroundStacked">@drawable/ab_stacked_solid_mycc98</item>
         <item name="backgroundSplit">#ee000000</item>
         <item name="progressBarStyle">@style/ProgressBar.Mycc98</item>
+        <item name="subtitleTextStyle">@style/TextAppearance.mycc98.ActionBar.Subtitle</item>
+        
     </style>
-
+    
+		<style name="TextAppearance.mycc98.ActionBar.Subtitle" parent="TextAppearance.Sherlock.Widget.ActionBar.Subtitle.Inverse">
+		    <item name="android:textColor">@android:color/white</item>
+		</style>
+    
     <style name="ActionBar.Transparent.Mycc98" parent="@style/Widget.Sherlock.ActionBar">
         <item name="background">@drawable/ab_transparent_mycc98</item>
+        <item name="progressBarStyle">@style/ProgressBar.Mycc98</item>
+    </style>
+	
+    <style name="ActionBar.Overlay.Mycc98" parent="@style/ActionBar.Solid.Mycc98">
+        <item name="background">@drawable/ab_overlay_mycc98</item>
         <item name="progressBarStyle">@style/ProgressBar.Mycc98</item>
     </style>
 	

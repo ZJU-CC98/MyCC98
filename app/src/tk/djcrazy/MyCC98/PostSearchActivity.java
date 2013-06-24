@@ -1,43 +1,38 @@
 package tk.djcrazy.MyCC98;
 
-import java.util.List;
-
 import roboguice.inject.ContentView;
-import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
+<<<<<<< HEAD
 import tk.djcrazy.MyCC98.adapter.NewTopicListAdapter;
 import tk.djcrazy.MyCC98.util.ToastUtils;
 import tk.djcrazy.libCC98.CachedCC98Service;
 import tk.djcrazy.libCC98.data.SearchResultEntity;
 import android.app.ProgressDialog;
+=======
+import tk.djcrazy.MyCC98.adapter.InboxFragmentPagerAdapter;
+import tk.djcrazy.MyCC98.adapter.PostSearchFragmentPagerAdapter;
+import tk.djcrazy.libCC98.ICC98Service;
+>>>>>>> 7d66653806d6165d4f004f584bb2a36db92b84cc
 import android.app.SearchManager;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.os.Handler;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.WindowManager;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.RadioGroup.OnCheckedChangeListener;
-import android.widget.Toast;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 
 import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.ActionBar.Tab;
+import com.actionbarsherlock.app.ActionBar.TabListener;
 import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 import com.google.inject.Inject;
 
 @ContentView(R.layout.activity_post_search)
-public class PostSearchActivity extends BaseFragmentActivity {
+public class PostSearchActivity extends BaseFragmentActivity implements OnPageChangeListener, TabListener{
 
 	public static final String BOARD_ID = "boardid";
 	public static final String BOARD_NAME = "boardname";
+<<<<<<< HEAD
 	public static final String SEARCH_TYPE = "searchType";
 	public static final String SEARCH_TYPE_TITLE = "2";
 	public static final String SEARCH_TYPE_AUTHOR = "1";
@@ -56,10 +51,14 @@ public class PostSearchActivity extends BaseFragmentActivity {
 	@InjectView(R.id.lv_postsearch)
 	private ListView listView;
 
+=======
+    
+>>>>>>> 7d66653806d6165d4f004f584bb2a36db92b84cc
 	private String boardId;
 	private String boardName;
 	private String mQueryString;
 
+<<<<<<< HEAD
 	private List<SearchResultEntity> mResList;
 	private NewTopicListAdapter newTopicListAdapter;
 
@@ -71,86 +70,29 @@ public class PostSearchActivity extends BaseFragmentActivity {
 
 	@Inject
 	private CachedCC98Service service;
+=======
+ 	@Inject
+	private ICC98Service service;
+ 	
+	@InjectView(R.id.post_search_main_pages)
+	private ViewPager viewPager;
+>>>>>>> 7d66653806d6165d4f004f584bb2a36db92b84cc
 
-	private Handler handler = new Handler() {
-		@Override
-		public void handleMessage(android.os.Message msg) {
-			switch (msg.what) {
-			case FETCH_SUCC:
-				int totalpost = Integer.parseInt(mResList.get(0)
-						.getTotalResult());
-				mResList.remove(0);
-				totalPage = totalpost % 20 == 0 ? totalpost / 20
-						: totalpost / 20 + 1;
-				getSupportActionBar().setSubtitle(
-						"共" + totalpost + "个结果  " + "第" + currentPage + "页 | 共"
-								+ totalPage + "页");
-				if (currentPage <= 1) {
-					vPrev.setVisibility(View.GONE);
-				} else {
-					vPrev.setVisibility(View.VISIBLE);
-				}
-				if (currentPage >= totalPage) {
-					vNext.setVisibility(View.GONE);
-				} else {
-					vNext.setVisibility(View.VISIBLE);
-				}
-				newTopicListAdapter = new NewTopicListAdapter(
-						PostSearchActivity.this, mResList);
-				listView.setAdapter(newTopicListAdapter);
-				pg.dismiss();
-				getWindow().setSoftInputMode(
-						WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-				break;
-			case NOTFOUND:
-				pg.dismiss();
-				Toast.makeText(PostSearchActivity.this, "木有找到...",
-						Toast.LENGTH_SHORT).show();
-			case FETCH_ERROR:
-				pg.dismiss();
-				ToastUtils.show(PostSearchActivity.this, "加载失败");
-			default:
-				break;
-			}
-		}
-	};
-
-	private void fetchContent(final String keyWord) {
-		pg.show();
-		new Thread() {
-			@Override
-			public void run() {
-				try {
-					mResList = service.searchPost(keyWord, boardId,
-							currentType, currentPage);
-					if (mResList.size() > 1) {
-						handler.sendEmptyMessage(FETCH_SUCC);
-					} else {
-						handler.sendEmptyMessage(NOTFOUND);
-					}
-				} catch (Exception e) {
-					handler.sendEmptyMessage(FETCH_ERROR);
-					e.printStackTrace();
-				}
-			}
-		}.start();
-	}
-
+ 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		configureActionBar();
-		setListeners();
-		pg = new ProgressDialog(this);
-		pg.setMessage("正在加载数据...");
-		rbByTitle.setChecked(true);
-		handleIntent(getIntent());
+  		handleIntent(getIntent());
 	}
 
 	private void configureActionBar() {
 		ActionBar actionBar = getSupportActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		actionBar.setLogo(new BitmapDrawable(service.getCurrentUserAvatar()));
+		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+		actionBar.addTab(actionBar.newTab().setText("主题搜索").setTabListener(this));
+		actionBar.addTab(actionBar.newTab().setText("作者搜索").setTabListener(this));
 	}
 
 	@Override
@@ -173,6 +115,7 @@ public class PostSearchActivity extends BaseFragmentActivity {
 			return super.onOptionsItemSelected(item);
 		}
 	}
+<<<<<<< HEAD
 
 	@Override
 	public boolean onSearchRequested() {
@@ -183,11 +126,22 @@ public class PostSearchActivity extends BaseFragmentActivity {
 		startSearch(null, false, appData, false);
 		return true;
 	}
+=======
+ 	@Override
+ 	public boolean onSearchRequested() {
+ 	     Bundle appData = new Bundle();
+ 	     appData.putString(PostSearchActivity.BOARD_ID, boardId);
+ 	     appData.putString(PostSearchActivity.BOARD_NAME, boardName);
+  	     startSearch(null, false, appData, false);
+ 	     return true;
+ 	 }
+>>>>>>> 7d66653806d6165d4f004f584bb2a36db92b84cc
 
 	@Override
 	protected void onNewIntent(Intent intent) {
 		setIntent(intent);
 		handleIntent(intent);
+		
 	}
 
 	private void handleIntent(Intent intent) {
@@ -197,6 +151,7 @@ public class PostSearchActivity extends BaseFragmentActivity {
 			Bundle appData = intent.getBundleExtra(SearchManager.APP_DATA);
 			boardId = appData.getString(BOARD_ID);
 			boardName = appData.getString(BOARD_NAME);
+<<<<<<< HEAD
 			currentType = appData.getString(SEARCH_TYPE);
 			currentPage = 1;
 			totalPage = 1;
@@ -252,5 +207,44 @@ public class PostSearchActivity extends BaseFragmentActivity {
 				startActivity(intent2);
 			}
 		});
+=======
+			PostSearchFragmentPagerAdapter adapter = new PostSearchFragmentPagerAdapter(
+					getSupportFragmentManager(), query, boardId);
+			viewPager.setAdapter(adapter);
+			viewPager.setOnPageChangeListener(this);
+ 			getSupportActionBar().setTitle("搜索：" + mQueryString+" 在"+boardName);
+ 		}
 	}
+
+	@Override
+	public void onTabSelected(Tab tab, FragmentTransaction ft) {
+		viewPager.setCurrentItem(tab.getPosition());
+	}
+
+	@Override
+	public void onTabUnselected(Tab tab, FragmentTransaction ft) {
+		
+	}
+
+	@Override
+	public void onTabReselected(Tab tab, FragmentTransaction ft) {
+		
+	}
+
+	@Override
+	public void onPageScrollStateChanged(int arg0) {
+		
+>>>>>>> 7d66653806d6165d4f004f584bb2a36db92b84cc
+	}
+
+	@Override
+	public void onPageScrolled(int arg0, float arg1, int arg2) {
+		
+	}
+
+	@Override
+	public void onPageSelected(int arg0) {
+		getSupportActionBar().setSelectedNavigationItem(arg0);
+	}
+
 }

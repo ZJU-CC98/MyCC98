@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="#f9f9f9"
-    android:orientation="vertical" >
+    android:layout_height="match_parent"
+     android:orientation="vertical" >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/abs__list_selector_holo_dark"
-        android:orientation="vertical"
-        android:padding="4dp" >
+        android:layout_margin="3dp"
+        android:background="@drawable/card_selector"
+        android:orientation="vertical" >
 
         <!-- 帖子标题 -->
 
@@ -19,17 +18,20 @@
             style="@style/post_title_style"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingBottom="4dp"
-            android:paddingTop="4dp"
-            android:text="" />
+            android:paddingBottom="15dp"
+            android:paddingLeft="6dp"
+            android:paddingRight="6dp"
+            android:paddingTop="15dp"
+            android:text="wowoowo佛啊阿福围殴覅欧普求问饿哦ine" />
 
         <LinearLayout
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/card_grey"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingBottom="2dp"
-            android:paddingTop="2dp" >
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp" >
 
             <!-- 所属版面名字 -->
 
@@ -38,23 +40,24 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1.0"
+                android:ellipsize="end"
+                android:singleLine="true"
                 android:text="MSTC Microsoft Technology Club"
                 android:textColor="#9400D3"
                 android:textSize="11sp" />
-            <!-- 作者 -->
 
-            <TextView
-                android:layout_width="wrap_content"
+            <ImageView
+                android:layout_width="15dp"
                 android:layout_height="wrap_content"
-                android:text="作者: "
-                android:textColor="#a0a0a0"
-                android:textSize="10sp" />
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="5dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/social_person" />
 
             <TextView
                 android:id="@+id/hot_topic_author"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right"
                 android:layout_marginRight="10dp"
                 android:text="MSTC"
                 android:textColor="#777"

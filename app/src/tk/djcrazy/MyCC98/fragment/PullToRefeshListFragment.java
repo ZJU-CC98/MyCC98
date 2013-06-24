@@ -139,11 +139,7 @@ public abstract class PullToRefeshListFragment<E> extends RoboSherlockFragment
 	 */
 	protected void configureList(Activity activity,
 			PullToRefreshListView listView) {
-//		ListView inner = listView.getRefreshableView();
-////		inner.setCacheColorHint(getResources().getColor(R.color.transparent));
-// 		inner.setDivider(getResources().getDrawable(R.drawable.list_divider));
-//		inner.setDividerHeight(1);
-		listView.setAdapter(createAdapter(items));
+ 		listView.setAdapter(createAdapter(items));
 	}
 
 	@Override

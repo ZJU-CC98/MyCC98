@@ -5,73 +5,9 @@
     android:background="@color/board_info_background"
     android:orientation="vertical" >
 
-    <RelativeLayout
+    <android.support.v4.view.ViewPager
+        android:id="@+id/post_search_main_pages"
         android:layout_width="match_parent"
-        android:layout_height="36dp" >
-
-        <RadioGroup
-            android:id="@+id/rg_postsearch_stype"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_weight="1"
-            android:orientation="horizontal"
-            android:paddingRight="15dp" >
-
-            <RadioButton
-                android:id="@+id/rb_postsearch_by_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="true"
-                android:text="以主题搜索"
-                android:textColor="#777"
-                android:textSize="13sp" />
-
-            <RadioButton
-                android:id="@+id/rb_postsearch_by_author"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="false"
-                android:text="以作者搜索"
-                android:textColor="#777"
-                android:textSize="13sp" />
-        </RadioGroup>
-    </RelativeLayout>
-
-    <ListView
-        android:id="@+id/lv_postsearch"
-        style="@style/listview"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_weight="1"
-        android:background="@color/post_list_background" />
-
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="32dp"
-        android:orientation="horizontal" >
-
-        <TextView
-            android:id="@+id/tv_postsearch_prev"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@drawable/simple_button_selector"
-            android:gravity="center"
-            android:text="上一页"
-            android:textColor="#fff"
-            android:textSize="10sp" />
-
-        <TextView
-            android:id="@+id/tv_postsearch_next"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@drawable/simple_button_selector"
-            android:gravity="center"
-            android:text="下一页"
-            android:textColor="#fff"
-            android:textSize="10sp" />
-    </LinearLayout>
-
+        android:layout_height="match_parent"
+        android:background="#e3e3e3" />
 </LinearLayout>

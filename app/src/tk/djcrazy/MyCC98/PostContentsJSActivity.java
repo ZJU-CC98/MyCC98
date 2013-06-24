@@ -188,7 +188,9 @@ public class PostContentsJSActivity extends BaseActivity implements
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
-			finish();
+			Intent intent = PostListActivity.createIntent(boardName, boardId);
+			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+ 			startActivity(intent);
 			break;
 		case R.id.menu_jump:
 			jumpDialog();
@@ -208,7 +210,7 @@ public class PostContentsJSActivity extends BaseActivity implements
 		case R.id.show_all_image:
 			webView.loadUrl("javascript:showAllImages.fireEvent('click');");
 			break;
-		default:
+ 		default:
 			break;
 		}
 		return false;
@@ -490,7 +492,7 @@ public class PostContentsJSActivity extends BaseActivity implements
 		} else {
 			pMustache.addScript(PostContentFactory.DEFAULT_UBB_SCRIPT);
 		}
-		return pMustache.genContent(templateIn);
+ 		return pMustache.genContent(templateIn);
 	}
 
 	//

@@ -102,27 +102,32 @@
 
              <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="32dp" 
+                android:layout_height="wrap_content" 
                 android:layout_marginTop="30dp">
 
-                <Button
-                    android:id="@+id/proxy_setting"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginRight="10dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/login_button_selector"
-                    android:text="代理"
-                    android:textColor="@color/white" />
+                 <Button
+                     android:id="@+id/proxy_setting"
+                     android:layout_width="match_parent"
+                     android:layout_height="wrap_content"
+                     android:layout_marginRight="10dp"
+                     android:layout_weight="1"
+                     android:background="@drawable/common_blue_button_selector"
+                     android:paddingTop="10dp"
+                     android:paddingBottom="10dp"
+                     android:text="代理"
+                     android:textColor="@color/white" />
 
-                <Button
+                <Button 
                     android:id="@+id/login"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/login_button_selector"
+                    android:layout_weight="1"      
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:background="@drawable/common_blue_button_selector"
                     android:text="@string/login_confirm"
+                    android:padding="0dp"
                     android:textColor="@color/white" />
             </LinearLayout>
         </LinearLayout>

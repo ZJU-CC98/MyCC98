@@ -165,7 +165,7 @@ public class SearchBoardFragment extends RoboSherlockFragment implements
 			} else if (boardList.size() <= 30) {
 				currentResult = boardList;
 			} else {
-				currentResult = boardList.subList(0, 30);
+				currentResult = boardList.subList(0, 50);
 			}
 		} else {
 			List<BoardStatus> tmplist = new ArrayList<BoardStatus>();

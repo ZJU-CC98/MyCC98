@@ -148,6 +148,7 @@ public abstract class PagedPullToRefeshListFragment<E> extends
 		isClearData =false;
 		this.items = items;
 		if (exception != null) {
+			setEmptyText("加载出错");
 			showList();
 			return;
 		} 

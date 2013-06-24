@@ -17,17 +17,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.inject.Inject;
 
 public class PostListViewAdapter extends BaseItemListAdapter<PostEntity> {
 
-	private String mBoardId;
-	private String mBoardName;
-
+ 
 	private final class ListItemView {
 		public TextView postName;
+		public LinearLayout postNameClickable;
+		
 		public TextView postAuthor;
 		public TextView lastReplyAuthor;
 		public TextView lastReplyTime;
@@ -38,9 +39,7 @@ public class PostListViewAdapter extends BaseItemListAdapter<PostEntity> {
 	public PostListViewAdapter(Activity context, List<PostEntity> postList,
 			String boardId, String boardName) {
 		super(context, postList);
-		mBoardId = boardId;
-		mBoardName = boardName;
-	}
+ 	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
@@ -103,7 +102,7 @@ public class PostListViewAdapter extends BaseItemListAdapter<PostEntity> {
 
 	private void setListItemViewListener(final int clickPosition,
 			final ListItemView listItemView) {
-		listItemView.postName.setOnClickListener(new View.OnClickListener() {
+		listItemView.postNameClickable.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
  				context.startActivity(PostContentsJSActivity.createIntent(items
@@ -120,8 +119,12 @@ public class PostListViewAdapter extends BaseItemListAdapter<PostEntity> {
 
 		 				context.startActivity(PostContentsJSActivity.createIntent(items
 								.get(clickPosition).getBoardId(),
+<<<<<<< HEAD
 								items.get(clickPosition).getPostId(), 32767, false));
 
+=======
+								items.get(clickPosition).getPostId(), 32767));
+>>>>>>> 7d66653806d6165d4f004f584bb2a36db92b84cc
 					}
 				});
 	}
@@ -143,5 +146,7 @@ public class PostListViewAdapter extends BaseItemListAdapter<PostEntity> {
 				.findViewById(R.id.post_last_reply_clickable);
 		listItemView.replyNum = (TextView) convertView
 				.findViewById(R.id.post_list_reply_num);
+		listItemView.postNameClickable = (LinearLayout) convertView
+				.findViewById(R.id.post_title_clickable);
 	}
 }

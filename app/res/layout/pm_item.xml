@@ -1,44 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/pm_item_view"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:background="@drawable/listview_selector"
-    android:orientation="vertical"
-    android:padding="8dp" >
+    android:layout_height="wrap_content" >
 
-    <TextView
-        android:id="@+id/pm_topic"
-          style="@style/post_title_style"
-        android:layout_width="fill_parent"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:lines="1"
-        android:text="A tooopic" />
-
-    <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
+        android:background="@drawable/card_selector"
+        android:orientation="vertical"
+        android:layout_margin="3dp" >
 
         <TextView
-            android:id="@+id/pm_sender_name"
-            android:layout_width="wrap_content"
+            android:id="@+id/pm_topic"
+            style="@style/post_title_style"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:lines="1"
-            android:text="Test Sender"
-            android:textColor="#999"
-            android:textSize="10sp" />
+            android:ellipsize="end"
+            android:paddingBottom="10dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:paddingTop="10dp"
+            android:singleLine="true"
+            android:text="A tooopic" />
 
-        <TextView
-            android:id="@+id/pm_time"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/pm_sender_name"
-            android:layout_alignParentRight="true"
-            android:lines="1"
-            android:text="2012-02-15 13:45:00"
-           android:textColor="@color/post_list_last_reply_text_color"
-            android:textSize="11sp" />
-    </RelativeLayout>
+            android:background="@color/card_grey"
+            android:paddingBottom="10dp"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:paddingTop="10dp" >
+						<ImageView
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:layout_marginRight="10dp"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/social_person" />
+            <TextView
+                android:id="@+id/pm_sender_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_weight="1.0"
+                android:lines="1"
+                android:text="Test Sender"
+                android:textColor="#999"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/pm_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/pm_sender_name"
+                android:layout_alignParentRight="true"
+                android:lines="1"
+                android:text="2012-02-15 13:45:00"
+                android:textColor="@color/post_list_last_reply_text_color"
+                android:textSize="12sp" />
+        </LinearLayout>
+    </LinearLayout>
 
 </LinearLayout>

@@ -1,117 +1,140 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:addStatesFromChildren="false"
-    android:background="@color/board_info_background"
-    android:orientation="vertical" >
+      android:orientation="vertical" >
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal" >
-
-        <TextView
-            android:id="@+id/board_name"
-            style="@style/board_name"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1.0"
-            android:background="@drawable/abs__list_selector_holo_dark"
-            android:clickable="true"
-            android:gravity="center_vertical"
-            android:paddingBottom="10dp"
-            android:paddingLeft="6dp"
-            android:paddingTop="10dp"
-            android:text="@string/test_board_name" />
-
-        <Button
-            android:layout_width="0.1dp"
-            android:layout_height="0.1dp"
-            android:alpha="0" />
+        android:layout_margin="3dp"
+        android:addStatesFromChildren="false"
+        android:background="@drawable/card_bg"
+        android:orientation="vertical" >
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingRight="6dp" >
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/today"
-                android:textColor="#aaa"
-                android:textSize="10sp" />
-
-            <TextView
-                android:id="@+id/topic_number_today"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="4dp"
-                android:text="@string/test_number"
-                android:textColor="#aaa"
-                android:textSize="10sp" />
-        </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal" >
-
-        <TextView
-            android:id="@+id/last_reply_topic_name"
+            android:id="@+id/board_name_clickable"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1.0"
             android:background="@drawable/abs__list_selector_holo_dark"
-            android:clickable="true"
             android:gravity="center_vertical"
-            android:paddingBottom="4dp"
-            android:paddingLeft="6dp"
-            android:paddingTop="4dp"
-            android:text="@string/test_topic_name"
-            android:textColor="#777"
-            android:textSize="13sp" />
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/board_name"
+                style="@style/board_name"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.0"
+                android:gravity="center_vertical"
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:paddingBottom="10dp"
+                android:paddingLeft="6dp"
+                android:paddingTop="10dp"
+                android:text="@string/test_board_name" />
+
+            <Button
+                android:layout_width="0.1dp"
+                android:layout_height="0.1dp"
+                android:alpha="0" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingRight="6dp" >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/message" />
+
+                <TextView
+                    android:id="@+id/topic_number_today"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="4dp"
+                    android:text="@string/test_number"
+                    android:textColor="#aaa"
+                    android:textSize="10sp" />
+            </LinearLayout>
+        </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/last_reply_time_clickable"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:background="@drawable/abs__list_selector_holo_dark"
-            android:clickable="true"
+            android:background="@color/card_grey"
             android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingBottom="6dp"
-            android:paddingRight="6dp"
-            android:paddingTop="6dp" >
+            android:orientation="horizontal" >
 
             <TextView
-                android:layout_width="wrap_content"
+                android:id="@+id/last_reply_topic_name"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="最后回复："
-                android:textColor="@color/post_list_last_reply_text_color"
-                android:textSize="10sp" />
+                android:layout_weight="1.0"
+                android:background="@drawable/abs__list_selector_holo_dark"
+                android:clickable="true"
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:paddingBottom="10dp"
+                android:paddingLeft="6dp"
+                android:paddingTop="10dp"
+                android:singleLine="true"
+                android:text="@string/test_topic_name"
+                android:textColor="#777"
+                android:textSize="13sp" />
+            
+						<ImageView android:src="@drawable/vertical_divider"
+						    android:layout_height="match_parent"
+						    android:layout_width="2px"
+						    android:scaleType="fitXY"/> 
+						    
+            <LinearLayout
+                android:id="@+id/last_reply_time_clickable"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/abs__list_selector_holo_dark"
+                android:clickable="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingLeft="10dp" >
 
-            <TextView
-                android:id="@+id/last_reply_author"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/test_author"
-                android:textColor="@color/post_list_last_reply_text_color"
-                android:textSize="10sp" />
+<!--                 <TextView -->
+<!--                     android:layout_width="wrap_content" -->
+<!--                     android:layout_height="match_parent" -->
+<!--                     android:gravity="center_vertical" -->
+<!--                     android:text="最后回复：" -->
+<!--                     android:textColor="@color/post_list_last_reply_text_color" -->
+<!--                     android:textSize="10sp" /> -->
+                <ImageView
+                    android:layout_width="15dp"
+                    android:layout_height="wrap_content"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/social_person" 
+                    android:layout_marginRight="10dp"/>
 
-            <TextView
-                android:id="@+id/last_reply_time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:text="55分钟前"
-                android:textColor="@color/post_list_last_reply_text_color"
-                android:textSize="10sp" />
+                
+                <TextView
+                    android:id="@+id/last_reply_author"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/test_author"
+                    android:textColor="@color/post_list_last_reply_text_color"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/last_reply_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:paddingRight="5dp"
+                    android:text="55分钟前"
+                    android:textColor="@color/post_list_last_reply_text_color"
+                    android:textSize="12sp" />
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 

@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#f9f9f9"
+    android:background="@color/card_list_bg"
     android:gravity="center"
     android:orientation="vertical" >
 
@@ -20,31 +20,23 @@
         android:gravity="center_vertical"
         android:visibility="visible" >
 
-        <LinearLayout
+        <ImageView
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_marginLeft="5dp"
+            android:src="@drawable/sear_icon_small" />
+
+        <EditText
+            android:id="@+id/search_board_bar"
             android:layout_width="match_parent"
-            android:layout_height="25dp"
+            android:layout_height="20dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-             android:gravity="center_vertical" >
-
-            <ImageView
-                android:layout_width="18dp"
-                android:layout_height="18dp"
-                android:layout_marginLeft="5dp"
-                android:src="@drawable/sear_icon_small" />
-
-            <EditText
-                android:id="@+id/search_board_bar"
-                android:layout_width="match_parent"
-                android:layout_height="20dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_weight="1.0"
-                android:background="@null"
-                android:hint="请输入关键词"
-                android:singleLine="true"
-                android:textSize="13sp" />
-        </LinearLayout>
+            android:layout_weight="1.0"
+            android:background="@null"
+            android:hint="请输入关键词"
+            android:singleLine="true"
+            android:textSize="13sp" />
     </LinearLayout>
 
     <ListView

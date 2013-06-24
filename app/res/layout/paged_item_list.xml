@@ -18,13 +18,16 @@
     xmlns:app="http://schemas.android.com/apk/res/tk.djcrazy.MyCC98"
     android:layout_width="match_parent"
     android:layout_height="match_parent" 
-    android:background="@drawable/dark_main_background">
+    android:background="@color/card_list_bg">
 
     <com.handmark.pulltorefresh.library.PullToRefreshListView
         android:id="@+id/pull_list"
         style="@style/listview"
-         android:layout_width="match_parent"
+        android:layout_width="match_parent"
         android:layout_height="match_parent" 
+        android:cacheColorHint="@color/transparent"
+        android:divider ="@null"
+        android:dividerHeight="0.0dp"
         app:ptrHeaderTextColor="#999"
         app:ptrMode="pullFromStart" 
         app:ptrOverScroll="true"
@@ -33,7 +36,8 @@
 
     <TextView
         android:id="@android:id/empty"
-        android:text="加载超时"
+        android:text="加载超时"       
+        android:textColor="@android:color/black"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
