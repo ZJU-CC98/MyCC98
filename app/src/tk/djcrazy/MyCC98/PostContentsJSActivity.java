@@ -191,6 +191,7 @@ public class PostContentsJSActivity extends BaseActivity implements
 			Intent intent = PostListActivity.createIntent(boardName, boardId);
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
  			startActivity(intent);
+ 			finish();
 			break;
 		case R.id.menu_jump:
 			jumpDialog();
