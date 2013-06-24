@@ -95,7 +95,7 @@ public class ProfileActivity extends BaseFragmentActivity {
 			finish();
 			return true;
 		case MENU_SEND_MESSAGE_ID:
-			Intents.Builder builder = new Builder(this, PmActivity.class);
+			Intents.Builder builder = new Builder(this, EditActivity.class);
 			Intent intent = builder.requestType(EditActivity.REQUEST_PM)
 					.pmToUser(mUserName).toIntent();
 			startActivity(intent);

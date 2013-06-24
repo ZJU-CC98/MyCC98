@@ -70,6 +70,8 @@ public class HomeActivity extends BaseSlidingFragmentActivity implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home);	
+ 		getSlidingMenu().setMode(SlidingMenu.LEFT_RIGHT);
+ 		getSlidingMenu().setSecondaryMenu(R.layout.home_second_behind_view);
  		setBehindContentView(R.layout.home_behind_view);
 		PreferenceManager.setDefaultValues(this, R.xml.settings, false);
 		HomeFragmentPagerAdapter adapter = new HomeFragmentPagerAdapter(
@@ -81,15 +83,7 @@ public class HomeActivity extends BaseSlidingFragmentActivity implements
  		viewPager.setOnPageChangeListener(new OnPageChangeListener() {
 			@Override
 			public void onPageSelected(int arg0) {
-				switch (arg0) {
-				case 0:
-					getSlidingMenu().setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
-					break;
-				default:
-					getSlidingMenu().setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
-					break;
-				}
-				getSupportActionBar().setSelectedNavigationItem(arg0);
+ 				getSupportActionBar().setSelectedNavigationItem(arg0);
 			}
 			@Override
 			public void onPageScrolled(int arg0, float arg1, int arg2) {
@@ -109,12 +103,12 @@ public class HomeActivity extends BaseSlidingFragmentActivity implements
 
 		// customize the SlidingMenu
 		SlidingMenu sm = getSlidingMenu();
-		sm.setShadowWidth(80); 
+		sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
+		sm.setShadowWidth(80);  
 		sm.setBehindScrollScale(0f);
  		sm.setBehindOffset(DisplayUtil.dip2px(getApplicationContext(), 150));
 		sm.setFadeDegree(0f);
 		viewPager.setCurrentItem(0);
-		sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
  		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		new CheckUpdateTask(this).execute();
 	}
