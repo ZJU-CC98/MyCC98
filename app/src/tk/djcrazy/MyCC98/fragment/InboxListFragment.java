@@ -9,14 +9,14 @@ import android.support.v4.content.Loader;
 import tk.djcrazy.MyCC98.adapter.BaseItemListAdapter;
 import tk.djcrazy.MyCC98.adapter.PmListViewAdapter;
 import tk.djcrazy.MyCC98.util.ThrowableLoader;
-import tk.djcrazy.libCC98.ICC98Service;
+import tk.djcrazy.libCC98.CachedCC98Service;
 import tk.djcrazy.libCC98.data.InboxInfo;
 import tk.djcrazy.libCC98.data.PmInfo;
 
 public class InboxListFragment extends PagedPullToRefeshListFragment<PmInfo> {
 
 	@Inject
-	private ICC98Service mService;
+	private CachedCC98Service mService;
 	private int type=0;
 	private InboxInfo inboxInfo = new InboxInfo(0, 0);
 	public static InboxListFragment createFragment(int type) {

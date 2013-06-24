@@ -6,11 +6,11 @@ import java.util.List;
 import tk.djcrazy.MyCC98.adapter.BaseItemListAdapter;
 import tk.djcrazy.MyCC98.adapter.PersonalboardListAdapter;
 import tk.djcrazy.MyCC98.application.MyApplication;
-import tk.djcrazy.MyCC98.helper.SerializableCacheHelper;
 import tk.djcrazy.MyCC98.util.ThrowableLoader;
-import tk.djcrazy.libCC98.ICC98Service;
+import tk.djcrazy.libCC98.CachedCC98Service;
 import tk.djcrazy.libCC98.SerializableCache;
 import tk.djcrazy.libCC98.data.BoardEntity;
+import tk.djcrazy.libCC98.util.SerializableCacheUtil;
 import android.os.Bundle;
 import android.support.v4.content.Loader;
 
@@ -20,7 +20,7 @@ public class PersonalBoardFragment extends
 		PullToRefeshListFragment<BoardEntity> {
 
 	@Inject
-	private ICC98Service service;
+	private CachedCC98Service service;
 	private boolean initload = true;
 
 	@Override
@@ -28,22 +28,7 @@ public class PersonalBoardFragment extends
 		return new ThrowableLoader<List<BoardEntity>>(getActivity(), items) {
 			@Override
 			public List<BoardEntity> loadData() throws Exception {
-				List<BoardEntity> ret = null;
-				SerializableCache cache = SerializableCache
-						.getInstance(MyApplication.getAppContext());
-				String keyString = SerializableCacheHelper
-						.personalBoardKey(service.getCurrentUserName());
-				// initial load, using cache if possible.
-				if (initload) {
-					Object object = cache.get(keyString);
-					if (object instanceof List) {
-						ret = (List<BoardEntity>) ret;
-					}
-				}
-				if (ret == null) {
-					ret = service.getPersonalBoardList();
-					cache.put(keyString, (Serializable) ret);
-				}
+				List<BoardEntity> ret = service.getPersonalBoardList(!initload);
 				initload = false;
 				return ret;
 			}

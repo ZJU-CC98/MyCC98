@@ -16,7 +16,6 @@ import roboguice.inject.ContentView;
 import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
 import roboguice.util.RoboAsyncTask;
-import tk.djcrazy.MyCC98.helper.SerializableCacheHelper;
 import tk.djcrazy.MyCC98.helper.ThemeHelper;
 import tk.djcrazy.MyCC98.task.ProgressRoboAsyncTask;
 import tk.djcrazy.MyCC98.template.PostContentFactory;
@@ -27,12 +26,13 @@ import tk.djcrazy.MyCC98.util.Intents.Builder;
 import tk.djcrazy.MyCC98.util.ToastUtils;
 import tk.djcrazy.MyCC98.view.ObservableWebView;
 import tk.djcrazy.MyCC98.view.ObservableWebView.OnScrollChangedCallback;
-import tk.djcrazy.libCC98.ICC98Service;
+import tk.djcrazy.libCC98.CachedCC98Service;
 import tk.djcrazy.libCC98.SerializableCache;
 import tk.djcrazy.libCC98.data.LoginType;
 import tk.djcrazy.libCC98.data.PostContentEntity;
 import tk.djcrazy.libCC98.data.UserData;
 import tk.djcrazy.libCC98.util.DateFormatUtil;
+import tk.djcrazy.libCC98.util.SerializableCacheUtil;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -101,20 +101,20 @@ public class PostContentsJSActivity extends BaseActivity implements
 
 	private List<PostContentEntity> mContentEntities;
 	@Inject
-	private ICC98Service service;
+	private CachedCC98Service service;
 
 	private Menu mOptionsMenu;
 	private GestureDetector gestureDetector;
 	private boolean isRefreshing = false;
 
 	public static Intent createIntent(String boardId, String postId,
-			int pageNumber) {
+			int pageNumber, boolean forceRefresh) {
 		return new Builder("post_content.VIEW").boardId(boardId).postId(postId)
-				.pageNumber(pageNumber).toIntent();
+				.pageNumber(pageNumber).forceRefresh(forceRefresh).toIntent();
 	}
 
 	public static Intent createIntent(String boardId, String postId) {
-		return createIntent(boardId, postId, 1);
+		return createIntent(boardId, postId, 1, false);
 	}
 
 	@Override
@@ -282,32 +282,28 @@ public class PostContentsJSActivity extends BaseActivity implements
 	public void jumpTo(int pageNum) {
 		if (pageNum <= totalPageNum) {
 			startActivity(PostContentsJSActivity.createIntent(boardId, postId,
-					pageNum));
+					pageNum, false));
 		}
 	}
 
 	public void prevPage() {
 		if (currPageNum >= 2) {
 			startActivity(PostContentsJSActivity.createIntent(boardId, postId,
-					currPageNum - 1));
+					currPageNum - 1, false));
 		} else {
 			ToastUtils.show(this, "已经到第一页啦");
 		}
 	}
 
 	public void refreshPage() {
-		String keyString = SerializableCacheHelper.postPageKey(boardId, postId,
-				currPageNum);
-		SerializableCache.getInstance(getApplicationContext())
-				.remove(keyString);
 		startActivity(PostContentsJSActivity.createIntent(boardId, postId,
-				currPageNum));
+				currPageNum, true));
 	}
 
 	public void nextPage() {
 		if (currPageNum + 1 <= totalPageNum) {
 			startActivity(PostContentsJSActivity.createIntent(boardId, postId,
-					currPageNum + 1));
+					currPageNum + 1, false));
 		} else {
 			ToastUtils.show(this, "已经到最后一页啦");
 		}
@@ -577,58 +573,36 @@ public class PostContentsJSActivity extends BaseActivity implements
 			setRefreshActionButtonState(true);
 		}
 
-		@SuppressWarnings("unchecked")
 		@Override
 		public List<PostContentEntity> call() throws Exception {
-			String keyString = SerializableCacheHelper.postPageKey(aBoardId,
-					aPostId, aPageNum);
-			Serializable obj = SerializableCache.getInstance(aContext).get(
-					keyString);
-			List<PostContentEntity> list = null;
-			if (obj == null) {
-				list = service.getPostContentList(aBoardId, aPostId, aPageNum);
-				if (aPageNum == LAST_PAGE) {
-					aPageNum = list.get(0).getTotalPage();
-				}
-				keyString = SerializableCacheHelper.postPageKey(aBoardId,
-						aPostId, aPageNum);
-				SerializableCache.getInstance(aContext).put(keyString,
-						(Serializable) list);
-			} else if (obj instanceof List) {
-				list = (List<PostContentEntity>) obj;
-			}
-			return list;
-		}
-
-		private void fetch(String boardId, String postId, int pageNum) {
-			String keyString = SerializableCacheHelper.postPageKey(boardId,
-					postId, pageNum);
-			Serializable obj = SerializableCache.getInstance(aContext).get(
-					keyString);
-			if (obj == null) {
-				try {
-					List<PostContentEntity> list = service.getPostContentList(
-							boardId, postId, pageNum);
-					SerializableCache.getInstance(aContext).put(keyString,
-							(Serializable) list);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
+			return service.getPostContentList(aBoardId, aPostId, aPageNum,
+					false);
 		}
 
 		private void prefetch() {
 			if (currPageNum < totalPageNum) {
 				new Thread() {
 					public void run() {
-						fetch(aBoardId, aPostId, currPageNum + 1);
+						try {
+							service.getPostContentList(aBoardId, aPostId,
+									currPageNum + 1, false);
+						} catch (Exception e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 					}
 				}.start();
 			}
 			if (currPageNum > 1) {
 				new Thread() {
 					public void run() {
-						fetch(aBoardId, aPostId, currPageNum - 1);
+						try {
+							service.getPostContentList(aBoardId, aPostId,
+									currPageNum - 1, false);
+						} catch (Exception e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 					}
 				}.start();
 			}

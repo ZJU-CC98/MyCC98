@@ -10,7 +10,6 @@ import com.google.inject.Inject;
 import tk.djcrazy.MyCC98.PostContentsJSActivity;
 import tk.djcrazy.MyCC98.R;
 import tk.djcrazy.libCC98.CC98ClientImpl;
-import tk.djcrazy.libCC98.ICC98Service;
 import tk.djcrazy.libCC98.data.HotTopicEntity;
 import android.app.Activity;
 import android.content.Context;

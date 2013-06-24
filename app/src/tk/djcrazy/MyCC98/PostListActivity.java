@@ -9,7 +9,7 @@ import roboguice.inject.InjectExtra;
 import tk.djcrazy.MyCC98.fragment.PostListFragment;
 import tk.djcrazy.MyCC98.util.Intents;
 import tk.djcrazy.MyCC98.util.Intents.Builder;
-import tk.djcrazy.libCC98.ICC98Service;
+import tk.djcrazy.libCC98.CachedCC98Service;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.drawable.BitmapDrawable;
@@ -31,7 +31,7 @@ public class PostListActivity extends BaseFragmentActivity {
 	private String boardId;
 
 	@Inject
-	private ICC98Service service;
+	private CachedCC98Service service;
 
 	public static Intent createIntent(String boardName, String boardId) {
 		Intent intent = new Intents.Builder("post_list.VIEW").boardId(boardId)

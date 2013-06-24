@@ -4,7 +4,6 @@ import java.util.List;
 
 import tk.djcrazy.MyCC98.PostContentsJSActivity;
 import tk.djcrazy.MyCC98.R;
-import tk.djcrazy.libCC98.ICC98Service;
 import tk.djcrazy.libCC98.data.PostEntity;
 import tk.djcrazy.libCC98.data.PostType;
 import tk.djcrazy.libCC98.util.DateFormatUtil;
@@ -109,7 +108,7 @@ public class PostListViewAdapter extends BaseItemListAdapter<PostEntity> {
 			public void onClick(View v) {
  				context.startActivity(PostContentsJSActivity.createIntent(items
 						.get(clickPosition).getBoardId(),
-						items.get(clickPosition).getPostId(), 1));
+						items.get(clickPosition).getPostId(), 1, false));
 			}
 		});
 
@@ -121,7 +120,7 @@ public class PostListViewAdapter extends BaseItemListAdapter<PostEntity> {
 
 		 				context.startActivity(PostContentsJSActivity.createIntent(items
 								.get(clickPosition).getBoardId(),
-								items.get(clickPosition).getPostId(), 32767));
+								items.get(clickPosition).getPostId(), 32767, false));
 
 					}
 				});

@@ -7,7 +7,7 @@ import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
 import tk.djcrazy.MyCC98.adapter.NewTopicListAdapter;
 import tk.djcrazy.MyCC98.util.ToastUtils;
-import tk.djcrazy.libCC98.ICC98Service;
+import tk.djcrazy.libCC98.CachedCC98Service;
 import tk.djcrazy.libCC98.data.SearchResultEntity;
 import android.app.ProgressDialog;
 import android.app.SearchManager;
@@ -44,8 +44,8 @@ public class PostSearchActivity extends BaseFragmentActivity {
 	private static final int FETCH_SUCC = 0;
 	private static final int NOTFOUND = 1;
 	private static final int FETCH_ERROR = 2;
- 
- 	@InjectView(R.id.tv_postsearch_next)
+
+	@InjectView(R.id.tv_postsearch_next)
 	private View vNext;
 	@InjectView(R.id.tv_postsearch_prev)
 	private View vPrev;
@@ -70,7 +70,7 @@ public class PostSearchActivity extends BaseFragmentActivity {
 	private ProgressDialog pg;
 
 	@Inject
-	private ICC98Service service;
+	private CachedCC98Service service;
 
 	private Handler handler = new Handler() {
 		@Override
@@ -156,7 +156,7 @@ public class PostSearchActivity extends BaseFragmentActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu optionMenu) {
 		getSupportMenuInflater().inflate(R.menu.post_search, optionMenu);
- 		return true;
+		return true;
 	}
 
 	@Override
@@ -165,7 +165,7 @@ public class PostSearchActivity extends BaseFragmentActivity {
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			finish();
- 			return true;
+			return true;
 		case R.id.post_search_action:
 			onSearchRequested();
 			return true;
@@ -173,15 +173,16 @@ public class PostSearchActivity extends BaseFragmentActivity {
 			return super.onOptionsItemSelected(item);
 		}
 	}
- 	@Override
- 	public boolean onSearchRequested() {
- 	     Bundle appData = new Bundle();
- 	     appData.putString(PostSearchActivity.BOARD_ID, boardId);
- 	     appData.putString(PostSearchActivity.BOARD_NAME, boardName);
- 	     appData.putString(SEARCH_TYPE, currentType);
- 	     startSearch(null, false, appData, false);
- 	     return true;
- 	 }
+
+	@Override
+	public boolean onSearchRequested() {
+		Bundle appData = new Bundle();
+		appData.putString(PostSearchActivity.BOARD_ID, boardId);
+		appData.putString(PostSearchActivity.BOARD_NAME, boardName);
+		appData.putString(SEARCH_TYPE, currentType);
+		startSearch(null, false, appData, false);
+		return true;
+	}
 
 	@Override
 	protected void onNewIntent(Intent intent) {
@@ -198,11 +199,12 @@ public class PostSearchActivity extends BaseFragmentActivity {
 			boardName = appData.getString(BOARD_NAME);
 			currentType = appData.getString(SEARCH_TYPE);
 			currentPage = 1;
-			totalPage   = 1;
-			if (currentType==null) {
-				currentType=SEARCH_TYPE_TITLE;
+			totalPage = 1;
+			if (currentType == null) {
+				currentType = SEARCH_TYPE_TITLE;
 			}
-			getSupportActionBar().setTitle("搜索：" + mQueryString+" 在"+boardName);
+			getSupportActionBar().setTitle(
+					"搜索：" + mQueryString + " 在" + boardName);
 			fetchContent(query);
 		}
 	}
@@ -244,9 +246,11 @@ public class PostSearchActivity extends BaseFragmentActivity {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
- 				Intent intent2 = PostContentsJSActivity.createIntent(mResList.get(arg2).getBoardId(), mResList.get(arg2).getPostId(), 1);
+				Intent intent2 = PostContentsJSActivity.createIntent(mResList
+						.get(arg2).getBoardId(),
+						mResList.get(arg2).getPostId(), 1, false);
 				startActivity(intent2);
- 			}
+			}
 		});
 	}
 }

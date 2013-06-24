@@ -8,12 +8,12 @@ import org.apache.commons.lang3.StringUtils;
 import com.google.inject.Inject;
 
 import tk.djcrazy.libCC98.CC98ClientImpl;
-import tk.djcrazy.libCC98.ICC98Service;
+import tk.djcrazy.libCC98.CachedCC98Service;
 import android.util.Log;
 
 public class HtmlGenHelper {
 	@Inject
-	private ICC98Service service;
+	private CachedCC98Service service;
 	public static final String ITEM_OPEN = "<div class=\"post\"><div class=\"post-content-wrapper\">";
 	public static final String ITEM_CLOSE = "</div>";
 

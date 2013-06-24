@@ -9,13 +9,13 @@ import tk.djcrazy.MyCC98.adapter.BaseItemListAdapter;
 import tk.djcrazy.MyCC98.adapter.HotTopicListAdapter;
 import tk.djcrazy.MyCC98.adapter.PostListViewAdapter;
 import tk.djcrazy.MyCC98.application.MyApplication;
-import tk.djcrazy.MyCC98.helper.SerializableCacheHelper;
 import tk.djcrazy.MyCC98.util.ThrowableLoader;
 import tk.djcrazy.MyCC98.view.PagedPullToRefreshListView;
-import tk.djcrazy.libCC98.ICC98Service;
+import tk.djcrazy.libCC98.CachedCC98Service;
 import tk.djcrazy.libCC98.SerializableCache;
 import tk.djcrazy.libCC98.data.HotTopicEntity;
 import tk.djcrazy.libCC98.data.PostEntity;
+import tk.djcrazy.libCC98.util.SerializableCacheUtil;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -37,7 +37,7 @@ public class PostListFragment extends PagedPullToRefeshListFragment<PostEntity> 
 	private static final String BOARD_NAME = "boardName";
 
 	@Inject
-	private ICC98Service service;
+	private CachedCC98Service service;
 	private String boardId;
 	private String boardName;
 
@@ -71,36 +71,11 @@ public class PostListFragment extends PagedPullToRefeshListFragment<PostEntity> 
 		// Use cache if exists until refresh.
 		// When refresh, remove all post list cache of the board.
 		return new ThrowableLoader<List<PostEntity>>(getActivity(), items) {
-			@SuppressWarnings("unchecked")
+
 			@Override
 			public List<PostEntity> loadData() throws Exception {
-				List<PostEntity> list = null;
 				int pagenum = getListView().getCurrentPage() + 1;
-				String keyString = SerializableCacheHelper.postListKey(boardId,
-						pagenum);
-				if (isClearData) {
-					list = service.getPostList(boardId, pagenum);
-					items = list;
-					// invalidate all cache of this board
-					SerializableCache cache = SerializableCache
-							.getInstance(MyApplication.getAppContext());
-					cache.removeAllWithPrefix(SerializableCacheHelper
-							.postListKey(boardId));
-					cache.put(keyString, (Serializable) list);
-				} else {
-					SerializableCache cache = SerializableCache
-							.getInstance(MyApplication.getAppContext());
-					Object object = cache.get(keyString);
-					if (object instanceof List) {
-						items.addAll((List<PostEntity>) object);
-					} else {
-						list = service.getPostList(boardId, pagenum);
-						items.addAll(list);
-						cache.put(keyString, (Serializable) list);
-					}
-
-				}
-				return items;
+				return service.getPostList(boardId, pagenum, isClearData);
 			}
 		};
 	}
