@@ -23,7 +23,7 @@
     </item>
     <item android:top="1px">
         <shape>
-            <solid android:color="#555" />
+            <solid android:color="#444444" />
         </shape>
     </item>
 
