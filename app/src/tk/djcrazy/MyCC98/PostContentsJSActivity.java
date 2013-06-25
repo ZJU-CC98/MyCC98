@@ -105,6 +105,7 @@ public class PostContentsJSActivity extends BaseActivity implements
 	private Menu mOptionsMenu;
 	private GestureDetector gestureDetector;
 	private boolean isRefreshing = false;
+	private boolean forceRefresh = false;
 
 	public static Intent createIntent(String boardId, String postId,
 			int pageNumber, boolean forceRefresh) {
@@ -127,7 +128,7 @@ public class PostContentsJSActivity extends BaseActivity implements
 			@Override
 			public void run() {
 				new GetPostContentTask(PostContentsJSActivity.this, boardId,
-						postId, currPageNum).execute();
+						postId, currPageNum, forceRefresh).execute();
 			}
 		}, 50);
 	}
@@ -139,7 +140,8 @@ public class PostContentsJSActivity extends BaseActivity implements
 		postId = intent.getStringExtra(Intents.EXTRA_POST_ID);
 		boardId = intent.getStringExtra(Intents.EXTRA_BOARD_ID);
 		currPageNum = intent.getIntExtra(Intents.EXTRA_PAGE_NUMBER, 1);
-		new GetPostContentTask(this, boardId, postId, currPageNum).execute();
+		forceRefresh = intent.getBooleanExtra(Intents.EXTRA_FORCE_REFRESH, false);
+		new GetPostContentTask(this, boardId, postId, currPageNum, forceRefresh).execute();
 	}
 
 	public void onPause() {
@@ -558,14 +560,16 @@ public class PostContentsJSActivity extends BaseActivity implements
 		private String aBoardId;
 		private String aPostId;
 		private int aPageNum;
+		private boolean aForceRefresh;
 
 		protected GetPostContentTask(Activity context, String boardId,
-				String postId, int pageNum) {
+				String postId, int pageNum, boolean forceRefresh) {
 			super(context);
 			aContext = context;
 			aBoardId = boardId;
 			aPostId = postId;
 			aPageNum = pageNum;
+			aForceRefresh = forceRefresh;
 		}
 
 		@Override
@@ -577,7 +581,7 @@ public class PostContentsJSActivity extends BaseActivity implements
 		@Override
 		public List<PostContentEntity> call() throws Exception {
 			return service.getPostContentList(aBoardId, aPostId, aPageNum,
-					false);
+					forceRefresh);
 		}
 
 		private void prefetch() {
