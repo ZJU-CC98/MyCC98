@@ -30,11 +30,10 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -79,11 +78,7 @@ public abstract class PagedPullToRefeshListFragment<E> extends
 	 */
 	protected ProgressBar progressBar;
 
-	/**
-	 * Is the list currently shown?
-	 */
-	protected boolean listShown;
-
+ 
 	protected boolean isClearData;
 	
 	@Override
@@ -106,8 +101,7 @@ public abstract class PagedPullToRefeshListFragment<E> extends
 	 */
 	@Override
 	public void onDestroyView() {
-		listShown = false;
-		emptyView = null;
+ 		emptyView = null;
 		progressBar = null;
 		listView = null;
 		super.onDestroyView();
@@ -187,8 +181,7 @@ public abstract class PagedPullToRefeshListFragment<E> extends
 	
 	protected void showError() {
 		setEmptyText("加载失败\n点击重试");
-		listShown = false;
-		hide(listView).hide(progressBar).show(emptyView).fadeIn(emptyView, true);
+ 		hide(listView).hide(progressBar).show(emptyView).fadeIn(emptyView, true);
 	}
 
 	/**
@@ -297,32 +290,20 @@ public abstract class PagedPullToRefeshListFragment<E> extends
 			final boolean animate) {
 		if (!isUsable())
 			return this;
-
-		if (shown == listShown) {
-			if (shown)
-				// List has already been shown so hide/show the empty view with
-				// no fade effect
-				if (items.isEmpty())
-					hide(listView).hide(progressBar).show(emptyView);
-				else
-					hide(emptyView).hide(progressBar).show(listView);
-			return this;
-		}
-
-		listShown = shown;
-
-		if (shown)
-			if (!items.isEmpty())
+		if (shown) {
+			if (!items.isEmpty()) {
 				hide(progressBar).hide(emptyView).fadeIn(listView, animate)
 						.show(listView);
+			}
 			else {
 				hide(progressBar).hide(listView).fadeIn(emptyView, animate)
 						.show(emptyView);
 				setEmptyText("没有数据\n点此重试");
 			}
-		else
+		} else {
 			hide(listView).hide(emptyView).fadeIn(progressBar, animate)
 					.show(progressBar);
+		}
 		return this;
 	}
 

@@ -76,12 +76,7 @@ public abstract class PullToRefeshListFragment<E> extends RoboSherlockFragment i
 	 */
 	protected ProgressBar progressBar;
 
-	/**
-	 * Is the list currently shown?
-	 */
-	protected boolean listShown;
-	
-	@Override
+ 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		if (!items.isEmpty())
@@ -100,8 +95,7 @@ public abstract class PullToRefeshListFragment<E> extends RoboSherlockFragment i
 	 */
 	@Override
 	public void onDestroyView() {
-		listShown = false;
-		emptyView = null;
+ 		emptyView = null;
 		progressBar = null;
 		listView = null;
 		super.onDestroyView();
@@ -167,8 +161,7 @@ public abstract class PullToRefeshListFragment<E> extends RoboSherlockFragment i
 
 	protected void showError() {
 		setEmptyText("加载失败\n点击重试");
-		listShown = false;
-		hide(listView).hide(progressBar).show(emptyView).fadeIn(emptyView, true);
+ 		hide(listView).hide(progressBar).show(emptyView).fadeIn(emptyView, true);
 	}
 
 	/**
@@ -278,18 +271,7 @@ public abstract class PullToRefeshListFragment<E> extends RoboSherlockFragment i
 		if (!isUsable())
 			return this;
 
-//		if (shown == listShown) {
-//			if (shown)
-//				// List has already been shown so hide/show the empty view with
-//				// no fade effect
-//				if (items.isEmpty())
-//					hide(listView).hide(progressBar).show(emptyView);
-//				else
-//					hide(emptyView).hide(progressBar).show(listView);
-//			return this;
-//		}
-//		listShown = shown;
-		if (shown) {
+ 		if (shown) {
 			if (!items.isEmpty())
 				hide(progressBar).hide(emptyView).fadeIn(listView, animate).show(listView);
 			else {
