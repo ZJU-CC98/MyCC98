@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string-array name="entries_list_preference">
         <item>Alpha Option 01</item>
         <item>Beta Option 02</item>
-        <item>Charlie Option 03</item>  
+        <item>Charlie Option 03</item>
     </string-array>
-
     <string-array name="entryvalues_list_preference">
         <item>alpha</item>
         <item>beta</item>
-        <item>charlie</item>  
+        <item>charlie</item>
     </string-array>
-    
     <string-array name="locations">
         <item>Home</item>
         <item>Email</item>
@@ -19,4 +18,49 @@
         <item>Browser</item>
         <item>Clock</item>
     </string-array>
+    <string-array name="global_board_name">
+        <item>教师答疑</item>
+        <item>个性生活</item>  
+        <item>电脑技术</item>
+        <item>感性空间</item>
+        <item>院系交流</item>
+        <item>学习天地</item>
+        <item>休闲娱乐</item>
+        <item>社科学术 </item>
+        <item>瞬间永恒</item>
+        <item>社团风采</item>
+        <item>校园动态</item>
+        <item>体育运动</item>
+        <item>游戏广场</item>
+        <item>交易代理</item>
+        <item>天下一家</item>
+        <item>信息资讯</item>
+        <item>影音无限</item>
+        <item>动漫天地</item>
+        <item>论坛管理</item>
+        <item>CC98协会</item>
+    </string-array>
+    <string-array name="global_board_id">
+        <item>2</item>
+        <item>6</item>
+        <item>12</item>
+        <item>24</item>
+        <item>35</item>
+        <item>3</item>
+        <item>8</item>
+        <item>13 </item>
+        <item>27</item>
+        <item>37</item>
+        <item>5</item>
+        <item>10</item>
+        <item>14</item>
+        <item>43</item>
+        <item>29</item>
+        <item>4</item>
+        <item>11</item>
+        <item>18</item>
+        <item>33</item>
+        <item>604</item>
+    </string-array>
+
 </resources>

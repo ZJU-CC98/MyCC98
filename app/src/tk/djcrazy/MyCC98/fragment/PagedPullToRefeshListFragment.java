@@ -44,6 +44,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
+import com.google.inject.internal.BytecodeGen.Visibility;
 
 /**
  * Base fragment for displaying a list of items that loads with a progress bar
@@ -84,6 +85,7 @@ public abstract class PagedPullToRefeshListFragment<E> extends
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+		hide(listView);
  		if (!items.isEmpty())
 			setListShown(true, false);
 		else
@@ -292,8 +294,10 @@ public abstract class PagedPullToRefeshListFragment<E> extends
 			return this;
 		if (shown) {
 			if (!items.isEmpty()) {
-				hide(progressBar).hide(emptyView).fadeIn(listView, animate)
-						.show(listView);
+				if (listView.getVisibility()!=View.VISIBLE) {
+					fadeIn(listView, animate);
+				}
+				hide(progressBar).hide(emptyView).show(listView);
 			}
 			else {
 				hide(progressBar).hide(listView).fadeIn(emptyView, animate)

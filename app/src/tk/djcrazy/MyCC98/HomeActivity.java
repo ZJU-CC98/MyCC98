@@ -6,6 +6,7 @@ import java.util.TimerTask;
 import org.json.JSONObject;
 
 import roboguice.util.RoboAsyncTask;
+import tk.djcrazy.MyCC98.adapter.GlobalBoardListAdapter;
 import tk.djcrazy.MyCC98.adapter.HomeFragmentPagerAdapter;
 import tk.djcrazy.MyCC98.fragment.HomeBehindMenuFragment;
 import tk.djcrazy.MyCC98.listener.LoadingListener;
@@ -28,6 +29,10 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.KeyEvent;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ListView;
 import android.widget.Toast;
 import ch.boye.httpclientandroidlib.HttpResponse;
 import ch.boye.httpclientandroidlib.client.methods.HttpGet;
@@ -43,7 +48,7 @@ import com.google.inject.Inject;
 import com.slidingmenu.lib.SlidingMenu;
 
 public class HomeActivity extends BaseSlidingFragmentActivity implements
-		LoadingListener, TabListener {
+		LoadingListener, TabListener, OnPageChangeListener {
 
 	
 	private static final String UPDATE_LINK = "http://mycc98.sinaapp.com/update.json";
@@ -52,7 +57,9 @@ public class HomeActivity extends BaseSlidingFragmentActivity implements
 	private static final String TAG = "HomeActivity";
 	public static final String USERINFO = "USERINFO";
 	public static final String AUTOLOGIN = "AUTOLOGIN";
-
+	public String[] boardNames;
+	public String[] boardIds;
+	
  	private ViewPager viewPager;
  	
  	@Inject
@@ -70,28 +77,11 @@ public class HomeActivity extends BaseSlidingFragmentActivity implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home);	
- 		getSlidingMenu().setMode(SlidingMenu.LEFT_RIGHT);
- 		getSlidingMenu().setSecondaryMenu(R.layout.home_second_behind_view);
- 		setBehindContentView(R.layout.home_behind_view);
-		PreferenceManager.setDefaultValues(this, R.xml.settings, false);
-		HomeFragmentPagerAdapter adapter = new HomeFragmentPagerAdapter(
-				getSupportFragmentManager());
-		adapter.setLoadingListener(this);
-		viewPager = (ViewPager) findViewById(R.id.main_pages);
-		viewPager.setAdapter(adapter);
+ 		PreferenceManager.setDefaultValues(this, R.xml.settings, false);
+		setupSlidingMenu();
+		setupViewPager();
 		configureActionBar();
- 		viewPager.setOnPageChangeListener(new OnPageChangeListener() {
-			@Override
-			public void onPageSelected(int arg0) {
- 				getSupportActionBar().setSelectedNavigationItem(arg0);
-			}
-			@Override
-			public void onPageScrolled(int arg0, float arg1, int arg2) {
-			}
-			@Override
-			public void onPageScrollStateChanged(int arg0) {
-			}
-		});
+ 		setupSecondBehindView();
 		if (savedInstanceState == null) {
 			FragmentTransaction t = this.getSupportFragmentManager().beginTransaction();
 			mFragment = new HomeBehindMenuFragment();
@@ -100,7 +90,45 @@ public class HomeActivity extends BaseSlidingFragmentActivity implements
 		} else {
 			mFragment = (Fragment)this.getSupportFragmentManager().findFragmentById(R.id.home_behind_view);
 		}
+		new CheckUpdateTask(this).execute();
+	}
 
+	/**
+	 * 
+	 */
+	private void setupViewPager() {
+		HomeFragmentPagerAdapter adapter = new HomeFragmentPagerAdapter(
+				getSupportFragmentManager());
+		adapter.setLoadingListener(this);
+		viewPager = (ViewPager) findViewById(R.id.main_pages);
+		viewPager.setAdapter(adapter);
+ 		viewPager.setOnPageChangeListener(this);
+		viewPager.setCurrentItem(0);
+	}
+
+	/**
+	 * 
+	 */
+	private void setupSecondBehindView() {
+		boardNames = getResources().getStringArray(R.array.global_board_name);
+ 		boardIds = getResources().getStringArray(R.array.global_board_id);
+		ListView globalBoardListView = (ListView)findViewById(R.id.global_boards);
+		globalBoardListView.setAdapter(new GlobalBoardListAdapter(this));
+		globalBoardListView.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+				startActivity(BoardListActivity.createIntent(boardNames[arg2], boardIds[arg2]));
+			}
+		});
+	}
+
+	/**
+	 * 
+	 */
+	private void setupSlidingMenu() {
+		getSlidingMenu().setMode(SlidingMenu.LEFT_RIGHT);
+ 		getSlidingMenu().setSecondaryMenu(R.layout.home_second_behind_view);
+ 		setBehindContentView(R.layout.home_behind_view);
 		// customize the SlidingMenu
 		SlidingMenu sm = getSlidingMenu();
 		sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
@@ -108,9 +136,6 @@ public class HomeActivity extends BaseSlidingFragmentActivity implements
 		sm.setBehindScrollScale(0f);
  		sm.setBehindOffset(DisplayUtil.dip2px(getApplicationContext(), 150));
 		sm.setFadeDegree(0f);
-		viewPager.setCurrentItem(0);
- 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		new CheckUpdateTask(this).execute();
 	}
 	
 	private void flushCache() {
@@ -132,6 +157,7 @@ public class HomeActivity extends BaseSlidingFragmentActivity implements
 	@SuppressWarnings("deprecation")
 	private void configureActionBar() {
 		ActionBar actionBar = getSupportActionBar();
+ 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 		actionBar.addTab(actionBar.newTab().setText("我的版面").setTabListener(this));
 		actionBar.addTab(actionBar.newTab().setText("热门话题").setTabListener(this));
@@ -284,5 +310,16 @@ public class HomeActivity extends BaseSlidingFragmentActivity implements
 
 	@Override
 	public void onTabReselected(Tab tab, FragmentTransaction ft) {
+	}
+
+	@Override
+	public void onPageSelected(int arg0) {
+			getSupportActionBar().setSelectedNavigationItem(arg0);
+	}
+	@Override
+	public void onPageScrolled(int arg0, float arg1, int arg2) {
+	}
+	@Override
+	public void onPageScrollStateChanged(int arg0) {
 	}
 }

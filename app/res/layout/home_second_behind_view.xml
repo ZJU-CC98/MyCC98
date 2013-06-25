@@ -5,10 +5,27 @@
     android:layout_height="match_parent"
     android:orientation="vertical" 
     android:gravity="center"
-    android:background="@android:color/background_light">
+    android:background="@color/card_list_bg">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/abs__action_bar_default_height"
+        android:background="#77252525"
+        android:gravity="center_vertical" >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_weight="1.0"
+            android:text="所有版块"
+            android:textColor="#f9f9f9"
+            android:textSize="18sp" />
+     </LinearLayout>
     
-    <TextView 
-        android:text="此处放置版面列表"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"/>
-</LinearLayout>
+    <ListView 
+        android:id="@+id/global_boards"
+        style="@style/listview"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent" >
+    </ListView>
+ </LinearLayout>

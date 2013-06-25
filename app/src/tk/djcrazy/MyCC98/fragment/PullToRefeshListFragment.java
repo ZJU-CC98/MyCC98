@@ -79,6 +79,7 @@ public abstract class PullToRefeshListFragment<E> extends RoboSherlockFragment i
  	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+		hide(listView);
 		if (!items.isEmpty())
 			setListShown(true, false);
 		else
@@ -272,8 +273,12 @@ public abstract class PullToRefeshListFragment<E> extends RoboSherlockFragment i
 			return this;
 
  		if (shown) {
-			if (!items.isEmpty())
-				hide(progressBar).hide(emptyView).fadeIn(listView, animate).show(listView);
+			if (!items.isEmpty()) {
+				if (listView.getVisibility()!=View.VISIBLE) {
+					fadeIn(listView, animate);
+				}
+				hide(progressBar).hide(emptyView).show(listView);
+			}
 			else {
 				setEmptyText("没有数据\n点此重试");
 				hide(progressBar).hide(listView).fadeIn(emptyView, animate).show(emptyView);
