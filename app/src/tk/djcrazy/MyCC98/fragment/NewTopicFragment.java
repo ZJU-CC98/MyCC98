@@ -56,7 +56,7 @@ public class NewTopicFragment extends
 			@Override
 			public List<SearchResultEntity> loadData() throws Exception {
 				int pagenum = getListView().getCurrentPage() + 1;
-				return service.getNewPostList(pagenum, isClearData);
+				return service.getNewPostList(pagenum, true);
 			}
 		};
 	}

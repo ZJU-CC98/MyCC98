@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/home_menu_background"
+    android:background="#333"
     android:orientation="vertical" >
 
     <LinearLayout
@@ -35,7 +35,7 @@
         android:layout_height="match_parent"
         android:layout_weight="1.0"
         android:divider="@drawable/account_list_divider"
-        android:dividerHeight="0.5dp" >
+        android:dividerHeight="2px" >
     </ListView>
 
     <LinearLayout

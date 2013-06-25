@@ -44,7 +44,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
-import com.google.inject.internal.BytecodeGen.Visibility;
 
 /**
  * Base fragment for displaying a list of items that loads with a progress bar
@@ -79,9 +78,6 @@ public abstract class PagedPullToRefeshListFragment<E> extends
 	 */
 	protected ProgressBar progressBar;
 
- 
-	protected boolean isClearData;
-	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
@@ -127,8 +123,7 @@ public abstract class PagedPullToRefeshListFragment<E> extends
 		emptyView.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				isClearData = true;
-				hide(emptyView).show(progressBar);
+ 				hide(emptyView).show(progressBar);
 				getLoaderManager().restartLoader(0, null, PagedPullToRefeshListFragment.this);
 			}
 		});
@@ -150,21 +145,22 @@ public abstract class PagedPullToRefeshListFragment<E> extends
  	@Override
 	public void onLoadFinished(Loader<List<E>> loader, List<E> items) {
  		Exception exception = getException(loader);
-		isClearData =false;
-		this.items = items;
-		if (exception != null) {
+ 		if (exception != null) {
+			exception.printStackTrace();
  			showError();
 			return;
 		} else {
 			if (mIsLoadingMore) { 
 				mIsLoadingMore = false;
+				this.items.addAll(items);
 	 			getListAdapter().setItems(this.items);
 				listView.onLoadComplete();
 			} else {
+				this.items = items;
 	 			getListAdapter().setItems(this.items);
 				listView.onRefreshComplete();
 			}
-	 		showList();
+ 	 		showList();
 		}
  	}
 
@@ -361,10 +357,8 @@ public abstract class PagedPullToRefeshListFragment<E> extends
 			listView.onLoadComplete();
 			return;
 		}
-		isClearData = true;
-		mIsLoadingMore = false;
-		getListAdapter().notifyDataSetChanged();
-		getLoaderManager().restartLoader(0, null, this);
+ 		mIsLoadingMore = false;
+ 		getLoaderManager().restartLoader(0, null, this);
 	}
 
 	@Override

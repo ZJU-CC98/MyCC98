@@ -8,19 +8,20 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="3dp"
-        android:background="@drawable/card_selector"
+        android:background="@drawable/listview_selector"
         android:gravity="center_vertical"
         android:orientation="vertical" >
 
         <TextView
             android:id="@+id/global_board_name"
-            style="@style/board_name"
-            android:layout_width="wrap_content"
+             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:layout_marginTop="10dp"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:text="qqqqq" />
+            android:text="qqqqq" 
+            android:textColor="#eee"
+            android:textSize="14sp"/>
     </LinearLayout>
 </LinearLayout>

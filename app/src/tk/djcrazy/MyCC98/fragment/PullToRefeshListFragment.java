@@ -54,7 +54,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
 public abstract class PullToRefeshListFragment<E> extends RoboSherlockFragment implements
 		OnRefreshListener<ListView>, LoaderCallbacks<List<E>> {
 
-	private static final String TAG = "PullToRefeshListFragment";
+	private static final String TAG = "PagedPullToRefeshListFragment";
 
 	/**
 	 * List items provided to {@link #onLoadFinished(Loader, List)}

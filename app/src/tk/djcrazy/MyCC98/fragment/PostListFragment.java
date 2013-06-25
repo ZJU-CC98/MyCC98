@@ -76,7 +76,7 @@ public class PostListFragment extends PagedPullToRefeshListFragment<PostEntity> 
 			@Override
 			public List<PostEntity> loadData() throws Exception {
 				int pagenum = getListView().getCurrentPage() + 1;
-				return service.getPostList(boardId, pagenum, isClearData);
+				return service.getPostList(boardId, pagenum, true);
 			}
 		};
 	}

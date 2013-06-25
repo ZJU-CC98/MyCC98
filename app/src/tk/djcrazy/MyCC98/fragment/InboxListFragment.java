@@ -50,13 +50,8 @@ public class InboxListFragment extends PagedPullToRefeshListFragment<PmInfo> {
 			@Override
 			public List<PmInfo> loadData() throws Exception {
 				List<PmInfo> list = mService.getPmData(getListView().getCurrentPage()+1, inboxInfo, type); 
-				if (isClearData) {
-					items = list;
-				} else {
-					items.addAll(list);
-				}
-				getListView().setTotalPageNumber(inboxInfo.getTotalInPage());
-				return items;
+ 				getListView().setTotalPageNumber(inboxInfo.getTotalInPage());
+				return list;
 			}
 		};
 	}

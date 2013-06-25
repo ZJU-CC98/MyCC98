@@ -52,13 +52,8 @@ public class PostSearchListFragment extends PagedPullToRefeshListFragment<Search
 			@Override
 			public List<SearchResultEntity> loadData() throws Exception {
 				List<SearchResultEntity> list = mService.searchPost(mKeyword, mBoardId, mType, getListView().getCurrentPage()+1); 
-				if (isClearData) {
-					items = list;
-				} else {
-					items.addAll(list);
-				}
-				getListView().setTotalPageNumber(list.size()>0? (int)Math.ceil(Integer.parseInt(list.get(0).getTotalResult())*1.0/25):0);
-				return items;
+ 				getListView().setTotalPageNumber(list.size()>0? (int)Math.ceil(Integer.parseInt(list.get(0).getTotalResult())*1.0/25):0);
+				return list;
 			}
 		};
 	}
