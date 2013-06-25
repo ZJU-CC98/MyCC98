@@ -471,10 +471,10 @@ public class CC98ClientImpl implements ICC98Client {
 		HttpResponse response = getHttpClient().execute(post);
 
 		HttpEntity entity = response.getEntity();
-		Log.d(TAG, EntityUtils.toString(response.getEntity()));
 		if (entity == null
 				|| !EntityUtils.toString(response.getEntity()).contains(
-						"发送短信成功")) {
+						"发送短信息成功")) {
+			Log.d(TAG, EntityUtils.toString(response.getEntity()));
 			throw new CC98Exception("send pm failed, reply content is: "
 					+ EntityUtils.toString(response.getEntity()));
 		}

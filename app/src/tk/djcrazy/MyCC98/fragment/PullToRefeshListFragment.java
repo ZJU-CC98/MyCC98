@@ -23,16 +23,13 @@ import tk.djcrazy.MyCC98.adapter.BaseItemListAdapter;
 import tk.djcrazy.MyCC98.util.ThrowableLoader;
 import tk.djcrazy.MyCC98.util.ToastUtils;
 import tk.djcrazy.MyCC98.util.ViewUtils;
-import tk.djcrazy.MyCC98.view.PagedPullToRefreshListView;
-import tk.djcrazy.MyCC98.view.PagedPullToRefreshListView.LoadMoreListener;
 import android.app.Activity;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
@@ -54,8 +51,8 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
  * 
  * @param <E>
  */
-public abstract class PullToRefeshListFragment<E> extends RoboSherlockFragment
-		implements OnRefreshListener<ListView>, LoaderCallbacks<List<E>> {
+public abstract class PullToRefeshListFragment<E> extends RoboSherlockFragment implements
+		OnRefreshListener<ListView>, LoaderCallbacks<List<E>> {
 
 	private static final String TAG = "PullToRefeshListFragment";
 
@@ -83,9 +80,7 @@ public abstract class PullToRefeshListFragment<E> extends RoboSherlockFragment
 	 * Is the list currently shown?
 	 */
 	protected boolean listShown;
-
-	protected boolean isClearData;
-
+	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
@@ -96,8 +91,7 @@ public abstract class PullToRefeshListFragment<E> extends RoboSherlockFragment
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		return inflater.inflate(R.layout.paged_item_list, container, false);
 	}
 
@@ -116,18 +110,23 @@ public abstract class PullToRefeshListFragment<E> extends RoboSherlockFragment
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-		listView = (PullToRefreshListView) view
-				.findViewById(R.id.pull_list);
+		listView = (PullToRefreshListView) view.findViewById(R.id.pull_list);
 		listView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				onListItemClick((ListView) parent, view, position, id);
 			}
 		});
- 		listView.setOnRefreshListener(this);
- 		progressBar = (ProgressBar) view.findViewById(R.id.pb_loading);
+		listView.setOnRefreshListener(this);
+		progressBar = (ProgressBar) view.findViewById(R.id.pb_loading);
 		emptyView = (TextView) view.findViewById(android.R.id.empty);
+		emptyView.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+ 				hide(emptyView).show(progressBar);
+				getLoaderManager().restartLoader(0, null, PullToRefeshListFragment.this);
+			}
+		});
 		configureList(getActivity(), getListView());
 	}
 
@@ -137,24 +136,21 @@ public abstract class PullToRefeshListFragment<E> extends RoboSherlockFragment
 	 * @param activity
 	 * @param listView
 	 */
-	protected void configureList(Activity activity,
-			PullToRefreshListView listView) {
- 		listView.setAdapter(createAdapter(items));
+	protected void configureList(Activity activity, PullToRefreshListView listView) {
+		listView.setAdapter(createAdapter(items));
 	}
 
 	@Override
 	public void onLoadFinished(Loader<List<E>> loader, List<E> items) {
 		Exception exception = getException(loader);
-		isClearData = false;
-		this.items = items;
+ 		this.items = items;
 		if (exception != null) {
+			showError();
+		} else {
+			getListAdapter().setItems(this.items);
+			listView.onRefreshComplete();
 			showList();
-			return;
 		}
-		// this.items = items;
-		getListAdapter().setItems(this.items);
-		listView.onRefreshComplete();
-		showList();
 	}
 
 	@Override
@@ -168,6 +164,12 @@ public abstract class PullToRefeshListFragment<E> extends RoboSherlockFragment
 	 * @return adapter
 	 */
 	protected abstract BaseItemListAdapter<E> createAdapter(final List<E> items);
+
+	protected void showError() {
+		setEmptyText("加载失败\n点击重试");
+		listShown = false;
+		hide(listView).hide(progressBar).show(emptyView).fadeIn(emptyView, true);
+	}
 
 	/**
 	 * Set the list to be shown
@@ -194,7 +196,7 @@ public abstract class PullToRefeshListFragment<E> extends RoboSherlockFragment
 	 * @return exception or null if none provided
 	 */
 	protected Exception getException(final Loader<List<E>> loader) {
-		return null;
+		return ((ThrowableLoader<List<E>>) loader).clearException();
 	}
 
 	/**
@@ -214,8 +216,8 @@ public abstract class PullToRefeshListFragment<E> extends RoboSherlockFragment
 	@SuppressWarnings("unchecked")
 	protected BaseItemListAdapter<E> getListAdapter() {
 		if (listView != null)
-			return (BaseItemListAdapter<E>) ((HeaderViewListAdapter) listView
-					.getRefreshableView().getAdapter()).getWrappedAdapter();
+			return (BaseItemListAdapter<E>) ((HeaderViewListAdapter) listView.getRefreshableView()
+					.getAdapter()).getWrappedAdapter();
 		else
 			return null;
 	}
@@ -226,21 +228,21 @@ public abstract class PullToRefeshListFragment<E> extends RoboSherlockFragment
 	 * @param adapter
 	 * @return this fragment
 	 */
-	protected PullToRefeshListFragment<E> setListAdapter(
-			final BaseItemListAdapter<E> adapter) {
+	protected PullToRefeshListFragment<E> setListAdapter(final BaseItemListAdapter<E> adapter) {
 		if (listView != null)
 			listView.setAdapter(adapter);
 		return this;
 	}
 
-	private PullToRefeshListFragment<E> fadeIn(final View view,
-			final boolean animate) {
-		if (view != null)
+	private PullToRefeshListFragment<E> fadeIn(final View view, final boolean animate) {
+		if (view != null) {
 			if (animate)
 				view.startAnimation(AnimationUtils.loadAnimation(getActivity(),
 						R.anim.activity_open_enter));
-			else;
+			else {
 				view.clearAnimation();
+			}
+		}
 		return this;
 	}
 
@@ -271,9 +273,8 @@ public abstract class PullToRefeshListFragment<E> extends RoboSherlockFragment
 	 * @param animate
 	 * @return this fragment
 	 */
-	public PullToRefeshListFragment<E> setListShown(final boolean shown,
-			final boolean animate) {
- 		if (!isUsable())
+	public PullToRefeshListFragment<E> setListShown(final boolean shown, final boolean animate) {
+		if (!isUsable())
 			return this;
 
 		if (shown == listShown) {
@@ -281,25 +282,22 @@ public abstract class PullToRefeshListFragment<E> extends RoboSherlockFragment
 				// List has already been shown so hide/show the empty view with
 				// no fade effect
 				if (items.isEmpty())
-					hide(listView).show(emptyView);
+					hide(listView).hide(progressBar).show(emptyView);
 				else
-					hide(emptyView).show(listView);
+					hide(emptyView).hide(progressBar).show(listView);
 			return this;
 		}
-
 		listShown = shown;
-
-		if (shown)
+		if (shown) {
 			if (!items.isEmpty())
-				hide(progressBar).hide(emptyView).fadeIn(listView, animate)
-						.show(listView);
-			else
-				hide(progressBar).hide(listView).fadeIn(emptyView, animate)
-						.show(emptyView);
-		else
-			hide(listView).hide(emptyView).fadeIn(progressBar, animate)
-					.show(progressBar);
-
+				hide(progressBar).hide(emptyView).fadeIn(listView, animate).show(listView);
+			else {
+				setEmptyText("没有数据\n点此重试");
+				hide(progressBar).hide(listView).fadeIn(emptyView, animate).show(emptyView);
+			}
+		} else {
+			hide(listView).hide(emptyView).fadeIn(progressBar, animate).show(progressBar);
+		}
 		return this;
 	}
 
@@ -349,7 +347,6 @@ public abstract class PullToRefeshListFragment<E> extends RoboSherlockFragment
 
 	@Override
 	public void onRefresh(PullToRefreshBase<ListView> refreshView) {
-		isClearData = true;
  		getListAdapter().notifyDataSetChanged();
 		getLoaderManager().restartLoader(0, null, this);
 	}

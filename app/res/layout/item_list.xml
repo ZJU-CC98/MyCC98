@@ -30,12 +30,13 @@
 
     <TextView
         android:id="@android:id/empty"
-        android:text="没有数据"
-        android:textColor="#999"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:visibility="gone" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableBottom="@drawable/reload"
+        android:text="加载失败\n点击重试"
+        android:textColor="#777" 
+        android:layout_centerInParent="true" 
+        android:visibility="gone"/>
 
     <ProgressBar
         android:id="@+id/pb_loading"

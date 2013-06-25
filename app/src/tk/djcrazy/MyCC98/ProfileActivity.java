@@ -5,8 +5,8 @@ import java.io.IOException;
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectExtra;
 import roboguice.util.RoboAsyncTask;
-import tk.djcrazy.MyCC98.task.ProgressRoboAsyncTask;
 import tk.djcrazy.MyCC98.util.Intents;
+import tk.djcrazy.MyCC98.util.ProgressRoboAsyncTask;
 import tk.djcrazy.MyCC98.util.Intents.Builder;
 import tk.djcrazy.MyCC98.util.ToastUtils;
 import tk.djcrazy.libCC98.CachedCC98Service;
@@ -95,7 +95,7 @@ public class ProfileActivity extends BaseFragmentActivity {
 			finish();
 			return true;
 		case MENU_SEND_MESSAGE_ID:
-			Intents.Builder builder = new Builder(this, PmActivity.class);
+			Intents.Builder builder = new Builder(this, EditActivity.class);
 			Intent intent = builder.requestType(EditActivity.REQUEST_PM)
 					.pmToUser(mUserName).toIntent();
 			startActivity(intent);

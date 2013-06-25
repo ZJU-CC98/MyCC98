@@ -32,16 +32,17 @@
         app:ptrMode="pullFromStart" 
         app:ptrOverScroll="true"
         app:ptrAnimationStyle="flip"
-        app:ptrDrawable="@drawable/arrow_down"/>
+        app:ptrDrawable="@drawable/arrow_down" />
 
     <TextView
         android:id="@android:id/empty"
-        android:text="加载超时"       
-        android:textColor="@android:color/black"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:visibility="gone" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableBottom="@drawable/reload"
+        android:text="加载失败\n点击重试"
+        android:textColor="#777" 
+        android:layout_centerInParent="true" 
+        android:visibility="gone"/>
 
     <ProgressBar
         android:id="@+id/pb_loading"
