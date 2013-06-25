@@ -236,9 +236,10 @@ public abstract class PullToRefeshListFragment<E> extends RoboSherlockFragment i
 
 	private PullToRefeshListFragment<E> fadeIn(final View view, final boolean animate) {
 		if (view != null) {
-			if (animate)
+			if (animate) {
 				view.startAnimation(AnimationUtils.loadAnimation(getActivity(),
 						R.anim.activity_open_enter));
+			}
 			else {
 				view.clearAnimation();
 			}
@@ -277,17 +278,17 @@ public abstract class PullToRefeshListFragment<E> extends RoboSherlockFragment i
 		if (!isUsable())
 			return this;
 
-		if (shown == listShown) {
-			if (shown)
-				// List has already been shown so hide/show the empty view with
-				// no fade effect
-				if (items.isEmpty())
-					hide(listView).hide(progressBar).show(emptyView);
-				else
-					hide(emptyView).hide(progressBar).show(listView);
-			return this;
-		}
-		listShown = shown;
+//		if (shown == listShown) {
+//			if (shown)
+//				// List has already been shown so hide/show the empty view with
+//				// no fade effect
+//				if (items.isEmpty())
+//					hide(listView).hide(progressBar).show(emptyView);
+//				else
+//					hide(emptyView).hide(progressBar).show(listView);
+//			return this;
+//		}
+//		listShown = shown;
 		if (shown) {
 			if (!items.isEmpty())
 				hide(progressBar).hide(emptyView).fadeIn(listView, animate).show(listView);

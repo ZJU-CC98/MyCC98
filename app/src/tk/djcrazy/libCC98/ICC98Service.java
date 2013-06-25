@@ -30,81 +30,74 @@ import ch.boye.httpclientandroidlib.client.ClientProtocolException;
 import ch.boye.httpclientandroidlib.client.HttpClient;
 
 public interface ICC98Service {
- 
+
 	public boolean isUseProxy();
 
-	public void doLogin(String userName, String pwd32, String pw16, String proxyName, String proxyPwd, LoginType type)
-			throws ClientProtocolException, IOException,
-			IllegalAccessException, ParseException, ParseContentException,
-			NetworkErrorException;
+	public void doLogin(String userName, String pwd32, String pw16, String proxyName,
+			String proxyPwd, LoginType type) throws ClientProtocolException, IOException,
+			IllegalAccessException, ParseException, ParseContentException, NetworkErrorException;
 
 	public void logOut();
 
 	public void clearProxy();
 
-	public void addFriend(String friendName) throws ParseException,
-			NoUserFoundException, IOException;
+	public void addFriend(String friendName) throws ParseException, NoUserFoundException,
+			IOException;
 
 	public String getCurrentUserName();
 
 	public List<Bitmap> getUserAvatars();
-	
+
 	public Bitmap getCurrentUserAvatar();
-	public String uploadFile(File file) throws PatternSyntaxException,
-			MalformedURLException, IOException, ParseContentException;
 
-	public void pushNewPost(String boardId, String title, String faceString,
-			String content) throws ClientProtocolException, IOException;
+	public String uploadFile(File file) throws PatternSyntaxException, MalformedURLException,
+			IOException, ParseContentException;
 
-	public void reply(String boardId, String postId, String title,
-			String faceString, String content) throws ClientProtocolException,
-			IOException, Exception;
+	public void pushNewPost(String boardId, String title, String faceString, String content)
+			throws ClientProtocolException, IOException;
 
-	public List<SearchResultEntity> searchPost(String keyword, String boardid,
-			String sType, int page) throws ParseException, IOException,
-			ParseContentException, java.text.ParseException;
+	public void reply(String boardId, String postId, String title, String faceString, String content)
+			throws ClientProtocolException, IOException, Exception;
 
-	public void sendPm(String toUser, String title, String content)
-			throws ClientProtocolException, IOException, CC98Exception;
+	public List<SearchResultEntity> searchPost(String keyword, String boardid, String sType,
+			int page) throws ParseException, IOException, ParseContentException,
+			java.text.ParseException;
 
-	public List<HotTopicEntity> getHotTopicList()
-			throws ClientProtocolException, ParseException, IOException,
-			ParseContentException;
+	public void sendPm(String toUser, String title, String content) throws ClientProtocolException,
+			IOException, CC98Exception;
 
-	public String getMsgContent(int pmId) throws ClientProtocolException,
-			ParseException, IOException;
+	public List<HotTopicEntity> getHotTopicList() throws ClientProtocolException, ParseException,
+			IOException, ParseContentException;
+
+	public String getMsgContent(int pmId) throws ClientProtocolException, ParseException,
+			IOException;
 
 	public List<SearchResultEntity> getNewPostList(int currentPageNumber)
-			throws ClientProtocolException, ParseException, IOException,
-			ParseContentException, java.text.ParseException;
+			throws ClientProtocolException, ParseException, IOException, ParseContentException,
+			java.text.ParseException;
 
-	public List<BoardEntity> getPersonalBoardList()
-			throws ClientProtocolException, ParseException, IOException,
-			ParseContentException, java.text.ParseException;
+	public List<BoardEntity> getPersonalBoardList() throws ClientProtocolException, ParseException,
+			IOException, ParseContentException, java.text.ParseException;
 
 	public List<PmInfo> getPmData(int pageNum, InboxInfo inboxInfo, int type)
 			throws ClientProtocolException, ParseException, IOException;
 
-	public List<PostContentEntity> getPostContentList(String boardId,
-			String postId, int pageNum) throws ClientProtocolException,
-			ParseException, ParseContentException, java.text.ParseException,
-			IOException;
+	public List<PostContentEntity> getPostContentList(String boardId, String postId, int pageNum)
+			throws ClientProtocolException, ParseException, ParseContentException,
+			java.text.ParseException, IOException;
 
 	public List<PostEntity> getPostList(String boardId, int pageNum)
-			throws ClientProtocolException, ParseException, IOException,
-			ParseContentException, java.text.ParseException;
+			throws ClientProtocolException, ParseException, IOException, ParseContentException,
+			java.text.ParseException;
 
-	public List<BoardStatus> getTodayBoardList()
-			throws ClientProtocolException, ParseException, IOException,
-			ParseContentException;
+	public List<BoardStatus> getTodayBoardList() throws ClientProtocolException, ParseException,
+			IOException, ParseContentException;
 
-	public List<UserStatueEntity> getFriendList()
-			throws ClientProtocolException, ParseException, IOException,
-			ParseContentException;
+	public List<UserStatueEntity> getFriendList() throws ClientProtocolException, ParseException,
+			IOException, ParseContentException;
 
-	public UserProfileEntity getUserProfile(String userName)
-			throws ParseException, NoUserFoundException, IOException,
-			ParseContentException;
+	public UserProfileEntity getUserProfile(String userName) throws ParseException,
+			NoUserFoundException, IOException, ParseContentException;
 
 	public String getUserImgUrl(String userName) throws ParseContentException,
 			ClientProtocolException, ParseException, IOException;
@@ -112,13 +105,17 @@ public interface ICC98Service {
 	public String getDomain();
 
 	public Bitmap getBitmapFromUrl(String url) throws IOException;
-	
+
 	public ICC98Client getCC98Client();
 
 	public UsersInfo getusersInfo();
-	
+
 	public void switchToUser(int index);
 
 	public void deleteUserInfo(int pos);
+
+	public List<BoardEntity> getBoardList(String boardId)
+			throws org.apache.http.client.ClientProtocolException, org.apache.http.ParseException,
+			IOException, ParseContentException, java.text.ParseException;
 
 }

@@ -1,16 +1,12 @@
 package tk.djcrazy.MyCC98.fragment;
 
-import java.io.Serializable;
 import java.util.List;
 
 import tk.djcrazy.MyCC98.adapter.BaseItemListAdapter;
-import tk.djcrazy.MyCC98.adapter.PersonalboardListAdapter;
-import tk.djcrazy.MyCC98.application.MyApplication;
+import tk.djcrazy.MyCC98.adapter.BoardListAdapter;
 import tk.djcrazy.MyCC98.util.ThrowableLoader;
 import tk.djcrazy.libCC98.CachedCC98Service;
-import tk.djcrazy.libCC98.SerializableCache;
 import tk.djcrazy.libCC98.data.BoardEntity;
-import tk.djcrazy.libCC98.util.SerializableCacheUtil;
 import android.os.Bundle;
 import android.support.v4.content.Loader;
 
@@ -38,6 +34,6 @@ public class PersonalBoardFragment extends
 	@Override
 	protected BaseItemListAdapter<BoardEntity> createAdapter(
 			List<BoardEntity> items) {
-		return new PersonalboardListAdapter(getActivity(), items);
+		return new BoardListAdapter(getActivity(), items);
 	}
 }

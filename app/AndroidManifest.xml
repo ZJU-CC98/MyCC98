@@ -73,6 +73,18 @@
                 android:value=".PostSearchActivity" />
         </activity>
         <activity
+            android:name=".BoardListActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize" >
+            <intent-filter>
+                <action android:name="tk.djcrazy.mycc98.board_list.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            
+            <meta-data
+                android:name="android.app.default_searchable"
+                android:value=".PostSearchActivity" />
+        </activity>
+        <activity
             android:name=".PhotoViewActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:hardwareAccelerated="true"

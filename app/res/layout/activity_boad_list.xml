@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/post_list_fragment_container"
+    android:id="@+id/board_list_fragment_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"

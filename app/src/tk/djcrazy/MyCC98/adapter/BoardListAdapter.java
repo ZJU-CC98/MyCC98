@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.google.inject.Inject;
 
+import tk.djcrazy.MyCC98.BoardListActivity;
 import tk.djcrazy.MyCC98.PostContentsJSActivity;
 import tk.djcrazy.MyCC98.PostListActivity;
 import tk.djcrazy.MyCC98.R;
@@ -24,7 +25,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-public class PersonalboardListAdapter extends BaseItemListAdapter<BoardEntity> {
+public class BoardListAdapter extends BaseItemListAdapter<BoardEntity> {
 
 	private final class ListItemView {
 		public TextView boardName;
@@ -37,13 +38,14 @@ public class PersonalboardListAdapter extends BaseItemListAdapter<BoardEntity> {
 		public View lastReplyTimeClickable;
 	}
 
-	public PersonalboardListAdapter(Activity context, List<BoardEntity> list) {
+	public BoardListAdapter(Activity context, List<BoardEntity> list) {
 		super(context, list);
 	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ListItemView listItemView = null;
+		BoardEntity entity = items.get(position);
 		if (convertView == null) {
 			listItemView = new ListItemView();
 			convertView = inflater.inflate(
@@ -54,10 +56,9 @@ public class PersonalboardListAdapter extends BaseItemListAdapter<BoardEntity> {
 		} else {
 			listItemView = (ListItemView) convertView.getTag();
 		}
-		listItemView.boardName.setText(items.get(position).getBoardName());
-		listItemView.postNumberToday.setText(String.valueOf(+items
-				.get(position).getPostNumberToday()));
-		if (items.get(position).getLastReplyTime() == null) {
+		listItemView.boardName.setText(entity.getBoardName()+ entity.getChildBoardString());
+		listItemView.postNumberToday.setText(String.valueOf(entity.getPostNumberToday()));
+		if (entity.getLastReplyTime() == null) {
 			ViewUtils.setGone(listItemView.lastReplyAuthor, true);
 			ViewUtils.setGone(listItemView.lastReplyTime, true);
 			listItemView.lastReplyTopicName.setText("认证论坛，请认证用户进入浏览");
@@ -69,13 +70,13 @@ public class PersonalboardListAdapter extends BaseItemListAdapter<BoardEntity> {
 			listItemView.lastReplyTimeClickable.setClickable(true);
 			ViewUtils.setGone(listItemView.lastReplyAuthor, false);
 			ViewUtils.setGone(listItemView.lastReplyTime, false);
-			listItemView.lastReplyTopicName.setText(items.get(position)
+			listItemView.lastReplyTopicName.setText(entity
 					.getLastReplyTopicName());
-			listItemView.lastReplyAuthor.setText(items.get(position)
+			listItemView.lastReplyAuthor.setText(entity
 					.getLastReplyAuthor());
 			listItemView.lastReplyTime.setText(DateFormatUtil
 					.convertDateToString(
-							items.get(position).getLastReplyTime(), true));
+							entity.getLastReplyTime(), true));
 			setListeners(position, listItemView);
 		}
 		return convertView;
@@ -115,9 +116,15 @@ public class PersonalboardListAdapter extends BaseItemListAdapter<BoardEntity> {
 				.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						context.startActivity(PostListActivity.createIntent(
-								items.get(clickPosition).getBoardName(), items
-										.get(clickPosition).getBoardID()));
+						if (items.get(clickPosition).getChildBoardNumber()!=0) {
+							context.startActivity(BoardListActivity.createIntent(
+									items.get(clickPosition).getBoardName(), items
+											.get(clickPosition).getBoardID()));
+						} else {
+							context.startActivity(PostListActivity.createIntent(
+									items.get(clickPosition).getBoardName(), items
+											.get(clickPosition).getBoardID()));
+						}
 					}
 				});
 
@@ -127,7 +134,7 @@ public class PersonalboardListAdapter extends BaseItemListAdapter<BoardEntity> {
 					public void onClick(View v) {
 						context.startActivity(PostContentsJSActivity
 								.createIntent(items.get(clickPosition)
-										.getBoardID(), items.get(clickPosition)
+										.getLastReplyBoardId(), items.get(clickPosition)
 										.getLastReplyTopicID(), 1, false));
 					}
 				});
@@ -138,7 +145,7 @@ public class PersonalboardListAdapter extends BaseItemListAdapter<BoardEntity> {
 					public void onClick(View v) {
 						context.startActivity(PostContentsJSActivity
 								.createIntent(items.get(clickPosition)
-										.getBoardID(), items.get(clickPosition)
+										.getLastReplyBoardId(), items.get(clickPosition)
 										.getLastReplyTopicID(), 32767, false));
 					}
 				});

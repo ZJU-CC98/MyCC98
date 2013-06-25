@@ -44,19 +44,20 @@ public class PostListFragment extends PagedPullToRefeshListFragment<PostEntity> 
 	public static PostListFragment createInstance(String boardId,
 			String boardName) {
 		PostListFragment fragment = new PostListFragment();
-		fragment.boardId = boardId;
-		fragment.boardName = boardName;
-		return fragment;
+		Bundle bundle = new Bundle();
+		bundle.putString(BOARD_ID, boardId);
+		bundle.putString(BOARD_NAME, boardName);
+		fragment.setArguments(bundle);
+ 		return fragment;
 	}
 
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-		if (savedInstanceState != null) {
-			boardId = savedInstanceState.getString(BOARD_ID);
-			boardName = savedInstanceState.getString(BOARD_NAME);
-		}
-	}
+		Bundle bundle = getArguments();
+ 		boardId = bundle.getString(BOARD_ID);
+		boardName = bundle.getString(BOARD_NAME);
+ 	}
 
 	@Override
 	protected void configureList(Activity activity,

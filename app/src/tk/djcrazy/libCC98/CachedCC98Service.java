@@ -206,6 +206,12 @@ public class CachedCC98Service {
 		}).call(forceRefresh);
 	}
 
+	public List<BoardEntity> getBoardList(String boardId, boolean forceRefresh)
+			throws Exception {
+		//TODO Add cache here
+ 		return service.getBoardList(boardId);
+	}
+
 	public List<PmInfo> getPmData(int pageNum, InboxInfo inboxInfo, int type)
 			throws ClientProtocolException, ParseException, IOException {
 		return service.getPmData(pageNum, inboxInfo, type);
