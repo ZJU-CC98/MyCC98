@@ -1,6 +1,5 @@
 package tk.djcrazy.MyCC98.animation;
 
-import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
@@ -29,7 +28,6 @@ public class ExpandCollapseAnimation extends Animation {
 	 * 1 will collapse view and set to gone
 	 */
 	public ExpandCollapseAnimation(View view, int duration, int type) {
-
 		setDuration(duration);
 		mAnimatedView = view;
 		mEndHeight = mAnimatedView.getLayoutParams().height;

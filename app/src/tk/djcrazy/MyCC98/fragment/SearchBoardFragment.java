@@ -8,9 +8,11 @@ import roboguice.util.RoboAsyncTask;
 import tk.djcrazy.MyCC98.PostListActivity;
 import tk.djcrazy.MyCC98.R;
 import tk.djcrazy.MyCC98.adapter.SearchBoardListAdapter;
+import tk.djcrazy.MyCC98.util.DisplayUtil;
 import tk.djcrazy.MyCC98.util.ViewUtils;
 import tk.djcrazy.libCC98.CachedCC98Service;
 import tk.djcrazy.libCC98.data.BoardStatus;
+import android.R.integer;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
@@ -23,12 +25,18 @@ import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
 import com.google.inject.Inject;
+import com.nineoldandroids.animation.Animator;
+import com.nineoldandroids.animation.Animator.AnimatorListener;
+import com.nineoldandroids.animation.ValueAnimator;
+import com.nineoldandroids.animation.ValueAnimator.AnimatorUpdateListener;
 
 public class SearchBoardFragment extends RoboSherlockFragment implements
 		OnItemClickListener, OnClickListener {
@@ -37,8 +45,8 @@ public class SearchBoardFragment extends RoboSherlockFragment implements
 	private List<BoardStatus> currentResult;
 	private List<BoardStatus> boardList;
 
-	@InjectView(R.id.search_board_bar) 
-	private EditText searchContent;
+	@InjectView(R.id.search_board_text) 
+	private EditText searchContentEditText; 
 	@InjectView(R.id.search_board_result_list)
 	private ListView mResultListView;  
 	@InjectView(R.id.search_board_loading_bar)
@@ -47,17 +55,22 @@ public class SearchBoardFragment extends RoboSherlockFragment implements
 	private View mContainer;
  	@InjectView(android.R.id.empty)
  	private TextView emptyView;
+ 	@InjectView(R.id.board_filter)
+ 	private ImageView mboardFilter;
+	@InjectView(R.id.search_board_bar)
+	private LinearLayout mSearchBar;
 	@Inject
 	private CachedCC98Service service;
 
 	private SearchBoardListAdapter listAdapter;
   
+	private int mOriginalSearchBarWidth = 0;
 	private TextWatcher textWatcher = new TextWatcher() {
 
 		@Override
 		public void onTextChanged(CharSequence s, int start, int before,
 				int count) {
-			doSearch(searchContent.getText().toString().trim());
+			doSearch(searchContentEditText.getText().toString().trim());
 		}
 
 		@Override
@@ -95,10 +108,73 @@ public class SearchBoardFragment extends RoboSherlockFragment implements
 		mResultListView.scrollTo(x, y);
 	}
 
+ 	
+ 	private void toggleFilter() {
+ 		if (searchContentEditText.getVisibility()==View.GONE) {
+ 			mOriginalSearchBarWidth = mSearchBar.getWidth();
+ 	        final ViewGroup.LayoutParams lp = mSearchBar.getLayoutParams();
+ 	 		ValueAnimator valueAnimator = ValueAnimator.ofInt(mSearchBar.getWidth(), DisplayUtil.dip2px(getActivity(), 200f)).setDuration(300);
+ 	 		valueAnimator.addUpdateListener(new AnimatorUpdateListener() {
+				@Override
+				public void onAnimationUpdate(ValueAnimator arg0) {
+					lp.width =  (Integer) arg0.getAnimatedValue();
+					mSearchBar.setLayoutParams(lp);
+				}
+			});
+ 	 		valueAnimator.addListener(new AnimatorListener() {
+				@Override
+				public void onAnimationStart(Animator arg0) {
+				}
+				@Override
+				public void onAnimationRepeat(Animator arg0) {
+				}
+				@Override
+				public void onAnimationEnd(Animator arg0) {
+					ViewUtils.setGone(searchContentEditText, false);
+				}
+				@Override
+				public void onAnimationCancel(Animator arg0) {
+				}
+			});
+ 	 		valueAnimator.start();
+		} else {
+ 	        final ViewGroup.LayoutParams lp = mSearchBar.getLayoutParams();
+ 	 		ValueAnimator valueAnimator = ValueAnimator.ofInt(mSearchBar.getWidth(), mOriginalSearchBarWidth).setDuration(300);
+ 	 		valueAnimator.addUpdateListener(new AnimatorUpdateListener() {
+				@Override
+				public void onAnimationUpdate(ValueAnimator arg0) {
+					lp.width =  (Integer) arg0.getAnimatedValue();
+					mSearchBar.setLayoutParams(lp);
+				}
+			});
+ 	 		valueAnimator.addListener(new AnimatorListener() {
+				@Override
+				public void onAnimationStart(Animator arg0) {
+				}
+				@Override
+				public void onAnimationRepeat(Animator arg0) {
+				}
+				@Override
+				public void onAnimationEnd(Animator arg0) {
+					ViewUtils.setGone(searchContentEditText, true);
+				}
+				@Override
+				public void onAnimationCancel(Animator arg0) {
+				}
+			});
+ 	 		valueAnimator.start();
+		}
+ 	}
 	private void setListeners() {
-		searchContent.addTextChangedListener(textWatcher);
+		searchContentEditText.addTextChangedListener(textWatcher);
 		mResultListView.setOnItemClickListener(this);
 		emptyView.setOnClickListener(this);
+		mboardFilter.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				toggleFilter();
+			}
+		});
 	}
 
 	private void doSearch(String string) {
@@ -188,7 +264,7 @@ public class SearchBoardFragment extends RoboSherlockFragment implements
 		protected void onSuccess(List<BoardStatus> t) throws Exception {
 			boardList = t;
 			currentResult = boardList;
-			searchContent.setText("");
+			searchContentEditText.setText("");
  			hide(progressBar).hide(emptyView).show(mContainer).fadeIn(mContainer, true);
  		}
 		
