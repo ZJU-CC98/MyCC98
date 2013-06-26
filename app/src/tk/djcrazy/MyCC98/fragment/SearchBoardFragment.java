@@ -12,7 +12,6 @@ import tk.djcrazy.MyCC98.util.DisplayUtil;
 import tk.djcrazy.MyCC98.util.ViewUtils;
 import tk.djcrazy.libCC98.CachedCC98Service;
 import tk.djcrazy.libCC98.data.BoardStatus;
-import android.R.integer;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
@@ -21,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -114,6 +114,7 @@ public class SearchBoardFragment extends RoboSherlockFragment implements
  			mOriginalSearchBarWidth = mSearchBar.getWidth();
  	        final ViewGroup.LayoutParams lp = mSearchBar.getLayoutParams();
  	 		ValueAnimator valueAnimator = ValueAnimator.ofInt(mSearchBar.getWidth(), DisplayUtil.dip2px(getActivity(), 200f)).setDuration(300);
+ 	 		valueAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
  	 		valueAnimator.addUpdateListener(new AnimatorUpdateListener() {
 				@Override
 				public void onAnimationUpdate(ValueAnimator arg0) {
@@ -140,6 +141,7 @@ public class SearchBoardFragment extends RoboSherlockFragment implements
 		} else {
  	        final ViewGroup.LayoutParams lp = mSearchBar.getLayoutParams();
  	 		ValueAnimator valueAnimator = ValueAnimator.ofInt(mSearchBar.getWidth(), mOriginalSearchBarWidth).setDuration(300);
+ 	 		valueAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
  	 		valueAnimator.addUpdateListener(new AnimatorUpdateListener() {
 				@Override
 				public void onAnimationUpdate(ValueAnimator arg0) {

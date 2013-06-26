@@ -43,7 +43,7 @@
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:text="MSTC Microsoft Technology Club"
-                android:textColor="#9400D3"
+                android:textColor="@color/hot_topic_text"
                 android:textSize="11sp" />
 
             <ImageView
@@ -60,7 +60,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="10dp"
                 android:text="MSTC"
-                android:textColor="#777"
+                android:textColor="@color/card_grey_text"
                 android:textSize="10sp" />
 
             <TextView
@@ -68,9 +68,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="16小时 之前"
-                android:textColor="#a0a0a0"
+                android:textColor="@color/card_grey_text"
                 android:textSize="10sp" />
         </LinearLayout>
     </LinearLayout>
-
 </LinearLayout>

@@ -24,18 +24,16 @@
             android:id="@+id/action_item_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="DJ"
-            android:textColor="#ddd"
-            android:textSize="16sp" />
+            android:textColor="@color/text_light_white"
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/use_proxy"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1.0"
             android:text="使用代理登录"
-            android:textColor="#aaa"
-            android:textSize="11sp" />
+            android:textColor="@color/text_light_white"
+            android:textSize="12sp" />
     </LinearLayout>
 
     <ImageView

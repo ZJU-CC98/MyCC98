@@ -62,7 +62,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="10dp"
                 android:text="MSTC"
-                android:textColor="#777"
+                android:textColor="@color/card_grey_text"
                 android:textSize="10sp" />
             <!-- 时间 -->
 
@@ -71,7 +71,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="16小时之前"
-                android:textColor="#a0a0a0"
+                android:textColor="@color/card_grey_text"
                 android:textSize="10sp" />
         </LinearLayout>
     </LinearLayout>

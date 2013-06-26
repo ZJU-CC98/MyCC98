@@ -21,7 +21,7 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:text="qqqqq" 
-            android:textColor="#eee"
+            android:textColor="@color/text_light_white"
             android:textSize="14sp"/>
     </LinearLayout>
 </LinearLayout>

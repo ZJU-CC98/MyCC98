@@ -58,7 +58,7 @@
                     android:layout_marginLeft="4dp"
                     android:minWidth="30dp"
                     android:text="@string/test_number"
-                    android:textColor="#aaa"
+                    android:textColor="@color/card_grey_text"
                     android:textSize="10sp" />
             </LinearLayout>
         </LinearLayout>
@@ -84,7 +84,7 @@
                 android:paddingTop="10dp"
                 android:singleLine="true"
                 android:text="@string/test_topic_name"
-                android:textColor="#777"
+                android:textColor="@color/card_grey_text"
                 android:textSize="13sp" />
             
 						<ImageView android:src="@drawable/vertical_divider"
@@ -102,15 +102,7 @@
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:paddingLeft="10dp" >
-
-<!--                 <TextView -->
-<!--                     android:layout_width="wrap_content" -->
-<!--                     android:layout_height="match_parent" -->
-<!--                     android:gravity="center_vertical" -->
-<!--                     android:text="最后回复：" -->
-<!--                     android:textColor="@color/post_list_last_reply_text_color" -->
-<!--                     android:textSize="10sp" /> -->
-                <ImageView
+                 <ImageView
                     android:layout_width="15dp"
                     android:layout_height="wrap_content"
                     android:scaleType="fitCenter"
@@ -123,7 +115,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/test_author"
-                    android:textColor="@color/post_list_last_reply_text_color"
+                    android:textColor="@color/card_grey_text"
                     android:textSize="12sp" />
 
                 <TextView
@@ -133,7 +125,7 @@
                     android:layout_marginLeft="10dp"
                     android:paddingRight="5dp"
                     android:text="55分钟前"
-                    android:textColor="@color/post_list_last_reply_text_color"
+                    android:textColor="@color/card_grey_text"
                     android:textSize="12sp" />
             </LinearLayout>
         </LinearLayout>
