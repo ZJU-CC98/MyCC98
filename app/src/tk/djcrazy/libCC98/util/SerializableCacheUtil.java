@@ -9,6 +9,11 @@ public class SerializableCacheUtil {
 	private static final String NEW_TOPIC = "newtopic://";
 	private static final String AVATAR = "avatar://";
 	private static final String MSG = "msg://";
+	private static final String BOARDS = "boards://";
+	
+	public static String boardsKey(String boardId) {
+		return BOARDS + boardId;
+	}
 	
 	public static String msgKey(int pmid) {
 		return MSG + String.valueOf(pmid);

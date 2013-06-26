@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.MalformedURLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.regex.PatternSyntaxException;
@@ -206,10 +207,20 @@ public class CachedCC98Service {
 		}).call(forceRefresh);
 	}
 
-	public List<BoardEntity> getBoardList(String boardId, boolean forceRefresh)
-			throws Exception {
-		//TODO Add cache here
- 		return service.getBoardList(boardId);
+	public List<BoardEntity> getBoardList(final String boardId,
+			boolean forceRefresh) throws Exception {
+		return (new ServiceCallable<List<BoardEntity>>() {
+			protected List<BoardEntity> getContent()
+					throws org.apache.http.client.ClientProtocolException,
+					org.apache.http.ParseException, IOException,
+					ParseContentException, java.text.ParseException {
+				return service.getBoardList(boardId);
+			}
+
+			protected String getKeyString() {
+				return SerializableCacheUtil.boardsKey(boardId);
+			}
+		}).call(forceRefresh);
 	}
 
 	public List<PmInfo> getPmData(int pageNum, InboxInfo inboxInfo, int type)
