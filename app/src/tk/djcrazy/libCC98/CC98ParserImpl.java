@@ -232,14 +232,17 @@ public class CC98ParserImpl implements ICC98Parser {
 		List<String> contentHtml = getMatchedStringList(POST_CONTENT_WHOLE_REGEX, html, -1);
 		for (String reply : contentHtml) {
 			PostContentEntity entity = new PostContentEntity();
-			entity.setUserName(Html.fromHtml(getMatchedString(POST_CONTENT_USERNAME_REGEX, reply))
+			try {
+				entity.setUserName(Html.fromHtml(getMatchedString(POST_CONTENT_USERNAME_REGEX, reply))
 					.toString());
-			entity.setPostContent(getMatchedString(POST_CONTENT_POST_CONTENT_REGEX, reply));
-			entity.setPostTitle(getMatchedString(POST_CONTENT_POST_TITLE_REGEX, reply));
-			entity.setPostFace(getMatchedString(POST_CONTENT_POST_FACE_REGEX, reply));
-			entity.setPostTime(convertStringToDateInPostContent(getMatchedString(
+				entity.setPostContent(getMatchedString(POST_CONTENT_POST_CONTENT_REGEX, reply));
+				entity.setPostTitle(getMatchedString(POST_CONTENT_POST_TITLE_REGEX, reply));
+ 				entity.setPostFace(getMatchedString(POST_CONTENT_POST_FACE_REGEX, reply));
+ 				entity.setPostTime(convertStringToDateInPostContent(getMatchedString(
 					POST_CONTENT_POST_TIME_REGEX, reply)));
-
+			} catch (Exception e) {
+				e.printStackTrace();
+ 			}
 			try {
 				String avatarLink = getMatchedString(POST_CONTENT_USER_AVATAR_LINK_REGEX, reply);
 				if (!avatarLink.contains("http://")) {
