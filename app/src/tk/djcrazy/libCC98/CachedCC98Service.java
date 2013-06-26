@@ -17,6 +17,7 @@ import tk.djcrazy.MyCC98.application.MyApplication;
 import tk.djcrazy.MyCC98.application.MyApplication.UsersInfo;
 import tk.djcrazy.libCC98.data.BoardEntity;
 import tk.djcrazy.libCC98.data.BoardStatus;
+import tk.djcrazy.libCC98.data.Bytes;
 import tk.djcrazy.libCC98.data.HotTopicEntity;
 import tk.djcrazy.libCC98.data.InboxInfo;
 import tk.djcrazy.libCC98.data.LoginType;
@@ -303,8 +304,15 @@ public class CachedCC98Service {
 		return service.getDomain();
 	}
 
-	public Bitmap getBitmapFromUrl(String url) throws IOException {
-		return service.getBitmapFromUrl(url);
+	public Bitmap getBitmapFromUrl(final String url) throws Exception {
+		return (new ServiceCallable<Bytes>() {
+			protected Bytes getContent() throws IOException {
+				return new Bytes(service.getBitmapFromUrl(url));
+			}
+			protected String getKeyString() {
+				return url;
+			}
+		}).call(false).getBitmap();
 	}
 
 	public ICC98Client getCC98Client() {
