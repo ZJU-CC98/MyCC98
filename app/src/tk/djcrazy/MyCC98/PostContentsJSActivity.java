@@ -400,32 +400,9 @@ public class PostContentsJSActivity extends BaseActivity implements
 			// view user info
 			viewUserInfo(item.getUserName());
 			break;
-		// case 4:
-		// if (item.getUserName().equals(service.getUserName())) {
-		// String tmp = item.getPostContent().replaceAll("(<br>|<BR>)",
-		// "\n");
-		// String topic = item.getPostTitle();
-		// editPost(item.getEditPostLink(), tmp, topic);
-		// }
-		// break;
-		case 5:
-			// cancel
-			break;
-		}
+ 		}
 	}
-
-	// private void editPost(String link, String content, String topic) {
-	// Bundle bundle = new Bundle();
-	// bundle.putString(EditActivity.EDIT_CONTENT,
-	// content.replaceAll("<.*?>|searchubb.*?;", ""));
-	// bundle.putString(EditActivity.EDIT_TOPIC, topic);
-	// bundle.putString(EditActivity.EDIT_LINK, link);
-	// bundle.putInt(EditActivity.MOD, EditActivity.MOD_EDIT);
-	// Intent intent = new Intent(this, EditActivity.class);
-	// intent.putExtra(EditActivity.BUNDLE, bundle);
-	// startActivity(intent);
-	// }
-
+ 
 	private void addFriend(final String userName) {
 		new AddFriendTask(this, userName).execute();
 	}
@@ -497,18 +474,7 @@ public class PostContentsJSActivity extends BaseActivity implements
  		return pMustache.genContent(templateIn);
 	}
 
-	//
-	// public void open(String pageLink, int pageNum) {
-	// Log.d(TAG, "open new post:" + pageNum);
-	// Bundle bundle = new Bundle();
-	// bundle.putString(POST_ID, pageLink);
-	// bundle.putInt(PAGE_NUMBER, pageNum);
-	// bundle.putString(POST_NAME, "");
-	// Intent intent = new Intent(this, PostContentsJSActivity.class);
-	// // intent.putExtra(POST, bundle);
-	// this.startActivity(intent);
-	// }
-
+ 
 	private void setRefreshActionButtonState(boolean refreshing) {
 		isRefreshing = refreshing;
 		if (mOptionsMenu == null) {
@@ -525,36 +491,7 @@ public class PostContentsJSActivity extends BaseActivity implements
 		}
 	}
 
-	/**
-	 * 同步一下cookie
-	 */
-	public void synCookies() {
-		CookieSyncManager.createInstance(this);
-		CookieManager cookieManager = CookieManager.getInstance();
-		cookieManager.setAcceptCookie(true);
-		cookieManager.removeSessionCookie();
-		UserData userData = service.getusersInfo().getCurrentUserData();
-		// if (userData.getLoginType() == LoginType.USER_DEFINED) {
-		// webView.setHttpAuthUsernamePassword(service.getDomain(), "",
-		// userData.getProxyUserName(), userData.getProxyPassword());
-		// }
-		for (Cookie cookie : service.getusersInfo().getCurrentUserData()
-				.getCookieStore().getCookies()) {
-			cookieManager.setCookie(service.getDomain(),
-					"version=" + cookie.getVersion());
-			cookieManager.setCookie(service.getDomain(), cookie.getName() + "="
-					+ cookie.getValue());
-			cookieManager.setCookie(service.getDomain(),
-					"domain=" + cookie.getDomain());
-			cookieManager.setCookie(service.getDomain(),
-					"path=" + cookie.getPath());
-			cookieManager.setCookie(service.getDomain(),
-					"expiry=" + cookie.getExpiryDate());
-			Log.d(TAG, cookie.toString());
-		}
-		CookieSyncManager.getInstance().sync();
-	}
-
+ 
 	private class GetPostContentTask extends
 			RoboAsyncTask<List<PostContentEntity>> {
 		private Activity aContext;
@@ -593,7 +530,6 @@ public class PostContentsJSActivity extends BaseActivity implements
 							service.getPostContentList(aBoardId, aPostId,
 									currPageNum + 1, false);
 						} catch (Exception e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 					}
@@ -606,7 +542,6 @@ public class PostContentsJSActivity extends BaseActivity implements
 							service.getPostContentList(aBoardId, aPostId,
 									currPageNum - 1, false);
 						} catch (Exception e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 					}
@@ -631,8 +566,7 @@ public class PostContentsJSActivity extends BaseActivity implements
 			}
 			boardName = (String) info.getBoardName();
 			postName = (String) info.getPostTopic();
-			synCookies();
-			webView.loadDataWithBaseURL(null, assemblyContent(t), "text/html",
+ 			webView.loadDataWithBaseURL(null, assemblyContent(t), "text/html",
 					"utf-8", null);
 			getSupportActionBar().setTitle(postName);
 			getSupportActionBar().setSubtitle(

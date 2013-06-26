@@ -7,7 +7,7 @@ public class BaseActivity extends RoboSherlockActivity {
 
 	@Override
 	protected void onResume() {
-		super.onResume();
+ 		super.onResume();
 		StatService.onResume(this);
 	}
 
