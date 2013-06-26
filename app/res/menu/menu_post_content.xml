@@ -8,27 +8,32 @@
         android:title="@string/refresh"/>
     <item
         android:id="@+id/menu_pre_page"
+        android:icon="@drawable/pre_page"
         android:showAsAction="ifRoom"
-        android:title="上一页"
-        android:icon="@drawable/pre_page"/>
+        android:title="上一页"/>
     <item
         android:id="@+id/menu_reply"
-        android:showAsAction="ifRoom"
         android:icon="@drawable/reply"
+        android:showAsAction="ifRoom"
         android:title="回复"/>
     <item
         android:id="@+id/menu_next_page"
-        android:showAsAction="ifRoom"
         android:icon="@drawable/next_page"
+        android:showAsAction="ifRoom"
         android:title="下一页"/>
     <item
-        android:id="@+id/show_all_image"
-        android:showAsAction="ifRoom"
-        android:icon="@drawable/show_pic"
-        android:title="显示图片"/>
-    <item
-        android:id="@+id/menu_jump"
-        android:showAsAction="ifRoom"
-        android:title="跳转"
-        android:icon="@drawable/jump"/>
+        android:icon="@drawable/ic_action_overflow"
+        android:showAsAction="ifRoom">
+         <item
+            android:id="@+id/show_all_image"
+            android:icon="@drawable/show_pic"
+            android:showAsAction="ifRoom"
+            android:title="显示图片"/>
+        <item
+            android:id="@+id/menu_jump"
+            android:icon="@drawable/jump"
+            android:showAsAction="ifRoom"
+            android:title="跳转"/>
+    </item>
+
 </menu>

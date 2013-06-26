@@ -5,6 +5,11 @@
         android:title="加载图片"
         android:defaultValue="true"/>
     <CheckBoxPreference 
+        android:key="show_user_avatar"
+        android:title="显示用户头像"
+        android:defaultValue="true"
+        android:summary="关闭可以节省一部分流量"/>
+    <CheckBoxPreference 
         android:key="enable_cache"
         android:title="打开内容缓存"
         android:summary="程序可以缓存一部分内容到本地，但是可能会占用一些空间"
@@ -20,4 +25,8 @@
     <EditTextPreference 
         android:key="custom_tail_content"
         android:title="自定义尾巴内容" />
+    <ListPreference 
+        android:key="post_theme"
+        android:title="帖子主题"
+        android:summary="更改帖子的外观" />
 </PreferenceScreen>

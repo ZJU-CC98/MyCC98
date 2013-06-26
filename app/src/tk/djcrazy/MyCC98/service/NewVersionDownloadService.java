@@ -41,7 +41,7 @@ public class NewVersionDownloadService extends RoboIntentService {
 	private void createNotification() {
 		mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		mBuilder = new NotificationCompat.Builder(this).setSmallIcon(
-				R.drawable.icon).setContentTitle("正在下载更新").setTicker("正在下载更新...");
+				R.drawable.ic_launcher).setContentTitle("正在下载更新").setTicker("正在下载更新...");
  		// mId allows you to update the notification later on.
  		File storeDir = new File(Environment.getExternalStorageDirectory(), "MyCC98");
 		if (!storeDir.exists()) {
@@ -65,36 +65,6 @@ public class NewVersionDownloadService extends RoboIntentService {
 		
 		@Override
 		public String call() throws Exception {
-			FileOutputStream fileOutputStream = null;
-			try {
-				HttpURLConnection connection = (HttpURLConnection) new URL(link)
-						.openConnection();
-				fileOutputStream = new FileOutputStream(saveFile);
-				int length = Integer.parseInt(connection.getHeaderField("Content-Length"));
-	 			mBuilder.setContentText("软件包大小："+(length/1024)+"KB");
-				mBuilder.setProgress(length, 0, false);
-				InputStream inputStream = connection.getInputStream();
-				int temp = 0;
-				int count = 0;
-				byte[] data = new byte[10240];
-				while ((temp = inputStream.read(data)) != -1) {
-					fileOutputStream.write(data, 0, temp);
-					count+=temp;
-					mBuilder.setProgress(length, count, false);
-					Notification notification = mBuilder.build();
-					notification.flags = Notification.FLAG_NO_CLEAR;
-					mNotificationManager.notify(NODIFICATION_ID, mBuilder.build());
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			} finally {
-				try {
-					fileOutputStream.flush();
-					fileOutputStream.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
 			return null;
 		}
 		
@@ -114,7 +84,7 @@ public class NewVersionDownloadService extends RoboIntentService {
 			intent.setDataAndType(uri, "application/vnd.android.package-archive"); 
 			startActivity(intent);
 			NotificationCompat.Builder builder = new NotificationCompat.Builder(getContext()).setSmallIcon(
-					R.drawable.icon).setTicker("下载成功");
+					R.drawable.ic_launcher).setTicker("下载成功");
 			mNotificationManager.notify(NODIFICATION_ID, builder.build());
 			mNotificationManager.cancel(NODIFICATION_ID);
 		} 

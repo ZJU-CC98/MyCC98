@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.Locale;
 
 public class DateFormatUtil {
+	//TODO It may have some problem in multithread env, for SDF is not thread safe
 	private static SimpleDateFormat sdf1 = new SimpleDateFormat("M/d/yyyy h:mm:ss a", Locale.ENGLISH);
 	public static Date convertStringToDateInPostContent(String dateString)
 			throws ParseException {

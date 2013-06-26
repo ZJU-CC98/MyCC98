@@ -10,6 +10,7 @@ import java.util.regex.PatternSyntaxException;
 import tk.djcrazy.MyCC98.application.MyApplication.UsersInfo;
 import tk.djcrazy.libCC98.data.LoginType;
 import tk.djcrazy.libCC98.data.UserData;
+import tk.djcrazy.libCC98.exception.CC98Exception;
 import tk.djcrazy.libCC98.exception.NoUserFoundException;
 import tk.djcrazy.libCC98.exception.ParseContentException;
 import android.accounts.NetworkErrorException;
@@ -176,9 +177,10 @@ public interface ICC98Client {
 	 * @return PM_SEND_SUCC on success PM_SEND_FAIL on failure
 	 * @throws IOException
 	 * @throws ClientProtocolException
+	 * @throws CC98Exception 
 	 */
-	public int sendPm(String touser, String title, String message)
-			throws ClientProtocolException, IOException;
+	public void sendPm(String touser, String title, String message)
+			throws ClientProtocolException, IOException, CC98Exception;
 
 	/**
 	 * add one user to friend list

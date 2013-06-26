@@ -209,4 +209,7 @@ public interface ICC98Parser {
 	 */
 	public void setCC98UrlManager(ICC98UrlManager cc98UrlManager);
 
+	public List<BoardEntity> getBoardList(String boardId) throws ClientProtocolException, ParseException,
+			IOException, ParseContentException, java.text.ParseException;
+
 }

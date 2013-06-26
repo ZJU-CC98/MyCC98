@@ -10,7 +10,7 @@ import tk.djcrazy.MyCC98.SettingsActivity;
 import tk.djcrazy.MyCC98.adapter.AccountListAdapter;
 import tk.djcrazy.MyCC98.dialog.AboutDialog;
 import tk.djcrazy.MyCC98.util.Intents;
-import tk.djcrazy.libCC98.ICC98Service;
+import tk.djcrazy.libCC98.CachedCC98Service;
 import android.R.integer;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -49,7 +49,7 @@ public class HomeBehindMenuFragment extends RoboSherlockFragment implements OnIt
 	@InjectView(R.id.home_menu_setting)
 	private Button mSettingButton;
 	@Inject
-	private ICC98Service service;
+	private CachedCC98Service service;
 	AccountListAdapter adapter;
 	
 	@Override

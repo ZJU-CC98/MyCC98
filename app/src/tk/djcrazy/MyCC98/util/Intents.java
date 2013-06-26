@@ -25,215 +25,229 @@ import android.content.Intent;
  */
 public class Intents {
 
-    /**
-     * Prefix for all intents created
-     */
-    public static final String INTENT_PREFIX = "tk.djcrazy.mycc98.";
+	/**
+	 * Prefix for all intents created
+	 */
+	public static final String INTENT_PREFIX = "tk.djcrazy.mycc98.";
 
-    /**
-     * Prefix for all extra data added to intents
-     */
-    public static final String INTENT_EXTRA_PREFIX = INTENT_PREFIX + "extra.";
+	/**
+	 * Prefix for all extra data added to intents
+	 */
+	public static final String INTENT_EXTRA_PREFIX = INTENT_PREFIX + "extra.";
 
-    public static final String EXTRA_BOARD_ID = INTENT_EXTRA_PREFIX
-            + "BOARD_ID";
-    public static final String EXTRA_BOARD_NAME = INTENT_EXTRA_PREFIX
-            + "BOARD_NAME";
+	public static final String EXTRA_BOARD_ID = INTENT_EXTRA_PREFIX
+			+ "BOARD_ID";
+	public static final String EXTRA_BOARD_NAME = INTENT_EXTRA_PREFIX
+			+ "BOARD_NAME";
 
-    public static final String EXTRA_POST_ID = INTENT_EXTRA_PREFIX
-            + "POST_ID";
-    public static final String EXTRA_POST_NAME = INTENT_EXTRA_PREFIX
-            + "POST_NAME";
+	public static final String EXTRA_POST_ID = INTENT_EXTRA_PREFIX + "POST_ID";
+	public static final String EXTRA_POST_NAME = INTENT_EXTRA_PREFIX
+			+ "POST_NAME";
 
-    public static final String EXTRA_PAGE_NUMBER = INTENT_EXTRA_PREFIX
-            + "PAGE_NUMBER";
-    
-    public static final String EXTRA_REPLY_USER_NAME = INTENT_EXTRA_PREFIX
-            + "REPLY_USER_NAME";
-    public static final String EXTRA_REPLY_USER_POST_TIME = INTENT_EXTRA_PREFIX
-            + "REPLY_USER_POST_TIME";
-    public static final String EXTRA_REPLY_CONTENT = INTENT_EXTRA_PREFIX
-            + "REPLY_CONTENT";
-    public static final String EXTRA_FLOOR_NUMBER = INTENT_EXTRA_PREFIX
-            + "FLOOR_NUMBER";
-    public static final String EXTRA_IS_QUOTE_USER = INTENT_EXTRA_PREFIX
-            + "IS_QUOTE_USER";
-    public static final String EXTRA_PM_TO_USER = INTENT_EXTRA_PREFIX
-            + "PM_TO_USER";
-    public static final String EXTRA_PM_TITLE = INTENT_EXTRA_PREFIX
-            + "PM_TITLE";
-    public static final String EXTRA_PM_CONTENT = INTENT_EXTRA_PREFIX
-            + "PM_CONTENT";
-    public static final String EXTRA_REQUEST_TYPE = INTENT_EXTRA_PREFIX
-            + "REQUEST_TYPE";
-    
-    public static final String EXTRA_DOWNLOAD_LINK = INTENT_EXTRA_PREFIX
-            + "DOWNLOAD_LINK";
-    public static final String EXTRA_PM_SENDER = INTENT_EXTRA_PREFIX
-            + "PM_SENDER";
-    public static final String EXTRA_PM_SEND_TIME = INTENT_EXTRA_PREFIX
-            + "PM_SEND_TIME";
-    public static final String EXTRA_PM_ID = INTENT_EXTRA_PREFIX
-            + "PM_ID";
-    public static final String EXTRA_NEED_LOGIN = INTENT_EXTRA_PREFIX
-            + "NEED_LOGIN";
+	public static final String EXTRA_PAGE_NUMBER = INTENT_EXTRA_PREFIX
+			+ "PAGE_NUMBER";
 
-     public static class Builder {
+	public static final String EXTRA_REPLY_USER_NAME = INTENT_EXTRA_PREFIX
+			+ "REPLY_USER_NAME";
+	public static final String EXTRA_REPLY_USER_POST_TIME = INTENT_EXTRA_PREFIX
+			+ "REPLY_USER_POST_TIME";
+	public static final String EXTRA_REPLY_CONTENT = INTENT_EXTRA_PREFIX
+			+ "REPLY_CONTENT";
+	public static final String EXTRA_FLOOR_NUMBER = INTENT_EXTRA_PREFIX
+			+ "FLOOR_NUMBER";
+	public static final String EXTRA_IS_QUOTE_USER = INTENT_EXTRA_PREFIX
+			+ "IS_QUOTE_USER";
+	public static final String EXTRA_PM_TO_USER = INTENT_EXTRA_PREFIX
+			+ "PM_TO_USER";
+	public static final String EXTRA_PM_TITLE = INTENT_EXTRA_PREFIX
+			+ "PM_TITLE";
+	public static final String EXTRA_PM_CONTENT = INTENT_EXTRA_PREFIX
+			+ "PM_CONTENT";
+	public static final String EXTRA_REQUEST_TYPE = INTENT_EXTRA_PREFIX
+			+ "REQUEST_TYPE";
 
-        private final Intent intent;
+	public static final String EXTRA_DOWNLOAD_LINK = INTENT_EXTRA_PREFIX
+			+ "DOWNLOAD_LINK";
+	public static final String EXTRA_PM_SENDER = INTENT_EXTRA_PREFIX
+			+ "PM_SENDER";
+	public static final String EXTRA_PM_SEND_TIME = INTENT_EXTRA_PREFIX
+			+ "PM_SEND_TIME";
+	public static final String EXTRA_PM_ID = INTENT_EXTRA_PREFIX + "PM_ID";
+	public static final String EXTRA_NEED_LOGIN = INTENT_EXTRA_PREFIX
+			+ "NEED_LOGIN";
 
-        /**
-         * Create builder with suffix
-         *
-         * @param actionSuffix
-         */
-        public Builder(String actionSuffix) {
-            // actionSuffix = e.g. "repos.VIEW"
-            intent = new Intent(INTENT_PREFIX + actionSuffix);
-        }
-        
-        public Builder() {
-            intent = new Intent();
-       }
-        
-        public Builder(Activity activity, Class<?> class1) {
-            intent = new Intent(activity, class1);
-       }
+	public static final String EXTRA_FORCE_REFRESH = INTENT_EXTRA_PREFIX
+			+ "FORCE_REFRESH";
 
-         public Builder boardId(String boardId) {
-             return add(EXTRA_BOARD_ID, boardId);
-         }
-           
-         public Builder postId(String postId) {
-             return add(EXTRA_POST_ID, postId);
-         }
-           
-         public Builder pageNumber(int postNumber) {
-             return add(EXTRA_PAGE_NUMBER, postNumber);
-         }
-         public Builder boardName(String name) {
-             return add(EXTRA_BOARD_NAME, name); 
-         }
-         public Builder postName(String name) {
-             return add(EXTRA_POST_NAME, name);
-         }
-         public Builder replyUserName(String name) {
-             return add(EXTRA_REPLY_USER_NAME, name);
-         }
-         public Builder replyUserPostTime(String time) {
-             return add(EXTRA_REPLY_USER_POST_TIME, time);
-         }
-         public Builder replyContent(String content) {
-             return add(EXTRA_REPLY_CONTENT, content);
-         }
-         public Builder floorNumber(int floorNum) {
-             return add(EXTRA_FLOOR_NUMBER, floorNum);
-         }
-         public Builder isQuoteUser(boolean is) {
-             return add(EXTRA_IS_QUOTE_USER, is);
-         }
-         
-         public Builder pmToUser(String name) {
-             return add(EXTRA_PM_TO_USER, name);
-         }
-         
-         public Builder pmTitle(String name) {
-             return add(EXTRA_PM_TITLE, name);
-         }
-         
-         public Builder pmContent(String content) {
-             return add(EXTRA_PM_CONTENT, content);
-         }
-         
-         public Builder requestType(int type) {
-             return add(EXTRA_REQUEST_TYPE, type);
-         }
-         
-         public Builder downloadLink(String type) {
-             return add(EXTRA_DOWNLOAD_LINK, type);
-         }
-         public Builder pmSender(String type) {
-             return add(EXTRA_PM_SENDER, type);
-         }
-         public Builder pmSendTime(String type) {
-             return add(EXTRA_PM_SEND_TIME, type);
-         }
-         public Builder pmId(int type) {
-             return add(EXTRA_PM_ID, type);
-         }
-         public Builder needLogin(boolean need) {
-             return add(EXTRA_NEED_LOGIN, need);
-         }
-         
-         
-         /**
-         * Add extra field data value to intent being built up
-         *
-         * @param fieldName
-         * @param value
-         * @return this builder
-         */
-        private Builder add(String fieldName, String value) {
-            intent.putExtra(fieldName, value);
-            return this;
-        }
+	public static class Builder {
 
- 
-        /**
-         * Add extra field data value to intent being built up
-         *
-         * @param fieldName
-         * @param value
-         * @return this builder
-         */  
-        private Builder add(String fieldName, int value) {
-            intent.putExtra(fieldName, value);
-            return this;
-        }
+		private final Intent intent;
 
-        /**
-         * Add extra field data value to intent being built up
-         *
-         * @param fieldName
-         * @param values
-         * @return this builder
-         */
-        private Builder add(String fieldName, int[] values) {
-            intent.putExtra(fieldName, values);
-            return this;
-        }
+		/**
+		 * Create builder with suffix
+		 * 
+		 * @param actionSuffix
+		 */
+		public Builder(String actionSuffix) {
+			// actionSuffix = e.g. "repos.VIEW"
+			intent = new Intent(INTENT_PREFIX + actionSuffix);
+		}
 
-        /**
-         * Add extra field data value to intent being built up
-         *
-         * @param fieldName
-         * @param values
-         * @return this builder
-         */
-        private Builder add(String fieldName, boolean[] values) {
-            intent.putExtra(fieldName, values);
-            return this;
-        }
+		public Builder() {
+			intent = new Intent();
+		}
 
-        /**
-         * Add extra field data value to intent being built up
-         *
-         * @param fieldName
-         * @param value
-         * @return this builder
-         */
-        private Builder add(String fieldName, Serializable value) {
-            intent.putExtra(fieldName, value);
-            return this;
-        }
+		public Builder(Activity activity, Class<?> class1) {
+			intent = new Intent(activity, class1);
+		}
 
-        /**
-         * Get built intent
-         *
-         * @return intent
-         */
-        public Intent toIntent() {
-            return intent;
-        }
-    }
+		public Builder boardId(String boardId) {
+			return add(EXTRA_BOARD_ID, boardId);
+		}
+
+		public Builder postId(String postId) {
+			return add(EXTRA_POST_ID, postId);
+		}
+
+		public Builder pageNumber(int postNumber) {
+			return add(EXTRA_PAGE_NUMBER, postNumber);
+		}
+
+		public Builder boardName(String name) {
+			return add(EXTRA_BOARD_NAME, name);
+		}
+
+		public Builder postName(String name) {
+			return add(EXTRA_POST_NAME, name);
+		}
+
+		public Builder replyUserName(String name) {
+			return add(EXTRA_REPLY_USER_NAME, name);
+		}
+
+		public Builder replyUserPostTime(String time) {
+			return add(EXTRA_REPLY_USER_POST_TIME, time);
+		}
+
+		public Builder replyContent(String content) {
+			return add(EXTRA_REPLY_CONTENT, content);
+		}
+
+		public Builder floorNumber(int floorNum) {
+			return add(EXTRA_FLOOR_NUMBER, floorNum);
+		}
+
+		public Builder isQuoteUser(boolean is) {
+			return add(EXTRA_IS_QUOTE_USER, is);
+		}
+
+		public Builder pmToUser(String name) {
+			return add(EXTRA_PM_TO_USER, name);
+		}
+
+		public Builder pmTitle(String name) {
+			return add(EXTRA_PM_TITLE, name);
+		}
+
+		public Builder pmContent(String content) {
+			return add(EXTRA_PM_CONTENT, content);
+		}
+
+		public Builder requestType(int type) {
+			return add(EXTRA_REQUEST_TYPE, type);
+		}
+
+		public Builder downloadLink(String type) {
+			return add(EXTRA_DOWNLOAD_LINK, type);
+		}
+		
+		public Builder forceRefresh(boolean forceRefresh) {
+			return add(EXTRA_FORCE_REFRESH, forceRefresh);
+		}
+
+		public Builder pmSender(String type) {
+			return add(EXTRA_PM_SENDER, type);
+		}
+
+		public Builder pmSendTime(String type) {
+			return add(EXTRA_PM_SEND_TIME, type);
+		}
+
+		public Builder pmId(int type) {
+			return add(EXTRA_PM_ID, type);
+		}
+
+		public Builder needLogin(boolean need) {
+			return add(EXTRA_NEED_LOGIN, need);
+		}
+
+		/**
+		 * Add extra field data value to intent being built up
+		 * 
+		 * @param fieldName
+		 * @param value
+		 * @return this builder
+		 */
+		private Builder add(String fieldName, String value) {
+			intent.putExtra(fieldName, value);
+			return this;
+		}
+
+		/**
+		 * Add extra field data value to intent being built up
+		 * 
+		 * @param fieldName
+		 * @param value
+		 * @return this builder
+		 */
+		private Builder add(String fieldName, int value) {
+			intent.putExtra(fieldName, value);
+			return this;
+		}
+
+		/**
+		 * Add extra field data value to intent being built up
+		 * 
+		 * @param fieldName
+		 * @param values
+		 * @return this builder
+		 */
+		private Builder add(String fieldName, int[] values) {
+			intent.putExtra(fieldName, values);
+			return this;
+		}
+
+		/**
+		 * Add extra field data value to intent being built up
+		 * 
+		 * @param fieldName
+		 * @param values
+		 * @return this builder
+		 */
+		private Builder add(String fieldName, boolean[] values) {
+			intent.putExtra(fieldName, values);
+			return this;
+		}
+
+		/**
+		 * Add extra field data value to intent being built up
+		 * 
+		 * @param fieldName
+		 * @param value
+		 * @return this builder
+		 */
+		private Builder add(String fieldName, Serializable value) {
+			intent.putExtra(fieldName, value);
+			return this;
+		}
+
+		/**
+		 * Get built intent
+		 * 
+		 * @return intent
+		 */
+		public Intent toIntent() {
+			return intent;
+		}
+	}
 }

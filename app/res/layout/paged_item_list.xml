@@ -18,26 +18,31 @@
     xmlns:app="http://schemas.android.com/apk/res/tk.djcrazy.MyCC98"
     android:layout_width="match_parent"
     android:layout_height="match_parent" 
-    android:background="@drawable/dark_main_background">
+    android:background="@color/card_list_bg">
 
     <com.handmark.pulltorefresh.library.PullToRefreshListView
         android:id="@+id/pull_list"
         style="@style/listview"
-         android:layout_width="match_parent"
+        android:layout_width="match_parent"
         android:layout_height="match_parent" 
+        android:cacheColorHint="@color/transparent"
+        android:divider ="@null"
+        android:dividerHeight="0.0dp"
         app:ptrHeaderTextColor="#999"
         app:ptrMode="pullFromStart" 
         app:ptrOverScroll="true"
         app:ptrAnimationStyle="flip"
-        app:ptrDrawable="@drawable/arrow_down"/>
+        app:ptrDrawable="@drawable/arrow_down" />
 
     <TextView
         android:id="@android:id/empty"
-        android:text="加载超时"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:visibility="gone" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableBottom="@drawable/reload"
+        android:text="加载失败\n点击重试"
+        android:textColor="#777" 
+        android:layout_centerInParent="true" 
+        android:visibility="gone"/>
 
     <ProgressBar
         android:id="@+id/pb_loading"

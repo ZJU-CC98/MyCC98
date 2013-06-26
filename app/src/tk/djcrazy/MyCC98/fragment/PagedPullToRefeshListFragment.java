@@ -30,9 +30,9 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
@@ -78,16 +78,10 @@ public abstract class PagedPullToRefeshListFragment<E> extends
 	 */
 	protected ProgressBar progressBar;
 
-	/**
-	 * Is the list currently shown?
-	 */
-	protected boolean listShown;
-
-	protected boolean isClearData;
-	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+		hide(listView);
  		if (!items.isEmpty())
 			setListShown(true, false);
 		else
@@ -105,8 +99,7 @@ public abstract class PagedPullToRefeshListFragment<E> extends
 	 */
 	@Override
 	public void onDestroyView() {
-		listShown = false;
-		emptyView = null;
+ 		emptyView = null;
 		progressBar = null;
 		listView = null;
 		super.onDestroyView();
@@ -127,6 +120,13 @@ public abstract class PagedPullToRefeshListFragment<E> extends
 		listView.setOnRefreshListener(this);
 		progressBar = (ProgressBar) view.findViewById(R.id.pb_loading);
 		emptyView = (TextView) view.findViewById(android.R.id.empty);
+		emptyView.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+ 				hide(emptyView).show(progressBar);
+				getLoaderManager().restartLoader(0, null, PagedPullToRefeshListFragment.this);
+			}
+		});
 		configureList(getActivity(), getListView());
 	}
 
@@ -145,23 +145,23 @@ public abstract class PagedPullToRefeshListFragment<E> extends
  	@Override
 	public void onLoadFinished(Loader<List<E>> loader, List<E> items) {
  		Exception exception = getException(loader);
-		isClearData =false;
-		this.items = items;
-		if (exception != null) {
-			showList();
+ 		if (exception != null) {
+			exception.printStackTrace();
+ 			showError();
 			return;
-		} 
-		if (mIsLoadingMore) { 
-			mIsLoadingMore = false;
-			//this.items.addAll(items);
-			getListAdapter().setItems(this.items);
-			listView.onLoadComplete();
 		} else {
-			//this.items = items;
-			getListAdapter().setItems(this.items);
-			listView.onRefreshComplete();
+			if (mIsLoadingMore) { 
+				mIsLoadingMore = false;
+				this.items.addAll(items);
+	 			getListAdapter().setItems(this.items);
+				listView.onLoadComplete();
+			} else {
+				this.items = items;
+	 			getListAdapter().setItems(this.items);
+				listView.onRefreshComplete();
+			}
+ 	 		showList();
 		}
- 		showList();
  	}
 
 	@Override
@@ -175,6 +175,12 @@ public abstract class PagedPullToRefeshListFragment<E> extends
 	 * @return adapter
 	 */
 	protected abstract BaseItemListAdapter<E> createAdapter(final List<E> items);
+	
+	
+	protected void showError() {
+		setEmptyText("加载失败\n点击重试");
+ 		hide(listView).hide(progressBar).show(emptyView).fadeIn(emptyView, true);
+	}
 
 	/**
 	 * Set the list to be shown
@@ -201,7 +207,7 @@ public abstract class PagedPullToRefeshListFragment<E> extends
 	 * @return exception or null if none provided
 	 */
 	protected Exception getException(final Loader<List<E>> loader) {
-		return null;
+		return ((ThrowableLoader<List<E>>) loader).clearException();
 	}
 
 	/**
@@ -282,31 +288,22 @@ public abstract class PagedPullToRefeshListFragment<E> extends
 			final boolean animate) {
 		if (!isUsable())
 			return this;
-
-		if (shown == listShown) {
-			if (shown)
-				// List has already been shown so hide/show the empty view with
-				// no fade effect
-				if (items.isEmpty())
-					hide(listView).show(emptyView);
-				else
-					hide(emptyView).show(listView);
-			return this;
-		}
-
-		listShown = shown;
-
-		if (shown)
-			if (!items.isEmpty())
-				hide(progressBar).hide(emptyView).fadeIn(listView, animate)
-						.show(listView);
-			else
+		if (shown) {
+			if (!items.isEmpty()) {
+				if (listView.getVisibility()!=View.VISIBLE) {
+					fadeIn(listView, animate);
+				}
+				hide(progressBar).hide(emptyView).show(listView);
+			}
+			else {
 				hide(progressBar).hide(listView).fadeIn(emptyView, animate)
 						.show(emptyView);
-		else
+				setEmptyText("没有数据\n点此重试");
+			}
+		} else {
 			hide(listView).hide(emptyView).fadeIn(progressBar, animate)
 					.show(progressBar);
-
+		}
 		return this;
 	}
 
@@ -360,10 +357,8 @@ public abstract class PagedPullToRefeshListFragment<E> extends
 			listView.onLoadComplete();
 			return;
 		}
-		isClearData = true;
-		mIsLoadingMore = false;
-		getListAdapter().notifyDataSetChanged();
-		getLoaderManager().restartLoader(0, null, this);
+ 		mIsLoadingMore = false;
+ 		getLoaderManager().restartLoader(0, null, this);
 	}
 
 	@Override

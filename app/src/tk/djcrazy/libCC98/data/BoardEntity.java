@@ -3,14 +3,19 @@
  */
 package tk.djcrazy.libCC98.data;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * @author DJ
  *
  */
-public class BoardEntity {
+public class BoardEntity implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String boardName="";
 	private String boardID="0";
 	private String BoardIntro="";
@@ -18,8 +23,10 @@ public class BoardEntity {
 	private String lastReplyTopicID="0";
 	private String lastReplyAuthor=""; 
 	private Date lastReplyTime;
+	private String lastReplyBoardId;
 	private int postNumberToday=0;
 	private String boardMaster="";
+	private int childBoardNumber=0;
   
  	public String getBoardName() {
 		return boardName;
@@ -119,5 +126,34 @@ public class BoardEntity {
 	 */
 	public void setLastReplyTime(Date lastReplyTime) {
 		this.lastReplyTime = lastReplyTime;
+	}
+	/**
+	 * @return the childBoardNumber
+	 */
+	public int getChildBoardNumber() {
+		return childBoardNumber;
+	}
+	/**
+	 * @param childBoardNumber the childBoardNumber to set
+	 */
+	public void setChildBoardNumber(int childBoardNumber) {
+		this.childBoardNumber = childBoardNumber;
+	}
+	
+	public String getChildBoardString() {
+		String res = childBoardNumber!=0  ? ("  ("+childBoardNumber+")"):"";
+		return res;
+	}
+	/**
+	 * @return the lastReplyBoardId
+	 */
+	public String getLastReplyBoardId() {
+		return lastReplyBoardId;
+	}
+	/**
+	 * @param lastReplyBoardId the lastReplyBoardId to set
+	 */
+	public void setLastReplyBoardId(String lastReplyBoardId) {
+		this.lastReplyBoardId = lastReplyBoardId;
 	}
  }

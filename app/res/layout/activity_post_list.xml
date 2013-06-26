@@ -4,5 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
-    android:background="@color/post_list_background">
+    android:background="@color/card_list_bg"
+    android:orientation="horizontal">
  </LinearLayout>

@@ -1,65 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#f9f9f9"
-    android:gravity="center"
-    android:orientation="vertical" >
+    android:background="@color/card_list_bg" >
 
     <ProgressBar
         android:id="@+id/search_board_loading_bar"
         style="@style/Spinner"
         android:layout_width="64dp"
-        android:layout_height="64dp" />
+        android:layout_height="64dp"
+        android:layout_centerInParent="true" />
 
-    <LinearLayout
-        android:id="@+id/search_board_search_area"
+    <RelativeLayout
+        android:id="@+id/search_board_main_container"
         android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:background="@drawable/search_bar_bg"
-        android:gravity="center_vertical"
-        android:visibility="gone" >
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:orientation="vertical"
+        android:visibility="visible" >
+
+        <ListView
+            android:id="@+id/search_board_result_list"
+            style="@style/listview"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" />
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="25dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:background="@drawable/search_area_bg"
-            android:gravity="center_vertical" >
+            android:id="@+id/search_board_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="100dp" 
+            android:background="@drawable/tag"
+            android:clickable="true"
+            android:gravity="center_vertical">
 
             <ImageView
-                android:layout_width="18dp"
-                android:layout_height="18dp"
-                android:layout_marginLeft="5dp"
-                android:src="@drawable/sear_icon_small" />
+                android:id="@+id/board_filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" 
+                android:src="@drawable/filter" />
 
             <EditText
-                android:id="@+id/search_board_bar"
-                android:layout_width="match_parent"
-                android:layout_height="20dp"
+                android:id="@+id/search_board_text"
+                android:layout_width="match_parent" 
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_weight="1.0"
                 android:background="@null"
                 android:hint="请输入关键词"
+                android:textCursorDrawable="@null"
+                android:textColor="#eee"
+                android:textColorHint="#ddd"
                 android:singleLine="true"
-                android:textSize="13sp" />
-
-            <Button
-                android:id="@+id/post_search_clear_input"
-                android:layout_width="18dp"
-                android:layout_height="18dp"
-                android:layout_marginRight="2dp"
-                android:background="@drawable/search_clear_input_icon" />
+                android:textSize="13sp" 
+                android:visibility="gone" />
         </LinearLayout>
-    </LinearLayout>
+    </RelativeLayout>
 
-    <ListView
-        android:id="@+id/search_board_result_list"
-        style="@style/listview"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+    <TextView
+        android:id="@android:id/empty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:drawableBottom="@drawable/reload"
+        android:text="加载失败\n点击重试"
+        android:textColor="#777"
         android:visibility="gone" />
 
-</LinearLayout>
+</RelativeLayout>

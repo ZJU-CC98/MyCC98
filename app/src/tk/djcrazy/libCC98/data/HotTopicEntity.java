@@ -3,13 +3,19 @@
  */
 package tk.djcrazy.libCC98.data;
 
+import java.io.Serializable;
+
 
 /**
  * A class that represents an item in the hot topic list
  * @author DJ
  *
  */
-public class HotTopicEntity {
+public class HotTopicEntity implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	/**
 	 * @return the topicName
 	 */

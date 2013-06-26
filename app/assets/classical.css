@@ -1,0 +1,184 @@
+@CHARSET "UTF-8";
+/* custom.css */
+div {
+	display: block;
+}
+
+body {
+	font-family: Microsoft YaHei;
+	background-color: #e3e3e3;
+	word-wrap: break-word;
+	word-break: break-all;
+}
+
+.bg-wrapper {
+	padding-left: 3px;
+	padding-right: 3px;
+ 	padding-top: 45px;
+ 	padding-bottom: 45px;
+}
+
+ 
+.topic {
+	margin: 0 0 -5px 0;
+	font-size: 10pt;
+	font-weight: bold;
+}
+
+.name { /* 	float: left; */
+	float: left;
+	clear: right;
+	font-weight: bold;
+	color: royalblue;
+}
+
+.img-avatar {
+	float: left;
+	margin: 0px 10px 0 0;
+	/* 	-webkit-border-radius: 6px 6px; */
+	/*-webkit-box-shadow: 0  0 6px #000; */
+}
+
+.floor-num {
+	float: right;
+}
+
+.img-gender {
+	margin: 0px 0 0px 0;
+}
+
+.time { /* 	float: left; */
+	margin: 2px 0 0 0;
+	clear: right;
+	color: grey;
+}
+
+.post-info {
+	clear: both;
+	margin: 0 0 10px 0;
+}
+
+.post-content {
+	margin: 7px 0 0 0;
+	font-size: 10pt;
+}
+
+.post {
+	border: 1px solid #d1d1d1;
+	-webkit-border-radius: 4px;
+ 	background-color: #fff;
+	margin-bottom: 10px;
+	border-bottom-width: 1px;	
+	outline: none;
+	white-space: normal;
+}
+
+.post-content-wrapper {
+	margin: 5px 10px 10px 10px;
+	padding: 10px 10px 10px 10px;
+}
+
+.pm-reply {
+	
+}
+
+.tablebody2 {
+	background-color: #white;
+	border: 1px #6595D6 solid;
+	border-top-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-left-width: 1px;
+	border-top-color: #dedede;
+	border-right-color: #dedede;
+	border-bottom-color: #dedede;
+	border-left-color: #dedede;
+	border-top-style: solid;
+	border-right-style: solid;
+	border-bottom-style: solid;
+	border-left-style: solid;
+}
+
+.tablebody1 {
+	background-color: white;
+	border: 1px #6595D6 solid;
+	border-top-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-left-width: 1px;
+	border-top-color: #dedede;
+	border-right-color: #dedede;
+	border-bottom-color: #dedede;
+	border-left-color: #dedede;
+	border-top-style: solid;
+	border-right-style: solid;
+	border-bottom-style: solid;
+	border-left-style: solid;
+}
+
+.dialog-but {
+	float: right;
+}
+ 
+.btn {
+	color: #08C;
+	width: 25%;
+	display: inline-block;
+	padding: 8px 0px 8px;
+ 	font-size: 13px;
+  text-align: center;
+	vertical-align: middle;
+	background-color: #f5f5f5;
+ 	border-color: #bfbfbf;
+	border: 1px solid #cccccc;
+}
+
+ .btn-group {
+	margin-left:1px;
+	margin-right:-2px;
+	margin-bottom:-1px;
+	
+ }
+/*   在这里改变点击是的颜色 */
+ .btn:hover {
+  text-decoration: none;
+  background-color: #e6e6e6;
+ }
+
+ .btn-group:before,
+.btn-group:after {
+  display: table;
+  content: "";
+}
+
+.btn-group:after {
+  clear: both;
+}
+
+ 
+.btn-group > .btn {
+  position: relative;
+  float: left;
+  margin-left: -2px;
+  -webkit-border-radius: 0;
+}
+
+.btn-group > .btn:first-child {
+ }
+.btn-group > .btn:first-child {
+   -webkit-border-bottom-left-radius: 4px;
+          border-bottom-left-radius: 4px;
+  -webkit-border-top-left-radius: 4px;
+          border-top-left-radius: 4px;
+ }
+
+.btn-group > .btn:last-child {
+  -webkit-border-top-right-radius: 4px;
+          border-top-right-radius: 4px;
+  -webkit-border-bottom-right-radius: 4px;
+          border-bottom-right-radius: 4px;
+ }
+
+   
+   
+ 

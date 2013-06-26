@@ -1,46 +1,69 @@
 package tk.djcrazy.MyCC98;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Date;
+import java.util.Arrays;
 import java.util.List;
+
+import javax.xml.transform.sax.TemplatesHandler;
+
+import org.apache.commons.lang3.StringUtils;
 
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
 import roboguice.util.RoboAsyncTask;
-import tk.djcrazy.MyCC98.helper.HtmlGenHelper;
-import tk.djcrazy.MyCC98.task.ProgressRoboAsyncTask;
+import tk.djcrazy.MyCC98.helper.ThemeHelper;
+import tk.djcrazy.MyCC98.template.PostContentFactory;
+import tk.djcrazy.MyCC98.util.DisplayUtil;
 import tk.djcrazy.MyCC98.util.Intents;
+import tk.djcrazy.MyCC98.util.ProgressRoboAsyncTask;
 import tk.djcrazy.MyCC98.util.Intents.Builder;
 import tk.djcrazy.MyCC98.util.ToastUtils;
-import tk.djcrazy.libCC98.ICC98Service;
-import tk.djcrazy.libCC98.data.Gender;
+import tk.djcrazy.MyCC98.view.ObservableWebView;
+import tk.djcrazy.MyCC98.view.ObservableWebView.OnScrollChangedCallback;
+import tk.djcrazy.libCC98.CachedCC98Service;
+import tk.djcrazy.libCC98.SerializableCache;
 import tk.djcrazy.libCC98.data.LoginType;
 import tk.djcrazy.libCC98.data.PostContentEntity;
 import tk.djcrazy.libCC98.data.UserData;
 import tk.djcrazy.libCC98.util.DateFormatUtil;
+import tk.djcrazy.libCC98.util.SerializableCacheUtil;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Html;
 import android.text.InputType;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.GestureDetector.SimpleOnGestureListener;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.View.OnTouchListener;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.webkit.HttpAuthHandler;
-import android.webkit.JavascriptInterface;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebSettings.LayoutAlgorithm;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 import ch.boye.httpclientandroidlib.cookie.Cookie;
 
@@ -50,14 +73,17 @@ import com.actionbarsherlock.view.MenuItem;
 import com.google.inject.Inject;
 
 @ContentView(R.layout.activity_post_contents)
-public class PostContentsJSActivity extends BaseActivity {
+public class PostContentsJSActivity extends BaseActivity implements
+		OnScrollChangedCallback {
 	private static final String TAG = "PostContentsJSActivity";
 	private static final String JS_INTERFACE = "PostContentsJSActivity";
 
 	public static final int LAST_PAGE = 32767;
+	// WebView cache max size, in bytes
+	private static final long CACHE_SIZE = 32 * 1024 * 1024;
 
 	@InjectView(R.id.post_contents)
-	private WebView webView;
+	private ObservableWebView webView;
 
 	@InjectExtra(value = Intents.EXTRA_BOARD_NAME, optional = true)
 	private String boardName = "";
@@ -66,7 +92,7 @@ public class PostContentsJSActivity extends BaseActivity {
 	@InjectExtra(Intents.EXTRA_BOARD_ID)
 	private String boardId;
 	@InjectExtra(value = Intents.EXTRA_POST_NAME, optional = true)
-	private String postName;
+	private String postName = "";
 	@InjectExtra(value = Intents.EXTRA_PAGE_NUMBER, optional = true)
 	private int currPageNum = 1;
 
@@ -74,32 +100,35 @@ public class PostContentsJSActivity extends BaseActivity {
 
 	private List<PostContentEntity> mContentEntities;
 	@Inject
-	private ICC98Service service;
+	private CachedCC98Service service;
 
-	private HtmlGenHelper helper = new HtmlGenHelper();
 	private Menu mOptionsMenu;
+	private GestureDetector gestureDetector;
+	private boolean isRefreshing = false;
+	private boolean forceRefresh = false;
 
 	public static Intent createIntent(String boardId, String postId,
-			int pageNumber) {
+			int pageNumber, boolean forceRefresh) {
 		return new Builder("post_content.VIEW").boardId(boardId).postId(postId)
-				.pageNumber(pageNumber).toIntent();
+				.pageNumber(pageNumber).forceRefresh(forceRefresh).toIntent();
 	}
 
 	public static Intent createIntent(String boardId, String postId) {
-		return createIntent(boardId, postId, 1);
+		return createIntent(boardId, postId, 1, false);
 	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
 		configureActionBar();
 		configureWebView();
+		gestureDetector = new GestureDetector(this,
+				new DefaultGestureDetector());
 		webView.postDelayed(new Runnable() {
 			@Override
 			public void run() {
 				new GetPostContentTask(PostContentsJSActivity.this, boardId,
-						postId, currPageNum).execute();
+						postId, currPageNum, forceRefresh).execute();
 			}
 		}, 50);
 	}
@@ -107,72 +136,12 @@ public class PostContentsJSActivity extends BaseActivity {
 	@Override
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
+		getSupportActionBar().show();
 		postId = intent.getStringExtra(Intents.EXTRA_POST_ID);
 		boardId = intent.getStringExtra(Intents.EXTRA_BOARD_ID);
 		currPageNum = intent.getIntExtra(Intents.EXTRA_PAGE_NUMBER, 1);
-		new GetPostContentTask(this, boardId, postId, currPageNum).execute();
-	}
-
-	private String assemblyContent(List<PostContentEntity> list) {
-		int tmpNum = (currPageNum == LAST_PAGE) ? totalPageNum : currPageNum;
-		StringBuilder builder = new StringBuilder(5000);
-		if (service.getusersInfo().getCurrentUserData().getLoginType()==LoginType.NORMAL) {
-			Log.d(TAG, "add Normal page open...");
-			builder.append(helper.PAGE_OPEN).append(
-					"<a href=\"javascript:;\" id=\"showAllImages\"></a>");
-		} else if (service.getusersInfo().getCurrentUserData().getLoginType()==LoginType.USER_DEFINED) {
-			Log.d(TAG, "add proxy page open...");
-			builder.append(helper.PAGE_PROXY_OPEN).append(
-					"<a href=\"javascript:;\" id=\"showAllImages\"></a>");
-		} else {
-			Log.d(TAG, "add rvpn page open...");
-			builder.append(helper.PAGE_RVPN_OPEN).append(
-					"<a href=\"javascript:;\" id=\"showAllImages\"></a>");
-		}
-		for (int i = 1; i < list.size(); ++i) {
-			PostContentEntity item = list.get(i);
-			String author = item.getUserName();
-			// String content = helper.parseInnerLink(
-			// item.getPostContent(), JS_INTERFACE);
-			String content = item.getPostContent();
-			String avatar = item.getUserAvatarLink();
-			Gender gender = item.getGender();
-			String postTitle = item.getPostTitle();
-			Date postTime = item.getPostTime();
-			String postFace = item.getPostFace();
-			int floorNum = (tmpNum - 1) * 10 + i;
-			String avatarUrl = "";
-			if (avatar != null) {
-				avatarUrl = avatar.toString();
-			}
-			if (avatarUrl.equals("")) {
-				avatarUrl = service.getDomain() + "face/deaduser.gif";
-			}
-			StringBuilder mBuilder = new StringBuilder(300);
-			mBuilder.append(HtmlGenHelper.ITEM_OPEN);
-			HtmlGenHelper.postInfo(mBuilder, postTitle, avatarUrl, author,
-					gender.getName(), floorNum,
-					DateFormatUtil.convertDateToString(postTime, true), i);
-			HtmlGenHelper.postContent(mBuilder, postFace, content, i);
-			HtmlGenHelper.btnsBegin(mBuilder);
-			HtmlGenHelper.jsBtn(mBuilder, "吐槽",
-					"PostContentsJSActivity.showContentDialog",
-					String.valueOf(i), "0");
-			HtmlGenHelper.jsBtn(mBuilder, "站短",
-					"PostContentsJSActivity.showContentDialog",
-					String.valueOf(i), "1");
-			HtmlGenHelper.jsBtn(mBuilder, "查看",
-					"PostContentsJSActivity.showContentDialog",
-					String.valueOf(i), "3");
-			HtmlGenHelper.jsBtn(mBuilder, "加好友",
-					"PostContentsJSActivity.showContentDialog",
-					String.valueOf(i), "2");
-			HtmlGenHelper.btnsEnd(mBuilder);
-			mBuilder.append(HtmlGenHelper.ITEM_CLOSE);
-			builder.append(mBuilder.toString());
-		}
-		builder.append(helper.PAGE_CLOSE);
-		return builder.toString();
+		forceRefresh = intent.getBooleanExtra(Intents.EXTRA_FORCE_REFRESH, false);
+		new GetPostContentTask(this, boardId, postId, currPageNum, forceRefresh).execute();
 	}
 
 	public void onPause() {
@@ -188,7 +157,7 @@ public class PostContentsJSActivity extends BaseActivity {
 	private void callHiddenWebViewMethod(String name) {
 		if (webView != null) {
 			try {
-				Method method = WebView.class.getMethod(name);
+				Method method = ObservableWebView.class.getMethod(name);
 				method.invoke(webView);
 			} catch (NoSuchMethodException e) {
 				e.printStackTrace();
@@ -220,7 +189,10 @@ public class PostContentsJSActivity extends BaseActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
-			finish();
+			Intent intent = PostListActivity.createIntent(boardName, boardId);
+			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+ 			startActivity(intent);
+ 			finish();
 			break;
 		case R.id.menu_jump:
 			jumpDialog();
@@ -240,7 +212,7 @@ public class PostContentsJSActivity extends BaseActivity {
 		case R.id.show_all_image:
 			webView.loadUrl("javascript:showAllImages.fireEvent('click');");
 			break;
-		default:
+ 		default:
 			break;
 		}
 		return false;
@@ -259,26 +231,40 @@ public class PostContentsJSActivity extends BaseActivity {
 		webSettings.setDefaultFontSize(14);
 		webSettings.setLoadsImagesAutomatically(showImage);
 		webSettings.setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
-		webSettings.setAppCacheEnabled(enableCache);
 		webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
+		if (enableCache) {
+			webSettings.setAppCacheMaxSize(CACHE_SIZE);
+			webSettings.setAllowFileAccess(true);
+			webView.getSettings().setDomStorageEnabled(true);
+			webSettings.setAppCachePath(getApplicationContext().getCacheDir()
+					.getPath());
+			webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
+		}
+		webSettings.setAppCacheEnabled(enableCache);
+		webView.setOnScrollChangedCallback(this);
 		webView.addJavascriptInterface(this, JS_INTERFACE);
+		webView.setWebChromeClient(new FullscreenableChromeClient(this));
 		webView.setWebViewClient(new WebViewClient() {
 			@Override
 			public void onPageFinished(WebView view, String url) {
-				webView.getSettings().setBlockNetworkImage(false);
-				onLoadDone();
 				super.onPageFinished(view, url);
 			}
 
 			@Override
 			public boolean shouldOverrideUrlLoading(WebView view, String url) {
-				if (url.startsWith("dispbbs")) {
+				Log.i(TAG, "shouldOverrideUrlLoading:" + url);
+				if (!url.startsWith("http")) {
 					url = service.getDomain() + url;
 				}
-				Intent i = new Intent(Intent.ACTION_VIEW);
-				i.setData(Uri.parse(url));
-				startActivity(i);
-				return true;
+				if (url.endsWith(".jpg") | url.endsWith(".png")
+						| url.endsWith(".bmp")) {
+					startActivity(PhotoViewActivity.createIntent(url));
+					return true;
+				} else {
+					Intent it = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+					startActivity(it);
+					return true;
+				}
 			}
 
 			@Override
@@ -289,37 +275,41 @@ public class PostContentsJSActivity extends BaseActivity {
 						.getCurrentUserData().getProxyPassword());
 			}
 		});
-	}
-
-	private void onLoadDone() {
-		mOptionsMenu.findItem(R.id.menu_pre_page).setEnabled(currPageNum != 1);
-		mOptionsMenu.findItem(R.id.menu_next_page).setEnabled(
-				currPageNum != totalPageNum);
+		webView.setOnTouchListener(new OnTouchListener() {
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				return gestureDetector.onTouchEvent(event);
+			}
+		});
 	}
 
 	public void jumpTo(int pageNum) {
 		if (pageNum <= totalPageNum) {
 			startActivity(PostContentsJSActivity.createIntent(boardId, postId,
-					pageNum));
+					pageNum, false));
 		}
 	}
 
 	public void prevPage() {
 		if (currPageNum >= 2) {
 			startActivity(PostContentsJSActivity.createIntent(boardId, postId,
-					currPageNum - 1));
+					currPageNum - 1, false));
+		} else {
+			ToastUtils.show(this, "已经到第一页啦");
 		}
 	}
 
 	public void refreshPage() {
 		startActivity(PostContentsJSActivity.createIntent(boardId, postId,
-				currPageNum));
+				currPageNum, true));
 	}
 
 	public void nextPage() {
 		if (currPageNum + 1 <= totalPageNum) {
 			startActivity(PostContentsJSActivity.createIntent(boardId, postId,
-					currPageNum + 1));
+					currPageNum + 1, false));
+		} else {
+			ToastUtils.show(this, "已经到最后一页啦");
 		}
 	}
 
@@ -370,7 +360,7 @@ public class PostContentsJSActivity extends BaseActivity {
 		startActivityForResult(intent, 1);
 	}
 
- 	public void showContentDialog(final int index, int which) {
+	public void showContentDialog(final int index, int which) {
 		final PostContentEntity item = mContentEntities.get(index);
 		switch (which) {
 		case 0: {
@@ -475,6 +465,38 @@ public class PostContentsJSActivity extends BaseActivity {
 		}
 	}
 
+	private String assemblyContent(List<PostContentEntity> list)
+			throws IOException {
+		SharedPreferences sharedPref = PreferenceManager
+				.getDefaultSharedPreferences(this);
+		int tmpNum = (currPageNum == LAST_PAGE) ? totalPageNum : currPageNum;
+		PostContentFactory pMustache = new PostContentFactory(list, tmpNum);
+
+		InputStream templateIn = null;
+		String theme = sharedPref.getString(SettingsActivity.THEME,
+				SettingsActivity.THEME_DEFAULT);
+		if (!theme.equals(SettingsActivity.THEME_DEFAULT)) {
+			String[] stylePaths = ThemeHelper.getStyleSheets(theme);
+			templateIn = ThemeHelper.getTemplateStream(theme);
+			if (stylePaths != null && templateIn != null) {
+				pMustache.addAllStyle(stylePaths);
+			}
+		}
+		if (templateIn == null) {
+			pMustache.addStyle(PostContentFactory.CLASSICAL_STYLE);
+			templateIn = getAssets().open(PostContentFactory.DEFAULT_TEMPLATE);
+		}
+
+		if (service.getusersInfo().getCurrentUserData().getLoginType() == LoginType.NORMAL) {
+			pMustache.addScript(PostContentFactory.DEFAULT_UBB_SCRIPT);
+		} else if (service.getusersInfo().getCurrentUserData().getLoginType() == LoginType.USER_DEFINED) {
+			pMustache.addScript(PostContentFactory.LIFETOY_UBB_SCRIPT);
+		} else {
+			pMustache.addScript(PostContentFactory.DEFAULT_UBB_SCRIPT);
+		}
+ 		return pMustache.genContent(templateIn);
+	}
+
 	//
 	// public void open(String pageLink, int pageNum) {
 	// Log.d(TAG, "open new post:" + pageNum);
@@ -488,10 +510,10 @@ public class PostContentsJSActivity extends BaseActivity {
 	// }
 
 	private void setRefreshActionButtonState(boolean refreshing) {
+		isRefreshing = refreshing;
 		if (mOptionsMenu == null) {
 			return;
 		}
-
 		final MenuItem refreshItem = mOptionsMenu.findItem(R.id.refresh);
 		if (refreshItem != null) {
 			if (refreshing) {
@@ -512,10 +534,10 @@ public class PostContentsJSActivity extends BaseActivity {
 		cookieManager.setAcceptCookie(true);
 		cookieManager.removeSessionCookie();
 		UserData userData = service.getusersInfo().getCurrentUserData();
-//		if (userData.getLoginType() == LoginType.USER_DEFINED) {
-//			webView.setHttpAuthUsernamePassword(service.getDomain(), "",
-//					userData.getProxyUserName(), userData.getProxyPassword());
-//		}
+		// if (userData.getLoginType() == LoginType.USER_DEFINED) {
+		// webView.setHttpAuthUsernamePassword(service.getDomain(), "",
+		// userData.getProxyUserName(), userData.getProxyPassword());
+		// }
 		for (Cookie cookie : service.getusersInfo().getCurrentUserData()
 				.getCookieStore().getCookies()) {
 			cookieManager.setCookie(service.getDomain(),
@@ -539,14 +561,16 @@ public class PostContentsJSActivity extends BaseActivity {
 		private String aBoardId;
 		private String aPostId;
 		private int aPageNum;
+		private boolean aForceRefresh;
 
 		protected GetPostContentTask(Activity context, String boardId,
-				String postId, int pageNum) {
+				String postId, int pageNum, boolean forceRefresh) {
 			super(context);
 			aContext = context;
 			aBoardId = boardId;
 			aPostId = postId;
 			aPageNum = pageNum;
+			aForceRefresh = forceRefresh;
 		}
 
 		@Override
@@ -557,7 +581,37 @@ public class PostContentsJSActivity extends BaseActivity {
 
 		@Override
 		public List<PostContentEntity> call() throws Exception {
-			return service.getPostContentList(aBoardId, aPostId, aPageNum);
+			return service.getPostContentList(aBoardId, aPostId, aPageNum,
+					forceRefresh);
+		}
+
+		private void prefetch() {
+			if (currPageNum < totalPageNum) {
+				new Thread() {
+					public void run() {
+						try {
+							service.getPostContentList(aBoardId, aPostId,
+									currPageNum + 1, false);
+						} catch (Exception e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				}.start();
+			}
+			if (currPageNum > 1) {
+				new Thread() {
+					public void run() {
+						try {
+							service.getPostContentList(aBoardId, aPostId,
+									currPageNum - 1, false);
+						} catch (Exception e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				}.start();
+			}
 		}
 
 		@Override
@@ -572,7 +626,7 @@ public class PostContentsJSActivity extends BaseActivity {
 			mContentEntities = t;
 			PostContentEntity info = t.get(0);
 			totalPageNum = info.getTotalPage();
-			if (currPageNum > totalPageNum) {
+			if (currPageNum > totalPageNum || currPageNum == LAST_PAGE) {
 				currPageNum = totalPageNum;
 			}
 			boardName = (String) info.getBoardName();
@@ -582,7 +636,9 @@ public class PostContentsJSActivity extends BaseActivity {
 					"utf-8", null);
 			getSupportActionBar().setTitle(postName);
 			getSupportActionBar().setSubtitle(
-					"第" + currPageNum + "页 | " + "共" + totalPageNum + "页");
+					"第" + currPageNum + "页 | " + "共" + totalPageNum + "页    "
+							+ boardName);
+			prefetch();
 		}
 
 		@Override
@@ -620,4 +676,139 @@ public class PostContentsJSActivity extends BaseActivity {
 		}
 	}
 
+	private int hideStartPos = 0;
+	private int showStartPos = 0;
+	private final int TRIGER_DIS = 100;
+
+	@Override
+	public void onScroll(int pre, int curr) {
+		if (curr > pre) {
+			showStartPos = curr;
+			if (curr - hideStartPos > TRIGER_DIS && !isRefreshing) {
+				getSupportActionBar().hide();
+			}
+		} else {
+			hideStartPos = curr;
+			if (showStartPos - curr > TRIGER_DIS) {
+				getSupportActionBar().show();
+			}
+		}
+	}
+
+	public class DefaultGestureDetector extends SimpleOnGestureListener {
+		final int FLING_MIN_DISTANCE = DisplayUtil.dip2px(
+				PostContentsJSActivity.this, 150);
+		final int FLING_MIN_VELOCITY = DisplayUtil.dip2px(
+				PostContentsJSActivity.this, 100);
+		final int FLING_MAX_Y_DISTANCE = DisplayUtil.dip2px(
+				PostContentsJSActivity.this, 50);
+
+		@Override
+		public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
+				float velocityY) {
+			Log.i("DefaultGestureDetector",
+					StringUtils.join(
+							Arrays.asList(e1.getX(), e1.getY(), e2.getX(),
+									e2.getY(), velocityX, velocityY), ","));
+			float distX = e1.getX() - e2.getX();
+			float distY = Math.abs(e1.getY() - e2.getY());
+			if (distX > FLING_MIN_DISTANCE
+					&& Math.abs(velocityX) > FLING_MIN_VELOCITY
+					&& distY < FLING_MAX_Y_DISTANCE)
+				nextPage();
+			else if (-distX > FLING_MIN_DISTANCE
+					&& Math.abs(velocityX) > FLING_MIN_VELOCITY
+					&& distY < FLING_MAX_Y_DISTANCE)
+				prevPage();
+			return false;
+		}
+	}
+}
+
+class FullscreenableChromeClient extends WebChromeClient {
+	protected Activity mActivity = null;
+
+	private View mCustomView;
+	private WebChromeClient.CustomViewCallback mCustomViewCallback;
+	private int mOriginalOrientation;
+
+	private FrameLayout mContentView;
+	private FrameLayout mFullscreenContainer;
+
+	private static final FrameLayout.LayoutParams COVER_SCREEN_PARAMS = new FrameLayout.LayoutParams(
+			ViewGroup.LayoutParams.MATCH_PARENT,
+			ViewGroup.LayoutParams.MATCH_PARENT);
+
+	public FullscreenableChromeClient(Activity activity) {
+		this.mActivity = activity;
+	}
+
+	@Override
+	public void onShowCustomView(View view, int requestedOrientation,
+			WebChromeClient.CustomViewCallback callback) {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+			if (mCustomView != null) {
+				callback.onCustomViewHidden();
+				return;
+			}
+
+			mOriginalOrientation = mActivity.getRequestedOrientation();
+			FrameLayout decor = (FrameLayout) mActivity.getWindow()
+					.getDecorView();
+			mFullscreenContainer = new FullscreenHolder(mActivity);
+			mFullscreenContainer.addView(view, COVER_SCREEN_PARAMS);
+			decor.addView(mFullscreenContainer, COVER_SCREEN_PARAMS);
+			mCustomView = view;
+			setFullscreen(true);
+			mCustomViewCallback = callback;
+			mActivity.setRequestedOrientation(requestedOrientation);
+		}
+
+		super.onShowCustomView(view, requestedOrientation, callback);
+	}
+
+	@Override
+	public void onHideCustomView() {
+		if (mCustomView == null) {
+			return;
+		}
+
+		setFullscreen(false);
+		FrameLayout decor = (FrameLayout) mActivity.getWindow().getDecorView();
+		decor.removeView(mFullscreenContainer);
+		mFullscreenContainer = null;
+		mCustomView = null;
+		mCustomViewCallback.onCustomViewHidden();
+		mActivity.setRequestedOrientation(mOriginalOrientation);
+	}
+
+	private void setFullscreen(boolean enabled) {
+		Window win = mActivity.getWindow();
+		WindowManager.LayoutParams winParams = win.getAttributes();
+		final int bits = WindowManager.LayoutParams.FLAG_FULLSCREEN;
+		if (enabled) {
+			winParams.flags |= bits;
+		} else {
+			winParams.flags &= ~bits;
+			if (mCustomView != null) {
+				mCustomView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
+			} else {
+				mContentView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
+			}
+		}
+		win.setAttributes(winParams);
+	}
+
+	private static class FullscreenHolder extends FrameLayout {
+		public FullscreenHolder(Context ctx) {
+			super(ctx);
+			setBackgroundColor(ctx.getResources().getColor(
+					android.R.color.black));
+		}
+
+		@Override
+		public boolean onTouchEvent(MotionEvent evt) {
+			return true;
+		}
+	}
 }

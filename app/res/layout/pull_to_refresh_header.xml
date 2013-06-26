@@ -36,7 +36,7 @@
         <ImageView
             android:id="@+id/pull_to_refresh_image"
             android:layout_width="wrap_content"
-            android:layout_height="30dp"
+            android:layout_height="45dp"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="30dip"
@@ -51,10 +51,9 @@
   					android:layout_centerVertical="true"
   					android:gravity="center"
             android:text="点击刷新"
-            android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="#999"
             android:textStyle="bold"
-            android:textSize="12sp" />
+            android:textSize="15sp" />
 
         <TextView
             android:id="@+id/pull_to_refresh_updated_at"

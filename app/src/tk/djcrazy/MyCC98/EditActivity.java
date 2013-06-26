@@ -6,20 +6,18 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
-import tk.djcrazy.MyCC98.R.drawable;
+import tk.djcrazy.MyCC98.R.id;
 import tk.djcrazy.MyCC98.adapter.EmotionGridViewAdapter;
 import tk.djcrazy.MyCC98.helper.TextHelper;
-import tk.djcrazy.MyCC98.task.ProgressRoboAsyncTask;
 import tk.djcrazy.MyCC98.util.Intents;
+import tk.djcrazy.MyCC98.util.ProgressRoboAsyncTask;
 import tk.djcrazy.MyCC98.util.ToastUtils;
 import tk.djcrazy.MyCC98.util.ViewUtils;
-import tk.djcrazy.libCC98.ICC98Service;
+import tk.djcrazy.libCC98.CachedCC98Service;
 import tk.djcrazy.libCC98.ICC98UrlManager;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -43,9 +41,7 @@ import android.provider.MediaStore;
 import android.text.Html;
 import android.text.Html.ImageGetter;
 import android.text.Spannable;
-import android.text.Spanned;
 import android.text.style.ImageSpan;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -62,7 +58,6 @@ import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 
 import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.google.inject.Inject;
 
@@ -77,6 +72,7 @@ public class EditActivity extends BaseFragmentActivity implements OnClickListene
 
 	public static final String TAIL = "\n\n[right][color=gray]From  "
 			+ Build.MODEL + " via MyCC98[/color][/right]";
+	public static final String XINLING_TAIL = "\n\n[right][color=gray][匿了]via MyCC98[/匿了][/color][/right]";
 
 	private String appendTail = TAIL;
 
@@ -91,8 +87,7 @@ public class EditActivity extends BaseFragmentActivity implements OnClickListene
 	/* 拍照的照片存储位置 */
 	private static final File PHOTO_DIR = new File(
 			Environment.getExternalStorageDirectory() + "/Camera");
-	private static final int MENU_REPLY_ID = 87356;
-
+ 
 	@InjectExtra(Intents.EXTRA_REQUEST_TYPE)
 	private int requestType;
 	@InjectExtra(value = Intents.EXTRA_BOARD_ID, optional = true)
@@ -142,15 +137,13 @@ public class EditActivity extends BaseFragmentActivity implements OnClickListene
 	private GridView mEmotionGrid;
 	@InjectView(R.id.reply_container)
 	private View mContainer;
-	@InjectView(R.id.edit_btn_delete)
-	private Button mDeleteBtn;
-	private String editContent;
+ 	private String editContent;
 	private String editTopic;
 	private File mCurrentPhotoFile;
 	private String faceGroupChooseString = "face7.gif";
 	private String picLink;
 	@Inject
-	private ICC98Service service;
+	private CachedCC98Service service;
 	@Inject
 	private ICC98UrlManager manager;
 	private ImageGetter getter = new ImageGetter() {
@@ -197,6 +190,7 @@ public class EditActivity extends BaseFragmentActivity implements OnClickListene
 			replyContentEditText.setText( editContent) ;
 			replyTitleEditText.setText( editTopic) ;
 		}
+		replyContentEditText.setSelection(replyContentEditText.getText().length());
 	}
 
 	private void lockContainerHeight(int paramInt) {
@@ -229,6 +223,8 @@ public class EditActivity extends BaseFragmentActivity implements OnClickListene
 				SettingsActivity.CUSTOM_TAIL_CONTENT, "");
 		if (!showTail) {
 			appendTail = "";
+		} else if ("182".equals(boardID)) {
+			appendTail = XINLING_TAIL;
 		} else if (!useCustomTail) {
 			appendTail = TAIL;
 		} else {
@@ -236,27 +232,14 @@ public class EditActivity extends BaseFragmentActivity implements OnClickListene
 					+ "[/color][/right]";
 		}
 	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu optionMenu) {
-		optionMenu.add(android.view.Menu.NONE, MENU_REPLY_ID, 1, "预览")
-				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-		return true;
-	}
-
+	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			finish();
 			return true;
-		case MENU_REPLY_ID:
-			startActivity(new Intent(EditActivity.this, PreviewActivity.class)
-					.putExtra(PreviewActivity.CONTENT,
-							replaceAllImage(replyContentEditText.getText()
-									.toString())));
-			return true;
-		default:
+ 		default:
 			break;
 		}
 		return false;
@@ -267,7 +250,7 @@ public class EditActivity extends BaseFragmentActivity implements OnClickListene
 	 */
 	private void ensure() {
 		String titleString = replyTitleEditText.getText().toString();
- 		String contentString = replyContentEditText.getText().toString()
+		String contentString = replyContentEditText.getText().toString()
 				+ appendTail;
 		contentString = replaceAllImage(contentString);
 		if (TextHelper.isEmpty(contentString)) {
@@ -315,7 +298,7 @@ public class EditActivity extends BaseFragmentActivity implements OnClickListene
 				String pmContent = "详情请点击："
 						+ manager.getPostUrl(boardID, postId, quotePageNumber)
 						+ "#" + quoteFloorNumber;
-				new SendPMTask(EditActivity.this, pmReplyName, pmTitle,
+				new SendPMTask(EditActivity.this, replyUserName, pmTitle,
 						pmContent).execute();
 				PushReplyTask task = new PushReplyTask(EditActivity.this,
 						postId, boardID, contentString, titleString,
@@ -352,8 +335,7 @@ public class EditActivity extends BaseFragmentActivity implements OnClickListene
 		mPhotoBtn.setOnClickListener(this);
 		mSubmitBtn.setOnClickListener(this);
 		replyTitleEditText.setOnClickListener(this);
-		mDeleteBtn.setOnClickListener(this);
-		replyContentEditText
+ 		replyContentEditText
 				.setOnFocusChangeListener(new OnFocusChangeListener() {
 					@Override
 					public void onFocusChange(View v, boolean hasFocus) {
@@ -478,12 +460,12 @@ public class EditActivity extends BaseFragmentActivity implements OnClickListene
 			ensure();
 			break;
 		case R.id.edit_btn_at:
+			ToastUtils.show(this, "@功能暂未完成");
 			int cursor = replyContentEditText.getSelectionStart();
 			replyContentEditText.getText().insert(cursor, "@");
 			break;
 		case R.id.edit_btn_emotion:
-			getSupportActionBar().hide();
-			if (mEmotionGrid.getVisibility() == View.GONE) {
+ 			if (mEmotionGrid.getVisibility() == View.GONE) {
 				hideKeyBoard();
 				mEmotionBtn.postDelayed((new Runnable() {
 					@Override
@@ -501,13 +483,7 @@ public class EditActivity extends BaseFragmentActivity implements OnClickListene
 		case R.id.reply_title_edit:
 			ViewUtils.setGone(mEmotionGrid, true);
 			break;
-		case R.id.edit_btn_delete:
-			if (replyContentEditText.getText().length() > 0) {
-				replyContentEditText.getText().delete(
-						replyContentEditText.getText().length() - 1,
-						replyContentEditText.getText().length());
-			}
-		default:
+ 		default:
 			break;
 		}
 	}
@@ -654,7 +630,7 @@ public class EditActivity extends BaseFragmentActivity implements OnClickListene
 	private class UpLoadPictureTask extends ProgressRoboAsyncTask<String> {
 		private File mUploadFile;
 		@Inject
-		private ICC98Service mService;
+		private CachedCC98Service mService;
 
 		protected UpLoadPictureTask(Activity context, File file) {
 			super(context);
@@ -694,7 +670,7 @@ public class EditActivity extends BaseFragmentActivity implements OnClickListene
 		private String mFaceExpression;
 		private boolean mIsNewPost;
 		@Inject
-		private ICC98Service mService;
+		private CachedCC98Service mService;
 
 		protected PushReplyTask(Activity context, String postId,
 				String boardId, String content, String title, String face,
@@ -745,7 +721,7 @@ public class EditActivity extends BaseFragmentActivity implements OnClickListene
 		private String mContent;
 		private String mTitle;
 		@Inject
-		private ICC98Service mService;
+		private CachedCC98Service mService;
 
 		protected SendPMTask(Activity context, String toUser, String title,
 				String content) {

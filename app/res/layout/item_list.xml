@@ -17,7 +17,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent" 
-    android:background="@drawable/dark_main_background">
+    android:background="@color/card_list_bg">
 
     <tk.djcrazy.MyCC98.view.PagedPullToRefreshListView
         android:id="@android:id/list"
@@ -30,11 +30,13 @@
 
     <TextView
         android:id="@android:id/empty"
-        android:text="加载超时"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:visibility="gone" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableBottom="@drawable/reload"
+        android:text="加载失败\n点击重试"
+        android:textColor="#777" 
+        android:layout_centerInParent="true" 
+        android:visibility="gone"/>
 
     <ProgressBar
         android:id="@+id/pb_loading"

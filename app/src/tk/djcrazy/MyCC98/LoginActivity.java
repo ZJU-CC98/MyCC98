@@ -8,45 +8,37 @@ package tk.djcrazy.MyCC98;
 
 import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
 
+import java.io.File;
 import java.io.IOException;
 
 import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
-import tk.djcrazy.MyCC98.application.MyApplication;
 import tk.djcrazy.MyCC98.dialog.AuthDialog;
 import tk.djcrazy.MyCC98.dialog.AuthDialog.MyAuthDialogListener;
 import tk.djcrazy.MyCC98.security.Md5;
-import tk.djcrazy.MyCC98.task.ProgressRoboAsyncTask;
 import tk.djcrazy.MyCC98.util.Intents;
+import tk.djcrazy.MyCC98.util.ProgressRoboAsyncTask;
 import tk.djcrazy.MyCC98.util.ToastUtils;
-import tk.djcrazy.libCC98.ICC98Service;
+import tk.djcrazy.libCC98.CachedCC98Service;
 import tk.djcrazy.libCC98.data.LoginType;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Application;
-import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.google.inject.Inject;
 
@@ -54,7 +46,7 @@ public class LoginActivity extends BaseFragmentActivity implements
 		OnClickListener {
 	private static final String TAG = "MyCC98";
 
-	public static final boolean IS_PROXY_VERSION = false;
+	public static final boolean IS_PROXY_VERSION = true;
 
 	public static final String USERNAME = "USERNAME";
 	public static final String PASSWORD32 = "PASSWORD32";
@@ -70,7 +62,7 @@ public class LoginActivity extends BaseFragmentActivity implements
 	private EditText mPasswordEdit;
 	@InjectView(R.id.login)
 	private Button mSignInButton;
- 
+
 	@InjectExtra(value = Intents.EXTRA_NEED_LOGIN, optional = true)
 	private boolean mNeedLogin = false;
 	private String mUsername = "";
@@ -87,7 +79,7 @@ public class LoginActivity extends BaseFragmentActivity implements
 	private static final String AUTHINFO = "AUTHINFO";
 
 	@Inject
-	private ICC98Service service;
+	private CachedCC98Service service;
 
 	MyAuthDialogListener listener = new MyAuthDialogListener() {
 		@Override
@@ -209,7 +201,7 @@ public class LoginActivity extends BaseFragmentActivity implements
 	}
 
 	private void onLoginSuccess() {
- 		forwardToNextActivity();
+		forwardToNextActivity();
 	}
 
 	private class LoginTask extends ProgressRoboAsyncTask<String> {
@@ -236,7 +228,7 @@ public class LoginActivity extends BaseFragmentActivity implements
 		public String call() throws Exception {
 			service.doLogin(userName, password32, password16, authUserName,
 					authPassword, mLoginType);
-			return null; 
+			return null;
 		}
 
 		@Override

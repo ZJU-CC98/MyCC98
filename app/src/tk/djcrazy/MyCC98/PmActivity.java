@@ -3,7 +3,7 @@ package tk.djcrazy.MyCC98;
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectView;
 import tk.djcrazy.MyCC98.adapter.InboxFragmentPagerAdapter;
-import tk.djcrazy.libCC98.ICC98Service;
+import tk.djcrazy.libCC98.CachedCC98Service;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
@@ -13,22 +13,17 @@ import android.support.v4.view.ViewPager.OnPageChangeListener;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.app.ActionBar.TabListener;
-import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockFragmentActivity;
 import com.google.inject.Inject;
-import com.viewpagerindicator.TabPageIndicator;
-import com.viewpagerindicator.TitlePageIndicator;
- 
+  
 @ContentView(R.layout.activity_pm)
 public class PmActivity extends BaseFragmentActivity implements OnPageChangeListener, TabListener{
 
 	private static String TAG = "PmActivity";
 	@Inject
-	private ICC98Service service;
+	private CachedCC98Service service;
 
 	@InjectView(R.id.pm_main_pages)
 	private ViewPager viewPager;
-//	@InjectView(R.id.pm_main_titles)
-//	private TitlePageIndicator indicator;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -39,7 +34,6 @@ public class PmActivity extends BaseFragmentActivity implements OnPageChangeList
 				getSupportFragmentManager());
 		viewPager.setAdapter(adapter);
 		viewPager.setOnPageChangeListener(this);
-//		indicator.setViewPager(viewPager);
 	}
 
 	private void configureActionBar() {

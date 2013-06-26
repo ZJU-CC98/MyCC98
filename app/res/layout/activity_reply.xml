@@ -8,7 +8,7 @@
 
     <LinearLayout
         android:id="@+id/reply_container"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1.0"
         android:orientation="vertical" >
@@ -38,74 +38,60 @@
             <EditText
                 android:id="@+id/reply_content"
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
+                android:layout_height="0dp"
                 android:layout_weight="1"
                 android:gravity="top"
                 android:hint="@string/moto_of_zju"
                 android:inputType="textMultiLine"
                 android:textColor="#444444"
-                android:textSize="15sp" />
+                android:textSize="13sp" />
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:padding="1dp" >
+            android:background="@color/bottombar_black"
+            android:gravity="center_vertical" >
 
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1.0"
-                android:text="来自 MyCC98.Android"
-                android:textColor="#555"
-                android:textSize="13dp" />
+                android:gravity="center_vertical"
+                android:padding="1dp" >
 
-            <ImageView
-                android:id="@+id/edit_btn_camera"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="4dp"
-                android:paddingRight="4dp"
-                android:src="@drawable/edit_btn_camera_selector" />
+                <ImageView
+                    android:id="@+id/edit_btn_camera"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="4dp"
+                    android:paddingRight="4dp"
+                    android:src="@drawable/edit_btn_camera_selector" />
 
-            <ImageView
-                android:id="@+id/edit_btn_photo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="4dp"
-                android:paddingRight="4dp"
-                android:src="@drawable/edit_btn_photo_selector" />
+                <ImageView
+                    android:id="@+id/edit_btn_photo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="4dp"
+                    android:paddingRight="4dp"
+                    android:src="@drawable/edit_btn_photo_selector" />
 
-            <ImageView
-                android:id="@+id/edit_btn_emotion"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="4dp"
-                android:paddingRight="4dp"
-                android:src="@drawable/edit_btn_emotion_selector" />
+                <ImageView
+                    android:id="@+id/edit_btn_emotion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="4dp"
+                    android:paddingRight="4dp"
+                    android:src="@drawable/edit_btn_emotion_selector" />
 
-            <ImageView
-                android:id="@+id/edit_btn_at"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="4dp"
-                android:paddingRight="4dp"
-                android:src="@drawable/edit_btn_at_selector" />
-        </LinearLayout>
-
-        <RelativeLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/bottombar_black" >
-
-            <Button
-                android:id="@+id/edit_btn_delete"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_marginLeft="10dp"
-                android:background="@drawable/edit_btn_delete_selector" />
+                <ImageView
+                    android:id="@+id/edit_btn_at"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="4dp"
+                    android:paddingRight="4dp"
+                    android:src="@drawable/edit_btn_at_selector" />
+            </LinearLayout>
 
             <Button
                 android:id="@+id/edit_btn_sure"
@@ -117,19 +103,20 @@
                 android:text="回复"
                 android:textColor="#666"
                 android:textSize="15sp" />
-        </RelativeLayout>
 
-        <GridView
-            android:id="@+id/edit_emotion_grid"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:columnWidth="32.0dip"
-            android:gravity="center"
-            android:horizontalSpacing="0.5dip"
-            android:numColumns="8"
-            android:scrollbars="none"
-            android:visibility="gone" >
-        </GridView>
+            </LinearLayout>
+ 
+            <GridView
+                android:id="@+id/edit_emotion_grid"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:columnWidth="32.0dip"
+                android:gravity="center"
+                android:horizontalSpacing="0.5dip"
+                android:verticalSpacing="0.5dp"
+                android:numColumns="7"
+                android:scrollbars="none"
+                android:visibility="gone" >
+            </GridView>
+        </LinearLayout>
     </LinearLayout>
-
-</LinearLayout>
