@@ -170,7 +170,6 @@ public class PmViewActivity extends BaseFragmentActivity {
 						pageString = (new PmContentFactory(readTopic,
 								service.getUserImgUrl(sender), sender, sendTime, pmContent))
 								.getConent();
-						Log.d(TAG, pageString);
 					} catch (ClientProtocolException e) {
 
 						e.printStackTrace();
