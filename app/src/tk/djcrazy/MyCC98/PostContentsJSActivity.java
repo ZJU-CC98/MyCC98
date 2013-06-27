@@ -32,6 +32,8 @@ import tk.djcrazy.libCC98.data.PostContentEntity;
 import tk.djcrazy.libCC98.data.UserData;
 import tk.djcrazy.libCC98.util.DateFormatUtil;
 import tk.djcrazy.libCC98.util.SerializableCacheUtil;
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -243,7 +245,8 @@ public class PostContentsJSActivity extends BaseActivity implements
 		webSettings.setAppCacheEnabled(enableCache);
 		webView.setOnScrollChangedCallback(this);
 		webView.addJavascriptInterface(this, JS_INTERFACE);
-		webView.setWebChromeClient(new FullscreenableChromeClient(this));
+		
+		setWebChromeClient();
 		webView.setWebViewClient(new WebViewClient() {
 			@Override
 			public void onPageFinished(WebView view, String url) {
@@ -281,6 +284,15 @@ public class PostContentsJSActivity extends BaseActivity implements
 				return gestureDetector.onTouchEvent(event);
 			}
 		});
+	}
+
+	/**
+	 * 
+	 */
+	private void setWebChromeClient() {
+		if (Build.VERSION.SDK_INT>=14) {
+			webView.setWebChromeClient(new FullscreenableChromeClient(this));
+		}
 	}
 
 	public void jumpTo(int pageNum) {
@@ -725,6 +737,8 @@ public class PostContentsJSActivity extends BaseActivity implements
 	}
 }
 
+@SuppressLint("NewApi")
+@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 class FullscreenableChromeClient extends WebChromeClient {
 	protected Activity mActivity = null;
 
