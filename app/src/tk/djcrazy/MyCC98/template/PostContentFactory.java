@@ -2,6 +2,7 @@ package tk.djcrazy.MyCC98.template;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
@@ -89,8 +90,13 @@ public class PostContentFactory {
 		this.list = list;
 		this.page = page;
 	}
+	
+	public static String inputStreamToString(InputStream is) {
+		java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
+	    return s.hasNext() ? s.next() : "";
+	}
 
-	public String genContent(InputStream templateIn) {
+	public String genContent(String template) {
 		for (int i = 1; i < list.size(); ++i) {
 			PostContentEntity entity = list.get(i);
 			posts.add(new Post(entity.getPostTitle(), entity
@@ -101,7 +107,7 @@ public class PostContentFactory {
 							.getPostContent(), i));
 		}
 		MustacheFactory mFactory = new DefaultMustacheFactory();
-		Mustache mustache = mFactory.compile(new InputStreamReader(templateIn),
+		Mustache mustache = mFactory.compile(new StringReader(template),
 				"posts");
 		StringWriter stringWriter = (StringWriter) mustache.execute(
 				new StringWriter(), this);
