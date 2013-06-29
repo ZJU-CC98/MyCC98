@@ -4,9 +4,6 @@ package tk.djcrazy.MyCC98.view;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import com.twotoasters.jazzylistview.JazzyHelper;
-import com.twotoasters.jazzylistview.JazzyListView;
-
 import tk.djcrazy.MyCC98.R;
 import tk.djcrazy.MyCC98.util.ViewUtils;
 import android.annotation.TargetApi;
@@ -31,7 +28,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 
-public class PullToRefreshListView extends JazzyListView implements OnScrollListener {
+public class PullToRefreshListView extends ListView implements OnScrollListener {
 
     private static final int TAP_TO_REFRESH = 1;//点击刷新
     private static final int PULL_TO_REFRESH = 2;
@@ -80,7 +77,7 @@ public class PullToRefreshListView extends JazzyListView implements OnScrollList
     }
 
     private void init(Context context) {
-    	setTransitionEffect(JazzyHelper.CARDS);
+    	
         // Load all of the animations we need in code rather than through XML
         //从下往上转懂的动画
         mFlipAnimation = new RotateAnimation(0, -180,
@@ -140,16 +137,16 @@ public class PullToRefreshListView extends JazzyListView implements OnScrollList
         setSelection(1);
     }
 
-//    /**
-//     * Set the listener that will receive notifications every time the list
-//     * scrolls.
-//     * 
-//     * @param l The scroll listener. 
-//     */
-//    @Override
-//    public void setOnScrollListener(AbsListView.OnScrollListener l) {
-//        mOnScrollListener = l;
-//    }
+    /**
+     * Set the listener that will receive notifications every time the list
+     * scrolls.
+     * 
+     * @param l The scroll listener. 
+     */
+    @Override
+    public void setOnScrollListener(AbsListView.OnScrollListener l) {
+        mOnScrollListener = l;
+    }
 
     /**
      * Register a callback to be invoked when this list should be refreshed.
@@ -325,7 +322,7 @@ public class PullToRefreshListView extends JazzyListView implements OnScrollList
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem,
             int visibleItemCount, int totalItemCount) {
-         // When the refresh view is completely visible, change the text to say
+        // When the refresh view is completely visible, change the text to say
         // "Release to refresh..." and flip the arrow drawable.
         if (mCurrentScrollState == SCROLL_STATE_TOUCH_SCROLL
                 && mRefreshState != REFRESHING) {
