@@ -3094,669 +3094,6 @@ com.github.droidfu.support.StringSupport: StringSupport()
 com.github.droidfu.support.StringSupport: java.lang.String underscore(java.lang.String)
 com.github.droidfu.support.StringSupport: java.lang.String[] splitByCharacterTypeCamelCase(java.lang.String)
 com.github.droidfu.support.StringSupport: java.lang.String[] splitByCharacterType(java.lang.String,boolean)
-com.github.mustachejava.Binding
-com.github.mustachejava.Binding: java.lang.Object get(java.lang.Object[])
-com.github.mustachejava.Code
-com.github.mustachejava.Code: java.io.Writer execute(java.io.Writer,java.lang.Object)
-com.github.mustachejava.Code: java.io.Writer execute(java.io.Writer,java.lang.Object[])
-com.github.mustachejava.Code: void identity(java.io.Writer)
-com.github.mustachejava.Code: void append(java.lang.String)
-com.github.mustachejava.Code: com.github.mustachejava.Code[] getCodes()
-com.github.mustachejava.Code: void setCodes(com.github.mustachejava.Code[])
-com.github.mustachejava.Code: void init()
-com.github.mustachejava.Code: java.lang.Object clone()
-com.github.mustachejava.Code: java.lang.Object clone(java.util.Set)
-com.github.mustachejava.DefaultMustacheFactory
-com.github.mustachejava.DefaultMustacheFactory: com.google.common.cache.LoadingCache mustacheCache
-com.github.mustachejava.DefaultMustacheFactory: com.github.mustachejava.ObjectHandler oh
-com.github.mustachejava.DefaultMustacheFactory: com.github.mustachejava.MustacheParser mc
-com.github.mustachejava.DefaultMustacheFactory: com.google.common.cache.LoadingCache templateCache
-com.github.mustachejava.DefaultMustacheFactory: java.lang.String resourceRoot
-com.github.mustachejava.DefaultMustacheFactory: java.io.File fileRoot
-com.github.mustachejava.DefaultMustacheFactory: com.google.common.util.concurrent.ListeningExecutorService les
-com.github.mustachejava.DefaultMustacheFactory: DefaultMustacheFactory()
-com.github.mustachejava.DefaultMustacheFactory: DefaultMustacheFactory(java.lang.String)
-com.github.mustachejava.DefaultMustacheFactory: DefaultMustacheFactory(java.io.File)
-com.github.mustachejava.DefaultMustacheFactory: com.github.mustachejava.MustacheVisitor createMustacheVisitor()
-com.github.mustachejava.DefaultMustacheFactory: java.io.Reader getReader(java.lang.String)
-com.github.mustachejava.DefaultMustacheFactory: void encode(java.lang.String,java.io.Writer)
-com.github.mustachejava.DefaultMustacheFactory: com.github.mustachejava.ObjectHandler getObjectHandler()
-com.github.mustachejava.DefaultMustacheFactory: void setObjectHandler(com.github.mustachejava.ObjectHandler)
-com.github.mustachejava.DefaultMustacheFactory: java.util.concurrent.ExecutorService getExecutorService()
-com.github.mustachejava.DefaultMustacheFactory: void setExecutorService(java.util.concurrent.ExecutorService)
-com.github.mustachejava.DefaultMustacheFactory: com.github.mustachejava.Mustache getFragment(com.github.mustachejava.FragmentKey)
-com.github.mustachejava.DefaultMustacheFactory: com.github.mustachejava.MustacheException handle(java.util.concurrent.ExecutionException)
-com.github.mustachejava.DefaultMustacheFactory: com.github.mustachejava.Mustache compile(java.lang.String)
-com.github.mustachejava.DefaultMustacheFactory: com.github.mustachejava.Mustache compile(java.io.Reader,java.lang.String)
-com.github.mustachejava.DefaultMustacheFactory: com.github.mustachejava.Mustache compile(java.io.Reader,java.lang.String,java.lang.String,java.lang.String)
-com.github.mustachejava.DefaultMustacheFactory: java.lang.String translate(java.lang.String)
-com.github.mustachejava.DefaultMustacheFactory: java.lang.String filterText(java.lang.String)
-com.github.mustachejava.DefaultMustacheFactory: com.google.common.cache.LoadingCache createMustacheCache()
-com.github.mustachejava.DefaultMustacheFactory: com.google.common.cache.LoadingCache createLambdaCache()
-com.github.mustachejava.DefaultMustacheFactory$FragmentCacheLoader
-com.github.mustachejava.DefaultMustacheFactory$FragmentCacheLoader: com.github.mustachejava.DefaultMustacheFactory this$0
-com.github.mustachejava.DefaultMustacheFactory$FragmentCacheLoader: DefaultMustacheFactory$FragmentCacheLoader(com.github.mustachejava.DefaultMustacheFactory)
-com.github.mustachejava.DefaultMustacheFactory$FragmentCacheLoader: com.github.mustachejava.Mustache load(com.github.mustachejava.FragmentKey)
-com.github.mustachejava.DefaultMustacheFactory$FragmentCacheLoader: java.lang.Object load(java.lang.Object)
-com.github.mustachejava.DefaultMustacheFactory$MustacheCacheLoader
-com.github.mustachejava.DefaultMustacheFactory$MustacheCacheLoader: com.github.mustachejava.DefaultMustacheFactory this$0
-com.github.mustachejava.DefaultMustacheFactory$MustacheCacheLoader: DefaultMustacheFactory$MustacheCacheLoader(com.github.mustachejava.DefaultMustacheFactory)
-com.github.mustachejava.DefaultMustacheFactory$MustacheCacheLoader: com.github.mustachejava.Mustache load(java.lang.String)
-com.github.mustachejava.DefaultMustacheFactory$MustacheCacheLoader: java.lang.Object load(java.lang.Object)
-com.github.mustachejava.DefaultMustacheVisitor
-com.github.mustachejava.DefaultMustacheVisitor: java.util.logging.Logger logger
-com.github.mustachejava.DefaultMustacheVisitor: com.github.mustachejava.Code EOF
-com.github.mustachejava.DefaultMustacheVisitor: java.util.List list
-com.github.mustachejava.DefaultMustacheVisitor: java.util.Map handlers
-com.github.mustachejava.DefaultMustacheVisitor: com.github.mustachejava.DefaultMustacheFactory df
-com.github.mustachejava.DefaultMustacheVisitor: DefaultMustacheVisitor(com.github.mustachejava.DefaultMustacheFactory)
-com.github.mustachejava.DefaultMustacheVisitor: void addPragmaHandler(java.lang.String,com.github.mustachejava.PragmaHandler)
-com.github.mustachejava.DefaultMustacheVisitor: com.github.mustachejava.Mustache mustache(com.github.mustachejava.TemplateContext)
-com.github.mustachejava.DefaultMustacheVisitor: void iterable(com.github.mustachejava.TemplateContext,java.lang.String,com.github.mustachejava.Mustache)
-com.github.mustachejava.DefaultMustacheVisitor: void notIterable(com.github.mustachejava.TemplateContext,java.lang.String,com.github.mustachejava.Mustache)
-com.github.mustachejava.DefaultMustacheVisitor: void name(com.github.mustachejava.TemplateContext,java.lang.String,com.github.mustachejava.Mustache)
-com.github.mustachejava.DefaultMustacheVisitor: void partial(com.github.mustachejava.TemplateContext,java.lang.String)
-com.github.mustachejava.DefaultMustacheVisitor: void value(com.github.mustachejava.TemplateContext,java.lang.String,boolean)
-com.github.mustachejava.DefaultMustacheVisitor: void write(com.github.mustachejava.TemplateContext,java.lang.String)
-com.github.mustachejava.DefaultMustacheVisitor: void pragma(com.github.mustachejava.TemplateContext,java.lang.String,java.lang.String)
-com.github.mustachejava.DefaultMustacheVisitor: void eof(com.github.mustachejava.TemplateContext)
-com.github.mustachejava.DefaultMustacheVisitor: void extend(com.github.mustachejava.TemplateContext,java.lang.String,com.github.mustachejava.Mustache)
-com.github.mustachejava.DefaultMustacheVisitor: void <clinit>()
-com.github.mustachejava.DefaultMustacheVisitor$1
-com.github.mustachejava.DefaultMustacheVisitor$1: com.github.mustachejava.DefaultMustacheVisitor this$0
-com.github.mustachejava.DefaultMustacheVisitor$1: DefaultMustacheVisitor$1(com.github.mustachejava.DefaultMustacheVisitor)
-com.github.mustachejava.DefaultMustacheVisitor$1$1
-com.github.mustachejava.DefaultMustacheVisitor$1$1: com.github.mustachejava.DefaultMustacheVisitor$1 this$1
-com.github.mustachejava.DefaultMustacheVisitor$1$1: DefaultMustacheVisitor$1$1(com.github.mustachejava.DefaultMustacheVisitor$1)
-com.github.mustachejava.DefaultMustacheVisitor$1$1: com.github.mustachejava.Code handle(java.lang.String,java.lang.String)
-com.github.mustachejava.DefaultMustacheVisitor$1$1$1
-com.github.mustachejava.DefaultMustacheVisitor$1$1$1: com.github.mustachejava.DefaultMustacheVisitor$1$1 this$2
-com.github.mustachejava.DefaultMustacheVisitor$1$1$1: DefaultMustacheVisitor$1$1$1(com.github.mustachejava.DefaultMustacheVisitor$1$1)
-com.github.mustachejava.DefaultMustacheVisitor$1$1$1: java.io.Writer execute(java.io.Writer,java.lang.Object[])
-com.github.mustachejava.DeferringMustacheFactory
-com.github.mustachejava.DeferringMustacheFactory: java.lang.Object DEFERRED
-com.github.mustachejava.DeferringMustacheFactory: DeferringMustacheFactory()
-com.github.mustachejava.DeferringMustacheFactory: DeferringMustacheFactory(java.lang.String)
-com.github.mustachejava.DeferringMustacheFactory: DeferringMustacheFactory(java.io.File)
-com.github.mustachejava.DeferringMustacheFactory: com.github.mustachejava.MustacheVisitor createMustacheVisitor()
-com.github.mustachejava.DeferringMustacheFactory: void writeTarget(java.io.Writer,java.lang.Long)
-com.github.mustachejava.DeferringMustacheFactory: void writeDeferral(java.lang.StringBuilder,com.github.mustachejava.DeferringMustacheFactory$Deferral,java.lang.Object)
-com.github.mustachejava.DeferringMustacheFactory: void <clinit>()
-com.github.mustachejava.DeferringMustacheFactory$1
-com.github.mustachejava.DeferringMustacheFactory$1: java.util.concurrent.atomic.AtomicLong val$id
-com.github.mustachejava.DeferringMustacheFactory$1: com.github.mustachejava.DeferringMustacheFactory this$0
-com.github.mustachejava.DeferringMustacheFactory$1: DeferringMustacheFactory$1(com.github.mustachejava.DeferringMustacheFactory,com.github.mustachejava.DefaultMustacheFactory,java.util.concurrent.atomic.AtomicLong)
-com.github.mustachejava.DeferringMustacheFactory$1: void partial(com.github.mustachejava.TemplateContext,java.lang.String)
-com.github.mustachejava.DeferringMustacheFactory$1$1
-com.github.mustachejava.DeferringMustacheFactory$1$1: com.github.mustachejava.util.Wrapper deferredWrapper
-com.github.mustachejava.DeferringMustacheFactory$1$1: java.lang.Long val$divid
-com.github.mustachejava.DeferringMustacheFactory$1$1: com.github.mustachejava.DeferringMustacheFactory$1 this$1
-com.github.mustachejava.DeferringMustacheFactory$1$1: DeferringMustacheFactory$1$1(com.github.mustachejava.DeferringMustacheFactory$1,com.github.mustachejava.TemplateContext,com.github.mustachejava.DefaultMustacheFactory,java.lang.String,java.lang.Long)
-com.github.mustachejava.DeferringMustacheFactory$1$1: java.io.Writer execute(java.io.Writer,java.lang.Object[])
-com.github.mustachejava.DeferringMustacheFactory$1$1: com.github.mustachejava.DeferringMustacheFactory$DeferredCallable getDeferred(java.lang.Object[])
-com.github.mustachejava.DeferringMustacheFactory$1$1: java.lang.Object[] access$000(com.github.mustachejava.DeferringMustacheFactory$1$1,java.lang.Object[],java.lang.Object)
-com.github.mustachejava.DeferringMustacheFactory$1$1: com.github.mustachejava.Mustache access$100(com.github.mustachejava.DeferringMustacheFactory$1$1)
-com.github.mustachejava.DeferringMustacheFactory$1$1$1
-com.github.mustachejava.DeferringMustacheFactory$1$1$1: java.lang.Object[] val$scopes
-com.github.mustachejava.DeferringMustacheFactory$1$1$1: java.lang.Object val$object
-com.github.mustachejava.DeferringMustacheFactory$1$1$1: com.github.mustachejava.DeferringMustacheFactory$1$1 this$2
-com.github.mustachejava.DeferringMustacheFactory$1$1$1: DeferringMustacheFactory$1$1$1(com.github.mustachejava.DeferringMustacheFactory$1$1,java.lang.Object[],java.lang.Object)
-com.github.mustachejava.DeferringMustacheFactory$1$1$1: java.lang.Object call()
-com.github.mustachejava.DeferringMustacheFactory$Deferral
-com.github.mustachejava.DeferringMustacheFactory$Deferral: long id
-com.github.mustachejava.DeferringMustacheFactory$Deferral: java.util.concurrent.Future future
-com.github.mustachejava.DeferringMustacheFactory$Deferral: DeferringMustacheFactory$Deferral(long,java.util.concurrent.Future)
-com.github.mustachejava.DeferringMustacheFactory$DeferredCallable
-com.github.mustachejava.DeferringMustacheFactory$DeferredCallable: java.util.List deferrals
-com.github.mustachejava.DeferringMustacheFactory$DeferredCallable: DeferringMustacheFactory$DeferredCallable()
-com.github.mustachejava.DeferringMustacheFactory$DeferredCallable: void add(com.github.mustachejava.DeferringMustacheFactory$Deferral)
-com.github.mustachejava.DeferringMustacheFactory$DeferredCallable: java.lang.String call()
-com.github.mustachejava.DeferringMustacheFactory$DeferredCallable: java.lang.Object call()
-com.github.mustachejava.FallbackMustacheFactory
-com.github.mustachejava.FallbackMustacheFactory: java.lang.Object[] resourceRoots
-com.github.mustachejava.FallbackMustacheFactory: FallbackMustacheFactory(java.lang.String,java.lang.String)
-com.github.mustachejava.FallbackMustacheFactory: FallbackMustacheFactory(java.io.File,java.io.File)
-com.github.mustachejava.FallbackMustacheFactory: FallbackMustacheFactory(java.lang.Object[])
-com.github.mustachejava.FallbackMustacheFactory: java.io.Reader getReader(java.lang.String)
-com.github.mustachejava.FragmentKey
-com.github.mustachejava.FragmentKey: com.github.mustachejava.TemplateContext tc
-com.github.mustachejava.FragmentKey: java.lang.String templateText
-com.github.mustachejava.FragmentKey: FragmentKey(com.github.mustachejava.TemplateContext,java.lang.String)
-com.github.mustachejava.FragmentKey: boolean equals(java.lang.Object)
-com.github.mustachejava.FragmentKey: int hashCode()
-com.github.mustachejava.Iteration
-com.github.mustachejava.Iteration: java.io.Writer next(java.io.Writer,java.lang.Object,java.lang.Object[])
-com.github.mustachejava.Mustache
-com.github.mustachejava.Mustache: void append(java.lang.String)
-com.github.mustachejava.Mustache: java.lang.Object clone()
-com.github.mustachejava.Mustache: java.io.Writer execute(java.io.Writer,java.lang.Object)
-com.github.mustachejava.Mustache: java.io.Writer execute(java.io.Writer,java.lang.Object[])
-com.github.mustachejava.Mustache: com.github.mustachejava.Code[] getCodes()
-com.github.mustachejava.Mustache: void identity(java.io.Writer)
-com.github.mustachejava.Mustache: void init()
-com.github.mustachejava.Mustache: void setCodes(com.github.mustachejava.Code[])
-com.github.mustachejava.Mustache: java.io.Writer run(java.io.Writer,java.lang.Object[])
-com.github.mustachejava.MustacheException
-com.github.mustachejava.MustacheException: MustacheException()
-com.github.mustachejava.MustacheException: MustacheException(java.lang.String)
-com.github.mustachejava.MustacheException: MustacheException(java.lang.String,java.lang.Throwable)
-com.github.mustachejava.MustacheException: MustacheException(java.lang.Throwable)
-com.github.mustachejava.MustacheFactory
-com.github.mustachejava.MustacheFactory: com.github.mustachejava.MustacheVisitor createMustacheVisitor()
-com.github.mustachejava.MustacheFactory: java.io.Reader getReader(java.lang.String)
-com.github.mustachejava.MustacheFactory: void encode(java.lang.String,java.io.Writer)
-com.github.mustachejava.MustacheFactory: com.github.mustachejava.ObjectHandler getObjectHandler()
-com.github.mustachejava.MustacheFactory: com.github.mustachejava.Mustache compile(java.lang.String)
-com.github.mustachejava.MustacheFactory: com.github.mustachejava.Mustache compile(java.io.Reader,java.lang.String)
-com.github.mustachejava.MustacheFactory: java.lang.String translate(java.lang.String)
-com.github.mustachejava.MustacheParser
-com.github.mustachejava.MustacheParser: java.lang.String DEFAULT_SM
-com.github.mustachejava.MustacheParser: java.lang.String DEFAULT_EM
-com.github.mustachejava.MustacheParser: com.github.mustachejava.MustacheFactory cf
-com.github.mustachejava.MustacheParser: MustacheParser(com.github.mustachejava.MustacheFactory)
-com.github.mustachejava.MustacheParser: com.github.mustachejava.Mustache compile(java.lang.String)
-com.github.mustachejava.MustacheParser: com.github.mustachejava.Mustache compile(java.io.Reader,java.lang.String)
-com.github.mustachejava.MustacheParser: com.github.mustachejava.Mustache compile(java.io.Reader,java.lang.String,java.lang.String,java.lang.String)
-com.github.mustachejava.MustacheParser: com.github.mustachejava.Mustache compile(java.io.Reader,java.lang.String,java.util.concurrent.atomic.AtomicInteger,java.lang.String,java.lang.String,java.lang.String)
-com.github.mustachejava.MustacheParser: java.lang.StringBuilder write(com.github.mustachejava.MustacheVisitor,java.lang.StringBuilder,java.lang.String,int)
-com.github.mustachejava.MustacheTimeoutException
-com.github.mustachejava.MustacheTimeoutException: MustacheTimeoutException()
-com.github.mustachejava.MustacheVisitor
-com.github.mustachejava.MustacheVisitor: com.github.mustachejava.Mustache mustache(com.github.mustachejava.TemplateContext)
-com.github.mustachejava.MustacheVisitor: void iterable(com.github.mustachejava.TemplateContext,java.lang.String,com.github.mustachejava.Mustache)
-com.github.mustachejava.MustacheVisitor: void notIterable(com.github.mustachejava.TemplateContext,java.lang.String,com.github.mustachejava.Mustache)
-com.github.mustachejava.MustacheVisitor: void partial(com.github.mustachejava.TemplateContext,java.lang.String)
-com.github.mustachejava.MustacheVisitor: void value(com.github.mustachejava.TemplateContext,java.lang.String,boolean)
-com.github.mustachejava.MustacheVisitor: void write(com.github.mustachejava.TemplateContext,java.lang.String)
-com.github.mustachejava.MustacheVisitor: void pragma(com.github.mustachejava.TemplateContext,java.lang.String,java.lang.String)
-com.github.mustachejava.MustacheVisitor: void eof(com.github.mustachejava.TemplateContext)
-com.github.mustachejava.MustacheVisitor: void extend(com.github.mustachejava.TemplateContext,java.lang.String,com.github.mustachejava.Mustache)
-com.github.mustachejava.MustacheVisitor: void name(com.github.mustachejava.TemplateContext,java.lang.String,com.github.mustachejava.Mustache)
-com.github.mustachejava.ObjectHandler
-com.github.mustachejava.ObjectHandler: com.github.mustachejava.util.Wrapper find(java.lang.String,java.lang.Object[])
-com.github.mustachejava.ObjectHandler: java.lang.Object coerce(java.lang.Object)
-com.github.mustachejava.ObjectHandler: java.io.Writer iterate(com.github.mustachejava.Iteration,java.io.Writer,java.lang.Object,java.lang.Object[])
-com.github.mustachejava.ObjectHandler: java.io.Writer falsey(com.github.mustachejava.Iteration,java.io.Writer,java.lang.Object,java.lang.Object[])
-com.github.mustachejava.ObjectHandler: com.github.mustachejava.Binding createBinding(java.lang.String,com.github.mustachejava.TemplateContext,com.github.mustachejava.Code)
-com.github.mustachejava.ObjectHandler: java.lang.String stringify(java.lang.Object)
-com.github.mustachejava.PragmaHandler
-com.github.mustachejava.PragmaHandler: com.github.mustachejava.Code handle(java.lang.String,java.lang.String)
-com.github.mustachejava.TemplateContext
-com.github.mustachejava.TemplateContext: java.lang.String sm
-com.github.mustachejava.TemplateContext: java.lang.String em
-com.github.mustachejava.TemplateContext: java.lang.String file
-com.github.mustachejava.TemplateContext: int line
-com.github.mustachejava.TemplateContext: TemplateContext(java.lang.String,java.lang.String,java.lang.String,int)
-com.github.mustachejava.TemplateContext: java.lang.String startChars()
-com.github.mustachejava.TemplateContext: java.lang.String endChars()
-com.github.mustachejava.TemplateContext: java.lang.String file()
-com.github.mustachejava.TemplateContext: int line()
-com.github.mustachejava.TemplateContext: boolean equals(java.lang.Object)
-com.github.mustachejava.TemplateContext: int hashCode()
-com.github.mustachejava.TemplateFunction
-com.github.mustachejava.TypeCheckingHandler
-com.github.mustachejava.TypeCheckingHandler: TypeCheckingHandler()
-com.github.mustachejava.TypeCheckingHandler: com.github.mustachejava.util.Wrapper find(java.lang.String,java.lang.Object[])
-com.github.mustachejava.TypeCheckingHandler: com.github.mustachejava.Binding createBinding(java.lang.String,com.github.mustachejava.TemplateContext,com.github.mustachejava.Code)
-com.github.mustachejava.TypeCheckingHandler: java.io.Writer falsey(com.github.mustachejava.Iteration,java.io.Writer,java.lang.Object,java.lang.Object[])
-com.github.mustachejava.TypeCheckingHandler: java.io.Writer iterate(com.github.mustachejava.Iteration,java.io.Writer,java.lang.Object,java.lang.Object[])
-com.github.mustachejava.TypeCheckingHandler: java.lang.String stringify(java.lang.Object)
-com.github.mustachejava.TypeCheckingHandler$1
-com.github.mustachejava.TypeCheckingHandler$1: java.lang.reflect.AccessibleObject val$member
-com.github.mustachejava.TypeCheckingHandler$1: com.github.mustachejava.TypeCheckingHandler this$0
-com.github.mustachejava.TypeCheckingHandler$1: TypeCheckingHandler$1(com.github.mustachejava.TypeCheckingHandler,java.lang.reflect.AccessibleObject)
-com.github.mustachejava.TypeCheckingHandler$1: java.lang.Object call(java.lang.Object[])
-com.github.mustachejava.TypeCheckingHandler$2
-com.github.mustachejava.TypeCheckingHandler$2: java.lang.String val$name
-com.github.mustachejava.TypeCheckingHandler$2: com.github.mustachejava.TypeCheckingHandler this$0
-com.github.mustachejava.TypeCheckingHandler$2: TypeCheckingHandler$2(com.github.mustachejava.TypeCheckingHandler,java.lang.String)
-com.github.mustachejava.TypeCheckingHandler$2: java.lang.Object get(java.lang.Object[])
-com.github.mustachejava.codes.DefaultCode
-com.github.mustachejava.codes.DefaultCode: java.lang.String appended
-com.github.mustachejava.codes.DefaultCode: com.github.mustachejava.Mustache mustache
-com.github.mustachejava.codes.DefaultCode: com.github.mustachejava.ObjectHandler oh
-com.github.mustachejava.codes.DefaultCode: java.lang.String name
-com.github.mustachejava.codes.DefaultCode: com.github.mustachejava.TemplateContext tc
-com.github.mustachejava.codes.DefaultCode: java.lang.String type
-com.github.mustachejava.codes.DefaultCode: boolean returnThis
-com.github.mustachejava.codes.DefaultCode: com.github.mustachejava.Binding binding
-com.github.mustachejava.codes.DefaultCode: com.github.mustachejava.DefaultMustacheFactory df
-com.github.mustachejava.codes.DefaultCode: java.lang.Object clone()
-com.github.mustachejava.codes.DefaultCode: java.lang.Object clone(java.util.Set)
-com.github.mustachejava.codes.DefaultCode: DefaultCode()
-com.github.mustachejava.codes.DefaultCode: DefaultCode(com.github.mustachejava.TemplateContext,com.github.mustachejava.DefaultMustacheFactory,com.github.mustachejava.Mustache,java.lang.String,java.lang.String)
-com.github.mustachejava.codes.DefaultCode: com.github.mustachejava.Code[] getCodes()
-com.github.mustachejava.codes.DefaultCode: void init()
-com.github.mustachejava.codes.DefaultCode: void setCodes(com.github.mustachejava.Code[])
-com.github.mustachejava.codes.DefaultCode: java.lang.Object get(java.lang.Object[])
-com.github.mustachejava.codes.DefaultCode: java.io.Writer execute(java.io.Writer,java.lang.Object)
-com.github.mustachejava.codes.DefaultCode: java.io.Writer execute(java.io.Writer,java.lang.Object[])
-com.github.mustachejava.codes.DefaultCode: void identity(java.io.Writer)
-com.github.mustachejava.codes.DefaultCode: void runIdentity(java.io.Writer)
-com.github.mustachejava.codes.DefaultCode: void tag(java.io.Writer,java.lang.String)
-com.github.mustachejava.codes.DefaultCode: java.io.Writer appendText(java.io.Writer)
-com.github.mustachejava.codes.DefaultCode: java.io.Writer run(java.io.Writer,java.lang.Object[])
-com.github.mustachejava.codes.DefaultCode: void append(java.lang.String)
-com.github.mustachejava.codes.DefaultCode: java.lang.Object[] addScope(java.lang.Object[],java.lang.Object)
-com.github.mustachejava.codes.DefaultMustache
-com.github.mustachejava.codes.DefaultMustache: com.github.mustachejava.Code[] codes
-com.github.mustachejava.codes.DefaultMustache: boolean inited
-com.github.mustachejava.codes.DefaultMustache: DefaultMustache(com.github.mustachejava.TemplateContext,com.github.mustachejava.DefaultMustacheFactory,com.github.mustachejava.Code[],java.lang.String)
-com.github.mustachejava.codes.DefaultMustache: com.github.mustachejava.Code[] getCodes()
-com.github.mustachejava.codes.DefaultMustache: java.io.Writer run(java.io.Writer,java.lang.Object[])
-com.github.mustachejava.codes.DefaultMustache: void setCodes(com.github.mustachejava.Code[])
-com.github.mustachejava.codes.DefaultMustache: void identity(java.io.Writer)
-com.github.mustachejava.codes.DefaultMustache: void init()
-com.github.mustachejava.codes.ExtendCode
-com.github.mustachejava.codes.ExtendCode: com.github.mustachejava.MustacheFactory mf
-com.github.mustachejava.codes.ExtendCode: ExtendCode(com.github.mustachejava.TemplateContext,com.github.mustachejava.DefaultMustacheFactory,com.github.mustachejava.Mustache,java.lang.String)
-com.github.mustachejava.codes.ExtendCode: com.github.mustachejava.Code[] replaceCodes(com.github.mustachejava.Code[],java.util.Map,java.util.Set)
-com.github.mustachejava.codes.ExtendCode: void init()
-com.github.mustachejava.codes.ExtendNameCode
-com.github.mustachejava.codes.ExtendNameCode: ExtendNameCode(com.github.mustachejava.TemplateContext,com.github.mustachejava.DefaultMustacheFactory,com.github.mustachejava.Mustache,java.lang.String)
-com.github.mustachejava.codes.ExtendNameCode: java.lang.String getName()
-com.github.mustachejava.codes.IterableCode
-com.github.mustachejava.codes.IterableCode: java.util.concurrent.ExecutorService les
-com.github.mustachejava.codes.IterableCode: IterableCode(com.github.mustachejava.TemplateContext,com.github.mustachejava.DefaultMustacheFactory,com.github.mustachejava.Mustache,java.lang.String)
-com.github.mustachejava.codes.IterableCode: java.io.Writer execute(java.io.Writer,java.lang.Object[])
-com.github.mustachejava.codes.IterableCode: java.io.Writer handle(java.io.Writer,java.lang.Object,java.lang.Object[])
-com.github.mustachejava.codes.IterableCode: java.io.Writer handleCallable(java.io.Writer,java.util.concurrent.Callable,java.lang.Object[])
-com.github.mustachejava.codes.IterableCode: java.io.Writer handleFunction(java.io.Writer,com.google.common.base.Function,java.lang.Object[])
-com.github.mustachejava.codes.IterableCode: java.io.Writer writeTemplate(java.io.Writer,java.lang.String,java.lang.Object[])
-com.github.mustachejava.codes.IterableCode: java.io.Writer execute(java.io.Writer,java.lang.Object,java.lang.Object[])
-com.github.mustachejava.codes.IterableCode: java.io.Writer next(java.io.Writer,java.lang.Object,java.lang.Object[])
-com.github.mustachejava.codes.IterableCode: java.io.Writer access$000(com.github.mustachejava.codes.IterableCode,java.io.Writer,java.lang.Object,java.lang.Object[])
-com.github.mustachejava.codes.IterableCode$1
-com.github.mustachejava.codes.IterableCode$1: java.util.concurrent.Callable val$callable
-com.github.mustachejava.codes.IterableCode$1: java.io.Writer val$originalWriter
-com.github.mustachejava.codes.IterableCode$1: java.lang.Object[] val$newScopes
-com.github.mustachejava.codes.IterableCode$1: com.github.mustachejava.util.LatchedWriter val$latchedWriter
-com.github.mustachejava.codes.IterableCode$1: com.github.mustachejava.codes.IterableCode this$0
-com.github.mustachejava.codes.IterableCode$1: IterableCode$1(com.github.mustachejava.codes.IterableCode,java.util.concurrent.Callable,java.io.Writer,java.lang.Object[],com.github.mustachejava.util.LatchedWriter)
-com.github.mustachejava.codes.IterableCode$1: void run()
-com.github.mustachejava.codes.NotIterableCode
-com.github.mustachejava.codes.NotIterableCode: NotIterableCode(com.github.mustachejava.TemplateContext,com.github.mustachejava.DefaultMustacheFactory,com.github.mustachejava.Mustache,java.lang.String)
-com.github.mustachejava.codes.NotIterableCode: java.io.Writer execute(java.io.Writer,java.lang.Object[])
-com.github.mustachejava.codes.NotIterableCode: java.io.Writer next(java.io.Writer,java.lang.Object,java.lang.Object[])
-com.github.mustachejava.codes.PartialCode
-com.github.mustachejava.codes.PartialCode: java.lang.String extension
-com.github.mustachejava.codes.PartialCode: com.github.mustachejava.Mustache partial
-com.github.mustachejava.codes.PartialCode: PartialCode(com.github.mustachejava.TemplateContext,com.github.mustachejava.DefaultMustacheFactory,com.github.mustachejava.Mustache,java.lang.String,java.lang.String)
-com.github.mustachejava.codes.PartialCode: PartialCode(com.github.mustachejava.TemplateContext,com.github.mustachejava.DefaultMustacheFactory,java.lang.String)
-com.github.mustachejava.codes.PartialCode: void identity(java.io.Writer)
-com.github.mustachejava.codes.PartialCode: com.github.mustachejava.Code[] getCodes()
-com.github.mustachejava.codes.PartialCode: void setCodes(com.github.mustachejava.Code[])
-com.github.mustachejava.codes.PartialCode: java.io.Writer execute(java.io.Writer,java.lang.Object[])
-com.github.mustachejava.codes.PartialCode: void init()
-com.github.mustachejava.codes.PartialCode: java.lang.String partialName()
-com.github.mustachejava.codes.ValueCode
-com.github.mustachejava.codes.ValueCode: boolean encoded
-com.github.mustachejava.codes.ValueCode: java.util.concurrent.ExecutorService les
-com.github.mustachejava.codes.ValueCode: void identity(java.io.Writer)
-com.github.mustachejava.codes.ValueCode: ValueCode(com.github.mustachejava.TemplateContext,com.github.mustachejava.DefaultMustacheFactory,java.lang.String,boolean)
-com.github.mustachejava.codes.ValueCode: java.io.Writer execute(java.io.Writer,java.lang.Object[])
-com.github.mustachejava.codes.ValueCode: java.io.Writer handleCallable(java.io.Writer,java.util.concurrent.Callable,java.lang.Object[])
-com.github.mustachejava.codes.ValueCode: void handleFunction(java.io.Writer,com.google.common.base.Function,java.lang.Object[])
-com.github.mustachejava.codes.ValueCode: void execute(java.io.Writer,java.lang.String)
-com.github.mustachejava.codes.ValueCode$1
-com.github.mustachejava.codes.ValueCode$1: java.util.concurrent.Callable val$callable
-com.github.mustachejava.codes.ValueCode$1: java.io.Writer val$finalWriter
-com.github.mustachejava.codes.ValueCode$1: com.github.mustachejava.util.LatchedWriter val$latchedWriter
-com.github.mustachejava.codes.ValueCode$1: com.github.mustachejava.codes.ValueCode this$0
-com.github.mustachejava.codes.ValueCode$1: ValueCode$1(com.github.mustachejava.codes.ValueCode,java.util.concurrent.Callable,java.io.Writer,com.github.mustachejava.util.LatchedWriter)
-com.github.mustachejava.codes.ValueCode$1: void run()
-com.github.mustachejava.codes.WriteCode
-com.github.mustachejava.codes.WriteCode: WriteCode(com.github.mustachejava.DefaultMustacheFactory,java.lang.String)
-com.github.mustachejava.codes.WriteCode: void identity(java.io.Writer)
-com.github.mustachejava.functions.BundleFunctions
-com.github.mustachejava.functions.BundleFunctions: BundleFunctions()
-com.github.mustachejava.functions.BundleFunctions: com.google.common.base.Function newPreTranslate(java.lang.String,java.util.Locale)
-com.github.mustachejava.functions.BundleFunctions: com.google.common.base.Function newPreTranslateNullableLabel(java.lang.String,java.util.Locale)
-com.github.mustachejava.functions.BundleFunctions: com.google.common.base.Function newPostTranslate(java.lang.String,java.util.Locale)
-com.github.mustachejava.functions.BundleFunctions: com.google.common.base.Function newPostTranslateNullableLabel(java.lang.String,java.util.Locale)
-com.github.mustachejava.functions.BundleFunctions$1
-com.github.mustachejava.functions.BundleFunctions$BundleFunc
-com.github.mustachejava.functions.BundleFunctions$BundleFunc: java.util.ResourceBundle res
-com.github.mustachejava.functions.BundleFunctions$BundleFunc: boolean returnLabels
-com.github.mustachejava.functions.BundleFunctions$BundleFunc: BundleFunctions$BundleFunc(java.lang.String,java.util.Locale,boolean)
-com.github.mustachejava.functions.BundleFunctions$BundleFunc: java.lang.String lookup(java.lang.String)
-com.github.mustachejava.functions.BundleFunctions$PostTranslateFunc
-com.github.mustachejava.functions.BundleFunctions$PostTranslateFunc: BundleFunctions$PostTranslateFunc(java.lang.String,java.util.Locale,boolean)
-com.github.mustachejava.functions.BundleFunctions$PostTranslateFunc: java.lang.Object apply(java.lang.Object)
-com.github.mustachejava.functions.BundleFunctions$PostTranslateFunc: BundleFunctions$PostTranslateFunc(java.lang.String,java.util.Locale,boolean,com.github.mustachejava.functions.BundleFunctions$1)
-com.github.mustachejava.functions.BundleFunctions$PreTranslateFunc
-com.github.mustachejava.functions.BundleFunctions$PreTranslateFunc: BundleFunctions$PreTranslateFunc(java.lang.String,java.util.Locale,boolean)
-com.github.mustachejava.functions.BundleFunctions$PreTranslateFunc: java.lang.String apply(java.lang.String)
-com.github.mustachejava.functions.BundleFunctions$PreTranslateFunc: java.lang.Object apply(java.lang.Object)
-com.github.mustachejava.functions.BundleFunctions$PreTranslateFunc: BundleFunctions$PreTranslateFunc(java.lang.String,java.util.Locale,boolean,com.github.mustachejava.functions.BundleFunctions$1)
-com.github.mustachejava.functions.CommentFunction
-com.github.mustachejava.functions.CommentFunction: CommentFunction()
-com.github.mustachejava.functions.CommentFunction: java.lang.String apply(java.lang.String)
-com.github.mustachejava.functions.CommentFunction: java.lang.Object apply(java.lang.Object)
-com.github.mustachejava.functions.TranslateBundleFunction
-com.github.mustachejava.functions.TranslateBundleFunction: java.util.ResourceBundle res
-com.github.mustachejava.functions.TranslateBundleFunction: TranslateBundleFunction(java.lang.String,java.util.Locale)
-com.github.mustachejava.functions.TranslateBundleFunction: java.lang.String apply(java.lang.String)
-com.github.mustachejava.functions.TranslateBundleFunction: java.lang.Object apply(java.lang.Object)
-com.github.mustachejava.jruby.JRubyObjectHandler
-com.github.mustachejava.jruby.JRubyObjectHandler: java.lang.reflect.Method CALL_METHOD
-com.github.mustachejava.jruby.JRubyObjectHandler: org.jruby.embed.ScriptingContainer sc
-com.github.mustachejava.jruby.JRubyObjectHandler: JRubyObjectHandler()
-com.github.mustachejava.jruby.JRubyObjectHandler: java.lang.Object coerce(java.lang.Object)
-com.github.mustachejava.jruby.JRubyObjectHandler: com.github.mustachejava.util.Wrapper findWrapper(int,com.github.mustachejava.util.Wrapper[],java.util.List,java.lang.Object,java.lang.String)
-com.github.mustachejava.jruby.JRubyObjectHandler: org.jruby.embed.ScriptingContainer access$000()
-com.github.mustachejava.jruby.JRubyObjectHandler: void <clinit>()
-com.github.mustachejava.jruby.JRubyObjectHandler$1
-com.github.mustachejava.jruby.JRubyObjectHandler$1: org.jruby.RubyProc val$proc
-com.github.mustachejava.jruby.JRubyObjectHandler$1: com.github.mustachejava.jruby.JRubyObjectHandler this$0
-com.github.mustachejava.jruby.JRubyObjectHandler$1: JRubyObjectHandler$1(com.github.mustachejava.jruby.JRubyObjectHandler,org.jruby.RubyProc)
-com.github.mustachejava.jruby.JRubyObjectHandler$1: java.lang.String apply(java.lang.String)
-com.github.mustachejava.jruby.JRubyObjectHandler$1: java.lang.Object apply(java.lang.Object)
-com.github.mustachejava.jruby.JRubyObjectHandler$2
-com.github.mustachejava.jruby.JRubyObjectHandler$2: int val$scopeIndex
-com.github.mustachejava.jruby.JRubyObjectHandler$2: org.jruby.RubySymbol val$rs
-com.github.mustachejava.jruby.JRubyObjectHandler$2: com.github.mustachejava.jruby.JRubyObjectHandler this$0
-com.github.mustachejava.jruby.JRubyObjectHandler$2: JRubyObjectHandler$2(com.github.mustachejava.jruby.JRubyObjectHandler,int,org.jruby.RubySymbol)
-com.github.mustachejava.jruby.JRubyObjectHandler$2: boolean apply(java.lang.Object[])
-com.github.mustachejava.jruby.JRubyObjectHandler$3
-com.github.mustachejava.jruby.JRubyObjectHandler$3: int val$scopeIndex
-com.github.mustachejava.jruby.JRubyObjectHandler$3: org.jruby.RubySymbol val$rs
-com.github.mustachejava.jruby.JRubyObjectHandler$3: com.github.mustachejava.jruby.JRubyObjectHandler this$0
-com.github.mustachejava.jruby.JRubyObjectHandler$3: JRubyObjectHandler$3(com.github.mustachejava.jruby.JRubyObjectHandler,int,org.jruby.RubySymbol)
-com.github.mustachejava.jruby.JRubyObjectHandler$3: boolean apply(java.lang.Object[])
-com.github.mustachejava.jruby.JRubyObjectHandler$4
-com.github.mustachejava.jruby.JRubyObjectHandler$4: int val$scopeIndex
-com.github.mustachejava.jruby.JRubyObjectHandler$4: java.lang.String val$name
-com.github.mustachejava.jruby.JRubyObjectHandler$4: com.github.mustachejava.jruby.JRubyObjectHandler this$0
-com.github.mustachejava.jruby.JRubyObjectHandler$4: JRubyObjectHandler$4(com.github.mustachejava.jruby.JRubyObjectHandler,int,java.lang.String)
-com.github.mustachejava.jruby.JRubyObjectHandler$4: boolean apply(java.lang.Object[])
-com.github.mustachejava.jruby.JRubyObjectHandler$5
-com.github.mustachejava.jruby.JRubyObjectHandler$5: int val$scopeIndex
-com.github.mustachejava.jruby.JRubyObjectHandler$5: java.lang.String val$name
-com.github.mustachejava.jruby.JRubyObjectHandler$5: com.github.mustachejava.jruby.JRubyObjectHandler this$0
-com.github.mustachejava.jruby.JRubyObjectHandler$5: JRubyObjectHandler$5(com.github.mustachejava.jruby.JRubyObjectHandler,int,java.lang.String)
-com.github.mustachejava.jruby.JRubyObjectHandler$5: boolean apply(java.lang.Object[])
-com.github.mustachejava.reflect.BaseObjectHandler
-com.github.mustachejava.reflect.BaseObjectHandler: BaseObjectHandler()
-com.github.mustachejava.reflect.BaseObjectHandler: java.lang.Object coerce(java.lang.Object)
-com.github.mustachejava.reflect.BaseObjectHandler: java.io.Writer falsey(com.github.mustachejava.Iteration,java.io.Writer,java.lang.Object,java.lang.Object[])
-com.github.mustachejava.reflect.BaseObjectHandler: com.github.mustachejava.Binding createBinding(java.lang.String,com.github.mustachejava.TemplateContext,com.github.mustachejava.Code)
-com.github.mustachejava.reflect.BaseObjectHandler: java.io.Writer iterate(com.github.mustachejava.Iteration,java.io.Writer,java.lang.Object,java.lang.Object[])
-com.github.mustachejava.reflect.BaseObjectHandler: java.lang.reflect.Field getField(java.lang.Class,java.lang.String)
-com.github.mustachejava.reflect.BaseObjectHandler: java.lang.reflect.Method getMethod(java.lang.Class,java.lang.String,java.lang.Class[])
-com.github.mustachejava.reflect.BaseObjectHandler: java.lang.reflect.AccessibleObject findMember(java.lang.Class,java.lang.String)
-com.github.mustachejava.reflect.BaseObjectHandler: void checkMethod(java.lang.reflect.Method)
-com.github.mustachejava.reflect.BaseObjectHandler: void checkField(java.lang.reflect.Field)
-com.github.mustachejava.reflect.BaseObjectHandler: java.lang.String stringify(java.lang.Object)
-com.github.mustachejava.reflect.Guard
-com.github.mustachejava.reflect.Guard: boolean apply(java.lang.Object[])
-com.github.mustachejava.reflect.GuardedBinding
-com.github.mustachejava.reflect.GuardedBinding: java.util.logging.Logger logger
-com.github.mustachejava.reflect.GuardedBinding: boolean debug
-com.github.mustachejava.reflect.GuardedBinding: com.github.mustachejava.ObjectHandler oh
-com.github.mustachejava.reflect.GuardedBinding: com.github.mustachejava.TemplateContext tc
-com.github.mustachejava.reflect.GuardedBinding: java.lang.String name
-com.github.mustachejava.reflect.GuardedBinding: com.github.mustachejava.Code code
-com.github.mustachejava.reflect.GuardedBinding: java.util.Set previousSet
-com.github.mustachejava.reflect.GuardedBinding: com.github.mustachejava.util.Wrapper[] prevWrappers
-com.github.mustachejava.reflect.GuardedBinding: GuardedBinding(com.github.mustachejava.ObjectHandler,java.lang.String,com.github.mustachejava.TemplateContext,com.github.mustachejava.Code)
-com.github.mustachejava.reflect.GuardedBinding: java.lang.Object get(java.lang.Object[])
-com.github.mustachejava.reflect.GuardedBinding: java.lang.Object createAndGet(java.lang.Object[])
-com.github.mustachejava.reflect.GuardedBinding: com.github.mustachejava.util.Wrapper getWrapper(java.lang.String,java.lang.Object[])
-com.github.mustachejava.reflect.GuardedBinding: void <clinit>()
-com.github.mustachejava.reflect.GuardedWrapper
-com.github.mustachejava.reflect.GuardedWrapper: com.github.mustachejava.util.GuardException guardException
-com.github.mustachejava.reflect.GuardedWrapper: com.github.mustachejava.reflect.Guard[] guards
-com.github.mustachejava.reflect.GuardedWrapper: int hashCode
-com.github.mustachejava.reflect.GuardedWrapper: GuardedWrapper(com.github.mustachejava.reflect.Guard[])
-com.github.mustachejava.reflect.GuardedWrapper: java.lang.Object call(java.lang.Object[])
-com.github.mustachejava.reflect.GuardedWrapper: void guardCall(java.lang.Object[])
-com.github.mustachejava.reflect.GuardedWrapper: int hashCode()
-com.github.mustachejava.reflect.GuardedWrapper: boolean equals(java.lang.Object)
-com.github.mustachejava.reflect.GuardedWrapper: com.github.mustachejava.reflect.Guard[] getGuards()
-com.github.mustachejava.reflect.GuardedWrapper: void <clinit>()
-com.github.mustachejava.reflect.MissingWrapper
-com.github.mustachejava.reflect.MissingWrapper: MissingWrapper(com.github.mustachejava.reflect.Guard[])
-com.github.mustachejava.reflect.ReflectionObjectHandler
-com.github.mustachejava.reflect.ReflectionObjectHandler: java.lang.reflect.Method MAP_METHOD
-com.github.mustachejava.reflect.ReflectionObjectHandler: ReflectionObjectHandler()
-com.github.mustachejava.reflect.ReflectionObjectHandler: java.lang.Object unwrap(com.github.mustachejava.ObjectHandler,int,com.github.mustachejava.util.Wrapper[],java.lang.Object[])
-com.github.mustachejava.reflect.ReflectionObjectHandler: com.github.mustachejava.util.Wrapper find(java.lang.String,java.lang.Object[])
-com.github.mustachejava.reflect.ReflectionObjectHandler: com.github.mustachejava.util.Wrapper findWrapper(int,com.github.mustachejava.util.Wrapper[],java.util.List,java.lang.Object,java.lang.String)
-com.github.mustachejava.reflect.ReflectionObjectHandler: com.github.mustachejava.reflect.MissingWrapper createMissingWrapper(java.util.List)
-com.github.mustachejava.reflect.ReflectionObjectHandler: com.github.mustachejava.reflect.guards.DotGuard createDotGuard(int,java.lang.Object,java.lang.String)
-com.github.mustachejava.reflect.ReflectionObjectHandler: com.github.mustachejava.reflect.guards.WrappedGuard createWrappedGuard(int,java.util.List,java.util.List)
-com.github.mustachejava.reflect.ReflectionObjectHandler: com.github.mustachejava.reflect.guards.NullGuard createNullGuard()
-com.github.mustachejava.reflect.ReflectionObjectHandler: com.github.mustachejava.reflect.guards.DepthGuard createDepthGuard(int)
-com.github.mustachejava.reflect.ReflectionObjectHandler: com.github.mustachejava.reflect.guards.ClassGuard createClassGuard(int,java.lang.Object)
-com.github.mustachejava.reflect.ReflectionObjectHandler: com.github.mustachejava.reflect.guards.MapGuard createMapGuard(int,com.github.mustachejava.util.Wrapper[],java.lang.String,boolean)
-com.github.mustachejava.reflect.ReflectionObjectHandler: com.github.mustachejava.util.Wrapper createWrapper(int,com.github.mustachejava.util.Wrapper[],java.util.List,java.lang.reflect.AccessibleObject,java.lang.Object[])
-com.github.mustachejava.reflect.ReflectionObjectHandler: com.github.mustachejava.Binding createBinding(java.lang.String,com.github.mustachejava.TemplateContext,com.github.mustachejava.Code)
-com.github.mustachejava.reflect.ReflectionObjectHandler: boolean areMethodsAccessible(java.util.Map)
-com.github.mustachejava.reflect.ReflectionObjectHandler: void <clinit>()
-com.github.mustachejava.reflect.ReflectionWrapper
-com.github.mustachejava.reflect.ReflectionWrapper: int scopeIndex
-com.github.mustachejava.reflect.ReflectionWrapper: com.github.mustachejava.util.Wrapper[] wrappers
-com.github.mustachejava.reflect.ReflectionWrapper: com.github.mustachejava.ObjectHandler oh
-com.github.mustachejava.reflect.ReflectionWrapper: java.lang.reflect.Method method
-com.github.mustachejava.reflect.ReflectionWrapper: java.lang.reflect.Field field
-com.github.mustachejava.reflect.ReflectionWrapper: java.lang.Object[] arguments
-com.github.mustachejava.reflect.ReflectionWrapper: ReflectionWrapper(int,com.github.mustachejava.util.Wrapper[],com.github.mustachejava.reflect.Guard[],java.lang.reflect.AccessibleObject,java.lang.Object[],com.github.mustachejava.ObjectHandler)
-com.github.mustachejava.reflect.ReflectionWrapper: ReflectionWrapper(com.github.mustachejava.reflect.ReflectionWrapper)
-com.github.mustachejava.reflect.ReflectionWrapper: java.lang.Object unwrap(java.lang.Object[])
-com.github.mustachejava.reflect.ReflectionWrapper: java.lang.Object call(java.lang.Object[])
-com.github.mustachejava.reflect.ReflectionWrapper: java.lang.reflect.Method getMethod()
-com.github.mustachejava.reflect.ReflectionWrapper: java.lang.reflect.Field getField()
-com.github.mustachejava.reflect.ReflectionWrapper: java.lang.Object[] getArguments()
-com.github.mustachejava.reflect.ReflectionWrapper: java.lang.String toString()
-com.github.mustachejava.reflect.ReflectionWrapper: com.github.mustachejava.util.Wrapper[] getWrappers()
-com.github.mustachejava.reflect.SimpleObjectHandler
-com.github.mustachejava.reflect.SimpleObjectHandler: java.util.Map cache
-com.github.mustachejava.reflect.SimpleObjectHandler: java.lang.reflect.AccessibleObject NONE
-com.github.mustachejava.reflect.SimpleObjectHandler: SimpleObjectHandler()
-com.github.mustachejava.reflect.SimpleObjectHandler: com.github.mustachejava.Binding createBinding(java.lang.String,com.github.mustachejava.TemplateContext,com.github.mustachejava.Code)
-com.github.mustachejava.reflect.SimpleObjectHandler: com.github.mustachejava.util.Wrapper find(java.lang.String,java.lang.Object[])
-com.github.mustachejava.reflect.SimpleObjectHandler: java.lang.reflect.AccessibleObject lookup(java.lang.Class,java.lang.String)
-com.github.mustachejava.reflect.SimpleObjectHandler: boolean areMethodsAccessible(java.util.Map)
-com.github.mustachejava.reflect.SimpleObjectHandler: java.lang.reflect.AccessibleObject access$000(com.github.mustachejava.reflect.SimpleObjectHandler,java.lang.Class,java.lang.String)
-com.github.mustachejava.reflect.SimpleObjectHandler: void <clinit>()
-com.github.mustachejava.reflect.SimpleObjectHandler$1
-com.github.mustachejava.reflect.SimpleObjectHandler$1: com.github.mustachejava.util.Wrapper wrapper
-com.github.mustachejava.reflect.SimpleObjectHandler$1: java.lang.String val$name
-com.github.mustachejava.reflect.SimpleObjectHandler$1: com.github.mustachejava.reflect.SimpleObjectHandler this$0
-com.github.mustachejava.reflect.SimpleObjectHandler$1: SimpleObjectHandler$1(com.github.mustachejava.reflect.SimpleObjectHandler,java.lang.String)
-com.github.mustachejava.reflect.SimpleObjectHandler$1: java.lang.Object get(java.lang.Object[])
-com.github.mustachejava.reflect.SimpleObjectHandler$2
-com.github.mustachejava.reflect.SimpleObjectHandler$2: java.lang.String val$name
-com.github.mustachejava.reflect.SimpleObjectHandler$2: com.github.mustachejava.reflect.SimpleObjectHandler this$0
-com.github.mustachejava.reflect.SimpleObjectHandler$2: SimpleObjectHandler$2(com.github.mustachejava.reflect.SimpleObjectHandler,java.lang.String)
-com.github.mustachejava.reflect.SimpleObjectHandler$2: java.lang.Object call(java.lang.Object[])
-com.github.mustachejava.reflect.SimpleObjectHandler$WrapperKey
-com.github.mustachejava.reflect.SimpleObjectHandler$WrapperKey: java.lang.Class aClass
-com.github.mustachejava.reflect.SimpleObjectHandler$WrapperKey: java.lang.String name
-com.github.mustachejava.reflect.SimpleObjectHandler$WrapperKey: int hashcode
-com.github.mustachejava.reflect.SimpleObjectHandler$WrapperKey: SimpleObjectHandler$WrapperKey(java.lang.Class,java.lang.String)
-com.github.mustachejava.reflect.SimpleObjectHandler$WrapperKey: int hashCode()
-com.github.mustachejava.reflect.SimpleObjectHandler$WrapperKey: boolean equals(java.lang.Object)
-com.github.mustachejava.reflect.guards.ClassGuard
-com.github.mustachejava.reflect.guards.ClassGuard: java.lang.Class classGuard
-com.github.mustachejava.reflect.guards.ClassGuard: int scopeIndex
-com.github.mustachejava.reflect.guards.ClassGuard: ClassGuard(int,java.lang.Object)
-com.github.mustachejava.reflect.guards.ClassGuard: int hashCode()
-com.github.mustachejava.reflect.guards.ClassGuard: boolean equals(java.lang.Object)
-com.github.mustachejava.reflect.guards.ClassGuard: boolean apply(java.lang.Object[])
-com.github.mustachejava.reflect.guards.DepthGuard
-com.github.mustachejava.reflect.guards.DepthGuard: int length
-com.github.mustachejava.reflect.guards.DepthGuard: DepthGuard(int)
-com.github.mustachejava.reflect.guards.DepthGuard: int hashCode()
-com.github.mustachejava.reflect.guards.DepthGuard: boolean equals(java.lang.Object)
-com.github.mustachejava.reflect.guards.DepthGuard: boolean apply(java.lang.Object[])
-com.github.mustachejava.reflect.guards.DotGuard
-com.github.mustachejava.reflect.guards.DotGuard: java.lang.String lookup
-com.github.mustachejava.reflect.guards.DotGuard: int scopeIndex
-com.github.mustachejava.reflect.guards.DotGuard: java.lang.Class classGuard
-com.github.mustachejava.reflect.guards.DotGuard: DotGuard(java.lang.String,int,java.lang.Object)
-com.github.mustachejava.reflect.guards.DotGuard: int hashCode()
-com.github.mustachejava.reflect.guards.DotGuard: boolean equals(java.lang.Object)
-com.github.mustachejava.reflect.guards.DotGuard: boolean apply(java.lang.Object[])
-com.github.mustachejava.reflect.guards.MapGuard
-com.github.mustachejava.reflect.guards.MapGuard: com.github.mustachejava.ObjectHandler oh
-com.github.mustachejava.reflect.guards.MapGuard: int scopeIndex
-com.github.mustachejava.reflect.guards.MapGuard: java.lang.String name
-com.github.mustachejava.reflect.guards.MapGuard: boolean contains
-com.github.mustachejava.reflect.guards.MapGuard: com.github.mustachejava.util.Wrapper[] wrappers
-com.github.mustachejava.reflect.guards.MapGuard: MapGuard(com.github.mustachejava.ObjectHandler,int,java.lang.String,boolean,com.github.mustachejava.util.Wrapper[])
-com.github.mustachejava.reflect.guards.MapGuard: boolean apply(java.lang.Object[])
-com.github.mustachejava.reflect.guards.NullGuard
-com.github.mustachejava.reflect.guards.NullGuard: NullGuard()
-com.github.mustachejava.reflect.guards.NullGuard: boolean apply(java.lang.Object[])
-com.github.mustachejava.reflect.guards.WrappedGuard
-com.github.mustachejava.reflect.guards.WrappedGuard: com.github.mustachejava.ObjectHandler oh
-com.github.mustachejava.reflect.guards.WrappedGuard: int index
-com.github.mustachejava.reflect.guards.WrappedGuard: com.github.mustachejava.util.Wrapper[] wrappers
-com.github.mustachejava.reflect.guards.WrappedGuard: java.util.List wrapperGuard
-com.github.mustachejava.reflect.guards.WrappedGuard: WrappedGuard(com.github.mustachejava.ObjectHandler,int,java.util.List,java.util.List)
-com.github.mustachejava.reflect.guards.WrappedGuard: boolean apply(java.lang.Object[])
-com.github.mustachejava.util.CapturingMustacheVisitor
-com.github.mustachejava.util.CapturingMustacheVisitor: com.github.mustachejava.util.CapturingMustacheVisitor$Captured captured
-com.github.mustachejava.util.CapturingMustacheVisitor: CapturingMustacheVisitor(com.github.mustachejava.DefaultMustacheFactory,com.github.mustachejava.util.CapturingMustacheVisitor$Captured)
-com.github.mustachejava.util.CapturingMustacheVisitor: void value(com.github.mustachejava.TemplateContext,java.lang.String,boolean)
-com.github.mustachejava.util.CapturingMustacheVisitor: void iterable(com.github.mustachejava.TemplateContext,java.lang.String,com.github.mustachejava.Mustache)
-com.github.mustachejava.util.CapturingMustacheVisitor: void notIterable(com.github.mustachejava.TemplateContext,java.lang.String,com.github.mustachejava.Mustache)
-com.github.mustachejava.util.CapturingMustacheVisitor: com.github.mustachejava.util.CapturingMustacheVisitor$Captured access$000(com.github.mustachejava.util.CapturingMustacheVisitor)
-com.github.mustachejava.util.CapturingMustacheVisitor$1
-com.github.mustachejava.util.CapturingMustacheVisitor$1: com.github.mustachejava.util.CapturingMustacheVisitor this$0
-com.github.mustachejava.util.CapturingMustacheVisitor$1: CapturingMustacheVisitor$1(com.github.mustachejava.util.CapturingMustacheVisitor,com.github.mustachejava.TemplateContext,com.github.mustachejava.DefaultMustacheFactory,java.lang.String,boolean)
-com.github.mustachejava.util.CapturingMustacheVisitor$1: java.lang.Object get(java.lang.Object[])
-com.github.mustachejava.util.CapturingMustacheVisitor$2
-com.github.mustachejava.util.CapturingMustacheVisitor$2: com.github.mustachejava.util.CapturingMustacheVisitor this$0
-com.github.mustachejava.util.CapturingMustacheVisitor$2: CapturingMustacheVisitor$2(com.github.mustachejava.util.CapturingMustacheVisitor,com.github.mustachejava.TemplateContext,com.github.mustachejava.DefaultMustacheFactory,com.github.mustachejava.Mustache,java.lang.String)
-com.github.mustachejava.util.CapturingMustacheVisitor$2: java.io.Writer execute(java.io.Writer,java.lang.Object[])
-com.github.mustachejava.util.CapturingMustacheVisitor$2: java.io.Writer next(java.io.Writer,java.lang.Object,java.lang.Object[])
-com.github.mustachejava.util.CapturingMustacheVisitor$2: java.lang.Object get(java.lang.Object[])
-com.github.mustachejava.util.CapturingMustacheVisitor$3
-com.github.mustachejava.util.CapturingMustacheVisitor$3: boolean called
-com.github.mustachejava.util.CapturingMustacheVisitor$3: com.github.mustachejava.util.CapturingMustacheVisitor this$0
-com.github.mustachejava.util.CapturingMustacheVisitor$3: CapturingMustacheVisitor$3(com.github.mustachejava.util.CapturingMustacheVisitor,com.github.mustachejava.TemplateContext,com.github.mustachejava.DefaultMustacheFactory,com.github.mustachejava.Mustache,java.lang.String)
-com.github.mustachejava.util.CapturingMustacheVisitor$3: java.lang.Object get(java.lang.Object[])
-com.github.mustachejava.util.CapturingMustacheVisitor$3: java.io.Writer next(java.io.Writer,java.lang.Object,java.lang.Object[])
-com.github.mustachejava.util.CapturingMustacheVisitor$3: java.io.Writer execute(java.io.Writer,java.lang.Object[])
-com.github.mustachejava.util.CapturingMustacheVisitor$Captured
-com.github.mustachejava.util.CapturingMustacheVisitor$Captured: void value(java.lang.String,java.lang.String)
-com.github.mustachejava.util.CapturingMustacheVisitor$Captured: void arrayStart(java.lang.String)
-com.github.mustachejava.util.CapturingMustacheVisitor$Captured: void arrayEnd()
-com.github.mustachejava.util.CapturingMustacheVisitor$Captured: void objectStart()
-com.github.mustachejava.util.CapturingMustacheVisitor$Captured: void objectEnd()
-com.github.mustachejava.util.GuardException
-com.github.mustachejava.util.GuardException: GuardException()
-com.github.mustachejava.util.HtmlEscaper
-com.github.mustachejava.util.HtmlEscaper: HtmlEscaper()
-com.github.mustachejava.util.HtmlEscaper: void escape(java.lang.String,java.io.Writer,boolean)
-com.github.mustachejava.util.HtmlEscaper: int append(java.lang.String,java.io.Writer,int,int,java.lang.String)
-com.github.mustachejava.util.HtmlEscaper: boolean matchesEntityRef(int,int,java.lang.String)
-com.github.mustachejava.util.HtmlEscaper: boolean matchesCharRef(int,int,java.lang.String)
-com.github.mustachejava.util.HtmlState
-com.github.mustachejava.util.HtmlState: java.util.logging.Logger l
-com.github.mustachejava.util.HtmlState: com.github.mustachejava.util.HtmlState$HTML state
-com.github.mustachejava.util.HtmlState: com.github.mustachejava.util.HtmlState$HTML quoteState
-com.github.mustachejava.util.HtmlState: com.github.mustachejava.util.HtmlState$HTML bodyState
-com.github.mustachejava.util.HtmlState: com.github.mustachejava.util.RingBuffer ringBuffer
-com.github.mustachejava.util.HtmlState: com.github.mustachejava.util.HtmlState$HTML getState()
-com.github.mustachejava.util.HtmlState: HtmlState()
-com.github.mustachejava.util.HtmlState: HtmlState(com.github.mustachejava.util.HtmlState$HTML)
-com.github.mustachejava.util.HtmlState: void nextState(char[],int,int)
-com.github.mustachejava.util.HtmlState: void scriptCheck(char)
-com.github.mustachejava.util.HtmlState: void cssCheck(char)
-com.github.mustachejava.util.HtmlState: void pragma(char)
-com.github.mustachejava.util.HtmlState: void scriptSqValue(char)
-com.github.mustachejava.util.HtmlState: void scriptDqValue(char)
-com.github.mustachejava.util.HtmlState: void script(char)
-com.github.mustachejava.util.HtmlState: void css(char)
-com.github.mustachejava.util.HtmlState: void afterEndTagName(char)
-com.github.mustachejava.util.HtmlState: void endTagName(char)
-com.github.mustachejava.util.HtmlState: void endTag(char)
-com.github.mustachejava.util.HtmlState: boolean nameStart(char)
-com.github.mustachejava.util.HtmlState: void comment(char)
-com.github.mustachejava.util.HtmlState: void nqValue(char)
-com.github.mustachejava.util.HtmlState: void escape()
-com.github.mustachejava.util.HtmlState: void sqValue(char)
-com.github.mustachejava.util.HtmlState: void dqValue(char)
-com.github.mustachejava.util.HtmlState: void attrEqual(char)
-com.github.mustachejava.util.HtmlState: boolean ws(char)
-com.github.mustachejava.util.HtmlState: void attrName(char)
-com.github.mustachejava.util.HtmlState: void attr(char)
-com.github.mustachejava.util.HtmlState: void tagName(char)
-com.github.mustachejava.util.HtmlState: boolean namePart(char)
-com.github.mustachejava.util.HtmlState: void setBodyTag()
-com.github.mustachejava.util.HtmlState: void tag(char)
-com.github.mustachejava.util.HtmlState: void error(char)
-com.github.mustachejava.util.HtmlState: void body(char)
-com.github.mustachejava.util.HtmlState: java.lang.Object getState()
-com.github.mustachejava.util.HtmlState: void <clinit>()
-com.github.mustachejava.util.HtmlState$1
-com.github.mustachejava.util.HtmlState$1: int[] $SwitchMap$com$github$mustachejava$util$HtmlState$HTML
-com.github.mustachejava.util.HtmlState$1: void <clinit>()
-com.github.mustachejava.util.HtmlState$HTML
-com.github.mustachejava.util.HtmlState$HTML: com.github.mustachejava.util.HtmlState$HTML ATTRIBUTES
-com.github.mustachejava.util.HtmlState$HTML: com.github.mustachejava.util.HtmlState$HTML BODY
-com.github.mustachejava.util.HtmlState$HTML: com.github.mustachejava.util.HtmlState$HTML TAG
-com.github.mustachejava.util.HtmlState$HTML: com.github.mustachejava.util.HtmlState$HTML ATTR_NAME
-com.github.mustachejava.util.HtmlState$HTML: com.github.mustachejava.util.HtmlState$HTML ATTR_EQUAL
-com.github.mustachejava.util.HtmlState$HTML: com.github.mustachejava.util.HtmlState$HTML DQ_VALUE
-com.github.mustachejava.util.HtmlState$HTML: com.github.mustachejava.util.HtmlState$HTML SCRIPT_DQ_VALUE
-com.github.mustachejava.util.HtmlState$HTML: com.github.mustachejava.util.HtmlState$HTML TAG_NAME
-com.github.mustachejava.util.HtmlState$HTML: com.github.mustachejava.util.HtmlState$HTML END_TAG
-com.github.mustachejava.util.HtmlState$HTML: com.github.mustachejava.util.HtmlState$HTML END_TAG_NAME
-com.github.mustachejava.util.HtmlState$HTML: com.github.mustachejava.util.HtmlState$HTML ESCAPE
-com.github.mustachejava.util.HtmlState$HTML: com.github.mustachejava.util.HtmlState$HTML SCRIPT
-com.github.mustachejava.util.HtmlState$HTML: com.github.mustachejava.util.HtmlState$HTML SCRIPT_SQ_VALUE
-com.github.mustachejava.util.HtmlState$HTML: com.github.mustachejava.util.HtmlState$HTML SCRIPT_CHECK
-com.github.mustachejava.util.HtmlState$HTML: com.github.mustachejava.util.HtmlState$HTML AFTER_END_TAG_NAME
-com.github.mustachejava.util.HtmlState$HTML: com.github.mustachejava.util.HtmlState$HTML SQ_VALUE
-com.github.mustachejava.util.HtmlState$HTML: com.github.mustachejava.util.HtmlState$HTML NQ_VALUE
-com.github.mustachejava.util.HtmlState$HTML: com.github.mustachejava.util.HtmlState$HTML PRAGMA
-com.github.mustachejava.util.HtmlState$HTML: com.github.mustachejava.util.HtmlState$HTML COMMENT
-com.github.mustachejava.util.HtmlState$HTML: com.github.mustachejava.util.HtmlState$HTML CSS
-com.github.mustachejava.util.HtmlState$HTML: com.github.mustachejava.util.HtmlState$HTML CSS_CHECK
-com.github.mustachejava.util.HtmlState$HTML: com.github.mustachejava.util.HtmlState$HTML[] $VALUES
-com.github.mustachejava.util.HtmlState$HTML: com.github.mustachejava.util.HtmlState$HTML[] values()
-com.github.mustachejava.util.HtmlState$HTML: com.github.mustachejava.util.HtmlState$HTML valueOf(java.lang.String)
-com.github.mustachejava.util.HtmlState$HTML: HtmlState$HTML(java.lang.String,int)
-com.github.mustachejava.util.HtmlState$HTML: void <clinit>()
-com.github.mustachejava.util.LatchedWriter
-com.github.mustachejava.util.LatchedWriter: java.util.concurrent.CountDownLatch latch
-com.github.mustachejava.util.LatchedWriter: java.lang.StringBuilder buffer
-com.github.mustachejava.util.LatchedWriter: java.io.Writer writer
-com.github.mustachejava.util.LatchedWriter: java.lang.Throwable e
-com.github.mustachejava.util.LatchedWriter: LatchedWriter(java.io.Writer)
-com.github.mustachejava.util.LatchedWriter: void done()
-com.github.mustachejava.util.LatchedWriter: void failed(java.lang.Throwable)
-com.github.mustachejava.util.LatchedWriter: void write(char[],int,int)
-com.github.mustachejava.util.LatchedWriter: void checkException()
-com.github.mustachejava.util.LatchedWriter: void flush()
-com.github.mustachejava.util.LatchedWriter: void close()
-com.github.mustachejava.util.LatchedWriter: void await()
-com.github.mustachejava.util.RingBuffer
-com.github.mustachejava.util.RingBuffer: int ringSize
-com.github.mustachejava.util.RingBuffer: int ringHash
-com.github.mustachejava.util.RingBuffer: char[] ring
-com.github.mustachejava.util.RingBuffer: int length
-com.github.mustachejava.util.RingBuffer: RingBuffer(int)
-com.github.mustachejava.util.RingBuffer: void append(char)
-com.github.mustachejava.util.RingBuffer: void clear()
-com.github.mustachejava.util.RingBuffer: boolean compare(java.lang.String,boolean)
-com.github.mustachejava.util.State
-com.github.mustachejava.util.State: void nextState(char[],int,int)
-com.github.mustachejava.util.State: java.lang.Object getState()
-com.github.mustachejava.util.StateAwareWriter
-com.github.mustachejava.util.StateAwareWriter: java.io.Writer writer
-com.github.mustachejava.util.StateAwareWriter: com.github.mustachejava.util.State state
-com.github.mustachejava.util.StateAwareWriter: StateAwareWriter(java.io.Writer,com.github.mustachejava.util.State)
-com.github.mustachejava.util.StateAwareWriter: void write(char[],int,int)
-com.github.mustachejava.util.StateAwareWriter: void flush()
-com.github.mustachejava.util.StateAwareWriter: void close()
-com.github.mustachejava.util.Wrapper
-com.github.mustachejava.util.Wrapper: java.lang.Object call(java.lang.Object[])
 com.github.rtyley.android.sherlock.android.accounts.SherlockAccountAuthenticatorActivity
 com.github.rtyley.android.sherlock.android.accounts.SherlockAccountAuthenticatorActivity: android.accounts.AccountAuthenticatorResponse mAccountAuthenticatorResponse
 com.github.rtyley.android.sherlock.android.accounts.SherlockAccountAuthenticatorActivity: android.os.Bundle mResultBundle
@@ -3863,532 +3200,29 @@ com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockListFragment
 com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockListFragment: RoboSherlockListFragment()
 com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockListFragment: void onCreate(android.os.Bundle)
 com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockListFragment: void onViewCreated(android.view.View,android.os.Bundle)
-com.google.common.base.Absent
-com.google.common.base.AbstractIterator$State
-com.google.common.base.AbstractIterator$State: com.google.common.base.AbstractIterator$State[] values()
-com.google.common.base.AbstractIterator$State: com.google.common.base.AbstractIterator$State valueOf(java.lang.String)
-com.google.common.base.CaseFormat
-com.google.common.base.CaseFormat: com.google.common.base.CaseFormat[] values()
-com.google.common.base.CaseFormat: com.google.common.base.CaseFormat valueOf(java.lang.String)
-com.google.common.base.Enums$ValueOfFunction
-com.google.common.base.Equivalence$Equals
-com.google.common.base.Equivalence$EquivalentToPredicate
-com.google.common.base.Equivalence$EquivalentToPredicate: java.lang.Object target
-com.google.common.base.Equivalence$Identity
-com.google.common.base.Equivalence$Wrapper
-com.google.common.base.Equivalence$Wrapper: java.lang.Object reference
 com.google.common.base.FinalizableReference: void finalizeReferent()
-com.google.common.base.FunctionalEquivalence
-com.google.common.base.Functions$ConstantFunction
-com.google.common.base.Functions$ForMapWithDefault
-com.google.common.base.Functions$FunctionComposition
-com.google.common.base.Functions$FunctionForMapNoDefault
-com.google.common.base.Functions$IdentityFunction
-com.google.common.base.Functions$IdentityFunction: com.google.common.base.Functions$IdentityFunction[] values()
-com.google.common.base.Functions$IdentityFunction: com.google.common.base.Functions$IdentityFunction valueOf(java.lang.String)
-com.google.common.base.Functions$PredicateFunction
-com.google.common.base.Functions$SupplierFunction
-com.google.common.base.Functions$ToStringFunction
-com.google.common.base.Functions$ToStringFunction: com.google.common.base.Functions$ToStringFunction[] values()
-com.google.common.base.Functions$ToStringFunction: com.google.common.base.Functions$ToStringFunction valueOf(java.lang.String)
-com.google.common.base.Optional
-com.google.common.base.PairwiseEquivalence
-com.google.common.base.Predicates$AndPredicate
-com.google.common.base.Predicates$AssignableFromPredicate
-com.google.common.base.Predicates$CompositionPredicate
-com.google.common.base.Predicates$ContainsPatternPredicate
-com.google.common.base.Predicates$InPredicate
-com.google.common.base.Predicates$InstanceOfPredicate
-com.google.common.base.Predicates$IsEqualToPredicate
-com.google.common.base.Predicates$NotPredicate
-com.google.common.base.Predicates$ObjectPredicate
-com.google.common.base.Predicates$ObjectPredicate: com.google.common.base.Predicates$ObjectPredicate[] values()
-com.google.common.base.Predicates$ObjectPredicate: com.google.common.base.Predicates$ObjectPredicate valueOf(java.lang.String)
-com.google.common.base.Predicates$ObjectPredicate$1
-com.google.common.base.Predicates$ObjectPredicate$2
-com.google.common.base.Predicates$ObjectPredicate$3
-com.google.common.base.Predicates$ObjectPredicate$4
-com.google.common.base.Predicates$OrPredicate
-com.google.common.base.Present
-com.google.common.base.Suppliers$ExpiringMemoizingSupplier
-com.google.common.base.Suppliers$MemoizingSupplier
-com.google.common.base.Suppliers$SupplierComposition
-com.google.common.base.Suppliers$SupplierFunction
-com.google.common.base.Suppliers$SupplierFunction: com.google.common.base.Suppliers$SupplierFunction[] values()
-com.google.common.base.Suppliers$SupplierFunction: com.google.common.base.Suppliers$SupplierFunction valueOf(java.lang.String)
-com.google.common.base.Suppliers$SupplierOfInstance
-com.google.common.base.Suppliers$ThreadSafeSupplier
 com.google.common.base.internal.Finalizer: java.lang.ref.ReferenceQueue startFinalizer(java.lang.Class,java.lang.Object)
 com.google.common.base.internal.Finalizer$ShutDown
-com.google.common.cache.CacheBuilder$NullListener
-com.google.common.cache.CacheBuilder$NullListener: com.google.common.cache.CacheBuilder$NullListener[] values()
-com.google.common.cache.CacheBuilder$NullListener: com.google.common.cache.CacheBuilder$NullListener valueOf(java.lang.String)
-com.google.common.cache.CacheBuilder$OneWeigher
-com.google.common.cache.CacheBuilder$OneWeigher: com.google.common.cache.CacheBuilder$OneWeigher[] values()
-com.google.common.cache.CacheBuilder$OneWeigher: com.google.common.cache.CacheBuilder$OneWeigher valueOf(java.lang.String)
-com.google.common.cache.CacheLoader: CacheLoader()
-com.google.common.cache.CacheLoader: java.lang.Object load(java.lang.Object)
-com.google.common.cache.CacheLoader: com.google.common.util.concurrent.ListenableFuture reload(java.lang.Object,java.lang.Object)
-com.google.common.cache.CacheLoader: java.util.Map loadAll(java.lang.Iterable)
-com.google.common.cache.CacheLoader: com.google.common.cache.CacheLoader from(com.google.common.base.Function)
-com.google.common.cache.CacheLoader: com.google.common.cache.CacheLoader from(com.google.common.base.Supplier)
-com.google.common.cache.CacheLoader$FunctionToCacheLoader
-com.google.common.cache.CacheLoader$InvalidCacheLoadException
-com.google.common.cache.CacheLoader$SupplierToCacheLoader
-com.google.common.cache.CacheLoader$UnsupportedLoadingOperationException
-com.google.common.cache.LocalCache: com.google.common.cache.CacheLoader defaultLoader
-com.google.common.cache.LocalCache$EntryFactory
-com.google.common.cache.LocalCache$EntryFactory: com.google.common.cache.LocalCache$EntryFactory[] values()
-com.google.common.cache.LocalCache$EntryFactory: com.google.common.cache.LocalCache$EntryFactory valueOf(java.lang.String)
-com.google.common.cache.LocalCache$EntryFactory$1
-com.google.common.cache.LocalCache$EntryFactory$2
-com.google.common.cache.LocalCache$EntryFactory$3
-com.google.common.cache.LocalCache$EntryFactory$4
-com.google.common.cache.LocalCache$EntryFactory$5
-com.google.common.cache.LocalCache$EntryFactory$6
-com.google.common.cache.LocalCache$EntryFactory$7
-com.google.common.cache.LocalCache$EntryFactory$8
-com.google.common.cache.LocalCache$LoadingSerializationProxy
-com.google.common.cache.LocalCache$LocalLoadingCache
-com.google.common.cache.LocalCache$LocalManualCache
-com.google.common.cache.LocalCache$ManualSerializationProxy
-com.google.common.cache.LocalCache$NullEntry
-com.google.common.cache.LocalCache$NullEntry: com.google.common.cache.LocalCache$NullEntry[] values()
-com.google.common.cache.LocalCache$NullEntry: com.google.common.cache.LocalCache$NullEntry valueOf(java.lang.String)
-com.google.common.cache.LocalCache$Segment
-com.google.common.cache.LocalCache$Strength
-com.google.common.cache.LocalCache$Strength: com.google.common.cache.LocalCache$Strength[] values()
-com.google.common.cache.LocalCache$Strength: com.google.common.cache.LocalCache$Strength valueOf(java.lang.String)
-com.google.common.cache.LocalCache$Strength$1
-com.google.common.cache.LocalCache$Strength$2
-com.google.common.cache.LocalCache$Strength$3
-com.google.common.cache.LongAdder
-com.google.common.cache.RemovalCause
-com.google.common.cache.RemovalCause: com.google.common.cache.RemovalCause[] values()
-com.google.common.cache.RemovalCause: com.google.common.cache.RemovalCause valueOf(java.lang.String)
-com.google.common.cache.RemovalCause$1
-com.google.common.cache.RemovalCause$2
-com.google.common.cache.RemovalCause$3
-com.google.common.cache.RemovalCause$4
-com.google.common.cache.RemovalCause$5
-com.google.common.cache.RemovalNotification: java.lang.Object key
-com.google.common.cache.RemovalNotification: java.lang.Object value
-com.google.common.cache.Striped64
-com.google.common.collect.AbstractBiMap
-com.google.common.collect.AbstractBiMap$Inverse
-com.google.common.collect.AbstractIterator$State
-com.google.common.collect.AbstractIterator$State: com.google.common.collect.AbstractIterator$State[] values()
-com.google.common.collect.AbstractIterator$State: com.google.common.collect.AbstractIterator$State valueOf(java.lang.String)
-com.google.common.collect.AbstractListMultimap
-com.google.common.collect.AbstractMapBasedMultiset
-com.google.common.collect.AbstractMultimap
-com.google.common.collect.AbstractSetMultimap
-com.google.common.collect.AbstractSortedSetMultimap
-com.google.common.collect.AllEqualOrdering
-com.google.common.collect.ArrayListMultimap
-com.google.common.collect.ArrayTable
 com.google.common.collect.AsynchronousComputationException
-com.google.common.collect.BoundType
-com.google.common.collect.BoundType: com.google.common.collect.BoundType[] values()
-com.google.common.collect.BoundType: com.google.common.collect.BoundType valueOf(java.lang.String)
-com.google.common.collect.BoundType$1
-com.google.common.collect.BoundType$2
-com.google.common.collect.ByFunctionOrdering
-com.google.common.collect.ComparatorOrdering
-com.google.common.collect.CompoundOrdering
 com.google.common.collect.ComputationException
 com.google.common.collect.ComputationException: long serialVersionUID
 com.google.common.collect.ComputationException: ComputationException(java.lang.Throwable)
-com.google.common.collect.ComputingConcurrentHashMap
-com.google.common.collect.ComputingConcurrentHashMap$ComputingMapAdapter
-com.google.common.collect.ComputingConcurrentHashMap$ComputingSegment
-com.google.common.collect.ComputingConcurrentHashMap$ComputingSerializationProxy
-com.google.common.collect.ConcurrentHashMultiset
-com.google.common.collect.Constraints$NotNullConstraint
-com.google.common.collect.Constraints$NotNullConstraint: com.google.common.collect.Constraints$NotNullConstraint[] values()
-com.google.common.collect.Constraints$NotNullConstraint: com.google.common.collect.Constraints$NotNullConstraint valueOf(java.lang.String)
-com.google.common.collect.ContiguousSet
-com.google.common.collect.Count
-com.google.common.collect.Cut
-com.google.common.collect.Cut$AboveAll
-com.google.common.collect.Cut$AboveValue
-com.google.common.collect.Cut$BelowAll
-com.google.common.collect.Cut$BelowValue
-com.google.common.collect.DescendingImmutableSortedMultiset
-com.google.common.collect.DescendingImmutableSortedMultiset$1
-com.google.common.collect.DiscreteDomains$BigIntegerDomain
-com.google.common.collect.DiscreteDomains$IntegerDomain
-com.google.common.collect.DiscreteDomains$LongDomain
-com.google.common.collect.EmptyContiguousSet
-com.google.common.collect.EmptyContiguousSet$SerializedForm
-com.google.common.collect.EmptyImmutableBiMap
-com.google.common.collect.EmptyImmutableList
-com.google.common.collect.EmptyImmutableListMultimap
-com.google.common.collect.EmptyImmutableMap
-com.google.common.collect.EmptyImmutableMultiset
-com.google.common.collect.EmptyImmutableSet
-com.google.common.collect.EmptyImmutableSetMultimap
-com.google.common.collect.EmptyImmutableSortedMap
-com.google.common.collect.EmptyImmutableSortedMultiset
-com.google.common.collect.EmptyImmutableSortedSet
-com.google.common.collect.EnumBiMap
-com.google.common.collect.EnumHashBiMap
-com.google.common.collect.EnumMultiset
-com.google.common.collect.ExplicitOrdering
-com.google.common.collect.GeneralRange
-com.google.common.collect.GeneralRange: java.lang.Object lowerEndpoint
-com.google.common.collect.GeneralRange: java.lang.Object upperEndpoint
-com.google.common.collect.GenericMapMaker$NullListener
-com.google.common.collect.GenericMapMaker$NullListener: com.google.common.collect.GenericMapMaker$NullListener[] values()
-com.google.common.collect.GenericMapMaker$NullListener: com.google.common.collect.GenericMapMaker$NullListener valueOf(java.lang.String)
-com.google.common.collect.HashBasedTable
-com.google.common.collect.HashBasedTable$Factory
-com.google.common.collect.HashBiMap
-com.google.common.collect.HashMultimap
-com.google.common.collect.HashMultiset
-com.google.common.collect.ImmutableAsList
-com.google.common.collect.ImmutableAsList$SerializedForm
-com.google.common.collect.ImmutableBiMap
-com.google.common.collect.ImmutableBiMap$SerializedForm
-com.google.common.collect.ImmutableCollection
-com.google.common.collect.ImmutableCollection$ArrayImmutableCollection
-com.google.common.collect.ImmutableCollection$EmptyImmutableCollection
-com.google.common.collect.ImmutableCollection$SerializedForm
-com.google.common.collect.ImmutableEntry
-com.google.common.collect.ImmutableEnumSet
-com.google.common.collect.ImmutableEnumSet$EnumSerializedForm
-com.google.common.collect.ImmutableList
-com.google.common.collect.ImmutableList$ReverseImmutableList
-com.google.common.collect.ImmutableList$SerializedForm
-com.google.common.collect.ImmutableList$SubList
-com.google.common.collect.ImmutableListMultimap
-com.google.common.collect.ImmutableMap
-com.google.common.collect.ImmutableMap$1
-com.google.common.collect.ImmutableMap$2
-com.google.common.collect.ImmutableMap$SerializedForm
-com.google.common.collect.ImmutableMapEntrySet
-com.google.common.collect.ImmutableMapEntrySet$EntrySetSerializedForm
-com.google.common.collect.ImmutableMapKeySet
-com.google.common.collect.ImmutableMapKeySet$1
-com.google.common.collect.ImmutableMapKeySet$KeySetSerializedForm
-com.google.common.collect.ImmutableMapValues
-com.google.common.collect.ImmutableMapValues$1
-com.google.common.collect.ImmutableMapValues$SerializedForm
-com.google.common.collect.ImmutableMultimap
-com.google.common.collect.ImmutableMultimap$BuilderMultimap
-com.google.common.collect.ImmutableMultimap$EntryCollection
-com.google.common.collect.ImmutableMultimap$Keys
-com.google.common.collect.ImmutableMultimap$Keys$KeysEntrySet
-com.google.common.collect.ImmutableMultimap$Keys$KeysEntrySet$1
-com.google.common.collect.ImmutableMultimap$Values
-com.google.common.collect.ImmutableMultiset
-com.google.common.collect.ImmutableMultiset$EntrySet
-com.google.common.collect.ImmutableMultiset$EntrySetSerializedForm
-com.google.common.collect.ImmutableMultiset$SerializedForm
-com.google.common.collect.ImmutableSet
-com.google.common.collect.ImmutableSet$ArrayImmutableSet
-com.google.common.collect.ImmutableSet$SerializedForm
-com.google.common.collect.ImmutableSetMultimap
-com.google.common.collect.ImmutableSetMultimap$BuilderMultimap
-com.google.common.collect.ImmutableSetMultimap$SortedKeyBuilderMultimap
-com.google.common.collect.ImmutableSortedAsList
-com.google.common.collect.ImmutableSortedMap
-com.google.common.collect.ImmutableSortedMap$SerializedForm
-com.google.common.collect.ImmutableSortedMapFauxverideShim
-com.google.common.collect.ImmutableSortedMultiset
-com.google.common.collect.ImmutableSortedMultiset$SerializedForm
-com.google.common.collect.ImmutableSortedMultisetFauxverideShim
-com.google.common.collect.ImmutableSortedSet
-com.google.common.collect.ImmutableSortedSet$SerializedForm
-com.google.common.collect.ImmutableSortedSetFauxverideShim
-com.google.common.collect.Interners$WeakInterner$Dummy
-com.google.common.collect.Interners$WeakInterner$Dummy: com.google.common.collect.Interners$WeakInterner$Dummy[] values()
-com.google.common.collect.Interners$WeakInterner$Dummy: com.google.common.collect.Interners$WeakInterner$Dummy valueOf(java.lang.String)
-com.google.common.collect.LexicographicalOrdering
-com.google.common.collect.LinkedHashMultimap
-com.google.common.collect.LinkedHashMultimap$ValueEntry: com.google.common.collect.LinkedHashMultimap$ValueEntry nextInValueSetHashRow
-com.google.common.collect.LinkedHashMultiset
-com.google.common.collect.LinkedListMultimap
-com.google.common.collect.Lists$OnePlusArrayList
-com.google.common.collect.Lists$StringAsImmutableList
-com.google.common.collect.Lists$TransformingRandomAccessList
-com.google.common.collect.Lists$TransformingSequentialList
-com.google.common.collect.Lists$TwoPlusArrayList
-com.google.common.collect.MapConstraints$NotNullMapConstraint
-com.google.common.collect.MapConstraints$NotNullMapConstraint: com.google.common.collect.MapConstraints$NotNullMapConstraint[] values()
-com.google.common.collect.MapConstraints$NotNullMapConstraint: com.google.common.collect.MapConstraints$NotNullMapConstraint valueOf(java.lang.String)
-com.google.common.collect.MapMaker$NullComputingConcurrentMap
-com.google.common.collect.MapMaker$NullConcurrentMap
-com.google.common.collect.MapMaker$RemovalCause
-com.google.common.collect.MapMaker$RemovalCause: com.google.common.collect.MapMaker$RemovalCause[] values()
-com.google.common.collect.MapMaker$RemovalCause: com.google.common.collect.MapMaker$RemovalCause valueOf(java.lang.String)
-com.google.common.collect.MapMaker$RemovalCause$1
-com.google.common.collect.MapMaker$RemovalCause$2
-com.google.common.collect.MapMaker$RemovalCause$3
-com.google.common.collect.MapMaker$RemovalCause$4
-com.google.common.collect.MapMaker$RemovalCause$5
-com.google.common.collect.MapMaker$RemovalNotification
-com.google.common.collect.MapMakerInternalMap
-com.google.common.collect.MapMakerInternalMap$AbstractSerializationProxy
-com.google.common.collect.MapMakerInternalMap$EntryFactory
-com.google.common.collect.MapMakerInternalMap$EntryFactory: com.google.common.collect.MapMakerInternalMap$EntryFactory[] values()
-com.google.common.collect.MapMakerInternalMap$EntryFactory: com.google.common.collect.MapMakerInternalMap$EntryFactory valueOf(java.lang.String)
-com.google.common.collect.MapMakerInternalMap$EntryFactory$1
-com.google.common.collect.MapMakerInternalMap$EntryFactory$10
-com.google.common.collect.MapMakerInternalMap$EntryFactory$11
-com.google.common.collect.MapMakerInternalMap$EntryFactory$12
-com.google.common.collect.MapMakerInternalMap$EntryFactory$2
-com.google.common.collect.MapMakerInternalMap$EntryFactory$3
-com.google.common.collect.MapMakerInternalMap$EntryFactory$4
-com.google.common.collect.MapMakerInternalMap$EntryFactory$5
-com.google.common.collect.MapMakerInternalMap$EntryFactory$6
-com.google.common.collect.MapMakerInternalMap$EntryFactory$7
-com.google.common.collect.MapMakerInternalMap$EntryFactory$8
-com.google.common.collect.MapMakerInternalMap$EntryFactory$9
-com.google.common.collect.MapMakerInternalMap$NullEntry
-com.google.common.collect.MapMakerInternalMap$NullEntry: com.google.common.collect.MapMakerInternalMap$NullEntry[] values()
-com.google.common.collect.MapMakerInternalMap$NullEntry: com.google.common.collect.MapMakerInternalMap$NullEntry valueOf(java.lang.String)
-com.google.common.collect.MapMakerInternalMap$Segment
-com.google.common.collect.MapMakerInternalMap$SerializationProxy
-com.google.common.collect.MapMakerInternalMap$Strength
-com.google.common.collect.MapMakerInternalMap$Strength: com.google.common.collect.MapMakerInternalMap$Strength[] values()
-com.google.common.collect.MapMakerInternalMap$Strength: com.google.common.collect.MapMakerInternalMap$Strength valueOf(java.lang.String)
-com.google.common.collect.MapMakerInternalMap$Strength$1
-com.google.common.collect.MapMakerInternalMap$Strength$2
-com.google.common.collect.MapMakerInternalMap$Strength$3
-com.google.common.collect.Maps$UnmodifiableBiMap
-com.google.common.collect.Maps$UnmodifiableNavigableMap
-com.google.common.collect.Multimaps$CustomListMultimap
-com.google.common.collect.Multimaps$CustomMultimap
-com.google.common.collect.Multimaps$CustomSetMultimap
-com.google.common.collect.Multimaps$CustomSortedSetMultimap
-com.google.common.collect.Multimaps$MapMultimap
-com.google.common.collect.Multimaps$UnmodifiableListMultimap
-com.google.common.collect.Multimaps$UnmodifiableMultimap
-com.google.common.collect.Multimaps$UnmodifiableSetMultimap
-com.google.common.collect.Multimaps$UnmodifiableSortedSetMultimap
-com.google.common.collect.Multisets$ImmutableEntry
-com.google.common.collect.Multisets$ImmutableEntry: java.lang.Object element
-com.google.common.collect.Multisets$SetMultiset
-com.google.common.collect.Multisets$UnmodifiableMultiset
-com.google.common.collect.Multisets$UnmodifiableSortedMultiset
-com.google.common.collect.NaturalOrdering
-com.google.common.collect.NullsFirstOrdering
-com.google.common.collect.NullsLastOrdering
-com.google.common.collect.Ordering$IncomparableValueException
-com.google.common.collect.Range
-com.google.common.collect.RangeMap
-com.google.common.collect.RangeMap$RangeValue
-com.google.common.collect.RegularContiguousSet
-com.google.common.collect.RegularContiguousSet$DescendingContiguousSet
-com.google.common.collect.RegularContiguousSet$SerializedForm
-com.google.common.collect.RegularImmutableAsList
-com.google.common.collect.RegularImmutableBiMap
-com.google.common.collect.RegularImmutableList
-com.google.common.collect.RegularImmutableMap
-com.google.common.collect.RegularImmutableMap$1
-com.google.common.collect.RegularImmutableMap$EntrySet
-com.google.common.collect.RegularImmutableMap$NonTerminalEntry
-com.google.common.collect.RegularImmutableMap$TerminalEntry
-com.google.common.collect.RegularImmutableMultiset
-com.google.common.collect.RegularImmutableMultiset$EntrySet
-com.google.common.collect.RegularImmutableMultiset$EntrySet$1
-com.google.common.collect.RegularImmutableSet
-com.google.common.collect.RegularImmutableSortedMap
-com.google.common.collect.RegularImmutableSortedMap$EntrySet
-com.google.common.collect.RegularImmutableSortedMap$EntrySet$1
-com.google.common.collect.RegularImmutableSortedMultiset
-com.google.common.collect.RegularImmutableSortedMultiset$EntrySet
-com.google.common.collect.RegularImmutableSortedMultiset$EntrySet$1
-com.google.common.collect.RegularImmutableSortedSet
-com.google.common.collect.RegularImmutableTable: com.google.common.collect.ImmutableList valueList
-com.google.common.collect.RegularImmutableTable$DenseImmutableTable$Column
-com.google.common.collect.RegularImmutableTable$DenseImmutableTable$ColumnMap
-com.google.common.collect.RegularImmutableTable$DenseImmutableTable$Row
-com.google.common.collect.RegularImmutableTable$DenseImmutableTable$RowMap
-com.google.common.collect.RegularImmutableTable$ImmutableArrayMap
-com.google.common.collect.RegularImmutableTable$ImmutableArrayMap$1
-com.google.common.collect.RegularImmutableTable$ImmutableArrayMap$2
-com.google.common.collect.ReverseNaturalOrdering
-com.google.common.collect.ReverseOrdering
-com.google.common.collect.Sets$SetFromMap
-com.google.common.collect.Sets$UnmodifiableNavigableSet
-com.google.common.collect.SingletonImmutableList
-com.google.common.collect.SingletonImmutableMap
-com.google.common.collect.SingletonImmutableSet
-com.google.common.collect.SortedLists$KeyAbsentBehavior
-com.google.common.collect.SortedLists$KeyAbsentBehavior: com.google.common.collect.SortedLists$KeyAbsentBehavior[] values()
-com.google.common.collect.SortedLists$KeyAbsentBehavior: com.google.common.collect.SortedLists$KeyAbsentBehavior valueOf(java.lang.String)
-com.google.common.collect.SortedLists$KeyAbsentBehavior$1
-com.google.common.collect.SortedLists$KeyAbsentBehavior$2
-com.google.common.collect.SortedLists$KeyAbsentBehavior$3
-com.google.common.collect.SortedLists$KeyPresentBehavior
-com.google.common.collect.SortedLists$KeyPresentBehavior: com.google.common.collect.SortedLists$KeyPresentBehavior[] values()
-com.google.common.collect.SortedLists$KeyPresentBehavior: com.google.common.collect.SortedLists$KeyPresentBehavior valueOf(java.lang.String)
-com.google.common.collect.SortedLists$KeyPresentBehavior$1
-com.google.common.collect.SortedLists$KeyPresentBehavior$2
-com.google.common.collect.SortedLists$KeyPresentBehavior$3
-com.google.common.collect.SortedLists$KeyPresentBehavior$4
-com.google.common.collect.SortedLists$KeyPresentBehavior$5
-com.google.common.collect.StandardRowSortedTable
-com.google.common.collect.StandardTable
-com.google.common.collect.Synchronized$SynchronizedAsMap
-com.google.common.collect.Synchronized$SynchronizedAsMapEntries
-com.google.common.collect.Synchronized$SynchronizedAsMapValues
-com.google.common.collect.Synchronized$SynchronizedBiMap
-com.google.common.collect.Synchronized$SynchronizedCollection
-com.google.common.collect.Synchronized$SynchronizedEntry
-com.google.common.collect.Synchronized$SynchronizedList
-com.google.common.collect.Synchronized$SynchronizedListMultimap
-com.google.common.collect.Synchronized$SynchronizedMap
-com.google.common.collect.Synchronized$SynchronizedMultimap
-com.google.common.collect.Synchronized$SynchronizedMultiset
-com.google.common.collect.Synchronized$SynchronizedNavigableMap
-com.google.common.collect.Synchronized$SynchronizedNavigableSet
-com.google.common.collect.Synchronized$SynchronizedObject
-com.google.common.collect.Synchronized$SynchronizedRandomAccessList
-com.google.common.collect.Synchronized$SynchronizedSet
-com.google.common.collect.Synchronized$SynchronizedSetMultimap
-com.google.common.collect.Synchronized$SynchronizedSortedMap
-com.google.common.collect.Synchronized$SynchronizedSortedSet
-com.google.common.collect.Synchronized$SynchronizedSortedSetMultimap
-com.google.common.collect.Tables$ImmutableCell
-com.google.common.collect.Tables$UnmodifiableRowSortedMap
-com.google.common.collect.Tables$UnmodifiableTable
-com.google.common.collect.TransformedImmutableSet
-com.google.common.collect.TreeBasedTable
-com.google.common.collect.TreeBasedTable$Factory
-com.google.common.collect.TreeBasedTable$TreeRow: java.lang.Object lowerBound
-com.google.common.collect.TreeBasedTable$TreeRow: java.lang.Object upperBound
-com.google.common.collect.TreeMultimap
-com.google.common.collect.TreeMultiset
-com.google.common.collect.TreeMultiset$Aggregate
-com.google.common.collect.TreeMultiset$Aggregate: com.google.common.collect.TreeMultiset$Aggregate[] values()
-com.google.common.collect.TreeMultiset$Aggregate: com.google.common.collect.TreeMultiset$Aggregate valueOf(java.lang.String)
-com.google.common.collect.TreeMultiset$Aggregate$1
-com.google.common.collect.TreeMultiset$Aggregate$2
-com.google.common.collect.TreeMultiset$AvlNode: java.lang.Object elem
-com.google.common.collect.TreeMultiset$Reference: java.lang.Object value
-com.google.common.collect.UsingToStringOrdering
-com.google.common.hash.BloomFilter
-com.google.common.hash.BloomFilter$SerialForm
-com.google.common.hash.BloomFilter$Strategy
-com.google.common.hash.BloomFilterStrategies
-com.google.common.hash.BloomFilterStrategies: com.google.common.hash.BloomFilterStrategies[] values()
-com.google.common.hash.BloomFilterStrategies: com.google.common.hash.BloomFilterStrategies valueOf(java.lang.String)
-com.google.common.hash.BloomFilterStrategies$1
-com.google.common.hash.Funnel
-com.google.common.hash.Funnels$ByteArrayFunnel
-com.google.common.hash.Funnels$ByteArrayFunnel: com.google.common.hash.Funnels$ByteArrayFunnel[] values()
-com.google.common.hash.Funnels$ByteArrayFunnel: com.google.common.hash.Funnels$ByteArrayFunnel valueOf(java.lang.String)
-com.google.common.hash.Funnels$IntegerFunnel
-com.google.common.hash.Funnels$IntegerFunnel: com.google.common.hash.Funnels$IntegerFunnel[] values()
-com.google.common.hash.Funnels$IntegerFunnel: com.google.common.hash.Funnels$IntegerFunnel valueOf(java.lang.String)
-com.google.common.hash.Funnels$LongFunnel
-com.google.common.hash.Funnels$LongFunnel: com.google.common.hash.Funnels$LongFunnel[] values()
-com.google.common.hash.Funnels$LongFunnel: com.google.common.hash.Funnels$LongFunnel valueOf(java.lang.String)
-com.google.common.hash.Funnels$StringFunnel
-com.google.common.hash.Funnels$StringFunnel: com.google.common.hash.Funnels$StringFunnel[] values()
-com.google.common.hash.Funnels$StringFunnel: com.google.common.hash.Funnels$StringFunnel valueOf(java.lang.String)
-com.google.common.hash.HashCodes$BytesHashCode
-com.google.common.hash.HashCodes$IntHashCode
-com.google.common.hash.HashCodes$LongHashCode
-com.google.common.hash.Murmur3_128HashFunction
-com.google.common.hash.Murmur3_32HashFunction
-com.google.common.net.HostAndPort
-com.google.common.primitives.Booleans$BooleanArrayAsList
-com.google.common.primitives.Booleans$LexicographicalComparator
-com.google.common.primitives.Booleans$LexicographicalComparator: com.google.common.primitives.Booleans$LexicographicalComparator[] values()
-com.google.common.primitives.Booleans$LexicographicalComparator: com.google.common.primitives.Booleans$LexicographicalComparator valueOf(java.lang.String)
-com.google.common.primitives.Bytes$ByteArrayAsList
-com.google.common.primitives.Chars$CharArrayAsList
-com.google.common.primitives.Chars$LexicographicalComparator
-com.google.common.primitives.Chars$LexicographicalComparator: com.google.common.primitives.Chars$LexicographicalComparator[] values()
-com.google.common.primitives.Chars$LexicographicalComparator: com.google.common.primitives.Chars$LexicographicalComparator valueOf(java.lang.String)
-com.google.common.primitives.Doubles$DoubleArrayAsList
-com.google.common.primitives.Doubles$LexicographicalComparator
-com.google.common.primitives.Doubles$LexicographicalComparator: com.google.common.primitives.Doubles$LexicographicalComparator[] values()
-com.google.common.primitives.Doubles$LexicographicalComparator: com.google.common.primitives.Doubles$LexicographicalComparator valueOf(java.lang.String)
-com.google.common.primitives.Floats$FloatArrayAsList
-com.google.common.primitives.Floats$LexicographicalComparator
-com.google.common.primitives.Floats$LexicographicalComparator: com.google.common.primitives.Floats$LexicographicalComparator[] values()
-com.google.common.primitives.Floats$LexicographicalComparator: com.google.common.primitives.Floats$LexicographicalComparator valueOf(java.lang.String)
-com.google.common.primitives.Ints$IntArrayAsList
-com.google.common.primitives.Ints$LexicographicalComparator
-com.google.common.primitives.Ints$LexicographicalComparator: com.google.common.primitives.Ints$LexicographicalComparator[] values()
-com.google.common.primitives.Ints$LexicographicalComparator: com.google.common.primitives.Ints$LexicographicalComparator valueOf(java.lang.String)
-com.google.common.primitives.Longs$LexicographicalComparator
-com.google.common.primitives.Longs$LexicographicalComparator: com.google.common.primitives.Longs$LexicographicalComparator[] values()
-com.google.common.primitives.Longs$LexicographicalComparator: com.google.common.primitives.Longs$LexicographicalComparator valueOf(java.lang.String)
-com.google.common.primitives.Longs$LongArrayAsList
-com.google.common.primitives.Shorts$LexicographicalComparator
-com.google.common.primitives.Shorts$LexicographicalComparator: com.google.common.primitives.Shorts$LexicographicalComparator[] values()
-com.google.common.primitives.Shorts$LexicographicalComparator: com.google.common.primitives.Shorts$LexicographicalComparator valueOf(java.lang.String)
-com.google.common.primitives.Shorts$ShortArrayAsList
-com.google.common.primitives.SignedBytes$LexicographicalComparator
-com.google.common.primitives.SignedBytes$LexicographicalComparator: com.google.common.primitives.SignedBytes$LexicographicalComparator[] values()
-com.google.common.primitives.SignedBytes$LexicographicalComparator: com.google.common.primitives.SignedBytes$LexicographicalComparator valueOf(java.lang.String)
-com.google.common.primitives.UnsignedBytes$LexicographicalComparatorHolder$PureJavaComparator
-com.google.common.primitives.UnsignedBytes$LexicographicalComparatorHolder$PureJavaComparator: com.google.common.primitives.UnsignedBytes$LexicographicalComparatorHolder$PureJavaComparator[] values()
-com.google.common.primitives.UnsignedBytes$LexicographicalComparatorHolder$PureJavaComparator: com.google.common.primitives.UnsignedBytes$LexicographicalComparatorHolder$PureJavaComparator valueOf(java.lang.String)
-com.google.common.primitives.UnsignedBytes$LexicographicalComparatorHolder$UnsafeComparator
-com.google.common.primitives.UnsignedBytes$LexicographicalComparatorHolder$UnsafeComparator: com.google.common.primitives.UnsignedBytes$LexicographicalComparatorHolder$UnsafeComparator[] values()
-com.google.common.primitives.UnsignedBytes$LexicographicalComparatorHolder$UnsafeComparator: com.google.common.primitives.UnsignedBytes$LexicographicalComparatorHolder$UnsafeComparator valueOf(java.lang.String)
-com.google.common.primitives.UnsignedInteger
-com.google.common.primitives.UnsignedInts$LexicographicalComparator
-com.google.common.primitives.UnsignedInts$LexicographicalComparator: com.google.common.primitives.UnsignedInts$LexicographicalComparator[] values()
-com.google.common.primitives.UnsignedInts$LexicographicalComparator: com.google.common.primitives.UnsignedInts$LexicographicalComparator valueOf(java.lang.String)
-com.google.common.primitives.UnsignedLong
-com.google.common.primitives.UnsignedLongs$LexicographicalComparator
-com.google.common.primitives.UnsignedLongs$LexicographicalComparator: com.google.common.primitives.UnsignedLongs$LexicographicalComparator[] values()
-com.google.common.primitives.UnsignedLongs$LexicographicalComparator: com.google.common.primitives.UnsignedLongs$LexicographicalComparator valueOf(java.lang.String)
-com.google.common.reflect.TypeToken
-com.google.common.reflect.TypeToken$ClassSet
-com.google.common.reflect.TypeToken$InterfaceSet
-com.google.common.reflect.TypeToken$SimpleTypeToken
-com.google.common.reflect.TypeToken$TypeFilter
-com.google.common.reflect.TypeToken$TypeFilter: com.google.common.reflect.TypeToken$TypeFilter[] values()
-com.google.common.reflect.TypeToken$TypeFilter: com.google.common.reflect.TypeToken$TypeFilter valueOf(java.lang.String)
-com.google.common.reflect.TypeToken$TypeFilter$1
-com.google.common.reflect.TypeToken$TypeFilter$2
-com.google.common.reflect.TypeToken$TypeSet
-com.google.common.reflect.Types$ClassOwnership
-com.google.common.reflect.Types$ClassOwnership: com.google.common.reflect.Types$ClassOwnership[] values()
-com.google.common.reflect.Types$ClassOwnership: com.google.common.reflect.Types$ClassOwnership valueOf(java.lang.String)
-com.google.common.reflect.Types$ClassOwnership$1
-com.google.common.reflect.Types$ClassOwnership$2
-com.google.common.reflect.Types$GenericArrayTypeImpl
-com.google.common.reflect.Types$JavaVersion
-com.google.common.reflect.Types$JavaVersion: com.google.common.reflect.Types$JavaVersion[] values()
-com.google.common.reflect.Types$JavaVersion: com.google.common.reflect.Types$JavaVersion valueOf(java.lang.String)
-com.google.common.reflect.Types$JavaVersion$2
-com.google.common.reflect.Types$JavaVersion$3
-com.google.common.reflect.Types$ParameterizedTypeImpl
-com.google.common.reflect.Types$WildcardTypeImpl
-com.google.common.util.concurrent.AbstractFuture$Sync
-com.google.common.util.concurrent.AbstractService$StateSnapshot: java.lang.Throwable failure
-com.google.common.util.concurrent.AtomicDouble
-com.google.common.util.concurrent.AtomicDoubleArray
-com.google.common.util.concurrent.CycleDetectingLockFactory$CycleDetectingReentrantLock
-com.google.common.util.concurrent.CycleDetectingLockFactory$CycleDetectingReentrantReadLock
-com.google.common.util.concurrent.CycleDetectingLockFactory$CycleDetectingReentrantReadWriteLock
-com.google.common.util.concurrent.CycleDetectingLockFactory$CycleDetectingReentrantWriteLock
-com.google.common.util.concurrent.CycleDetectingLockFactory$ExampleStackTrace
-com.google.common.util.concurrent.CycleDetectingLockFactory$Policies
-com.google.common.util.concurrent.CycleDetectingLockFactory$Policies: com.google.common.util.concurrent.CycleDetectingLockFactory$Policies[] values()
-com.google.common.util.concurrent.CycleDetectingLockFactory$Policies: com.google.common.util.concurrent.CycleDetectingLockFactory$Policies valueOf(java.lang.String)
-com.google.common.util.concurrent.CycleDetectingLockFactory$Policies$1
-com.google.common.util.concurrent.CycleDetectingLockFactory$Policies$2
-com.google.common.util.concurrent.CycleDetectingLockFactory$Policies$3
-com.google.common.util.concurrent.CycleDetectingLockFactory$PotentialDeadlockException
-com.google.common.util.concurrent.ExecutionError
-com.google.common.util.concurrent.Service$State
-com.google.common.util.concurrent.Service$State: com.google.common.util.concurrent.Service$State[] values()
-com.google.common.util.concurrent.Service$State: com.google.common.util.concurrent.Service$State valueOf(java.lang.String)
-com.google.common.util.concurrent.Striped$PaddedLock
-com.google.common.util.concurrent.Striped$PaddedSemaphore
-com.google.common.util.concurrent.UncheckedExecutionException
-com.google.common.util.concurrent.UncheckedTimeoutException
+com.google.common.collect.CustomConcurrentHashMap$ComputingImpl
+com.google.common.collect.CustomConcurrentHashMap$Impl
+com.google.common.collect.CustomConcurrentHashMap$Impl$InternalsImpl
+com.google.common.collect.CustomConcurrentHashMap$Impl$Segment
+com.google.common.collect.MapMaker$SoftEntry: void finalizeReferent()
+com.google.common.collect.MapMaker$SoftValueReference: void finalizeReferent()
+com.google.common.collect.MapMaker$StrategyImpl
+com.google.common.collect.MapMaker$Strength
+com.google.common.collect.MapMaker$Strength: com.google.common.collect.MapMaker$Strength[] values()
+com.google.common.collect.MapMaker$Strength: com.google.common.collect.MapMaker$Strength valueOf(java.lang.String)
+com.google.common.collect.MapMaker$Strength$1
+com.google.common.collect.MapMaker$Strength$2
+com.google.common.collect.MapMaker$Strength$3
+com.google.common.collect.MapMaker$WeakEntry: void finalizeReferent()
+com.google.common.collect.MapMaker$WeakValueReference: void finalizeReferent()
+com.google.common.collect.NullOutputException
 com.google.inject.AbstractModule
 com.google.inject.AbstractModule: com.google.inject.Binder binder
 com.google.inject.AbstractModule: AbstractModule()
@@ -8026,6 +6860,8 @@ com.handmark.pulltorefresh.library.R$anim: int slide_in_from_bottom
 com.handmark.pulltorefresh.library.R$anim: int slide_in_from_top
 com.handmark.pulltorefresh.library.R$anim: int slide_out_to_bottom
 com.handmark.pulltorefresh.library.R$anim: int slide_out_to_top
+com.handmark.pulltorefresh.library.R$attr: int effect
+com.handmark.pulltorefresh.library.R$attr: int only_animate_new_items
 com.handmark.pulltorefresh.library.R$attr: int ptrAdapterViewBackground
 com.handmark.pulltorefresh.library.R$attr: int ptrAnimationStyle
 com.handmark.pulltorefresh.library.R$attr: int ptrDrawable
@@ -8056,10 +6892,17 @@ com.handmark.pulltorefresh.library.R$drawable: int indicator_arrow
 com.handmark.pulltorefresh.library.R$drawable: int indicator_bg_bottom
 com.handmark.pulltorefresh.library.R$drawable: int indicator_bg_top
 com.handmark.pulltorefresh.library.R$id: int both
+com.handmark.pulltorefresh.library.R$id: int cards
+com.handmark.pulltorefresh.library.R$id: int curl
 com.handmark.pulltorefresh.library.R$id: int disabled
+com.handmark.pulltorefresh.library.R$id: int fade
+com.handmark.pulltorefresh.library.R$id: int fan
 com.handmark.pulltorefresh.library.R$id: int fl_inner
 com.handmark.pulltorefresh.library.R$id: int flip
+com.handmark.pulltorefresh.library.R$id: int fly
 com.handmark.pulltorefresh.library.R$id: int gridview
+com.handmark.pulltorefresh.library.R$id: int grow
+com.handmark.pulltorefresh.library.R$id: int helix
 com.handmark.pulltorefresh.library.R$id: int manualOnly
 com.handmark.pulltorefresh.library.R$id: int pullDownFromTop
 com.handmark.pulltorefresh.library.R$id: int pullFromEnd
@@ -8069,9 +6912,16 @@ com.handmark.pulltorefresh.library.R$id: int pull_to_refresh_image
 com.handmark.pulltorefresh.library.R$id: int pull_to_refresh_progress
 com.handmark.pulltorefresh.library.R$id: int pull_to_refresh_sub_text
 com.handmark.pulltorefresh.library.R$id: int pull_to_refresh_text
+com.handmark.pulltorefresh.library.R$id: int reverse_fly
 com.handmark.pulltorefresh.library.R$id: int rotate
 com.handmark.pulltorefresh.library.R$id: int scrollview
+com.handmark.pulltorefresh.library.R$id: int slide_in
+com.handmark.pulltorefresh.library.R$id: int standard
+com.handmark.pulltorefresh.library.R$id: int tilt
+com.handmark.pulltorefresh.library.R$id: int twirl
+com.handmark.pulltorefresh.library.R$id: int wave
 com.handmark.pulltorefresh.library.R$id: int webview
+com.handmark.pulltorefresh.library.R$id: int zipper
 com.handmark.pulltorefresh.library.R$layout: int pull_to_refresh_header_horizontal
 com.handmark.pulltorefresh.library.R$layout: int pull_to_refresh_header_vertical
 com.handmark.pulltorefresh.library.R$string: int pull_to_refresh_from_bottom_pull_label
@@ -8080,6 +6930,9 @@ com.handmark.pulltorefresh.library.R$string: int pull_to_refresh_from_bottom_rel
 com.handmark.pulltorefresh.library.R$string: int pull_to_refresh_pull_label
 com.handmark.pulltorefresh.library.R$string: int pull_to_refresh_refreshing_label
 com.handmark.pulltorefresh.library.R$string: int pull_to_refresh_release_label
+com.handmark.pulltorefresh.library.R$styleable: int[] JazzyListView
+com.handmark.pulltorefresh.library.R$styleable: int JazzyListView_effect
+com.handmark.pulltorefresh.library.R$styleable: int JazzyListView_only_animate_new_items
 com.handmark.pulltorefresh.library.R$styleable: int[] PullToRefresh
 com.handmark.pulltorefresh.library.R$styleable: int PullToRefresh_ptrAdapterViewBackground
 com.handmark.pulltorefresh.library.R$styleable: int PullToRefresh_ptrAnimationStyle
@@ -8830,10 +7683,38 @@ com.slidingmenu.lib.app.SlidingListActivity: void setContentView(android.view.Vi
 com.slidingmenu.lib.app.SlidingListActivity: void setBehindContentView(android.view.View)
 com.slidingmenu.lib.app.SlidingPreferenceActivity: void setContentView(android.view.View)
 com.slidingmenu.lib.app.SlidingPreferenceActivity: void setBehindContentView(android.view.View)
-com.twitter.mustache.ScalaObjectHandler
-com.twitter.mustache.ScalaObjectHandler$$anonfun$iterate$1
-com.twitter.mustache.TwitterObjectHandler
-com.twitter.mustache.TwitterObjectHandler$$anon$1
+com.twotoasters.jazzylistview.JazzyGridView: void setOnScrollListener(android.widget.AbsListView$OnScrollListener)
+com.twotoasters.jazzylistview.JazzyGridView: void setTransitionEffect(int)
+com.twotoasters.jazzylistview.JazzyGridView: void setTransitionEffect(com.twotoasters.jazzylistview.JazzyEffect)
+com.twotoasters.jazzylistview.JazzyGridView: void setShouldOnlyAnimateNewItems(boolean)
+com.twotoasters.jazzylistview.JazzyListView
+com.twotoasters.jazzylistview.JazzyListView: JazzyListView(android.content.Context)
+com.twotoasters.jazzylistview.JazzyListView: JazzyListView(android.content.Context,android.util.AttributeSet)
+com.twotoasters.jazzylistview.JazzyListView: JazzyListView(android.content.Context,android.util.AttributeSet,int)
+com.twotoasters.jazzylistview.JazzyListView: void setOnScrollListener(android.widget.AbsListView$OnScrollListener)
+com.twotoasters.jazzylistview.JazzyListView: void setTransitionEffect(int)
+com.twotoasters.jazzylistview.JazzyListView: void setTransitionEffect(com.twotoasters.jazzylistview.JazzyEffect)
+com.twotoasters.jazzylistview.JazzyListView: void setShouldOnlyAnimateNewItems(boolean)
+com.twotoasters.jazzylistview.R$attr: int effect
+com.twotoasters.jazzylistview.R$attr: int only_animate_new_items
+com.twotoasters.jazzylistview.R$id: int cards
+com.twotoasters.jazzylistview.R$id: int curl
+com.twotoasters.jazzylistview.R$id: int fade
+com.twotoasters.jazzylistview.R$id: int fan
+com.twotoasters.jazzylistview.R$id: int flip
+com.twotoasters.jazzylistview.R$id: int fly
+com.twotoasters.jazzylistview.R$id: int grow
+com.twotoasters.jazzylistview.R$id: int helix
+com.twotoasters.jazzylistview.R$id: int reverse_fly
+com.twotoasters.jazzylistview.R$id: int slide_in
+com.twotoasters.jazzylistview.R$id: int standard
+com.twotoasters.jazzylistview.R$id: int tilt
+com.twotoasters.jazzylistview.R$id: int twirl
+com.twotoasters.jazzylistview.R$id: int wave
+com.twotoasters.jazzylistview.R$id: int zipper
+com.twotoasters.jazzylistview.R$styleable: int[] JazzyListView
+com.twotoasters.jazzylistview.R$styleable: int JazzyListView_effect
+com.twotoasters.jazzylistview.R$styleable: int JazzyListView_only_animate_new_items
 javax.annotation.CheckForNull
 javax.annotation.CheckForSigned
 javax.annotation.CheckReturnValue
@@ -9839,7 +8720,6 @@ tk.djcrazy.MyCC98.PostContentsJSActivity: void jumpDialog()
 tk.djcrazy.MyCC98.PostContentsJSActivity: void reply()
 tk.djcrazy.MyCC98.PostContentsJSActivity: void showContentDialog(int,int)
 tk.djcrazy.MyCC98.PostContentsJSActivity: void onActivityResult(int,int,android.content.Intent)
-tk.djcrazy.MyCC98.PostContentsJSActivity: void synCookies()
 tk.djcrazy.MyCC98.PostContentsJSActivity: void onScroll(int,int)
 tk.djcrazy.MyCC98.PostListActivity
 tk.djcrazy.MyCC98.PostListActivity: tk.djcrazy.libCC98.CachedCC98Service service
@@ -9916,6 +8796,7 @@ tk.djcrazy.MyCC98.R$attr: int dividerVertical
 tk.djcrazy.MyCC98.R$attr: int dropDownHintAppearance
 tk.djcrazy.MyCC98.R$attr: int dropDownListViewStyle
 tk.djcrazy.MyCC98.R$attr: int dropdownListPreferredItemHeight
+tk.djcrazy.MyCC98.R$attr: int effect
 tk.djcrazy.MyCC98.R$attr: int expandActivityOverflowButtonDrawable
 tk.djcrazy.MyCC98.R$attr: int fadeDegree
 tk.djcrazy.MyCC98.R$attr: int fadeEnabled
@@ -9939,6 +8820,7 @@ tk.djcrazy.MyCC98.R$attr: int listPreferredItemPaddingRight
 tk.djcrazy.MyCC98.R$attr: int logo
 tk.djcrazy.MyCC98.R$attr: int mode
 tk.djcrazy.MyCC98.R$attr: int navigationMode
+tk.djcrazy.MyCC98.R$attr: int only_animate_new_items
 tk.djcrazy.MyCC98.R$attr: int popupMenuStyle
 tk.djcrazy.MyCC98.R$attr: int preserveIconSpacing
 tk.djcrazy.MyCC98.R$attr: int progressBarPadding
@@ -10594,8 +9476,10 @@ tk.djcrazy.MyCC98.R$id: int but_draw
 tk.djcrazy.MyCC98.R$id: int but_erase
 tk.djcrazy.MyCC98.R$id: int but_save
 tk.djcrazy.MyCC98.R$id: int cancelbutton
+tk.djcrazy.MyCC98.R$id: int cards
 tk.djcrazy.MyCC98.R$id: int check_personal_info
 tk.djcrazy.MyCC98.R$id: int check_update
+tk.djcrazy.MyCC98.R$id: int curl
 tk.djcrazy.MyCC98.R$id: int current_accept
 tk.djcrazy.MyCC98.R$id: int disableHome
 tk.djcrazy.MyCC98.R$id: int disabled
@@ -10630,14 +9514,19 @@ tk.djcrazy.MyCC98.R$id: int face7
 tk.djcrazy.MyCC98.R$id: int face8
 tk.djcrazy.MyCC98.R$id: int face9
 tk.djcrazy.MyCC98.R$id: int face_choose_radio_group
+tk.djcrazy.MyCC98.R$id: int fade
+tk.djcrazy.MyCC98.R$id: int fan
 tk.djcrazy.MyCC98.R$id: int feedback
 tk.djcrazy.MyCC98.R$id: int fl_inner
 tk.djcrazy.MyCC98.R$id: int flip
+tk.djcrazy.MyCC98.R$id: int fly
 tk.djcrazy.MyCC98.R$id: int fullscreen
 tk.djcrazy.MyCC98.R$id: int global_board_name
 tk.djcrazy.MyCC98.R$id: int global_boards
 tk.djcrazy.MyCC98.R$id: int grid_image
 tk.djcrazy.MyCC98.R$id: int gridview
+tk.djcrazy.MyCC98.R$id: int grow
+tk.djcrazy.MyCC98.R$id: int helix
 tk.djcrazy.MyCC98.R$id: int homeAsUp
 tk.djcrazy.MyCC98.R$id: int home_behind_listview
 tk.djcrazy.MyCC98.R$id: int home_behind_view
@@ -10742,6 +9631,7 @@ tk.djcrazy.MyCC98.R$id: int refresh
 tk.djcrazy.MyCC98.R$id: int reply_container
 tk.djcrazy.MyCC98.R$id: int reply_content
 tk.djcrazy.MyCC98.R$id: int reply_title_edit
+tk.djcrazy.MyCC98.R$id: int reverse_fly
 tk.djcrazy.MyCC98.R$id: int right
 tk.djcrazy.MyCC98.R$id: int rotate
 tk.djcrazy.MyCC98.R$id: int scrollview
@@ -10759,14 +9649,20 @@ tk.djcrazy.MyCC98.R$id: int showHome
 tk.djcrazy.MyCC98.R$id: int showTitle
 tk.djcrazy.MyCC98.R$id: int show_all_image
 tk.djcrazy.MyCC98.R$id: int sketch_control
+tk.djcrazy.MyCC98.R$id: int slide_in
 tk.djcrazy.MyCC98.R$id: int slidingmenumain
+tk.djcrazy.MyCC98.R$id: int standard
 tk.djcrazy.MyCC98.R$id: int tabMode
+tk.djcrazy.MyCC98.R$id: int tilt
 tk.djcrazy.MyCC98.R$id: int topic_number_today
+tk.djcrazy.MyCC98.R$id: int twirl
 tk.djcrazy.MyCC98.R$id: int useLogo
 tk.djcrazy.MyCC98.R$id: int use_proxy
 tk.djcrazy.MyCC98.R$id: int username
+tk.djcrazy.MyCC98.R$id: int wave
 tk.djcrazy.MyCC98.R$id: int webview
 tk.djcrazy.MyCC98.R$id: int wrap_content
+tk.djcrazy.MyCC98.R$id: int zipper
 tk.djcrazy.MyCC98.R$integer: int abs__max_action_buttons
 tk.djcrazy.MyCC98.R$interpolator: int accelerate_cubic
 tk.djcrazy.MyCC98.R$interpolator: int accelerate_decelerate
@@ -11070,6 +9966,9 @@ tk.djcrazy.MyCC98.R$style: int personal_board_list_footer_button
 tk.djcrazy.MyCC98.R$style: int post_name_common
 tk.djcrazy.MyCC98.R$style: int post_title_style
 tk.djcrazy.MyCC98.R$style: int simple_button
+tk.djcrazy.MyCC98.R$styleable: int[] JazzyListView
+tk.djcrazy.MyCC98.R$styleable: int JazzyListView_effect
+tk.djcrazy.MyCC98.R$styleable: int JazzyListView_only_animate_new_items
 tk.djcrazy.MyCC98.R$styleable: int[] PullToRefresh
 tk.djcrazy.MyCC98.R$styleable: int PullToRefresh_ptrAdapterViewBackground
 tk.djcrazy.MyCC98.R$styleable: int PullToRefresh_ptrAnimationStyle

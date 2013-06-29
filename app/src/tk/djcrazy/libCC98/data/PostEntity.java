@@ -45,19 +45,7 @@ public class PostEntity implements Serializable {
  	public void setPostId(String postId) {
 		this.postId = postId;
 	}
-	/**
-	 * @return the postPageNumber
-	 */
-	public int getPostPageNumber() {
-		return postPageNumber;
-	}
-	/**
-	 * @param postPageNumber the postPageNumber to set
-	 */
-	public void setPostPageNumber(int postPageNumber) {
-		this.postPageNumber = postPageNumber;
-	}
-	/**
+ 	/**
 	 * @return the postAuthorName
 	 */
 	public String getPostAuthorName() {
@@ -121,8 +109,7 @@ public class PostEntity implements Serializable {
 	private String postName= "";
 	private String postId= "";
 	private String boardId = "";
-	private int postPageNumber=0;
-	private String postAuthorName= "";
+ 	private String postAuthorName= "";
 	private String replyNumber= "";
 	private Date lastReplyTime;
  	private String lastReplyAuthor= "";

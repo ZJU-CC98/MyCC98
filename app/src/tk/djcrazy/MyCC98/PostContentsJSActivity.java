@@ -17,7 +17,7 @@ import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
 import roboguice.util.RoboAsyncTask;
 import tk.djcrazy.MyCC98.helper.ThemeHelper;
-import tk.djcrazy.MyCC98.template.PostContentFactory;
+import tk.djcrazy.MyCC98.template.PostContentTemplateFactory;
 import tk.djcrazy.MyCC98.util.DisplayUtil;
 import tk.djcrazy.MyCC98.util.Intents;
 import tk.djcrazy.MyCC98.util.ProgressRoboAsyncTask;
@@ -412,31 +412,11 @@ public class PostContentsJSActivity extends BaseActivity implements
 			// view user info
 			viewUserInfo(item.getUserName());
 			break;
-		// case 4:
-		// if (item.getUserName().equals(service.getUserName())) {
-		// String tmp = item.getPostContent().replaceAll("(<br>|<BR>)",
-		// "\n");
-		// String topic = item.getPostTitle();
-		// editPost(item.getEditPostLink(), tmp, topic);
-		// }
-		// break;
-		case 5:
+ 		case 5:
 			// cancel
 			break;
 		}
 	}
-
-	// private void editPost(String link, String content, String topic) {
-	// Bundle bundle = new Bundle();
-	// bundle.putString(EditActivity.EDIT_CONTENT,
-	// content.replaceAll("<.*?>|searchubb.*?;", ""));
-	// bundle.putString(EditActivity.EDIT_TOPIC, topic);
-	// bundle.putString(EditActivity.EDIT_LINK, link);
-	// bundle.putInt(EditActivity.MOD, EditActivity.MOD_EDIT);
-	// Intent intent = new Intent(this, EditActivity.class);
-	// intent.putExtra(EditActivity.BUNDLE, bundle);
-	// startActivity(intent);
-	// }
 
 	private void addFriend(final String userName) {
 		new AddFriendTask(this, userName).execute();
@@ -477,36 +457,22 @@ public class PostContentsJSActivity extends BaseActivity implements
 		}
 	}
 
-	private String assemblyContent(List<PostContentEntity> list)
-			throws IOException {
-		SharedPreferences sharedPref = PreferenceManager
-				.getDefaultSharedPreferences(this);
+	private String assemblyContent(List<PostContentEntity> list) {
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+		boolean showUserAvatar = sharedPref.getBoolean(SettingsActivity.SHOW_USER_AVATAR, false);
+
 		int tmpNum = (currPageNum == LAST_PAGE) ? totalPageNum : currPageNum;
-		PostContentFactory pMustache = new PostContentFactory(list, tmpNum);
-
-		InputStream templateIn = null;
-		String theme = sharedPref.getString(SettingsActivity.THEME,
-				SettingsActivity.THEME_DEFAULT);
-		if (!theme.equals(SettingsActivity.THEME_DEFAULT)) {
-			String[] stylePaths = ThemeHelper.getStyleSheets(theme);
-			templateIn = ThemeHelper.getTemplateStream(theme);
-			if (stylePaths != null && templateIn != null) {
-				pMustache.addAllStyle(stylePaths);
-			}
-		}
-		if (templateIn == null) {
-			pMustache.addStyle(PostContentFactory.CLASSICAL_STYLE);
-			templateIn = getAssets().open(PostContentFactory.DEFAULT_TEMPLATE);
-		}
-
 		if (service.getusersInfo().getCurrentUserData().getLoginType() == LoginType.NORMAL) {
-			pMustache.addScript(PostContentFactory.DEFAULT_UBB_SCRIPT);
+			if (showUserAvatar) {
+				return PostContentTemplateFactory.getDefault().genContent(getApplicationContext(), list, tmpNum);
+			} else {
+				return PostContentTemplateFactory.getSimple().genContent(getApplicationContext(), list, tmpNum);
+			}
 		} else if (service.getusersInfo().getCurrentUserData().getLoginType() == LoginType.USER_DEFINED) {
-			pMustache.addScript(PostContentFactory.LIFETOY_UBB_SCRIPT);
-		} else {
-			pMustache.addScript(PostContentFactory.DEFAULT_UBB_SCRIPT);
+			return PostContentTemplateFactory.getLifetoy().genContent(getApplicationContext(), list, tmpNum);
+ 		} else {
+ 			return PostContentTemplateFactory.getDefault().genContent(getApplicationContext(), list, tmpNum);
 		}
- 		return pMustache.genContent(PostContentFactory.inputStreamToString(templateIn));
 	}
 
 	//
@@ -537,36 +503,7 @@ public class PostContentsJSActivity extends BaseActivity implements
 		}
 	}
 
-	/**
-	 * 同步一下cookie
-	 */
-	public void synCookies() {
-		CookieSyncManager.createInstance(this);
-		CookieManager cookieManager = CookieManager.getInstance();
-		cookieManager.setAcceptCookie(true);
-		cookieManager.removeSessionCookie();
-		UserData userData = service.getusersInfo().getCurrentUserData();
-		// if (userData.getLoginType() == LoginType.USER_DEFINED) {
-		// webView.setHttpAuthUsernamePassword(service.getDomain(), "",
-		// userData.getProxyUserName(), userData.getProxyPassword());
-		// }
-		for (Cookie cookie : service.getusersInfo().getCurrentUserData()
-				.getCookieStore().getCookies()) {
-			cookieManager.setCookie(service.getDomain(),
-					"version=" + cookie.getVersion());
-			cookieManager.setCookie(service.getDomain(), cookie.getName() + "="
-					+ cookie.getValue());
-			cookieManager.setCookie(service.getDomain(),
-					"domain=" + cookie.getDomain());
-			cookieManager.setCookie(service.getDomain(),
-					"path=" + cookie.getPath());
-			cookieManager.setCookie(service.getDomain(),
-					"expiry=" + cookie.getExpiryDate());
-			Log.d(TAG, cookie.toString());
-		}
-		CookieSyncManager.getInstance().sync();
-	}
-
+ 
 	private class GetPostContentTask extends
 			RoboAsyncTask<List<PostContentEntity>> {
 		private Activity aContext;
@@ -605,7 +542,6 @@ public class PostContentsJSActivity extends BaseActivity implements
 							service.getPostContentList(aBoardId, aPostId,
 									currPageNum + 1, false);
 						} catch (Exception e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 					}
@@ -618,7 +554,6 @@ public class PostContentsJSActivity extends BaseActivity implements
 							service.getPostContentList(aBoardId, aPostId,
 									currPageNum - 1, false);
 						} catch (Exception e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 					}
@@ -643,8 +578,7 @@ public class PostContentsJSActivity extends BaseActivity implements
 			}
 			boardName = (String) info.getBoardName();
 			postName = (String) info.getPostTopic();
-			synCookies();
-			webView.loadDataWithBaseURL(null, assemblyContent(t), "text/html",
+ 			webView.loadDataWithBaseURL(null, assemblyContent(t), "text/html",
 					"utf-8", null);
 			getSupportActionBar().setTitle(postName);
 			getSupportActionBar().setSubtitle(
