@@ -17,7 +17,7 @@ import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
 import roboguice.util.RoboAsyncTask;
 import tk.djcrazy.MyCC98.helper.ThemeHelper;
-import tk.djcrazy.MyCC98.template.PostContentFactory;
+import tk.djcrazy.MyCC98.template.PostContentTemplateFactory;
 import tk.djcrazy.MyCC98.util.DisplayUtil;
 import tk.djcrazy.MyCC98.util.Intents;
 import tk.djcrazy.MyCC98.util.ProgressRoboAsyncTask;
@@ -32,6 +32,8 @@ import tk.djcrazy.libCC98.data.PostContentEntity;
 import tk.djcrazy.libCC98.data.UserData;
 import tk.djcrazy.libCC98.util.DateFormatUtil;
 import tk.djcrazy.libCC98.util.SerializableCacheUtil;
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -243,7 +245,8 @@ public class PostContentsJSActivity extends BaseActivity implements
 		webSettings.setAppCacheEnabled(enableCache);
 		webView.setOnScrollChangedCallback(this);
 		webView.addJavascriptInterface(this, JS_INTERFACE);
-		webView.setWebChromeClient(new FullscreenableChromeClient(this));
+		
+		setWebChromeClient();
 		webView.setWebViewClient(new WebViewClient() {
 			@Override
 			public void onPageFinished(WebView view, String url) {
@@ -281,6 +284,15 @@ public class PostContentsJSActivity extends BaseActivity implements
 				return gestureDetector.onTouchEvent(event);
 			}
 		});
+	}
+
+	/**
+	 * 
+	 */
+	private void setWebChromeClient() {
+		if (Build.VERSION.SDK_INT>=14) {
+			webView.setWebChromeClient(new FullscreenableChromeClient(this));
+		}
 	}
 
 	public void jumpTo(int pageNum) {
@@ -400,9 +412,12 @@ public class PostContentsJSActivity extends BaseActivity implements
 			// view user info
 			viewUserInfo(item.getUserName());
 			break;
- 		}
+ 		case 5:
+			// cancel
+			break;
+		}
 	}
- 
+
 	private void addFriend(final String userName) {
 		new AddFriendTask(this, userName).execute();
 	}
@@ -442,39 +457,36 @@ public class PostContentsJSActivity extends BaseActivity implements
 		}
 	}
 
-	private String assemblyContent(List<PostContentEntity> list)
-			throws IOException {
-		SharedPreferences sharedPref = PreferenceManager
-				.getDefaultSharedPreferences(this);
+	private String assemblyContent(List<PostContentEntity> list) {
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+		boolean showUserAvatar = sharedPref.getBoolean(SettingsActivity.SHOW_USER_AVATAR, false);
+
 		int tmpNum = (currPageNum == LAST_PAGE) ? totalPageNum : currPageNum;
-		PostContentFactory pMustache = new PostContentFactory(list, tmpNum);
-
-		InputStream templateIn = null;
-		String theme = sharedPref.getString(SettingsActivity.THEME,
-				SettingsActivity.THEME_DEFAULT);
-		if (!theme.equals(SettingsActivity.THEME_DEFAULT)) {
-			String[] stylePaths = ThemeHelper.getStyleSheets(theme);
-			templateIn = ThemeHelper.getTemplateStream(theme);
-			if (stylePaths != null && templateIn != null) {
-				pMustache.addAllStyle(stylePaths);
-			}
-		}
-		if (templateIn == null) {
-			pMustache.addStyle(PostContentFactory.CLASSICAL_STYLE);
-			templateIn = getAssets().open(PostContentFactory.DEFAULT_TEMPLATE);
-		}
-
 		if (service.getusersInfo().getCurrentUserData().getLoginType() == LoginType.NORMAL) {
-			pMustache.addScript(PostContentFactory.DEFAULT_UBB_SCRIPT);
+			if (showUserAvatar) {
+				return PostContentTemplateFactory.getDefault().genContent(getApplicationContext(), list, tmpNum);
+			} else {
+				return PostContentTemplateFactory.getSimple().genContent(getApplicationContext(), list, tmpNum);
+			}
 		} else if (service.getusersInfo().getCurrentUserData().getLoginType() == LoginType.USER_DEFINED) {
-			pMustache.addScript(PostContentFactory.LIFETOY_UBB_SCRIPT);
-		} else {
-			pMustache.addScript(PostContentFactory.DEFAULT_UBB_SCRIPT);
+			return PostContentTemplateFactory.getLifetoy().genContent(getApplicationContext(), list, tmpNum);
+ 		} else {
+ 			return PostContentTemplateFactory.getDefault().genContent(getApplicationContext(), list, tmpNum);
 		}
- 		return pMustache.genContent(templateIn);
 	}
 
- 
+	//
+	// public void open(String pageLink, int pageNum) {
+	// Log.d(TAG, "open new post:" + pageNum);
+	// Bundle bundle = new Bundle();
+	// bundle.putString(POST_ID, pageLink);
+	// bundle.putInt(PAGE_NUMBER, pageNum);
+	// bundle.putString(POST_NAME, "");
+	// Intent intent = new Intent(this, PostContentsJSActivity.class);
+	// // intent.putExtra(POST, bundle);
+	// this.startActivity(intent);
+	// }
+
 	private void setRefreshActionButtonState(boolean refreshing) {
 		isRefreshing = refreshing;
 		if (mOptionsMenu == null) {
@@ -659,6 +671,8 @@ public class PostContentsJSActivity extends BaseActivity implements
 	}
 }
 
+@SuppressLint("NewApi")
+@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 class FullscreenableChromeClient extends WebChromeClient {
 	protected Activity mActivity = null;
 

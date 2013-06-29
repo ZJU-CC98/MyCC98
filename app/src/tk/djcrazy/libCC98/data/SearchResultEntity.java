@@ -1,9 +1,14 @@
 package tk.djcrazy.libCC98.data;
 
+import java.io.Serializable;
 import java.util.Date;
 
  
-public class SearchResultEntity {
+public class SearchResultEntity implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	/**
 	 * @return the faceId
 	 */

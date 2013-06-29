@@ -22,7 +22,7 @@ public class Bytes implements Serializable {
 	
 	public Bytes(Bitmap bitmap) {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		bitmap.compress(CompressFormat.WEBP, 100, baos);
+		bitmap.compress(CompressFormat.PNG, 100, baos);
 		bytes = baos.toByteArray();
 	}
 	

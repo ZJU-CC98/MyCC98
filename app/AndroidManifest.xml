@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="tk.djcrazy.MyCC98"
     android:versionCode="24"
-    android:versionName="3.0.0.preview" >
+    android:versionName="3.0.0" >
 
     <uses-sdk
         android:minSdkVersion="7"
