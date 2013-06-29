@@ -31,6 +31,9 @@ import android.widget.ListView;
 
 import com.handmark.pulltorefresh.library.internal.EmptyViewMethodAccessor;
 import com.handmark.pulltorefresh.library.internal.LoadingLayout;
+import com.twotoasters.jazzylistview.JazzyEffect;
+import com.twotoasters.jazzylistview.JazzyHelper;
+import com.twotoasters.jazzylistview.JazzyListView;
 
 public class PullToRefreshListView extends PullToRefreshAdapterViewBase<ListView> {
 
@@ -274,12 +277,13 @@ public class PullToRefreshListView extends PullToRefreshAdapterViewBase<ListView
 		}
 	}
 
-	protected class InternalListView extends ListView implements EmptyViewMethodAccessor {
+	protected class InternalListView extends JazzyListView implements EmptyViewMethodAccessor {
 
 		private boolean mAddedLvFooter = false;
 
 		public InternalListView(Context context, AttributeSet attrs) {
 			super(context, attrs);
+			setTransitionEffect(JazzyHelper.CARDS);
 		}
 
 		@Override

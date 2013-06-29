@@ -19,7 +19,7 @@
         android:orientation="vertical"
         android:visibility="visible" >
 
-        <ListView
+        <com.twotoasters.jazzylistview.JazzyListView
             android:id="@+id/search_board_result_list"
             style="@style/listview"
             android:layout_width="fill_parent"

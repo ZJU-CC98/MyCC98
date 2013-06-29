@@ -37,6 +37,8 @@ import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.Animator.AnimatorListener;
 import com.nineoldandroids.animation.ValueAnimator;
 import com.nineoldandroids.animation.ValueAnimator.AnimatorUpdateListener;
+import com.twotoasters.jazzylistview.JazzyHelper;
+import com.twotoasters.jazzylistview.JazzyListView;
 
 public class SearchBoardFragment extends RoboSherlockFragment implements
 		OnItemClickListener, OnClickListener {
@@ -48,7 +50,7 @@ public class SearchBoardFragment extends RoboSherlockFragment implements
 	@InjectView(R.id.search_board_text) 
 	private EditText searchContentEditText; 
 	@InjectView(R.id.search_board_result_list)
-	private ListView mResultListView;  
+	private JazzyListView mResultListView;  
 	@InjectView(R.id.search_board_loading_bar)
 	private ProgressBar progressBar;
  	@InjectView(R.id.search_board_main_container)
@@ -94,6 +96,7 @@ public class SearchBoardFragment extends RoboSherlockFragment implements
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 		setListeners();
+		mResultListView.setTransitionEffect(JazzyHelper.CARDS);
 		if (boardList != null) {
  			hide(progressBar).hide(emptyView).show(mContainer);
 			mResultListView.setAdapter(listAdapter);
