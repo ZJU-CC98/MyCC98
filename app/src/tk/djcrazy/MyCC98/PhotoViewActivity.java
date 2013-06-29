@@ -110,7 +110,7 @@ public class PhotoViewActivity extends BaseActivity {
 					}
 				}
 			});
-			getActionBar().hide();
+			getSupportActionBar().hide();
 		}
 
 		/**
