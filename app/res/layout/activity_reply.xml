@@ -103,20 +103,20 @@
                 android:text="回复"
                 android:textColor="#666"
                 android:textSize="15sp" />
-
-            </LinearLayout>
- 
-            <GridView
-                android:id="@+id/edit_emotion_grid"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:columnWidth="32.0dip"
-                android:gravity="center"
-                android:horizontalSpacing="0.5dip"
-                android:verticalSpacing="0.5dp"
-                android:numColumns="7"
-                android:scrollbars="none"
-                android:visibility="gone" >
-            </GridView>
         </LinearLayout>
+
+        <GridView
+            android:id="@+id/edit_emotion_grid"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:columnWidth="32.0dip"
+            android:gravity="center"
+            android:horizontalSpacing="0.5dip"
+            android:numColumns="7"
+            android:scrollbars="none"
+            android:verticalSpacing="0.5dp"
+            android:visibility="gone" >
+        </GridView>
     </LinearLayout>
+
+</LinearLayout>
