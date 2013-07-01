@@ -1,14 +1,9 @@
 package tk.djcrazy.MyCC98;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
-
-import javax.xml.transform.sax.TemplatesHandler;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -16,22 +11,18 @@ import roboguice.inject.ContentView;
 import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
 import roboguice.util.RoboAsyncTask;
-import tk.djcrazy.MyCC98.helper.ThemeHelper;
 import tk.djcrazy.MyCC98.template.PostContentTemplateFactory;
 import tk.djcrazy.MyCC98.util.DisplayUtil;
 import tk.djcrazy.MyCC98.util.Intents;
-import tk.djcrazy.MyCC98.util.ProgressRoboAsyncTask;
 import tk.djcrazy.MyCC98.util.Intents.Builder;
+import tk.djcrazy.MyCC98.util.ProgressRoboAsyncTask;
 import tk.djcrazy.MyCC98.util.ToastUtils;
 import tk.djcrazy.MyCC98.view.ObservableWebView;
 import tk.djcrazy.MyCC98.view.ObservableWebView.OnScrollChangedCallback;
 import tk.djcrazy.libCC98.CachedCC98Service;
-import tk.djcrazy.libCC98.SerializableCache;
 import tk.djcrazy.libCC98.data.LoginType;
 import tk.djcrazy.libCC98.data.PostContentEntity;
-import tk.djcrazy.libCC98.data.UserData;
 import tk.djcrazy.libCC98.util.DateFormatUtil;
-import tk.djcrazy.libCC98.util.SerializableCacheUtil;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -49,6 +40,7 @@ import android.text.Html;
 import android.text.InputType;
 import android.util.Log;
 import android.view.GestureDetector;
+import android.view.GestureDetector.OnDoubleTapListener;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.MotionEvent;
 import android.view.View;
@@ -56,8 +48,6 @@ import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.webkit.CookieManager;
-import android.webkit.CookieSyncManager;
 import android.webkit.HttpAuthHandler;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -67,7 +57,6 @@ import android.webkit.WebViewClient;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.Toast;
-import ch.boye.httpclientandroidlib.cookie.Cookie;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
@@ -174,6 +163,7 @@ public class PostContentsJSActivity extends BaseActivity implements
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	private void configureActionBar() {
 		ActionBar actionBar = getSupportActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
@@ -220,6 +210,7 @@ public class PostContentsJSActivity extends BaseActivity implements
 		return false;
 	}
 
+	@SuppressWarnings("deprecation")
 	private void configureWebView() {
 		SharedPreferences sharedPref = PreferenceManager
 				.getDefaultSharedPreferences(this);
@@ -245,8 +236,7 @@ public class PostContentsJSActivity extends BaseActivity implements
 		webSettings.setAppCacheEnabled(enableCache);
 		webView.setOnScrollChangedCallback(this);
 		webView.addJavascriptInterface(this, JS_INTERFACE);
-		
-		setWebChromeClient();
+ 		setWebChromeClient();
 		webView.setWebViewClient(new WebViewClient() {
 			@Override
 			public void onPageFinished(WebView view, String url) {
@@ -475,18 +465,7 @@ public class PostContentsJSActivity extends BaseActivity implements
 		}
 	}
 
-	//
-	// public void open(String pageLink, int pageNum) {
-	// Log.d(TAG, "open new post:" + pageNum);
-	// Bundle bundle = new Bundle();
-	// bundle.putString(POST_ID, pageLink);
-	// bundle.putInt(PAGE_NUMBER, pageNum);
-	// bundle.putString(POST_NAME, "");
-	// Intent intent = new Intent(this, PostContentsJSActivity.class);
-	// // intent.putExtra(POST, bundle);
-	// this.startActivity(intent);
-	// }
-
+ 
 	private void setRefreshActionButtonState(boolean refreshing) {
 		isRefreshing = refreshing;
 		if (mOptionsMenu == null) {
@@ -531,7 +510,7 @@ public class PostContentsJSActivity extends BaseActivity implements
 		@Override
 		public List<PostContentEntity> call() throws Exception {
 			return service.getPostContentList(aBoardId, aPostId, aPageNum,
-					forceRefresh);
+					aForceRefresh);
 		}
 
 		private void prefetch() {
@@ -667,6 +646,12 @@ public class PostContentsJSActivity extends BaseActivity implements
 					&& distY < FLING_MAX_Y_DISTANCE)
 				prevPage();
 			return false;
+		}
+		
+		@Override
+		public boolean onDoubleTap(MotionEvent e) {
+			reply();
+			return true;
 		}
 	}
 }
