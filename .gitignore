@@ -19,7 +19,7 @@ local.properties
 project.properties
 org.eclipse.jdt.core.prefs
 org.eclipse.jdt.ui.prefs
-
+lint.xml
 .project
 .classpath
 .settings
