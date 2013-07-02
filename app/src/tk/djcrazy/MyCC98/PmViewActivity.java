@@ -5,6 +5,7 @@ import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
 import tk.djcrazy.MyCC98.helper.HtmlGenHelper;
 import tk.djcrazy.MyCC98.util.Intents;
+import tk.djcrazy.MyCC98.util.UrlUtils;
 import tk.djcrazy.libCC98.CachedCC98Service;
 import tk.djcrazy.libCC98.exception.ParseContentException;
 import android.content.Intent;
@@ -14,6 +15,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.webkit.WebSettings;
 import android.webkit.WebSettings.LayoutAlgorithm;
 import android.webkit.WebView;
@@ -121,9 +123,19 @@ public class PmViewActivity extends BaseFragmentActivity {
 
 			@Override
 			public boolean shouldOverrideUrlLoading(WebView view, String url) {
-				Intent i = new Intent(Intent.ACTION_VIEW);
-				i.setData(Uri.parse(url));
-				startActivity(i);
+				Log.i(TAG, "shouldOverrideUrlLoading:" + url);
+				if (!url.startsWith("http")) {
+					url = service.getDomain() + url;
+				}
+				if (url.endsWith(".jpg") | url.endsWith(".png")
+						| url.endsWith(".bmp")) {
+					startActivity(PhotoViewActivity.createIntent(url));
+				} else if (UrlUtils.isPostContentLink(url)) {
+					startActivity(UrlUtils.getPostContentIntent(url));
+				} else {
+					Intent it = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+					startActivity(it);
+				}		
 				return true;
 			}
 		});
@@ -165,7 +177,7 @@ public class PmViewActivity extends BaseFragmentActivity {
 							e.printStackTrace();
 						}
 						HtmlGenHelper.addPostInfo(builder, readTopic,
-								senderAvatarUrl, sender, "", -1, sendTime, -1);
+								senderAvatarUrl, sender, "", 1, sendTime, -1);
 						builder.append(
 								"<div class=\"post-content\"><span id=\"ubbcode\">")
 								.append("<div class=\"post-content\"><span id=\"ubbcode\">")

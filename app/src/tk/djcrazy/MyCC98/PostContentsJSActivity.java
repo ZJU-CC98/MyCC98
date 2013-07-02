@@ -17,6 +17,7 @@ import tk.djcrazy.MyCC98.util.Intents;
 import tk.djcrazy.MyCC98.util.Intents.Builder;
 import tk.djcrazy.MyCC98.util.ProgressRoboAsyncTask;
 import tk.djcrazy.MyCC98.util.ToastUtils;
+import tk.djcrazy.MyCC98.util.UrlUtils;
 import tk.djcrazy.MyCC98.view.ObservableWebView;
 import tk.djcrazy.MyCC98.view.ObservableWebView.OnScrollChangedCallback;
 import tk.djcrazy.libCC98.CachedCC98Service;
@@ -111,17 +112,22 @@ public class PostContentsJSActivity extends BaseActivity implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		configureActionBar();
-		configureWebView();
-		gestureDetector = new GestureDetector(this,
-				new DefaultGestureDetector());
-		webView.postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				new GetPostContentTask(PostContentsJSActivity.this, boardId,
-						postId, currPageNum, forceRefresh).execute();
-			}
-		}, 50);
+		try {
+			configureActionBar();
+			configureWebView();
+			gestureDetector = new GestureDetector(this,
+					new DefaultGestureDetector());
+			webView.postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					new GetPostContentTask(PostContentsJSActivity.this, boardId,
+							postId, currPageNum, forceRefresh).execute();
+				}
+			}, 50);
+		} catch (IllegalArgumentException e) {
+			ToastUtils.show(this, "请先登录应用");
+			finish();
+		}
 	}
 
 	@Override
@@ -252,12 +258,13 @@ public class PostContentsJSActivity extends BaseActivity implements
 				if (url.endsWith(".jpg") | url.endsWith(".png")
 						| url.endsWith(".bmp")) {
 					startActivity(PhotoViewActivity.createIntent(url));
-					return true;
+				} else if (UrlUtils.isPostContentLink(url)) {
+					startActivity(UrlUtils.getPostContentIntent(url));
 				} else {
 					Intent it = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
 					startActivity(it);
-					return true;
-				}
+				}		
+				return true;
 			}
 
 			@Override
@@ -294,22 +301,28 @@ public class PostContentsJSActivity extends BaseActivity implements
 
 	public void prevPage() {
 		if (currPageNum >= 2) {
-			startActivity(PostContentsJSActivity.createIntent(boardId, postId,
-					currPageNum - 1, false));
+			Intent intent = PostContentsJSActivity.createIntent(boardId, postId,
+					currPageNum - 1, false);
+			intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+			startActivity(intent);
 		} else {
 			ToastUtils.show(this, "已经到第一页啦");
 		}
 	}
 
 	public void refreshPage() {
-		startActivity(PostContentsJSActivity.createIntent(boardId, postId,
-				currPageNum, true));
+		Intent intent = PostContentsJSActivity.createIntent(boardId, postId,
+				currPageNum, true);
+		intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+		startActivity(intent);
 	}
 
 	public void nextPage() {
 		if (currPageNum + 1 <= totalPageNum) {
-			startActivity(PostContentsJSActivity.createIntent(boardId, postId,
-					currPageNum + 1, false));
+			Intent intent = PostContentsJSActivity.createIntent(boardId, postId,
+					currPageNum + 1, false);
+			intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+			startActivity(intent);
 		} else {
 			ToastUtils.show(this, "已经到最后一页啦");
 		}
