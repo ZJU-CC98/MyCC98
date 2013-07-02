@@ -131,7 +131,7 @@ public class CC98UrlManagerImpl implements ICC98UrlManager {
 
 	@Override
 	public String getPostUrl(String boardId, String postId, int pageNum) {
-		return getClientPrefix() + "dispbbs.asp?boardID=" + boardId + "&ID=" + postId
+		return CC98 + "dispbbs.asp?boardID=" + boardId + "&ID=" + postId
 				+ "&star=" + pageNum;
 	}
 
