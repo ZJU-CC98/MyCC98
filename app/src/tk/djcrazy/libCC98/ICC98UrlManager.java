@@ -54,6 +54,8 @@ public interface ICC98UrlManager {
 	public String getBoardUrl(String boardId);
 
 	public String getPostUrl(String boardId, String postId, int pageNum);
+	
+	public String getCC98PostUrl(String boardId, String postId, int pageNum);
 
 	/**
 	 * @return the hotTopicUrl

@@ -16,16 +16,16 @@ import com.google.inject.Singleton;
 @Singleton
 public class CC98UrlManagerImpl implements ICC98UrlManager {
 	private final String CC98 = "http://www.cc98.org/";
-	private final String LIFETOY = "http://hz.cc98.lifetoy.org/";
+	private final String PROXY = "http://hz.cc98.lifetoy.org/";
 	private final String ZJU_RVPN_HOST = "https://61.175.193.50/";
 	private final String ZJU_RVPN_HOST_PREFIX = "/web/1/http/0/www.cc98.org/";
 	
-	@Inject
+	@Inject 
 	private Application application;
  
 	private String getClientPrefix() {
 		if (getProxyType()==LoginType.USER_DEFINED) {
-			return LIFETOY;
+			return PROXY;
 		} else if (getProxyType()==LoginType.RVPN) {
 			return ZJU_RVPN_HOST + ZJU_RVPN_HOST_PREFIX;
 		} else {
@@ -35,7 +35,7 @@ public class CC98UrlManagerImpl implements ICC98UrlManager {
 	
 	private String getClientPrefix(LoginType proxy) { 
 		if (proxy==LoginType.USER_DEFINED) {
-			return LIFETOY;
+			return PROXY;
 		} else if (proxy==LoginType.RVPN) {
 			return ZJU_RVPN_HOST+ZJU_RVPN_HOST_PREFIX;
 		} else {
@@ -111,7 +111,7 @@ public class CC98UrlManagerImpl implements ICC98UrlManager {
 	@Override
 	public String getClientUrl() {
 		if (getProxyType()==LoginType.USER_DEFINED) {
-			return LIFETOY;
+			return PROXY;
 		} else if (getProxyType()==LoginType.RVPN) {
 			return ZJU_RVPN_HOST;
 		} else {
@@ -131,10 +131,16 @@ public class CC98UrlManagerImpl implements ICC98UrlManager {
 
 	@Override
 	public String getPostUrl(String boardId, String postId, int pageNum) {
+		return getClientPrefix() + "dispbbs.asp?boardID=" + boardId + "&ID=" + postId
+				+ "&star=" + pageNum;
+	}
+	
+	@Override
+	public String getCC98PostUrl(String boardId, String postId, int pageNum) {
 		return CC98 + "dispbbs.asp?boardID=" + boardId + "&ID=" + postId
 				+ "&star=" + pageNum;
 	}
-
+ 
 	@Override
 	public String getHotTopicUrl() {
 		return getClientPrefix() + "hottopic.asp";
@@ -210,7 +216,7 @@ public class CC98UrlManagerImpl implements ICC98UrlManager {
 	@Override
 	public String getClientUrl(LoginType type) {
 		if (type==LoginType.USER_DEFINED) {
-			return LIFETOY;
+			return PROXY;
 		} else if(type==LoginType.NORMAL){
 			return CC98;
 		} else {
