@@ -181,8 +181,7 @@ public class PmViewActivity extends BaseFragmentActivity {
 						builder.append(
 								"<div class=\"post-content\"><span id=\"ubbcode\">")
 								.append("<div class=\"post-content\"><span id=\"ubbcode\">")
-								.append(helper.parseInnerLink(pmContent,
-										"PmReply"))
+								.append(pmContent)
 								.append("</span><script>searchubb('ubbcode',1,'tablebody2');</script></div>");
  					} catch (Exception e) {
 						e.printStackTrace();

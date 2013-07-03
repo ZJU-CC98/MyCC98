@@ -295,9 +295,9 @@ public class EditActivity extends BaseFragmentActivity implements OnClickListene
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				String pmTitle = "用户：" + service.getCurrentUserName() + " 在帖子中回复了你";
-				String pmContent = "详情请点击："
-						+ manager.getPostUrl(boardID, postId, quotePageNumber)
-						+ "#" + quoteFloorNumber;
+				String pmContent = "详情请点击：[url="
+						+ manager.getCC98PostUrl(boardID, postId, quotePageNumber)
+						+ "]"+postName+ "[/url]";
 				new SendPMTask(EditActivity.this, replyUserName, pmTitle,
 						pmContent).execute();
 				PushReplyTask task = new PushReplyTask(EditActivity.this,
