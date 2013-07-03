@@ -321,9 +321,11 @@ public class CC98ParserImpl implements ICC98Parser {
 				entity.setChildBoardNumber(0);
 			}
 			try {
-				entity.setLastReplyBoardId(getMatchedString(CC98ParseRepository.P_BOARD_LAST_REPLY_BOARDID_REGEX, string));
+				entity.setPostNumberToday(Integer.parseInt(getMatchedString(
+						P_BOARD_POST_NUMBER_TODAY, string)));
 				entity.setBoardName(Html.fromHtml(getMatchedString(P_BOARD_NAME_REGEX, string))
 						.toString());
+				entity.setLastReplyBoardId(getMatchedString(CC98ParseRepository.P_BOARD_LAST_REPLY_BOARDID_REGEX, string));
 				entity.setLastReplyAuthor(Html.fromHtml(
 						getMatchedString(P_BOARD_LAST_REPLY_AUTHOR_REGEX, string)).toString());
 				entity.setLastReplyTime(DateFormatUtil.convertStrToDateInPBoard(getMatchedString(
@@ -332,8 +334,6 @@ public class CC98ParserImpl implements ICC98Parser {
 						string));
 				entity.setLastReplyTopicName(Html.fromHtml(
 						getMatchedString(P_BOARD_LAST_REPLY_TOPIC_NAME_REGEX, string)).toString());
-				entity.setPostNumberToday(Integer.parseInt(getMatchedString(
-						P_BOARD_POST_NUMBER_TODAY, string)));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
