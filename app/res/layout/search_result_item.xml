@@ -48,7 +48,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="4dp"
                     android:minWidth="30dp"
-                    android:textColor="#aaa"
+                    android:textColor="@color/card_text_grey_color"
                     android:textSize="12sp" />
             </LinearLayout>
         </LinearLayout>

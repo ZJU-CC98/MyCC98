@@ -2,12 +2,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/board_info_background"
+    android:background="@color/card_list_bg"
     android:orientation="vertical" >
 
     <android.support.v4.view.ViewPager
         android:id="@+id/post_search_main_pages"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#e3e3e3" />
+        android:background="@color/card_list_bg" />
 </LinearLayout>

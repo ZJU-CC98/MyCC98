@@ -28,7 +28,7 @@
         android:cacheColorHint="@color/transparent"
         android:divider ="@null"
         android:dividerHeight="0.0dp"
-        app:ptrHeaderTextColor="#999"
+        app:ptrHeaderTextColor="@color/card_grey_text"
         app:ptrMode="pullFromStart" 
         app:ptrOverScroll="true"
         app:ptrAnimationStyle="flip"
@@ -40,7 +40,7 @@
         android:layout_height="wrap_content"
         android:drawableBottom="@drawable/reload"
         android:text="加载失败\n点击重试"
-        android:textColor="#777" 
+        android:textColor="@color/card_grey_text" 
         android:layout_centerInParent="true" 
         android:visibility="gone"/>
 

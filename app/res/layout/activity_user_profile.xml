@@ -7,7 +7,7 @@
     <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:background="@color/user_profile_bg"
+        android:background="@color/card_list_bg"
         android:scrollbars="horizontal" >
 
         <LinearLayout
@@ -62,7 +62,7 @@
                         android:layout_height="wrap_content"
                          android:text="在线"
                         android:visibility="gone"
-                        android:textColor="#444" />
+                        android:textColor="@color/text_dark" />
 
                     <TextView
                         android:id="@+id/profile_user_name"

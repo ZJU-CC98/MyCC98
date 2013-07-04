@@ -2,13 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#333"
+    android:background="@color/background_dark"
     android:orientation="vertical" >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/abs__action_bar_default_height"
-        android:background="#77252525"
+        android:background="@color/dark_actionbar"
         android:gravity="center_vertical" >
 
         <TextView
@@ -17,7 +17,7 @@
             android:layout_marginLeft="15dp"
             android:layout_weight="1.0"
             android:text="账号"
-            android:textColor="#f9f9f9"
+            android:textColor="@color/text_light_white"
             android:textSize="18sp" />
 
         <ImageView

@@ -3,22 +3,13 @@
     android:id="@+id/home_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#e3e3e3"
+    android:background="@color/card_list_bg"
     android:orientation="vertical" >
 
- 
-<!--     <com.viewpagerindicator.TabPageIndicator -->
-<!--         android:id="@+id/main_titles" -->
-<!--         android:layout_width="match_parent" -->
-<!--         android:layout_height="wrap_content" -->
-<!--         android:background="@drawable/pager_title_background" -->
-<!--         android:textColor="@color/pager_title_text" -->
-<!--         android:textSize="12sp"/> -->
-
-    <android.support.v4.view.ViewPager
+     <android.support.v4.view.ViewPager
         android:id="@+id/main_pages"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#e3e3e3" />
+        android:background="@color/card_list_bg" />
 
 </LinearLayout>

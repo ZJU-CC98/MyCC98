@@ -2,8 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/board_info_background"
-    android:orientation="horizontal" >
+     android:orientation="horizontal" >
 
 
     <TextView
@@ -14,7 +13,7 @@
         android:text="点击加载更多"
         android:paddingLeft="30dp"
         android:paddingRight="30dp"
-        android:textColor="#a0a0a0"
+        android:textColor="@color/text_dark"
         android:layout_centerInParent="true"
         android:background="@drawable/listview_selector" />
     <ProgressBar

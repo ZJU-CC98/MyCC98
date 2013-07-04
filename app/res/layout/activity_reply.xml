@@ -3,7 +3,7 @@
     android:id="@+id/layout_root"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#f9f9f9"
+    android:background="@color/card_list_bg"
     android:orientation="vertical" >
 
     <LinearLayout
@@ -28,7 +28,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:hint="主题"
-                android:textColor="#444444"
+                android:textColor="@color/text_dark"
                 android:textSize="15sp" />
 
             <!-- 回帖心情 -->
@@ -45,7 +45,7 @@
                 android:gravity="top"
                 android:hint="@string/moto_of_zju"
                 android:inputType="textMultiLine"
-                android:textColor="#444444"
+                android:textColor="@color/text_dark"
                 android:textSize="13sp" />
         </LinearLayout>
 				</ScrollView>
@@ -103,7 +103,7 @@
                 android:background="@drawable/edit_btn_send_selector"
                 android:paddingRight="10dp"
                 android:text="回复"
-                android:textColor="#666"
+                android:textColor="@color/text_dark"
                 android:textSize="15sp" />
         </LinearLayout>
 

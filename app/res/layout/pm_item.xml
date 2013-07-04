@@ -45,7 +45,7 @@
                 android:layout_weight="1.0"
                 android:lines="1"
                 android:text="Test Sender"
-                android:textColor="#999"
+                android:textColor="@color/card_grey_text"
                 android:textSize="12sp" />
 
             <TextView
@@ -56,7 +56,7 @@
                 android:layout_alignParentRight="true"
                 android:lines="1"
                 android:text="2012-02-15 13:45:00"
-                android:textColor="@color/post_list_last_reply_text_color"
+                android:textColor="@color/card_text_grey_color"
                 android:textSize="12sp" />
         </LinearLayout>
     </LinearLayout>
