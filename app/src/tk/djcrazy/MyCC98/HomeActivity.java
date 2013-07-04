@@ -283,9 +283,10 @@ public class HomeActivity extends BaseSlidingFragmentActivity implements
 			if (totalUnread!=0) {
 				mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 				mBuilder = new NotificationCompat.Builder(getContext()).setSmallIcon(
-						R.drawable.ic_launcher).setContentTitle("您有"+totalUnread+"条未读消息").setTicker("请点击查看");
+						R.drawable.ic_launcher).setContentTitle("您有"+totalUnread+"条未读消息").setTicker("您有"+totalUnread+"条未读消息").setContentText("请点击查看");
 				Uri alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 				mBuilder.setSound(alert);
+				mBuilder.setAutoCancel(true);
 				Intent resultIntent = new Intent(getContext(), PmActivity.class);
  				TaskStackBuilder stackBuilder = TaskStackBuilder.create(getContext());
 				stackBuilder.addParentStack(PmActivity.class);
@@ -296,9 +297,7 @@ public class HomeActivity extends BaseSlidingFragmentActivity implements
 				            PendingIntent.FLAG_UPDATE_CURRENT
 				        );
 				mBuilder.setContentIntent(resultPendingIntent);
-							Notification notification = mBuilder.build();
-				notification.flags = Notification.FLAG_AUTO_CANCEL;
-				mNotificationManager.notify(NODIFICATION_ID, mBuilder.build());
+  				mNotificationManager.notify(NODIFICATION_ID, mBuilder.build());
 			}
 		}
 	}
