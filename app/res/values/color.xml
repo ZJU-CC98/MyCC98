@@ -28,4 +28,5 @@
      <color name="dark_actionbar">#77252525</color>
      <color name="board_text">#75899e</color>
      <color name="post_text">#708090</color>
+     <color name="pm_title_unread">#c0392b</color>
 </resources>

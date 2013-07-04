@@ -65,5 +65,10 @@ public class PmListViewAdapter extends BaseItemListAdapter<PmInfo> {
 		itemView.topic.setText(StringEscapeUtils.unescapeHtml4(items.get(
 				position).getTopic()));
 		itemView.time.setText(items.get(position).getSendTime());
+		if (items.get(position).isNew()) {
+			itemView.topic.setTextColor(context.getResources().getColorStateList(R.color.pm_title_unread));
+		} else {
+			itemView.topic.setTextColor(context.getResources().getColorStateList(R.color.post_text));
+		}
 	}
 }

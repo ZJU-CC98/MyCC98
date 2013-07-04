@@ -1,5 +1,7 @@
 package tk.djcrazy.libCC98.data;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 
 /**
  * Store the information of pm.
@@ -53,6 +55,11 @@ public final class PmInfo {
         avatarUrl = builder.userAvater;
     }
 
+    
+    @Override
+    public String toString() {
+    	return ToStringBuilder.reflectionToString(this);
+    }
     /**
      * PLease use this Builder to obtain a new instance of PmInfo. e.g: PmInfo =
      * PmInfo.Builder.newTopic(arg).fromWho(arg).....userAvatar(arg).build();

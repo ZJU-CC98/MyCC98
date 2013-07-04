@@ -84,6 +84,7 @@ import tk.djcrazy.libCC98.util.DateFormatUtil;
 import tk.djcrazy.libCC98.util.StringUtil;
 
 import android.text.Html;
+import android.util.Log;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -516,7 +517,7 @@ public class CC98ParserImpl implements ICC98Parser {
 		if (m3.find()) {
 			inboxInfo.setTotalPmIn(Integer.parseInt(m3.group()));
 		}
-		return pmList;
+ 		return pmList;
 	}
 
 	/**

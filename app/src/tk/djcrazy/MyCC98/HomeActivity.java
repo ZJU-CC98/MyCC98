@@ -1,5 +1,6 @@
 package tk.djcrazy.MyCC98;
 
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -13,7 +14,12 @@ import tk.djcrazy.MyCC98.listener.LoadingListener;
 import tk.djcrazy.MyCC98.service.NewVersionDownloadService;
 import tk.djcrazy.MyCC98.util.DisplayUtil;
 import tk.djcrazy.libCC98.CachedCC98Service;
+import tk.djcrazy.libCC98.data.InboxInfo;
+import tk.djcrazy.libCC98.data.PmInfo;
 import android.app.AlertDialog;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -22,10 +28,14 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.drawable.BitmapDrawable;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.KeyEvent;
@@ -91,6 +101,7 @@ public class HomeActivity extends BaseSlidingFragmentActivity implements
 			mFragment = (Fragment)this.getSupportFragmentManager().findFragmentById(R.id.home_behind_view);
 		}
 		new CheckUpdateTask(this).execute();
+		new CheckInboxTask(this).execute();
 	}
 
 	/**
@@ -132,10 +143,10 @@ public class HomeActivity extends BaseSlidingFragmentActivity implements
 		// customize the SlidingMenu
 		SlidingMenu sm = getSlidingMenu();
 		sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
-		sm.setShadowWidth(80);  
+		sm.setShadowWidth(10);  
 		sm.setBehindScrollScale(0f);
  		sm.setBehindOffset(DisplayUtil.dip2px(getApplicationContext(), 150));
-		sm.setFadeDegree(0f);
+		sm.setFadeDegree(0.35f);
 	}
 	
 	private void flushCache() {
@@ -244,6 +255,53 @@ public class HomeActivity extends BaseSlidingFragmentActivity implements
 		return false;
 	}
 
+	
+	private class CheckInboxTask extends RoboAsyncTask<List<PmInfo>> {
+		
+		@Inject
+		private NotificationManager mNotificationManager;
+		private NotificationCompat.Builder mBuilder;
+		private static final int NODIFICATION_ID = 58484654;
+
+		protected CheckInboxTask(Context context) {
+			super(context);
+		}
+		
+		@Override
+		public List<PmInfo> call() throws Exception {
+			return service.getPmData(1, new InboxInfo(0,0), 0);
+ 		}
+		@Override
+		protected void onSuccess(List<PmInfo> t) throws Exception {
+			super.onSuccess(t);
+			int totalUnread = 0;
+			for (PmInfo pmInfo : t) {
+				if (pmInfo.isNew()) {
+					totalUnread++;
+				}
+			}
+			if (totalUnread!=0) {
+				mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+				mBuilder = new NotificationCompat.Builder(getContext()).setSmallIcon(
+						R.drawable.ic_launcher).setContentTitle("您有"+totalUnread+"条未读消息").setTicker("请点击查看");
+				Uri alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+				mBuilder.setSound(alert);
+				Intent resultIntent = new Intent(getContext(), PmActivity.class);
+ 				TaskStackBuilder stackBuilder = TaskStackBuilder.create(getContext());
+				stackBuilder.addParentStack(PmActivity.class);
+				stackBuilder.addNextIntent(resultIntent);
+				PendingIntent resultPendingIntent =
+				        stackBuilder.getPendingIntent(
+				            0,
+				            PendingIntent.FLAG_UPDATE_CURRENT
+				        );
+				mBuilder.setContentIntent(resultPendingIntent);
+							Notification notification = mBuilder.build();
+				notification.flags = Notification.FLAG_AUTO_CANCEL;
+				mNotificationManager.notify(NODIFICATION_ID, mBuilder.build());
+			}
+		}
+	}
 	private class CheckUpdateTask extends RoboAsyncTask<String> {
 
 		protected CheckUpdateTask(Context context) {

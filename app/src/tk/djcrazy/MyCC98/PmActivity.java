@@ -4,6 +4,7 @@ import roboguice.inject.ContentView;
 import roboguice.inject.InjectView;
 import tk.djcrazy.MyCC98.adapter.InboxFragmentPagerAdapter;
 import tk.djcrazy.libCC98.CachedCC98Service;
+import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
@@ -51,6 +52,9 @@ public class PmActivity extends BaseFragmentActivity implements OnPageChangeList
 			com.actionbarsherlock.view.MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
+			Intent intent = new Intent(this, HomeActivity.class);
+			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
+			startActivity(intent);
 			finish();
 			return true;
 		default:
