@@ -42,6 +42,7 @@ import android.text.Html;
 import android.text.Html.ImageGetter;
 import android.text.Spannable;
 import android.text.style.ImageSpan;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -658,6 +659,7 @@ public class EditActivity extends BaseFragmentActivity implements OnClickListene
 		@Override
 		protected void onException(Exception e) {
 			super.onException(e);
+			Log.e(TAG, "", e);
 			ToastUtils.show(context, "上传图片失败，请检查网络或图片");
 		}
 	}

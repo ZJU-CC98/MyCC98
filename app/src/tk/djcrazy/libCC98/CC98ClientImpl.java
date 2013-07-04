@@ -56,6 +56,9 @@ import ch.boye.httpclientandroidlib.conn.scheme.Scheme;
 import ch.boye.httpclientandroidlib.conn.scheme.SchemeRegistry;
 import ch.boye.httpclientandroidlib.conn.ssl.SSLSocketFactory;
 import ch.boye.httpclientandroidlib.cookie.Cookie;
+import ch.boye.httpclientandroidlib.entity.mime.MultipartEntity;
+import ch.boye.httpclientandroidlib.entity.mime.content.FileBody;
+import ch.boye.httpclientandroidlib.entity.mime.content.StringBody;
 import ch.boye.httpclientandroidlib.impl.client.DefaultHttpClient;
 import ch.boye.httpclientandroidlib.impl.client.cache.CacheConfig;
 import ch.boye.httpclientandroidlib.impl.client.cache.CachingHttpClient;
@@ -373,59 +376,16 @@ public class CC98ClientImpl implements ICC98Client {
 	public String uploadPictureToCC98(File picFile)
 			throws PatternSyntaxException, MalformedURLException, IOException,
 			ParseContentException {
-
-		URL url = new URL(manager.getUploadPictureUrl());
-		HttpURLConnection uc = (HttpURLConnection) url.openConnection();
-		// 上传图片的一些参数设置
-		String cookieString = "";
-		for (Cookie cookie : getHttpClient().getCookieStore().getCookies()) {
-			cookieString += cookie.getName() + "=" + cookie.getValue() + "; ";
-		}
-		uc.setRequestProperty("Cookie", cookieString);
-		uc.setRequestProperty("User-Agent",
-				"Apache-HttpClient/4.1.2 (java 1.5)");
-		uc.setRequestProperty("Connection", "Keep-Alive");
-		uc.setRequestProperty("Host", "www.cc98.org");
-		uc.setRequestProperty("Content-Type",
-				"multipart/form-data; boundary=iZhqsAXWbyxTJ01lIrUiXj_AGU2675rDPk");
-		uc.addRequestProperty("Cookie2", "$Version=1");
-		uc.setDoOutput(true);
-		uc.setUseCaches(true);
-		// 读取文件流
-		int size = (int) picFile.length();
-		byte[] data = new byte[size];
-		FileInputStream fis = new FileInputStream(picFile);
-		OutputStream out = uc.getOutputStream();
-		fis.read(data, 0, size);
-		String temp = "--iZhqsAXWbyxTJ01lIrUiXj_AGU2675rDPk\r\n";
-		out.write(temp.getBytes());
-		temp = "Content-Disposition: form-data; name=\"file\"; "
-				+ "filename=\"" + picFile.getName() + "\"\r\n";
-		out.write(temp.getBytes());
-		temp = "Content-Type: application/octet-stream\r\nContent-Transfer-Encoding: binary\r\n\r\n";
-		out.write(temp.getBytes());
-		// 写入图片流
-		out.write(data);
-		temp = "\n--iZhqsAXWbyxTJ01lIrUiXj_AGU2675rDPk\r\nContent-Disposition: form-data; name=\"descript\"\r\nContent-Type: text/plain; charset=US-ASCII\r\nContent-Transfer-Encoding: 8bit\r\n";
-		out.write(temp.getBytes());
-		temp = "0431.la\r\n--iZhqsAXWbyxTJ01lIrUiXj_AGU2675rDPk--\r\n";
-		out.write(temp.getBytes());
-		out.flush();
-		out.close();
-		fis.close();
-		// 读取响应数据
-		int code = uc.getResponseCode();
-		String sCurrentLine = "";
-		// 存放响应结果
-		String sTotalString = "";
-		if (code == 200) {
-			InputStream is = uc.getInputStream();
-			BufferedReader reader = new BufferedReader(
-					new InputStreamReader(is));
-			while ((sCurrentLine = reader.readLine()) != null)
-				if (sCurrentLine.length() > 0)
-					sTotalString = sTotalString + sCurrentLine.trim();
-		} else {
+		HttpPost post = new HttpPost(manager.getUploadPictureUrl());
+        MultipartEntity reqEntity = new MultipartEntity();
+        reqEntity.addPart("act", new StringBody("upload"));
+        reqEntity.addPart("fname", new StringBody(picFile.getName()));
+        reqEntity.addPart("file1", new FileBody(picFile));
+        post.setEntity(reqEntity);
+        HttpResponse response = getHttpClient().execute(post);
+        String sTotalString = EntityUtils.toString(response.getEntity());
+  		if (response.getStatusLine().getStatusCode() != 200) {
+ 			Log.e(TAG, sTotalString);
 			throw new IllegalStateException("upload error");
 		}
 		return RegexUtil.getMatchedString(
