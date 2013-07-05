@@ -12,6 +12,7 @@ import java.util.Map;
 
 import org.apache.commons.lang3.CharSequenceUtils;
 
+import roboguice.inject.InjectPreference;
 import tk.djcrazy.MyCC98.application.MyApplication;
 import tk.djcrazy.MyCC98.helper.ThemeHelper;
 
@@ -40,8 +41,8 @@ public class SettingsActivity extends RoboSherlockPreferenceActivity {
 	public static final String USE_CUSTOM_TAIL = "use_custom_tail";
 	public static final String CUSTOM_TAIL_CONTENT = "custom_tail_content";
 	public static final String SHOW_IMAGE = "enable_load_image";
+	public static final String SHOW_TOP = "enable_show_top";
 	public static final String THEME = "post_theme";
-	
 	public static final String THEME_DEFAULT = "default";
 
 	private CheckBoxPreference showTailPreference;

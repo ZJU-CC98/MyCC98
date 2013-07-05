@@ -10,6 +10,10 @@
         android:defaultValue="true"
         android:summary="关闭可以节省一部分流量"/>
     <CheckBoxPreference 
+        android:key="enable_show_top"
+        android:title="显示置顶帖"
+        android:defaultValue="true" />
+    <CheckBoxPreference 
         android:key="enable_cache"
         android:title="打开内容缓存"
         android:summary="程序可以缓存一部分内容到本地，但是可能会占用一些空间"

@@ -1,33 +1,23 @@
 package tk.djcrazy.MyCC98.fragment;
 
-import java.io.Serializable;
+import java.util.Iterator;
 import java.util.List;
 
-import tk.djcrazy.MyCC98.PostContentsJSActivity;
-import tk.djcrazy.MyCC98.R;
+import tk.djcrazy.MyCC98.SettingsActivity;
 import tk.djcrazy.MyCC98.adapter.BaseItemListAdapter;
-import tk.djcrazy.MyCC98.adapter.HotTopicListAdapter;
 import tk.djcrazy.MyCC98.adapter.PostListViewAdapter;
-import tk.djcrazy.MyCC98.application.MyApplication;
 import tk.djcrazy.MyCC98.util.ThrowableLoader;
 import tk.djcrazy.MyCC98.view.PagedPullToRefreshListView;
 import tk.djcrazy.libCC98.CachedCC98Service;
-import tk.djcrazy.libCC98.SerializableCache;
-import tk.djcrazy.libCC98.data.HotTopicEntity;
 import tk.djcrazy.libCC98.data.PostEntity;
-import tk.djcrazy.libCC98.util.SerializableCacheUtil;
+import tk.djcrazy.libCC98.data.PostType;
 import android.app.Activity;
-import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.content.Loader;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ListView;
-
-import ch.boye.httpclientandroidlib.impl.client.cache.CacheConfig;
 
 import com.google.inject.Inject;
 
@@ -40,7 +30,8 @@ public class PostListFragment extends PagedPullToRefeshListFragment<PostEntity> 
 	private CachedCC98Service service;
 	private String boardId;
 	private String boardName;
-
+	private boolean enableTopPost;
+	
 	public static PostListFragment createInstance(String boardId,
 			String boardName) {
 		PostListFragment fragment = new PostListFragment();
@@ -57,6 +48,11 @@ public class PostListFragment extends PagedPullToRefeshListFragment<PostEntity> 
 		Bundle bundle = getArguments();
  		boardId = bundle.getString(BOARD_ID);
 		boardName = bundle.getString(BOARD_NAME);
+		SharedPreferences sharedPref = PreferenceManager
+				.getDefaultSharedPreferences(getActivity());
+	    enableTopPost = sharedPref.getBoolean(
+				SettingsActivity.SHOW_TOP, true);
+
  	}
 
 	@Override
@@ -68,15 +64,24 @@ public class PostListFragment extends PagedPullToRefeshListFragment<PostEntity> 
 
 	@Override
 	public Loader<List<PostEntity>> onCreateLoader(int arg0, Bundle arg1) {
-		// Cache behavior:
-		// Use cache if exists until refresh.
-		// When refresh, remove all post list cache of the board.
+ 
 		return new ThrowableLoader<List<PostEntity>>(getActivity(), items) {
-
 			@Override
 			public List<PostEntity> loadData() throws Exception {
 				int pagenum = getListView().getCurrentPage() + 1;
-				return service.getPostList(boardId, pagenum, true);
+				List<PostEntity> list = service.getPostList(boardId, pagenum, true);
+				if (!enableTopPost) {
+					Iterator<PostEntity> iterator = list.iterator();
+					while (iterator.hasNext()) {
+						PostEntity postEntity = (PostEntity) iterator.next();
+						if (postEntity.getPostType().equals(PostType.TOP)|
+							postEntity.getPostType().equals(PostType.Z_TOP)|
+							postEntity.getPostType().equals(PostType.TOP_B)) {
+							iterator.remove();
+						}
+					}
+				}
+				return list;
 			}
 		};
 	}
