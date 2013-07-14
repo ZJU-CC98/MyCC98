@@ -32,6 +32,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
@@ -141,11 +142,13 @@ public class PostContentsJSActivity extends BaseActivity implements
 		new GetPostContentTask(this, boardId, postId, currPageNum, forceRefresh).execute();
 	}
 
+	@Override
 	public void onPause() {
 		super.onPause();
 		this.callHiddenWebViewMethod("onPause");
 	}
 
+	@Override
 	public void onResume() {
 		super.onResume();
 		this.callHiddenWebViewMethod("onResume");
@@ -281,6 +284,7 @@ public class PostContentsJSActivity extends BaseActivity implements
 				return gestureDetector.onTouchEvent(event);
 			}
 		});
+ 		webView.setBackgroundColor(Color.parseColor("#e3e3e3"));
 	}
 
 	/**
@@ -529,6 +533,7 @@ public class PostContentsJSActivity extends BaseActivity implements
 		private void prefetch() {
 			if (currPageNum < totalPageNum) {
 				new Thread() {
+					@Override
 					public void run() {
 						try {
 							service.getPostContentList(aBoardId, aPostId,
@@ -541,6 +546,7 @@ public class PostContentsJSActivity extends BaseActivity implements
 			}
 			if (currPageNum > 1) {
 				new Thread() {
+					@Override
 					public void run() {
 						try {
 							service.getPostContentList(aBoardId, aPostId,
@@ -568,8 +574,8 @@ public class PostContentsJSActivity extends BaseActivity implements
 			if (currPageNum > totalPageNum || currPageNum == LAST_PAGE) {
 				currPageNum = totalPageNum;
 			}
-			boardName = (String) info.getBoardName();
-			postName = (String) info.getPostTopic();
+			boardName = info.getBoardName();
+			postName = info.getPostTopic();
  			webView.loadDataWithBaseURL(null, assemblyContent(t), "text/html",
 					"utf-8", null);
 			getSupportActionBar().setTitle(postName);

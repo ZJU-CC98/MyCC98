@@ -103,7 +103,7 @@
                 android:background="@drawable/edit_btn_send_selector"
                 android:paddingRight="10dp"
                 android:text="回复"
-                android:textColor="@color/text_dark"
+                android:textColor="@color/card_grey_text"
                 android:textSize="15sp" />
         </LinearLayout>
 

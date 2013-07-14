@@ -137,14 +137,17 @@ public class CC98ClientImpl implements ICC98Client {
 			HttpProtocolParams.setContentCharset(params, "UTF-8");
 			HttpProtocolParams.setUseExpectContinue(params, true);
 			X509TrustManager xtm = new X509TrustManager() {
+				@Override
 				public void checkClientTrusted(X509Certificate[] chain,
 						String authType) {
 				}
 
+				@Override
 				public void checkServerTrusted(X509Certificate[] chain,
 						String authType) {
 				}
 
+				@Override
 				public X509Certificate[] getAcceptedIssuers() {
 					return null;
 				}
@@ -205,7 +208,7 @@ public class CC98ClientImpl implements ICC98Client {
 		HttpResponse response = getHttpClient().execute(httpost);
 		if (response.getStatusLine().getStatusCode() != 200) {
 			throw new NetworkErrorException(SERVER_ERROR);
-		}
+		} 
 		String sysMsg = EntityUtils.toString(response.getEntity());
 		if (!sysMsg.contains("9898")) {
 			throw new IllegalAccessException(ID_PASSWD_ERROR_MSG);

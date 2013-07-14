@@ -9,6 +9,6 @@
             android:id="@+id/post_contents"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-    android:background="@color/card_list_bg" />
+            android:background="@color/card_list_bg" />
  
  </LinearLayout>
