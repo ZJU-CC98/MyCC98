@@ -1,10 +1,10 @@
 buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:0.4.1'
-    }
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath 'com.android.tools.build:gradle:0.4.2'
+	}
 }
 apply plugin: 'android-library'
 
@@ -13,13 +13,14 @@ dependencies {
 }
 
 android {
-    compileSdkVersion 17
-    buildToolsVersion "17"
 
-    defaultConfig {
-        minSdkVersion 7
-        targetSdkVersion 17
-    }
+	compileSdkVersion 16
+	buildToolsVersion "17"
+	defaultConfig {
+		minSdkVersion 7
+		targetSdkVersion 16
+	}
+
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'

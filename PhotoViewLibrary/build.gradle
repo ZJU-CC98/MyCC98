@@ -1,4 +1,4 @@
-apply plugin: "android"
+
 buildscript {
 	repositories {
 		mavenCentral()
@@ -7,15 +7,15 @@ buildscript {
 		classpath 'com.android.tools.build:gradle:0.4.2'
 	}
 }
- 
+apply plugin: 'android-library'
+
+
 dependencies {
-	compile  fileTree(dir: 'libs', include: '*.jar')	
- 	compile  project(":SlidingMenuLibrary")
-	compile  project(":AndroidPullToRefreshLibrary")
-	compile  project(":PhotoViewLibrary")
+	compile fileTree(dir: 'libs', include: '*.jar')	
 }
-	
+
 android {
+
 	compileSdkVersion 16
 	buildToolsVersion "17"
 	defaultConfig {
@@ -23,26 +23,7 @@ android {
 		targetSdkVersion 16
 	}
 
-    signingConfigs {
-		releaseConfig {
-            storeFile file("MyCC98.keystore")
-            storePassword "66957860"
-            keyAlias "androidkey"
-            keyPassword "66957860"
-        }
-    }
-
-    buildTypes {
-		debug {
- 		}
-		release {
-		    runProguard true
-			proguardFile ('proguard-project.txt')
-			signingConfig signingConfigs.releaseConfig
- 		}
-	}
-	
-	sourceSets {
+    sourceSets {
         main {
             manifest.srcFile './AndroidManifest.xml'
             java.srcDirs = ['src']
@@ -55,7 +36,4 @@ android {
 
         instrumentTest.setRoot('tests')
     }
-
 }
-
-	
