@@ -11,12 +11,5 @@
         android:width="1px"
         android:color="#3079ed" />
 
-    <corners android:radius="3dp" />
-
-    <padding
-        android:bottom="10dp"
-        android:left="10dp"
-        android:right="10dp"
-        android:top="10dp" />
 
 </shape>

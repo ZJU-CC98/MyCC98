@@ -6,9 +6,25 @@
 
 package tk.djcrazy.MyCC98;
 
-import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+import android.os.Bundle;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.Window;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 
-import java.io.File;
+import com.google.inject.Inject;
+
 import java.io.IOException;
 
 import roboguice.inject.InjectExtra;
@@ -21,32 +37,12 @@ import tk.djcrazy.MyCC98.util.ProgressRoboAsyncTask;
 import tk.djcrazy.MyCC98.util.ToastUtils;
 import tk.djcrazy.libCC98.CachedCC98Service;
 import tk.djcrazy.libCC98.data.LoginType;
-import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnCancelListener;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.Window;
-import android.view.animation.AccelerateDecelerateInterpolator;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 
-import com.google.inject.Inject;
+import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
 
 public class LoginActivity extends BaseFragmentActivity implements
 		OnClickListener {
 	private static final String TAG = "MyCC98";
-
-	public static final boolean IS_PROXY_VERSION = true ;
 
 	public static final String USERNAME = "USERNAME";
 	public static final String PASSWORD32 = "PASSWORD32";
@@ -154,11 +150,11 @@ public class LoginActivity extends BaseFragmentActivity implements
 					}
 				});
 		authBuilder.setCancelable(false);
-		if (IS_PROXY_VERSION) {
-			authBuilder.show();
-		} else {
-			showLoginField();
-		}
+		if (Config.IS_NORMAL_VERSION) {
+            showLoginField();
+        } else {
+            authBuilder.show();
+        }
 	}
 
 	private void saveAuthInfo() {

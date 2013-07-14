@@ -298,8 +298,10 @@ public class PostContentsJSActivity extends BaseActivity implements
 
 	public void jumpTo(int pageNum) {
 		if (pageNum <= totalPageNum) {
-			startActivity(PostContentsJSActivity.createIntent(boardId, postId,
-					pageNum, false));
+            Intent intent = PostContentsJSActivity.createIntent(boardId, postId,
+                    pageNum, false);
+            intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP|Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
 		}
 	}
 
