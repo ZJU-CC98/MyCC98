@@ -278,13 +278,13 @@ public class CachedCC98Service {
 	}
 
 	public List<BoardStatus> getTodayBoardList()
-			throws ClientProtocolException, ParseException, IOException,
+			throws ParseException, IOException,
 			ParseContentException {
 		return service.getTodayBoardList();
 	}
 
 	public List<UserStatueEntity> getFriendList()
-			throws ClientProtocolException, ParseException, IOException,
+			throws  ParseException, IOException,
 			ParseContentException {
 		return service.getFriendList();
 	}

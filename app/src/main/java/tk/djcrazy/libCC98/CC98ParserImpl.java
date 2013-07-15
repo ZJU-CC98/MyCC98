@@ -675,8 +675,7 @@ public class CC98ParserImpl implements ICC98Parser {
 					mEntity.setOnlineTime(string);
 				}
 			}
-			mEntity.setUserAvartar(cc98Client.getUserImg(mEntity.getUserName()));
-			list.add(mEntity);
+ 			list.add(mEntity);
 		}
 		return list;
 	}

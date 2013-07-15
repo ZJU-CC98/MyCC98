@@ -65,7 +65,7 @@ public class CC98ServiceImpl implements ICC98Service {
 	@Override
 	public String uploadFile(File file) throws PatternSyntaxException, MalformedURLException,
 			IOException, ParseContentException {
-		return cc98Client.uploadPictureToCC98(file);
+		return cc98Client.uploadPicture(file);
 	}
 
 	@Override
@@ -208,7 +208,7 @@ public class CC98ServiceImpl implements ICC98Service {
 
 	@Override
 	public List<Bitmap> getUserAvatars() {
-		return cc98Client.getuserAvatars();
+		return cc98Client.getUserAvatars();
 	}
 
 	@Override
@@ -218,7 +218,7 @@ public class CC98ServiceImpl implements ICC98Service {
 
 	@Override
 	public UsersInfo getusersInfo() {
-		return cc98Client.getusersInfo();
+		return cc98Client.getUsersInfo();
 	}
 
 	@Override

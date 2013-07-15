@@ -23,22 +23,7 @@ import tk.djcrazy.libCC98.exception.ParseContentException;
 
 public interface ICC98Parser {
 
-	/**
-	 * Get a List of Maps of posts info.
-	 * 
-	 * @author DJ
-	 * @param boardLink
-	 *            , url String
-	 * @return A List that contains each post's basic information,
-	 * @throws IOException
-	 * @throws ParseException
-	 * @throws ClientProtocolException
-	 * @throws ParseContentException
-	 * @throws java.text.ParseException 
-	 * 
-	 * @see #parsePostList(String)
-	 */
-	public List<PostEntity> getPostList(String boardId, int pageNum)
+ 	public List<PostEntity> getPostList(String boardId, int pageNum)
 			throws ClientProtocolException, ParseException, IOException,
 			ParseContentException, java.text.ParseException;
 
@@ -57,37 +42,11 @@ public interface ICC98Parser {
 			throws ClientProtocolException, ParseException, IOException,
 			ParseContentException;
 
-	/**
-	 * Get a List of BoardEntity of board info from your personal board list.
-	 * 
-	 * @author DJ
-	 * @return List board info.
-	 * @throws IOException
-	 * @throws ParseException
-	 * @throws ClientProtocolException
-	 * @throws ParseContentException 
-	 * @throws java.text.ParseException 
-	 * 
-	 * @see #parsePersonalBoardList(String)
-	 */
-	public List<BoardEntity> getPersonalBoardList()
+ 	public List<BoardEntity> getPersonalBoardList()
 			throws ClientProtocolException, ParseException, IOException,
 			ParseContentException, java.text.ParseException;
 
-	/**
-	 * Get a list of Maps of each reply post's info.
-	 * 
-	 * @author DJ
-	 * @param postLink
-	 * @return A list of Maps of each reply post's info.
-	 * @throws java.text.ParseException
-	 * @throws IOException
-	 * @throws ParseException
-	 * @throws ClientProtocolException
-	 * @throws ParseContentException
-	 * @see #parsePostContentList(String)
-	 */
-	public List<PostContentEntity> getPostContentList(String boardId, String postId,
+ 	public List<PostContentEntity> getPostContentList(String boardId, String postId,
 			int pageNum) throws ClientProtocolException, ParseException,
 			ParseContentException, java.text.ParseException, IOException;
 
@@ -119,17 +78,7 @@ public interface ICC98Parser {
 	public List<SearchResultEntity> getNewPostList(int pageNum)
 			throws ClientProtocolException, ParseException, IOException, ParseContentException, java.text.ParseException;
 
-	/**
-	 * get user friend list
-	 * 
-	 * @param html
-	 * @return list of user
-	 * @throws ClientProtocolException
-	 * @throws ParseException
-	 * @throws IOException
-	 * @throws ParseContentException 
-	 */
-	public List<UserStatueEntity> getUserFriendList()
+ 	public List<UserStatueEntity> getUserFriendList()
 			throws ClientProtocolException, ParseException, IOException,
 			ParseContentException;
 

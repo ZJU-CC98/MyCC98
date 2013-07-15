@@ -1,11 +1,14 @@
 package tk.djcrazy.MyCC98;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import org.json.JSONObject;
 
+import roboguice.inject.InjectView;
 import roboguice.util.RoboAsyncTask;
 import tk.djcrazy.MyCC98.adapter.GlobalBoardListAdapter;
 import tk.djcrazy.MyCC98.adapter.HomeFragmentPagerAdapter;
@@ -25,6 +28,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -50,17 +54,21 @@ import ch.boye.httpclientandroidlib.HttpResponse;
 import ch.boye.httpclientandroidlib.client.methods.HttpGet;
 import ch.boye.httpclientandroidlib.impl.client.DefaultHttpClient;
 import ch.boye.httpclientandroidlib.util.EntityUtils;
+import tk.djcrazy.libCC98.data.UserStatue;
+import tk.djcrazy.libCC98.data.UserStatueEntity;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.app.ActionBar.TabListener;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.astuetz.viewpager.extensions.PagerSlidingTabStrip;
 import com.google.inject.Inject;
+import com.jfeinstein.jazzyviewpager.JazzyViewPager;
 import com.slidingmenu.lib.SlidingMenu;
 
 public class HomeActivity extends BaseSlidingFragmentActivity implements
-        LoadingListener, TabListener, OnPageChangeListener {
+        LoadingListener {
 
     private static final String TAG = "HomeActivity";
     public static final String USERINFO = "USERINFO";
@@ -68,7 +76,8 @@ public class HomeActivity extends BaseSlidingFragmentActivity implements
     public String[] boardNames;
     public String[] boardIds;
 
-    private ViewPager viewPager;
+    @InjectView(R.id.main_pages)
+    private JazzyViewPager viewPager;
 
     @Inject
     private CachedCC98Service service;
@@ -100,6 +109,8 @@ public class HomeActivity extends BaseSlidingFragmentActivity implements
         }
         new CheckUpdateTask(this).execute();
         new CheckInboxTask(this).execute();
+        //new GetFriendListTask(this).execute();
+
     }
 
     /**
@@ -107,12 +118,13 @@ public class HomeActivity extends BaseSlidingFragmentActivity implements
      */
     private void setupViewPager() {
         HomeFragmentPagerAdapter adapter = new HomeFragmentPagerAdapter(
-                getSupportFragmentManager());
+                getSupportFragmentManager(),viewPager);
         adapter.setLoadingListener(this);
-        viewPager = (ViewPager) findViewById(R.id.main_pages);
         viewPager.setAdapter(adapter);
-        viewPager.setOnPageChangeListener(this);
         viewPager.setCurrentItem(0);
+        viewPager.setTransitionEffect(JazzyViewPager.TransitionEffect.Tablet);
+        PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
+        tabs.setViewPager(viewPager);
     }
 
     /**
@@ -167,11 +179,6 @@ public class HomeActivity extends BaseSlidingFragmentActivity implements
     private void configureActionBar() {
         ActionBar actionBar = getSupportActionBar();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-        actionBar.addTab(actionBar.newTab().setText("我的版面").setTabListener(this));
-        actionBar.addTab(actionBar.newTab().setText("热门话题").setTabListener(this));
-        actionBar.addTab(actionBar.newTab().setText("版面列表").setTabListener(this));
-        actionBar.addTab(actionBar.newTab().setText("查看新帖").setTabListener(this));
         actionBar.setIcon(new BitmapDrawable(service.getCurrentUserAvatar()));
         actionBar.setHomeButtonEnabled(true);
         actionBar.setTitle(service.getCurrentUserName());
@@ -317,11 +324,9 @@ public class HomeActivity extends BaseSlidingFragmentActivity implements
         @Override
         protected void onSuccess(String t) throws Exception {
             super.onSuccess(t);
-            String aString = new String(t.getBytes(), "UTF-8");
-            aString = aString.replaceAll(".*?\\{", "{");
             JSONObject object = new JSONObject(t);
-            int verionCode = object.getInt("versionCode");
-            if (verionCode > getVersionCode()) {
+            int versionCode = object.getInt("versionCode");
+            if (versionCode > getVersionCode()) {
                 final String downloadLink = object.getString("downloadLink");
                 String versionName = object.getString("versionName");
                 String updateHint = object.getString("hint");
@@ -345,39 +350,34 @@ public class HomeActivity extends BaseSlidingFragmentActivity implements
         }
 
         private int getVersionCode() throws NameNotFoundException {
-            // 获取packagemanager的实例
+            // 获取package Manager的实例
             PackageManager packageManager = getPackageManager();
             // getPackageName()是你当前类的包名，0代表是获取版本信息
-            PackageInfo packInfo = packageManager.getPackageInfo(
-                    getPackageName(), 0);
+            PackageInfo packInfo = packageManager.getPackageInfo(getPackageName(), 0);
             return packInfo.versionCode;
         }
 
     }
+    private class GetFriendListTask extends RoboAsyncTask<List<UserStatueEntity>> {
 
-    @Override
-    public void onTabSelected(Tab tab, FragmentTransaction ft) {
-        viewPager.setCurrentItem(tab.getPosition());
-    }
+        protected GetFriendListTask(Context context) {
+            super(context);
+        }
 
-    @Override
-    public void onTabUnselected(Tab tab, FragmentTransaction ft) {
-    }
+        @Override
+        public List<UserStatueEntity> call() throws Exception {
+             return service.getFriendList();
+        }
 
-    @Override
-    public void onTabReselected(Tab tab, FragmentTransaction ft) {
-    }
-
-    @Override
-    public void onPageSelected(int arg0) {
-        getSupportActionBar().setSelectedNavigationItem(arg0);
-    }
-
-    @Override
-    public void onPageScrolled(int arg0, float arg1, int arg2) {
-    }
-
-    @Override
-    public void onPageScrollStateChanged(int arg0) {
+        @Override
+        protected void onSuccess(List<UserStatueEntity> t) throws Exception {
+            super.onSuccess(t);
+            Set<String> nameSet = new HashSet<String>();
+            for(UserStatueEntity entity : t) {
+                nameSet.add(entity.getUserName());
+            }
+            SharedPreferences.Editor editor = context.getSharedPreferences("FRIEND_LIST", MODE_PRIVATE).edit();
+            editor.clear().putStringSet("FRIENDS", nameSet).commit();
+        }
     }
 }

@@ -1,229 +1,88 @@
 package tk.djcrazy.libCC98;
 
+import android.accounts.NetworkErrorException;
+import android.graphics.Bitmap;
+
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 import java.util.List;
 import java.util.regex.PatternSyntaxException;
 
+import ch.boye.httpclientandroidlib.NameValuePair;
+import ch.boye.httpclientandroidlib.ParseException;
 import tk.djcrazy.MyCC98.application.MyApplication.UsersInfo;
 import tk.djcrazy.libCC98.data.LoginType;
 import tk.djcrazy.libCC98.data.UserData;
 import tk.djcrazy.libCC98.exception.CC98Exception;
 import tk.djcrazy.libCC98.exception.NoUserFoundException;
 import tk.djcrazy.libCC98.exception.ParseContentException;
-import android.accounts.NetworkErrorException;
-import android.graphics.Bitmap;
-import ch.boye.httpclientandroidlib.NameValuePair;
-import ch.boye.httpclientandroidlib.ParseException;
-import ch.boye.httpclientandroidlib.auth.AuthenticationException;
-import ch.boye.httpclientandroidlib.client.ClientProtocolException;
-import ch.boye.httpclientandroidlib.client.HttpClient;
 
 public interface ICC98Client {
-	public UserData getCurrentUserData();
+    public UserData getCurrentUserData();
 
-	/**
-	 * Login method
-	 * 
-	 * @param id
-	 * @param password
-	 * @return is success
-	 * @throws IOException
-	 * @throws ClientProtocolException
-	 * @throws IllegalAccessException
-	 * @throws ParseContentException
-	 * @throws ParseException
-	 * @throws NetworkErrorException
-	 */
-	public void doLogin(String id, String pw32, String pw16, String proxyName, String proxyPwd, LoginType type) throws ClientProtocolException,
-			IOException, IllegalAccessException, ParseException,
-			ParseContentException, NetworkErrorException;
+    public void doLogin(String id, String pw32, String pw16, String proxyName, String proxyPwd,
+                        LoginType type) throws
+            IOException, IllegalAccessException, ParseException,
+            ParseContentException, NetworkErrorException;
 
-	/**
-	 * Reply ?
-	 * 
-	 * @author DJ
-	 * @param nvpsList
-	 * @param boardID
-	 * @param rootID
-	 * @return ?
-	 * @throws IOException
-	 * @throws ClientProtocolException
-	 */
-	public boolean pushNewPost(List<NameValuePair> nvpsList, String boardID)
-			throws ClientProtocolException, IOException;
+    public boolean pushNewPost(List<NameValuePair> nvpsList, String boardID)
+            throws IOException;
 
-	/**
-	 * Edit post
-	 * 
-	 * @author zsy
-	 * @throws IOException
-	 * @throws ClientProtocolException
-	 */
-	public boolean editPost(List<NameValuePair> nvpsList, String link)
-			throws ClientProtocolException, IOException;
+    public boolean editPost(List<NameValuePair> nvpsList, String link)
+            throws IOException;
 
-	/**
-	 * Reply ?
-	 * 
-	 * @author DJ
-	 * @param nvpsList
-	 * @param boardID
-	 * @param rootID
-	 * @return ?
-	 * @throws IOException
-	 * @throws ClientProtocolException
-	 * @throws Exception
-	 */
-	public void submitReply(List<NameValuePair> nvpsList, String boardID,
-			String rootID) throws ClientProtocolException, IOException,
-			Exception;
+    public void submitReply(List<NameValuePair> nvpsList, String boardID,
+                            String rootID) throws Exception;
 
-	/**
-	 * @author zsy
-	 * @param keyWord
-	 * @param sType
-	 * @param searchDate
-	 * @param boardArea
-	 * @param boardID
-	 * @return
-	 * @throws ParseException
-	 * @throws IOException
-	 */
-	public String queryPosts(String keyWord, String sType, String searchDate,
-			int boardArea, String boardID) throws ParseException, IOException;
+    public String queryPosts(String keyWord, String sType, String searchDate,
+                             int boardArea, String boardID) throws ParseException, IOException;
 
-	/**
-	 * get the HTML code of the link address
-	 * 
-	 * @param link
-	 * @return HTML of the link address
-	 * @throws IOException
-	 * @throws ClientProtocolException
-	 * @throws ParseException
-	 */
-	public String getPage(String link) throws ClientProtocolException,
-			IOException, ParseException;
+    public String getPage(String link) throws
+            IOException, ParseException;
 
-	/**
-	 * 
-	 * @param picFile
-	 * @return
-	 * @throws IOException
-	 * @throws MalformedURLException
-	 * @throws PatternSyntaxException
-	 * @throws ParseContentException
-	 */
-	public String uploadPictureToCC98(File picFile)
-			throws PatternSyntaxException, MalformedURLException, IOException,
-			ParseContentException;
+    public String uploadPicture(File picFile)
+            throws PatternSyntaxException, IOException,
+            ParseContentException;
 
-	/**
-	 * get the HTML of the PM inbox
-	 * 
-	 * @author zsy
-	 * 
-	 * @param pageNumber
-	 *            The Page number of the inbox
-	 * @return A String contains the HTML of inbox
-	 * @throws IOException
-	 * @throws ParseException
-	 * @throws ClientProtocolException
-	 */
-	public String getInboxHtml(int pageNumber) throws ClientProtocolException,
-			ParseException, IOException;
+    public String getInboxHtml(int pageNumber) throws
+            ParseException, IOException;
 
-	/**
-	 * get the HTML of the PM outbox
-	 * 
-	 * @author zsy
-	 * 
-	 * @param pageNumber
-	 *            The Page number of the outbox
-	 * @return A String contains the HTML of outbox
-	 * @throws IOException
-	 * @throws ParseException
-	 * @throws ClientProtocolException
-	 */
-	public String getOutboxHtml(int pageNumber) throws ClientProtocolException,
-			ParseException, IOException;
+    public String getOutboxHtml(int pageNumber) throws
+            ParseException, IOException;
 
-	/**
-	 * Get user's avatar URL using user's id.
-	 * 
-	 * @author zsy
-	 * 
-	 * @param userName
-	 * @return User's avatar URL.
-	 * @throws IOException
-	 * @throws ParseException
-	 * @throws ClientProtocolException
-	 * @throws ParseContentException
-	 */
-	public String getUserImgUrl(String userName)
-			throws ClientProtocolException, ParseException, IOException,
-			ParseContentException;
+    public String getUserImgUrl(String userName)
+            throws ParseException, IOException,
+            ParseContentException;
 
-	/**
-	 * @author zsy
-	 * @param touser
-	 *            User's name
-	 * @param title
-	 *            Message title
-	 * @param message
-	 *            The message
-	 * @return PM_SEND_SUCC on success PM_SEND_FAIL on failure
-	 * @throws IOException
-	 * @throws ClientProtocolException
-	 * @throws CC98Exception 
-	 */
-	public void sendPm(String touser, String title, String message)
-			throws ClientProtocolException, IOException, CC98Exception;
+    public void sendPm(String toUser, String title, String message)
+            throws IOException, CC98Exception;
 
-	/**
-	 * add one user to friend list
-	 * 
-	 * @param userId
-	 * @throws ParseException
-	 * @throws NoUserFoundException
-	 * @throws IOException
-	 */
-	public void addFriend(String userId) throws ParseException,
-			NoUserFoundException, IOException;
+    public void addFriend(String userId) throws ParseException,
+            NoUserFoundException, IOException;
 
-	public String getUserProfileHtml(String userName)
-			throws NoUserFoundException, IOException;
+    public String getUserProfileHtml(String userName)
+            throws NoUserFoundException, IOException;
 
-	/**
-	 * Get bitmap using the url given
-	 * 
-	 * @param url
-	 * @return
-	 * @throws IOException
-	 */
+    public Bitmap getBitmapFromUrl(String url) throws IOException;
 
-	public Bitmap getBitmapFromUrl(String url) throws IOException;
+    public Bitmap getUserImg(String userName) throws
+            ParseException, IOException, ParseContentException;
 
-	public Bitmap getUserImg(String userName) throws ClientProtocolException,
-			ParseException, IOException, ParseContentException;
+    public void addHttpBasicAuthorization(UserData userData2, String authName, String authPassword);
 
-	public void addHttpBasicAuthorization(UserData userData2,String authName, String authPassword) ;
+    void clearLoginInfo();
 
-	void clearLoginInfo();
+    public String getDomain();
 
-	public String getDomain();
- 
-	public Bitmap getCurrentUserAvatar();
-	
-	public List<Bitmap> getuserAvatars();
+    public Bitmap getCurrentUserAvatar();
 
-	public UsersInfo getusersInfo();
+    public List<Bitmap> getUserAvatars();
 
-	public String getDomain(LoginType type);
+    public UsersInfo getUsersInfo();
 
-	public void switchToUser(int index);
+    public String getDomain(LoginType type);
 
-	public void deleteUserInfo(int pos);
+    public void switchToUser(int index);
+
+    public void deleteUserInfo(int pos);
 }

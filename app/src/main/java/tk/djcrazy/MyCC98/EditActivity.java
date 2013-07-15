@@ -1,24 +1,5 @@
 package tk.djcrazy.MyCC98;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import roboguice.inject.ContentView;
-import roboguice.inject.InjectExtra;
-import roboguice.inject.InjectView;
-import tk.djcrazy.MyCC98.R.id;
-import tk.djcrazy.MyCC98.adapter.EmotionGridViewAdapter;
-import tk.djcrazy.MyCC98.helper.TextHelper;
-import tk.djcrazy.MyCC98.util.Intents;
-import tk.djcrazy.MyCC98.util.ProgressRoboAsyncTask;
-import tk.djcrazy.MyCC98.util.ToastUtils;
-import tk.djcrazy.MyCC98.util.ViewUtils;
-import tk.djcrazy.libCC98.CachedCC98Service;
-import tk.djcrazy.libCC98.ICC98UrlManager;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
@@ -50,6 +31,7 @@ import android.view.View.OnFocusChangeListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
@@ -59,8 +41,30 @@ import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 
 import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.internal.widget.IcsListPopupWindow;
 import com.actionbarsherlock.view.MenuItem;
 import com.google.inject.Inject;
+
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Set;
+
+import roboguice.inject.ContentView;
+import roboguice.inject.InjectExtra;
+import roboguice.inject.InjectView;
+import tk.djcrazy.MyCC98.adapter.EmotionGridViewAdapter;
+import tk.djcrazy.MyCC98.helper.TextHelper;
+import tk.djcrazy.MyCC98.util.DisplayUtil;
+import tk.djcrazy.MyCC98.util.Intents;
+import tk.djcrazy.MyCC98.util.ProgressRoboAsyncTask;
+import tk.djcrazy.MyCC98.util.ToastUtils;
+import tk.djcrazy.MyCC98.util.ViewUtils;
+import tk.djcrazy.libCC98.CachedCC98Service;
+import tk.djcrazy.libCC98.ICC98UrlManager;
 
 @ContentView(R.layout.activity_reply)
 public class EditActivity extends BaseFragmentActivity implements OnClickListener {
@@ -138,11 +142,13 @@ public class EditActivity extends BaseFragmentActivity implements OnClickListene
 	private GridView mEmotionGrid;
 	@InjectView(R.id.reply_container)
 	private View mContainer;
- 	private String editContent;
-	private String editTopic;
-	private File mCurrentPhotoFile;
+
+ 	private File mCurrentPhotoFile;
 	private String faceGroupChooseString = "face7.gif";
 	private String picLink;
+    private IcsListPopupWindow friendsListPopupWindow;
+
+
 	@Inject
 	private CachedCC98Service service;
 	@Inject
@@ -166,7 +172,18 @@ public class EditActivity extends BaseFragmentActivity implements OnClickListene
 		configureActionBar();
 		setupListeners();
 		mEmotionGrid.setAdapter(new EmotionGridViewAdapter(this));
-	}
+        configurePopupWindow();
+ 	}
+
+    private void configurePopupWindow() {
+        friendsListPopupWindow  = new IcsListPopupWindow(this);
+        String[] testContent = {"one","two","three","four"};
+        friendsListPopupWindow.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, testContent));
+        friendsListPopupWindow.setAnchorView(mAtBtn);
+        friendsListPopupWindow.setContentWidth(DisplayUtil.dip2px(this,150f));
+        friendsListPopupWindow.setBackgroundDrawable(getResources().getDrawable(R.drawable.popupwindow_bg));
+    }
+
 
 	private void configureActionBar() {
 		ActionBar actionBar = getSupportActionBar();
@@ -188,26 +205,8 @@ public class EditActivity extends BaseFragmentActivity implements OnClickListene
  			replyContentEditText.setText(pmReplyContent);
 			replyTitleEditText.setText(pmReplyTopic);
 		} else if (requestType == REQUEST_EDIT) {
-			replyContentEditText.setText( editContent) ;
-			replyTitleEditText.setText( editTopic) ;
-		}
+ 		}
 		replyContentEditText.setSelection(replyContentEditText.getText().length());
-	}
-
-	private void lockContainerHeight(int paramInt) {
-		LinearLayout.LayoutParams localLayoutParams = (LinearLayout.LayoutParams) this.mContainer
-				.getLayoutParams();
-		localLayoutParams.height = paramInt;
-		localLayoutParams.weight = 0.0F;
-		unlockContainerHeightDelayed();
-	}
-
-	public void unlockContainerHeightDelayed() {
-		this.mEmotionGrid.postDelayed(new Runnable() {
-			public void run() {
-				((LinearLayout.LayoutParams) mContainer.getLayoutParams()).weight = 1.0F;
-			}
-		}, 200L);
 	}
 
 	/**
@@ -464,7 +463,8 @@ public class EditActivity extends BaseFragmentActivity implements OnClickListene
 			ToastUtils.show(this, "@功能暂未完成");
 			int cursor = replyContentEditText.getSelectionStart();
 			replyContentEditText.getText().insert(cursor, "@");
-			break;
+            friendsListPopupWindow.show();
+            break;
 		case R.id.edit_btn_emotion:
  			if (mEmotionGrid.getVisibility() == View.GONE) {
 				hideKeyBoard();

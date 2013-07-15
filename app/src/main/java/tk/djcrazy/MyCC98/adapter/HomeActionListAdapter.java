@@ -63,8 +63,7 @@ public class HomeActionListAdapter extends BaseAdapter {
 			listItemView = new ViewHolder();
 			convertView = mInflater.inflate(R.layout.home_action_list_item,
 					null);
-			listItemView.image = (ImageView) convertView
-					.findViewById(R.id.action_item_image);
+			listItemView.image = (ImageView) convertView.findViewById(R.id.action_item_image);
 			listItemView.text = (TextView) convertView
 					.findViewById(R.id.action_item_text);
 			convertView.setTag(listItemView);

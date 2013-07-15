@@ -1,18 +1,11 @@
 package tk.djcrazy.libCC98;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.net.ConnectException;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.net.UnknownServiceException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
@@ -46,7 +39,6 @@ import ch.boye.httpclientandroidlib.ParseException;
 import ch.boye.httpclientandroidlib.auth.AuthScope;
 import ch.boye.httpclientandroidlib.auth.UsernamePasswordCredentials;
 import ch.boye.httpclientandroidlib.client.ClientProtocolException;
-import ch.boye.httpclientandroidlib.client.cache.HttpCacheStorage;
 import ch.boye.httpclientandroidlib.client.entity.UrlEncodedFormEntity;
 import ch.boye.httpclientandroidlib.client.methods.HttpGet;
 import ch.boye.httpclientandroidlib.client.methods.HttpPost;
@@ -55,13 +47,10 @@ import ch.boye.httpclientandroidlib.conn.scheme.PlainSocketFactory;
 import ch.boye.httpclientandroidlib.conn.scheme.Scheme;
 import ch.boye.httpclientandroidlib.conn.scheme.SchemeRegistry;
 import ch.boye.httpclientandroidlib.conn.ssl.SSLSocketFactory;
-import ch.boye.httpclientandroidlib.cookie.Cookie;
 import ch.boye.httpclientandroidlib.entity.mime.MultipartEntity;
 import ch.boye.httpclientandroidlib.entity.mime.content.FileBody;
 import ch.boye.httpclientandroidlib.entity.mime.content.StringBody;
 import ch.boye.httpclientandroidlib.impl.client.DefaultHttpClient;
-import ch.boye.httpclientandroidlib.impl.client.cache.CacheConfig;
-import ch.boye.httpclientandroidlib.impl.client.cache.CachingHttpClient;
 import ch.boye.httpclientandroidlib.impl.conn.tsccm.ThreadSafeClientConnManager;
 import ch.boye.httpclientandroidlib.message.BasicNameValuePair;
 import ch.boye.httpclientandroidlib.params.BasicHttpParams;
@@ -376,7 +365,7 @@ public class CC98ClientImpl implements ICC98Client {
 	}
 
 	@Override
-	public String uploadPictureToCC98(File picFile)
+	public String uploadPicture(File picFile)
 			throws PatternSyntaxException, MalformedURLException, IOException,
 			ParseContentException {
 		HttpPost post = new HttpPost(manager.getUploadPictureUrl());
@@ -554,28 +543,28 @@ public class CC98ClientImpl implements ICC98Client {
 	}
 
 	@Override
-	public List<Bitmap> getuserAvatars() {
+	public List<Bitmap> getUserAvatars() {
 		return ((MyApplication) application).getUserAvatars();
 	}
 
 	@Override
-	public UsersInfo getusersInfo() {
+	public UsersInfo getUsersInfo() {
 		return ((MyApplication) application).getUsersInfo();
 	}
 
 	@Override
 	public void switchToUser(int index) {
-		getusersInfo().currentUserIndex = index;
+		getUsersInfo().currentUserIndex = index;
 		((MyApplication) application).storeUsersInfo();
 		getHttpClient(true);
 	}
 
 	@Override
 	public void deleteUserInfo(int pos) {
-		if (pos != getusersInfo().currentUserIndex) {
+		if (pos != getUsersInfo().currentUserIndex) {
 			Log.d(TAG, "to delete:" + pos);
-			UsersInfo info = getusersInfo();
-			List<Bitmap> avatars = getuserAvatars();
+			UsersInfo info = getUsersInfo();
+			List<Bitmap> avatars = getUserAvatars();
 			UserData currentUser = getCurrentUserData();
 			info.users.remove(pos);
 			avatars.remove(pos);

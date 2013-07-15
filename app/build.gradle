@@ -4,15 +4,23 @@ buildscript {
 		mavenCentral()
 	}
 	dependencies {
-		classpath 'com.android.tools.build:gradle:0.5.0'
+		classpath 'com.android.tools.build:gradle:0.5.+'
 	}
 }
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {  
  
-dependencies {
 	compile  fileTree(dir: 'libs', include: '*.jar')	
- 	compile  project(":SlidingMenuLibrary")
+ 	compile 'org.apache.commons:commons-lang3:3.1'
 	compile  project(":AndroidPullToRefreshLibrary")
-	compile  project(":PhotoViewLibrary")
+	compile  project(":PagerSlidingTabStripLibrary")
+	compile  project(":SlidingMenuLibrary")
+ 	compile  project(":PhotoViewLibrary")
+ 	compile  project(":JazzyViewPagerLibrary")
 }
 	
 android {

@@ -8,14 +8,20 @@ import tk.djcrazy.MyCC98.listener.LoadingListener;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.view.ViewGroup;
+
+import com.jfeinstein.jazzyviewpager.JazzyViewPager;
 
 public class HomeFragmentPagerAdapter extends FragmentPagerAdapter {
 	private FragmentManager mFragment;
-	private String[] pageTitle = {"我的版面","热门","列表","新帖"};
+	private String[] pageTitle = {"我的版面","热门板块","版面列表","查看新帖"};
 	private final int FRAGMENT_NUMBER = 4;
- 	public HomeFragmentPagerAdapter(FragmentManager fm) {
+    private JazzyViewPager mJazzyViewPager;
+
+ 	public HomeFragmentPagerAdapter(FragmentManager fm, JazzyViewPager viewPager) {
 		super(fm);
 		mFragment = fm;
+        mJazzyViewPager = viewPager;
  	}
 	@Override
     public CharSequence getPageTitle(int position) {
@@ -47,4 +53,11 @@ public class HomeFragmentPagerAdapter extends FragmentPagerAdapter {
 	public int getCount() {
 		return FRAGMENT_NUMBER;
 	}
+
+    @Override
+    public Object instantiateItem(ViewGroup container, final int position) {
+        Object obj = super.instantiateItem(container, position);
+        mJazzyViewPager.setObjectForPosition(obj, position);
+        return obj;
+    }
 }

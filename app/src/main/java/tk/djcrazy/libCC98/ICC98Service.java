@@ -54,12 +54,12 @@ public interface ICC98Service {
 			IOException, ParseContentException;
 
 	public void pushNewPost(String boardId, String title, String faceString, String content)
-			throws ClientProtocolException, IOException;
+			throws IOException;
 
 	public void reply(String boardId, String postId, String title, String faceString, String content)
-			throws ClientProtocolException, IOException, Exception;
+			throws Exception;
 
-	public List<SearchResultEntity> searchPost(String keyword, String boardid, String sType,
+	public List<SearchResultEntity> searchPost(String keyword, String boardId, String sType,
 			int page) throws ParseException, IOException, ParseContentException,
 			java.text.ParseException;
 
