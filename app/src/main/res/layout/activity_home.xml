@@ -8,7 +8,8 @@
     <com.astuetz.viewpager.extensions.PagerSlidingTabStrip
             android:id="@+id/tabs"
             android:layout_width="match_parent"
-            android:layout_height="48dip" />
+            android:layout_height="48dip"
+            />
 
      <com.jfeinstein.jazzyviewpager.JazzyViewPager
         android:id="@+id/main_pages"

@@ -21,22 +21,26 @@ dependencies {
 	compile  project(":SlidingMenuLibrary")
  	compile  project(":PhotoViewLibrary")
  	compile  project(":JazzyViewPagerLibrary")
+	compile  project(":FadingActionBarLibrary")
 }
 	
 android {
  	compileSdkVersion 16
 	buildToolsVersion "17"
 	defaultConfig {
+	    versionCode 29
+		versionName "3.1.2"
+
 		minSdkVersion 7
 		targetSdkVersion 16
 	}
 
     signingConfigs {
 		releaseConfig {
-            storeFile file("MyCC98.keystore")
-            storePassword "66957860"
-            keyAlias "androidkey"
-            keyPassword "66957860"
+            storeFile file("key.keystore")
+            storePassword signPwd
+            keyAlias signKeyAlias
+            keyPassword signKeyPwd
         }
     }
 

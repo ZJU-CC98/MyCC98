@@ -1,93 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical" >
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="@color/card_list_bg"
+            android:scrollbars="horizontal">
 
-    <ScrollView
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:background="@color/card_list_bg"
-        android:scrollbars="horizontal" >
-
-        <LinearLayout
+    <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
-            <!-- 头像部分 -->
-
-            <RelativeLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content" >
-
-							<ImageView 
-							    android:layout_height="wrap_content"
-							    android:layout_width="match_parent"
-							    android:scaleType="fitXY"
-							    android:src="@drawable/profile_head_bg"
-							    android:adjustViewBounds="true"/>
-							<LinearLayout 
-							    android:layout_height="wrap_content"
-							    android:layout_width="wrap_content"
-							    android:layout_centerInParent="true"
-							    android:orientation="vertical"
-							    android:gravity="center_horizontal">
-							    
-							   <RelativeLayout
-                    android:id="@+id/profile_head_portrait_frame"
-                    android:layout_width="80dip"
-                    android:layout_height="80dip"   >
- 
-							       <ImageView
-                        android:id="@+id/profile_image"
-                        android:layout_width="75dp"
-                        android:layout_height="75dp"
-                         android:layout_centerInParent="true"
-                         android:scaleType="fitXY" 
-                         android:padding="2dp"
-	                       android:background="@drawable/avatar_bg"  />
-                    </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical" >
-
-                    <!-- 用户昵称 -->
-
-                    <TextView
-                        android:id="@+id/profile_online_statues"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                         android:text="在线"
-                        android:visibility="gone"
-                        android:textColor="@color/text_dark" />
-
-                    <TextView
-                        android:id="@+id/profile_user_name"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                         android:text=""
-                        android:textColor="@android:color/white"
-                        android:layout_marginTop="20dp"
-                        android:textSize="30sp" />
-
-                </RelativeLayout>
-							</LinearLayout>
-            </RelativeLayout>
-            <!-- 基本信息部分 -->
-
-            <LinearLayout
+        <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10.0dip"
                 android:background="@drawable/panel_bg"
-                android:orientation="vertical" >
+                android:orientation="vertical">
 
-                <!-- 用户头衔 -->
+            <!-- 用户头衔 -->
 
-                <TextView
+            <TextView
                     android:id="@+id/profile_user_nick_name"
                     style="@style/normalText"
                     android:layout_width="fill_parent"
@@ -97,17 +29,17 @@
                     android:gravity="center_vertical"
                     android:text="用户头衔："
                     android:textColor="#FF7D899D"
-                    android:textSize="15sp" >
-                </TextView>
-                <!-- 分隔条 -->
+                    android:textSize="15sp">
+            </TextView>
+            <!-- 分隔条 -->
 
-                <View
+            <View
                     android:layout_width="fill_parent"
-                    android:layout_height="1.0dip" >
-                </View>
-                <!-- 用户等级 -->
+                    android:layout_height="1.0dip">
+            </View>
+            <!-- 用户等级 -->
 
-                <TextView
+            <TextView
                     android:id="@+id/profile_user_level"
                     style="@style/normalText"
                     android:layout_width="fill_parent"
@@ -117,17 +49,17 @@
                     android:gravity="center_vertical"
                     android:text="用户等级： "
                     android:textColor="#FF7D899D"
-                    android:textSize="15sp" >
-                </TextView>
-                <!-- 分隔条 -->
+                    android:textSize="15sp">
+            </TextView>
+            <!-- 分隔条 -->
 
-                <View
+            <View
                     android:layout_width="fill_parent"
-                    android:layout_height="1.0dip" >
-                </View>
-                <!-- 用户门派 -->
+                    android:layout_height="1.0dip">
+            </View>
+            <!-- 用户门派 -->
 
-                <TextView
+            <TextView
                     android:id="@+id/profile_user_group"
                     style="@style/normalText"
                     android:layout_width="fill_parent"
@@ -137,16 +69,16 @@
                     android:gravity="center_vertical"
                     android:text="用户门派： "
                     android:textColor="#FF7D899D"
-                    android:textSize="15sp" >
-                </TextView>
+                    android:textSize="15sp">
+            </TextView>
 
-                <View
+            <View
                     android:layout_width="fill_parent"
-                    android:layout_height="1.0dip" >
-                </View>
-                <!-- 精华帖数 -->
+                    android:layout_height="1.0dip">
+            </View>
+            <!-- 精华帖数 -->
 
-                <TextView
+            <TextView
                     android:id="@+id/profile_good_posts"
                     style="@style/normalText"
                     android:layout_width="fill_parent"
@@ -156,16 +88,16 @@
                     android:gravity="center_vertical"
                     android:text="精华帖数："
                     android:textColor="#FF7D899D"
-                    android:textSize="15sp" >
-                </TextView>
+                    android:textSize="15sp">
+            </TextView>
 
-                <View
+            <View
                     android:layout_width="fill_parent"
-                    android:layout_height="1.0dip" >
-                </View>
-                <!-- 帖数总数 -->
+                    android:layout_height="1.0dip">
+            </View>
+            <!-- 帖数总数 -->
 
-                <TextView
+            <TextView
                     android:id="@+id/profile_total_posts"
                     style="@style/normalText"
                     android:layout_width="fill_parent"
@@ -175,16 +107,16 @@
                     android:gravity="center_vertical"
                     android:text="帖数总数： "
                     android:textColor="#FF7D899D"
-                    android:textSize="15sp" >
-                </TextView>
+                    android:textSize="15sp">
+            </TextView>
 
-                <View
+            <View
                     android:layout_width="fill_parent"
-                    android:layout_height="1.0dip" >
-                </View>
-                <!-- 用户威望 -->
+                    android:layout_height="1.0dip">
+            </View>
+            <!-- 用户威望 -->
 
-                <TextView
+            <TextView
                     android:id="@+id/profile_user_prestige"
                     style="@style/normalText"
                     android:layout_width="fill_parent"
@@ -194,16 +126,16 @@
                     android:gravity="center_vertical"
                     android:text="用户威望： "
                     android:textColor="#FF7D899D"
-                    android:textSize="15sp" >
-                </TextView>
+                    android:textSize="15sp">
+            </TextView>
 
-                <View
+            <View
                     android:layout_width="fill_parent"
-                    android:layout_height="1.0dip" >
-                </View>
-                <!-- 注册时间 -->
+                    android:layout_height="1.0dip">
+            </View>
+            <!-- 注册时间 -->
 
-                <TextView
+            <TextView
                     android:id="@+id/profile_register_time"
                     style="@style/normalText"
                     android:layout_width="fill_parent"
@@ -213,16 +145,16 @@
                     android:gravity="center_vertical"
                     android:text="注册时间： "
                     android:textColor="#FF7D899D"
-                    android:textSize="15sp" >
-                </TextView>
+                    android:textSize="15sp">
+            </TextView>
 
-                <View
+            <View
                     android:layout_width="fill_parent"
-                    android:layout_height="1.0dip" >
-                </View>
-                <!-- 登陆次数 -->
+                    android:layout_height="1.0dip">
+            </View>
+            <!-- 登陆次数 -->
 
-                <TextView
+            <TextView
                     android:id="@+id/profile_login_times"
                     style="@style/normalText"
                     android:layout_width="fill_parent"
@@ -232,16 +164,16 @@
                     android:gravity="center_vertical"
                     android:text="登陆次数： "
                     android:textColor="#FF7D899D"
-                    android:textSize="15sp" >
-                </TextView>
+                    android:textSize="15sp">
+            </TextView>
 
-                <View
+            <View
                     android:layout_width="fill_parent"
-                    android:layout_height="1.0dip" >
-                </View>
-                <!-- 被删主题 -->
+                    android:layout_height="1.0dip">
+            </View>
+            <!-- 被删主题 -->
 
-                <TextView
+            <TextView
                     android:id="@+id/profile_deleted_posts"
                     style="@style/normalText"
                     android:layout_width="fill_parent"
@@ -251,16 +183,16 @@
                     android:gravity="center_vertical"
                     android:text="被删主题： "
                     android:textColor="#FF7D899D"
-                    android:textSize="15sp" >
-                </TextView>
+                    android:textSize="15sp">
+            </TextView>
 
-                <View
+            <View
                     android:layout_width="fill_parent"
-                    android:layout_height="1.0dip" >
-                </View>
-                <!-- 被删除率 -->
+                    android:layout_height="1.0dip">
+            </View>
+            <!-- 被删除率 -->
 
-                <TextView
+            <TextView
                     android:id="@+id/profile_deleted_ratio"
                     style="@style/normalText"
                     android:layout_width="fill_parent"
@@ -270,16 +202,16 @@
                     android:gravity="center_vertical"
                     android:text="被删除率： "
                     android:textColor="#FF7D899D"
-                    android:textSize="15sp" >
-                </TextView>
+                    android:textSize="15sp">
+            </TextView>
 
-                <View
+            <View
                     android:layout_width="fill_parent"
-                    android:layout_height="1.0dip" >
-                </View>
-                <!-- 最后登录 -->
+                    android:layout_height="1.0dip">
+            </View>
+            <!-- 最后登录 -->
 
-                <TextView
+            <TextView
                     android:id="@+id/profile_last_login_time"
                     style="@style/normalText"
                     android:layout_width="fill_parent"
@@ -289,27 +221,27 @@
                     android:gravity="center_vertical"
                     android:text="最后登录： "
                     android:textColor="#FF7D899D"
-                    android:textSize="15sp" >
-                </TextView>
-            </LinearLayout>
+                    android:textSize="15sp">
+            </TextView>
+        </LinearLayout>
 
-            <TextView
+        <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="个人信息：" />
+                android:text="个人信息："/>
 
-            <!-- 个人信息部分 -->
+        <!-- 个人信息部分 -->
 
-            <LinearLayout
+        <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10.0dip"
                 android:background="@drawable/panel_bg"
-                android:orientation="vertical" >
+                android:orientation="vertical">
 
-                <!-- 性 别 -->
+            <!-- 性 别 -->
 
-                <TextView
+            <TextView
                     android:id="@+id/profile_user_gender"
                     style="@style/normalText"
                     android:layout_width="fill_parent"
@@ -319,16 +251,16 @@
                     android:gravity="center_vertical"
                     android:text="性 别： "
                     android:textColor="#FF7D899D"
-                    android:textSize="15sp" >
-                </TextView>
+                    android:textSize="15sp">
+            </TextView>
 
-                <View
+            <View
                     android:layout_width="fill_parent"
-                    android:layout_height="1.0dip" >
-                </View>
-                <!-- 生 日 -->
+                    android:layout_height="1.0dip">
+            </View>
+            <!-- 生 日 -->
 
-                <TextView
+            <TextView
                     android:id="@+id/profile_user_birthday"
                     style="@style/normalText"
                     android:layout_width="fill_parent"
@@ -338,16 +270,16 @@
                     android:gravity="center_vertical"
                     android:text="生 日： "
                     android:textColor="#FF7D899D"
-                    android:textSize="15sp" >
-                </TextView>
+                    android:textSize="15sp">
+            </TextView>
 
-                <View
+            <View
                     android:layout_width="fill_parent"
-                    android:layout_height="1.0dip" >
-                </View>
-                <!-- 星座 -->
+                    android:layout_height="1.0dip">
+            </View>
+            <!-- 星座 -->
 
-                <TextView
+            <TextView
                     android:id="@+id/profile_user_constellation"
                     style="@style/normalText"
                     android:layout_width="fill_parent"
@@ -357,16 +289,16 @@
                     android:gravity="center_vertical"
                     android:text="星 座： "
                     android:textColor="#FF7D899D"
-                    android:textSize="15sp" >
-                </TextView>
+                    android:textSize="15sp">
+            </TextView>
 
-                <View
+            <View
                     android:layout_width="fill_parent"
-                    android:layout_height="1.0dip" >
-                </View>
-                <!-- Email -->
+                    android:layout_height="1.0dip">
+            </View>
+            <!-- Email -->
 
-                <TextView
+            <TextView
                     android:id="@+id/profile_user_email"
                     style="@style/normalText"
                     android:layout_width="fill_parent"
@@ -376,16 +308,16 @@
                     android:gravity="center_vertical"
                     android:text="Email： "
                     android:textColor="#FF7D899D"
-                    android:textSize="15sp" >
-                </TextView>
+                    android:textSize="15sp">
+            </TextView>
 
-                <View
+            <View
                     android:layout_width="fill_parent"
-                    android:layout_height="1.0dip" >
-                </View>
-                <!-- QQ -->
+                    android:layout_height="1.0dip">
+            </View>
+            <!-- QQ -->
 
-                <TextView
+            <TextView
                     android:id="@+id/profile_user_qq"
                     style="@style/normalText"
                     android:layout_width="fill_parent"
@@ -395,16 +327,16 @@
                     android:gravity="center_vertical"
                     android:text="QQ ： "
                     android:textColor="#FF7D899D"
-                    android:textSize="15sp" >
-                </TextView>
+                    android:textSize="15sp">
+            </TextView>
 
-                <View
+            <View
                     android:layout_width="fill_parent"
-                    android:layout_height="1.0dip" >
-                </View>
-                <!-- MSN -->
+                    android:layout_height="1.0dip">
+            </View>
+            <!-- MSN -->
 
-                <TextView
+            <TextView
                     android:id="@+id/profile_user_msn"
                     style="@style/normalText"
                     android:layout_width="fill_parent"
@@ -414,16 +346,16 @@
                     android:gravity="center_vertical"
                     android:text="MSN  ： "
                     android:textColor="#FF7D899D"
-                    android:textSize="15sp" >
-                </TextView>
+                    android:textSize="15sp">
+            </TextView>
 
-                <View
+            <View
                     android:layout_width="fill_parent"
-                    android:layout_height="1.0dip" >
-                </View>
-                <!-- 主页 -->
+                    android:layout_height="1.0dip">
+            </View>
+            <!-- 主页 -->
 
-                <TextView
+            <TextView
                     android:id="@+id/profile_user_page"
                     style="@style/normalText"
                     android:layout_width="fill_parent"
@@ -433,10 +365,8 @@
                     android:gravity="center_vertical"
                     android:text="主 页： "
                     android:textColor="#FF7D899D"
-                    android:textSize="15sp" >
-                </TextView>
-            </LinearLayout>
+                    android:textSize="15sp">
+            </TextView>
         </LinearLayout>
-    </ScrollView>
-
-</LinearLayout>
+    </LinearLayout>
+</ScrollView>

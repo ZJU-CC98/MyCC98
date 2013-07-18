@@ -32,6 +32,7 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.google.inject.Inject;
+import com.manuelpeinado.fadingactionbar.FadingActionBarHelper;
 
 @ContentView(R.layout.activity_user_profile)
 public class ProfileActivity extends BaseFragmentActivity {
@@ -72,13 +73,19 @@ public class ProfileActivity extends BaseFragmentActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
- 		findViews();
-		new GetProfileTask(this).execute();
 		ActionBar actionBar = getSupportActionBar();
 		actionBar.setLogo(R.drawable.personal_profile_icon);
 		actionBar.setTitle("用户资料");
 		actionBar.setDisplayHomeAsUpEnabled(true);
-	}
+        FadingActionBarHelper helper = new FadingActionBarHelper()
+                .actionBarBackground(R.drawable.ab_solid_mycc98)
+                .headerLayout(R.layout.activity_profile_header)
+                .contentLayout(R.layout.activity_user_profile);
+        setContentView(helper.createView(this));
+        helper.initActionBar(this);
+        findViews();
+        new GetProfileTask(this).execute();
+    }
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu optionMenu) {

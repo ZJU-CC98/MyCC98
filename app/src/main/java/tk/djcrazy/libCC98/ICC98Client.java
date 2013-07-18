@@ -1,6 +1,5 @@
 package tk.djcrazy.libCC98;
 
-import android.accounts.NetworkErrorException;
 import android.graphics.Bitmap;
 
 import java.io.File;
@@ -18,34 +17,24 @@ import tk.djcrazy.libCC98.exception.NoUserFoundException;
 import tk.djcrazy.libCC98.exception.ParseContentException;
 
 public interface ICC98Client {
+
     public UserData getCurrentUserData();
 
     public void doLogin(String id, String pw32, String pw16, String proxyName, String proxyPwd,
-                        LoginType type) throws
-            IOException, IllegalAccessException, ParseException,
-            ParseContentException, NetworkErrorException;
+                        LoginType type);
 
-    public boolean pushNewPost(List<NameValuePair> nvpsList, String boardID)
-            throws IOException;
+    public void pushNewPost(List<NameValuePair> pairList, String boardID);
 
-    public boolean editPost(List<NameValuePair> nvpsList, String link)
-            throws IOException;
-
-    public void submitReply(List<NameValuePair> nvpsList, String boardID,
-                            String rootID) throws Exception;
+    public void submitReply(List<NameValuePair> pairList, String boardID, String rootID);
 
     public String queryPosts(String keyWord, String sType, String searchDate,
-                             int boardArea, String boardID) throws ParseException, IOException;
+                             int boardArea, String boardID)  throws ParseException, IOException;
 
-    public String getPage(String link) throws
-            IOException, ParseException;
+    public String getPage(String link);
 
     public String uploadPicture(File picFile)
             throws PatternSyntaxException, IOException,
             ParseContentException;
-
-    public String getInboxHtml(int pageNumber) throws
-            ParseException, IOException;
 
     public String getOutboxHtml(int pageNumber) throws
             ParseException, IOException;
@@ -60,15 +49,11 @@ public interface ICC98Client {
     public void addFriend(String userId) throws ParseException,
             NoUserFoundException, IOException;
 
-    public String getUserProfileHtml(String userName)
-            throws NoUserFoundException, IOException;
 
     public Bitmap getBitmapFromUrl(String url) throws IOException;
 
     public Bitmap getUserImg(String userName) throws
             ParseException, IOException, ParseContentException;
-
-    public void addHttpBasicAuthorization(UserData userData2, String authName, String authPassword);
 
     void clearLoginInfo();
 

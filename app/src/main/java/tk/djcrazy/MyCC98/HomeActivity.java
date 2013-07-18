@@ -32,6 +32,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -125,6 +126,7 @@ public class HomeActivity extends BaseSlidingFragmentActivity implements
         viewPager.setTransitionEffect(JazzyViewPager.TransitionEffect.Tablet);
         PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
         tabs.setViewPager(viewPager);
+        tabs.setIndicatorColor(Color.parseColor("#1faeff"));
     }
 
     /**

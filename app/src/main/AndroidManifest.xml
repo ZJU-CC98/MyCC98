@@ -159,7 +159,8 @@
         </activity>
         <activity
             android:name=".ProfileActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize" >
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@style/Theme.Mycc98.OverLay">
         </activity>
         <activity
             android:name=".HomeActivity"

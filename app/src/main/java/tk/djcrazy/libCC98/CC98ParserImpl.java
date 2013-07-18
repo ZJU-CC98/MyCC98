@@ -1,5 +1,37 @@
 package tk.djcrazy.libCC98;
 
+import android.text.Html;
+
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
+import org.apache.http.ParseException;
+import org.apache.http.client.ClientProtocolException;
+
+import java.io.IOException;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import tk.djcrazy.libCC98.data.BoardEntity;
+import tk.djcrazy.libCC98.data.BoardStatus;
+import tk.djcrazy.libCC98.data.Gender;
+import tk.djcrazy.libCC98.data.HotTopicEntity;
+import tk.djcrazy.libCC98.data.InboxInfo;
+import tk.djcrazy.libCC98.data.PmInfo;
+import tk.djcrazy.libCC98.data.PostContentEntity;
+import tk.djcrazy.libCC98.data.PostEntity;
+import tk.djcrazy.libCC98.data.SearchResultEntity;
+import tk.djcrazy.libCC98.data.UserProfileEntity;
+import tk.djcrazy.libCC98.data.UserStatue;
+import tk.djcrazy.libCC98.data.UserStatueEntity;
+import tk.djcrazy.libCC98.exception.NoUserFoundException;
+import tk.djcrazy.libCC98.exception.ParseContentException;
+import tk.djcrazy.libCC98.util.DateFormatUtil;
+import tk.djcrazy.libCC98.util.StringUtil;
+
 import static tk.djcrazy.libCC98.CC98ParseRepository.HOT_TOPIC_BOARD_ID_REGEX;
 import static tk.djcrazy.libCC98.CC98ParseRepository.HOT_TOPIC_BOARD_NAME_WITH_AUTHOR_REGEX;
 import static tk.djcrazy.libCC98.CC98ParseRepository.HOT_TOPIC_CLICK_REGEX;
@@ -31,7 +63,6 @@ import static tk.djcrazy.libCC98.CC98ParseRepository.POST_LIST_POST_BOARD_ID_REG
 import static tk.djcrazy.libCC98.CC98ParseRepository.POST_LIST_POST_ENTITY_REGEX;
 import static tk.djcrazy.libCC98.CC98ParseRepository.POST_LIST_POST_ID_REGEX;
 import static tk.djcrazy.libCC98.CC98ParseRepository.POST_LIST_POST_NAME_REGEX;
-import static tk.djcrazy.libCC98.CC98ParseRepository.POST_LIST_POST_PAGE_NUMBER_REGEX;
 import static tk.djcrazy.libCC98.CC98ParseRepository.POST_LIST_POST_TYPE_REGEX;
 import static tk.djcrazy.libCC98.CC98ParseRepository.POST_LIST_REPLY_NUM_REGEX;
 import static tk.djcrazy.libCC98.CC98ParseRepository.P_BOARD_ID_REGEX;
@@ -55,39 +86,6 @@ import static tk.djcrazy.libCC98.util.DateFormatUtil.convertStringToDateInPostCo
 import static tk.djcrazy.libCC98.util.RegexUtil.getMatchedString;
 import static tk.djcrazy.libCC98.util.RegexUtil.getMatchedStringList;
 import static tk.djcrazy.libCC98.util.StringUtil.filterHtmlDecode;
-
-import java.io.IOException;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.apache.http.ParseException;
-import org.apache.http.client.ClientProtocolException;
-
-import tk.djcrazy.libCC98.data.BoardEntity;
-import tk.djcrazy.libCC98.data.BoardStatus;
-import tk.djcrazy.libCC98.data.Gender;
-import tk.djcrazy.libCC98.data.HotTopicEntity;
-import tk.djcrazy.libCC98.data.InboxInfo;
-import tk.djcrazy.libCC98.data.PmInfo;
-import tk.djcrazy.libCC98.data.PostContentEntity;
-import tk.djcrazy.libCC98.data.PostEntity;
-import tk.djcrazy.libCC98.data.SearchResultEntity;
-import tk.djcrazy.libCC98.data.UserProfileEntity;
-import tk.djcrazy.libCC98.data.UserStatue;
-import tk.djcrazy.libCC98.data.UserStatueEntity;
-import tk.djcrazy.libCC98.exception.NoUserFoundException;
-import tk.djcrazy.libCC98.exception.ParseContentException;
-import tk.djcrazy.libCC98.util.DateFormatUtil;
-import tk.djcrazy.libCC98.util.StringUtil;
-
-import android.text.Html;
-import android.util.Log;
-
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
 @Singleton
 public class CC98ParserImpl implements ICC98Parser {
