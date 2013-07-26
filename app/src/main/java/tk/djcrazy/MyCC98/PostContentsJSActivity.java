@@ -24,6 +24,8 @@ import tk.djcrazy.libCC98.CachedCC98Service;
 import tk.djcrazy.libCC98.data.LoginType;
 import tk.djcrazy.libCC98.data.PostContentEntity;
 import tk.djcrazy.libCC98.util.DateFormatUtil;
+import tk.djcrazy.libCC98.util.SerializableCacheUtil;
+
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -528,6 +530,10 @@ public class PostContentsJSActivity extends BaseActivity implements
 
 		@Override
 		public List<PostContentEntity> call() throws Exception {
+            // if force refresh, invalidate all pages of that post
+            if (aForceRefresh) {
+                SerializableCacheUtil.invalidatePostContent(service.getCache(), aBoardId, aPostId);
+            }
 			return service.getPostContentList(aBoardId, aPostId, aPageNum,
 					aForceRefresh);
 		}

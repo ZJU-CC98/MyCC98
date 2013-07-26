@@ -14,7 +14,7 @@ public class PostContentEntity implements Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 8810851880636238685L;
+	private static final long serialVersionUID = 1L;
 	/**
 	 * @return the postTopic
 	 */

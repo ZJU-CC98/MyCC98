@@ -36,6 +36,7 @@ import android.graphics.Bitmap;
 import android.view.FocusFinder;
 import ch.boye.httpclientandroidlib.ParseException;
 import ch.boye.httpclientandroidlib.client.ClientProtocolException;
+import com.github.droidfu.cachefu.AbstractCache;
 
 @Singleton
 public class CachedCC98Service {
@@ -86,6 +87,10 @@ public class CachedCC98Service {
 			NetworkErrorException {
 		service.doLogin(userName, pwd32, pw16, proxyName, proxyPwd, type);
 	}
+
+    public AbstractCache getCache() {
+        return cache;
+    }
 
 	public void logOut() {
 		service.logOut();

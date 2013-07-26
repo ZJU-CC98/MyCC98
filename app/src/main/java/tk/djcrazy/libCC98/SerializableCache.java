@@ -17,7 +17,7 @@ public class SerializableCache extends AbstractCache<String, Serializable> {
 
 	private static SerializableCache cache = null;
 	private static final int CACHE_INIT_CAP = 64;
-	private static final int CACHE_EXPIRATION_MINUTES = 60*24*3;
+	private static final int CACHE_EXPIRATION_MINUTES = 7;
 	private static final int MAX_CONCURRENT_THREADS = 4;
 
 	public static SerializableCache getInstance(Context context) {

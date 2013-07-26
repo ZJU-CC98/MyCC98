@@ -1,5 +1,8 @@
 package tk.djcrazy.libCC98.util;
 
+import com.github.droidfu.cachefu.AbstractCache;
+import com.github.droidfu.cachefu.CacheHelper;
+
 public class SerializableCacheUtil {
 	private static final String POST = "post://";
 	private static final String PM = "pm://";
@@ -24,12 +27,18 @@ public class SerializableCacheUtil {
 	}
 
 	public static String postPageKey(String boardId, String postId, int pageNum) {
-		StringBuilder builder = new StringBuilder(POST);
-		return builder.append(boardId).append('/').append(postId).append('/')
-				.append(pageNum).toString();
+		StringBuilder builder = new StringBuilder(postPageKeyPrefix(boardId, postId));
+		return builder.append(pageNum).toString();
 	}
 
-	public static String pmKey(int pmID) {
+    public static String postPageKeyPrefix(String boardId, String postId) {
+        StringBuilder builder = new StringBuilder(POST);
+        return builder.append(boardId).append('/').append(postId).append('/')
+                .toString();
+    }
+
+
+    public static String pmKey(int pmID) {
 		return PM + String.valueOf(pmID);
 	}
 
@@ -56,4 +65,9 @@ public class SerializableCacheUtil {
 	public static String hottopicKey() {
 		return HOT_TOPIC;
 	}
+
+    public static void invalidatePostContent(AbstractCache<String, ?> cache,
+                                             String boardId, String postId) {
+        CacheHelper.removeAllWithStringPrefix(cache, postPageKeyPrefix(boardId, postId));
+    }
 }

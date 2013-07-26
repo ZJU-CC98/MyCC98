@@ -14,7 +14,7 @@ public class PostEntity implements Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -7632981725488779596L;
+	private static final long serialVersionUID = 1L;
 	/**
 	 * @return the postType
 	 */
