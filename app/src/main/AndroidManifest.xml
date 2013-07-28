@@ -180,6 +180,10 @@
             android:name=".service.NewVersionDownloadService"
             android:exported="false" >
         </service>
+
+        <service
+                android:name="com.octo.android.robospice.UncachedSpiceService"
+                android:exported="false" />
     </application>
 
 </manifest>

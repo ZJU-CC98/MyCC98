@@ -12,6 +12,8 @@ repositories {
 	mavenCentral()
 }
 
+
+
 dependencies {  
  
 	compile  fileTree(dir: 'libs', include: '*.jar')	
@@ -22,13 +24,17 @@ dependencies {
  	compile  project(":PhotoViewLibrary")
  	compile  project(":JazzyViewPagerLibrary")
 	compile  project(":FadingActionBarLibrary")
+	compile 'com.google.code.gson:gson:2.2.4'
+	compile ('com.octo.android.robospice:robospice:1.4.6')  {
+		exclude module: 'support-v4'
+	}
 }
 	
 android {
  	compileSdkVersion 16
 	buildToolsVersion "17"
 	defaultConfig {
-	    versionCode 29
+	    versionCode 28
 		versionName "3.1.2"
 
 		minSdkVersion 7

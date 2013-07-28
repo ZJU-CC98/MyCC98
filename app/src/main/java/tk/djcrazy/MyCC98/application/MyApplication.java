@@ -1,5 +1,15 @@
 package tk.djcrazy.MyCC98.application;
 
+import android.app.Application;
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Log;
+
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.HttpClientStack;
+import com.android.volley.toolbox.Volley;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -7,17 +17,28 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+
+import org.apache.http.HttpVersion;
+import org.apache.http.client.HttpClient;
+import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.conn.scheme.PlainSocketFactory;
+import org.apache.http.conn.scheme.Scheme;
+import org.apache.http.conn.scheme.SchemeRegistry;
+import org.apache.http.conn.ssl.SSLSocketFactory;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.CoreConnectionPNames;
+import org.apache.http.params.HttpParams;
+import org.apache.http.params.HttpProtocolParams;
 import tk.djcrazy.libCC98.data.UserData;
-import android.app.Application;
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.util.Log;
 
 public class MyApplication extends Application {
 
@@ -28,10 +49,14 @@ public class MyApplication extends Application {
  	private UsersInfo usersInfo;
  	private List<Bitmap> userAvatars = new ArrayList<Bitmap>();
  	private static Context context;
- 	
+    public RequestQueue   mRequestQueue;
+
 	@Override
 	public void onCreate() {
 		super.onCreate();
+        HttpClientStack stack = new HttpClientStack(genHttpClient());
+        mRequestQueue = Volley.newRequestQueue(this, stack);
+        mRequestQueue.start();
 		initUsersInfo();
 		MyApplication.context = getApplicationContext();
 	} 
@@ -86,8 +111,31 @@ public class MyApplication extends Application {
 			}
 		}
 	}
+    @SuppressWarnings("deprecation")
+    private DefaultHttpClient genHttpClient() {
+        try {
+            HttpParams params = new BasicHttpParams();
+            HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
+            HttpProtocolParams.setContentCharset(params, "UTF-8");
+            HttpProtocolParams.setUseExpectContinue(params, true);
+            SchemeRegistry schReg = new SchemeRegistry();
+            schReg.register(new Scheme("http", PlainSocketFactory
+                    .getSocketFactory(), 80));
+            ClientConnectionManager conMgr = new ThreadSafeClientConnManager(
+                    params, schReg);
+            DefaultHttpClient client = new DefaultHttpClient(conMgr, params);
+            client.getParams().setParameter(
+                    CoreConnectionPNames.CONNECTION_TIMEOUT, 30000);
+            client.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT,
+                    30000);
+            return  client;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new IllegalArgumentException("Initial http params failed");
+        }
+    }
 
-	/**
+    /**
 	 * @return the userData
 	 */
 	public UserData getCurrentUserData() {
