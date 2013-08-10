@@ -18,7 +18,7 @@ android {
 	compileSdkVersion 16
 	buildToolsVersion "17"
 	defaultConfig {
-		minSdkVersion 7
+		minSdkVersion 8
 		targetSdkVersion 16
 	}
 

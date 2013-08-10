@@ -8,16 +8,20 @@ buildscript {
 }
 apply plugin: 'android-library'
 
+repositories {
+  mavenCentral()
+}
+
 dependencies {
-	compile project(':ActionBarSherklockLibrary')
  	compile fileTree(dir: 'libs', include: '*.jar')	
+	compile project(':FadingActionBarLibrary')
 }
 
 android {
 	compileSdkVersion 16
-	buildToolsVersion "17"
+	buildToolsVersion "18.0.1"
 	defaultConfig {
-		minSdkVersion 7
+		minSdkVersion 8
 		targetSdkVersion 16
 	}
 

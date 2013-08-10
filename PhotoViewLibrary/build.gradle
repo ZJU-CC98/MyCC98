@@ -17,9 +17,9 @@ dependencies {
 android {
 
 	compileSdkVersion 16
-	buildToolsVersion "17"
+	buildToolsVersion "18.0.1"
 	defaultConfig {
-		minSdkVersion 7
+		minSdkVersion 8
 		targetSdkVersion 16
 	}
 

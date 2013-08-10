@@ -2,9 +2,5 @@
     package="com.manuelpeinado.fadingactionbar"
     android:versionCode="9"
     android:versionName="2.2.2" >
-
-    <uses-sdk
-        android:minSdkVersion="7"
-        android:targetSdkVersion="16" />
     <application/>
 </manifest>
