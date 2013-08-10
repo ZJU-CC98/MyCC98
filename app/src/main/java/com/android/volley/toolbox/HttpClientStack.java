@@ -20,20 +20,20 @@ import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Request.Method;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpDelete;
-import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpPut;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.entity.ByteArrayEntity;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
+import ch.boye.httpclientandroidlib.HttpEntity;
+import ch.boye.httpclientandroidlib.HttpResponse;
+import ch.boye.httpclientandroidlib.NameValuePair;
+import ch.boye.httpclientandroidlib.client.HttpClient;
+import ch.boye.httpclientandroidlib.client.methods.HttpDelete;
+import ch.boye.httpclientandroidlib.client.methods.HttpEntityEnclosingRequestBase;
+import ch.boye.httpclientandroidlib.client.methods.HttpGet;
+import ch.boye.httpclientandroidlib.client.methods.HttpPost;
+import ch.boye.httpclientandroidlib.client.methods.HttpPut;
+import ch.boye.httpclientandroidlib.client.methods.HttpUriRequest;
+import ch.boye.httpclientandroidlib.entity.ByteArrayEntity;
+import ch.boye.httpclientandroidlib.message.BasicNameValuePair;
+import ch.boye.httpclientandroidlib.params.HttpConnectionParams;
+import ch.boye.httpclientandroidlib.params.HttpParams;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -41,7 +41,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * An HttpStack that performs request over an {@link org.apache.http.client.HttpClient}.
+ * An HttpStack that performs request over an {@link ch.boye.httpclientandroidlib.client.HttpClient}.
  */
 public class HttpClientStack implements HttpStack {
     protected final HttpClient mClient;
@@ -57,7 +57,6 @@ public class HttpClientStack implements HttpStack {
             httpRequest.setHeader(key, headers.get(key));
         }
     }
-
     @SuppressWarnings("unused")
     private static List<NameValuePair> getPostParameterPairs(Map<String, String> postParams) {
         List<NameValuePair> result = new ArrayList<NameValuePair>(postParams.size());
@@ -66,6 +65,7 @@ public class HttpClientStack implements HttpStack {
         }
         return result;
     }
+
 
     @Override
     public HttpResponse performRequest(Request<?> request, Map<String, String> additionalHeaders)

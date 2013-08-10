@@ -33,11 +33,7 @@ public interface ICC98Service {
 
 	public boolean isUseProxy();
 
-	public void doLogin(String userName, String pwd32, String pw16, String proxyName,
-			String proxyPwd, LoginType type) throws ClientProtocolException, IOException,
-			IllegalAccessException, ParseException, ParseContentException, NetworkErrorException;
-
-	public void logOut();
+ 	public void logOut();
 
 	public void clearProxy();
 
@@ -115,7 +111,7 @@ public interface ICC98Service {
 	public void deleteUserInfo(int pos);
 
 	public List<BoardEntity> getBoardList(String boardId)
-			throws org.apache.http.client.ClientProtocolException, org.apache.http.ParseException,
+			throws ch.boye.httpclientandroidlib.client.ClientProtocolException, ch.boye.httpclientandroidlib.ParseException,
 			IOException, ParseContentException, java.text.ParseException;
 
 }

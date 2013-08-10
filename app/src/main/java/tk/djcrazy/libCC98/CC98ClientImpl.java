@@ -17,18 +17,12 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.UnknownServiceException;
-import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.PatternSyntaxException;
 
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
-
 import ch.boye.httpclientandroidlib.HttpEntity;
 import ch.boye.httpclientandroidlib.HttpResponse;
-import ch.boye.httpclientandroidlib.HttpVersion;
 import ch.boye.httpclientandroidlib.NameValuePair;
 import ch.boye.httpclientandroidlib.ParseException;
 import ch.boye.httpclientandroidlib.auth.AuthScope;
@@ -37,21 +31,14 @@ import ch.boye.httpclientandroidlib.client.ClientProtocolException;
 import ch.boye.httpclientandroidlib.client.entity.UrlEncodedFormEntity;
 import ch.boye.httpclientandroidlib.client.methods.HttpGet;
 import ch.boye.httpclientandroidlib.client.methods.HttpPost;
-import ch.boye.httpclientandroidlib.conn.ClientConnectionManager;
-import ch.boye.httpclientandroidlib.conn.scheme.PlainSocketFactory;
-import ch.boye.httpclientandroidlib.conn.scheme.Scheme;
-import ch.boye.httpclientandroidlib.conn.scheme.SchemeRegistry;
-import ch.boye.httpclientandroidlib.conn.ssl.SSLSocketFactory;
+import ch.boye.httpclientandroidlib.cookie.Cookie;
 import ch.boye.httpclientandroidlib.entity.mime.MultipartEntity;
 import ch.boye.httpclientandroidlib.entity.mime.content.FileBody;
 import ch.boye.httpclientandroidlib.entity.mime.content.StringBody;
 import ch.boye.httpclientandroidlib.impl.client.DefaultHttpClient;
-import ch.boye.httpclientandroidlib.impl.conn.tsccm.ThreadSafeClientConnManager;
+import ch.boye.httpclientandroidlib.impl.cookie.BasicClientCookie;
+import ch.boye.httpclientandroidlib.impl.cookie.BasicClientCookie2;
 import ch.boye.httpclientandroidlib.message.BasicNameValuePair;
-import ch.boye.httpclientandroidlib.params.BasicHttpParams;
-import ch.boye.httpclientandroidlib.params.CoreConnectionPNames;
-import ch.boye.httpclientandroidlib.params.HttpParams;
-import ch.boye.httpclientandroidlib.params.HttpProtocolParams;
 import ch.boye.httpclientandroidlib.util.EntityUtils;
 import tk.djcrazy.MyCC98.application.MyApplication;
 import tk.djcrazy.MyCC98.application.MyApplication.UsersInfo;
@@ -74,7 +61,6 @@ public class CC98ClientImpl implements ICC98Client {
     private ICC98UrlManager manager;
     @Inject
     private Application application;
-    private DefaultHttpClient client;
 
     @Override
     public UserData getCurrentUserData() {
@@ -82,74 +68,16 @@ public class CC98ClientImpl implements ICC98Client {
         return userData;
     }
 
+    private MyApplication getApplication() {
+        return  (MyApplication) application;
+    }
     @Override
     public Bitmap getCurrentUserAvatar() {
-        return ((MyApplication) application).getCurrentUserAvatar();
+        return getApplication().getCurrentUserAvatar();
     }
 
     private DefaultHttpClient getHttpClient() {
-        getHttpClient(false);
-        return client;
-    }
-
-    public DefaultHttpClient getHttpClient(boolean forceRefresh) {
-        if (client == null || forceRefresh) {
-            genHttpClient();
-            if (getCurrentUserData().getCookieStore() != null) {
-                client.setCookieStore(getCurrentUserData().getCookieStore());
-            }
-            if (getCurrentUserData().getLoginType() == LoginType.USER_DEFINED
-                    && (getCurrentUserData().getProxyUserName() != null)) {
-                addHttpBasicAuthorization(
-                        getCurrentUserData().getProxyUserName(),
-                        getCurrentUserData().getProxyPassword());
-            }
-        }
-        return client;
-    }
-
-    @SuppressWarnings("deprecation")
-    private void genHttpClient() {
-        try {
-            HttpParams params = new BasicHttpParams();
-            HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
-            HttpProtocolParams.setContentCharset(params, "UTF-8");
-            HttpProtocolParams.setUseExpectContinue(params, true);
-            X509TrustManager xtm = new X509TrustManager() {
-                @Override
-                public void checkClientTrusted(X509Certificate[] chain,
-                                               String authType) {
-                }
-
-                @Override
-                public void checkServerTrusted(X509Certificate[] chain,
-                                               String authType) {
-                }
-
-                @Override
-                public X509Certificate[] getAcceptedIssuers() {
-                    return null;
-                }
-            };
-            SSLContext ctx = SSLContext.getInstance("TLS");
-            ctx.init(null, new TrustManager[]{xtm}, null);
-            SSLSocketFactory sf = new SSLSocketFactory(ctx,
-                    SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
-            SchemeRegistry schReg = new SchemeRegistry();
-            schReg.register(new Scheme("http", PlainSocketFactory
-                    .getSocketFactory(), 80));
-            schReg.register(new Scheme("https", 443, sf));
-            ClientConnectionManager conMgr = new ThreadSafeClientConnManager(
-                    params, schReg);
-            client = new DefaultHttpClient(conMgr, params);
-            client.getParams().setParameter(
-                    CoreConnectionPNames.CONNECTION_TIMEOUT, 30000);
-            client.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT,
-                    30000);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new IllegalArgumentException("Initial http params failed");
-        }
+         return getApplication().mHttpClient;
     }
 
     @Override
@@ -158,84 +86,7 @@ public class CC98ClientImpl implements ICC98Client {
         getHttpClient().getCredentialsProvider().clear();
     }
 
-    public DefaultHttpClient getNoCurrentUserHttpClient() {
-        genHttpClient();
-        return client;
-    }
-
-    @Override
-    public void doLogin(String id, String pw32, String pw16, String proxyName,
-                        String proxyPwd, LoginType loginType) {
-        getNoCurrentUserHttpClient();
-        if (loginType == LoginType.USER_DEFINED) {
-            addHttpBasicAuthorization(proxyName, proxyPwd);
-        } else if (loginType == LoginType.RVPN) {
-            authenticateForRVPN(proxyName, proxyPwd);
-        }
-        storeUserData(id, pw32, pw16, proxyName, proxyPwd, loginType);
-    }
-
-    private void storeUserData(String id, String pw32, String pw16, String proxyName, String proxyPwd, LoginType loginType) {
-        UserData newUserData = new UserData();
-        doInternalLogin(id, pw32, loginType);
-        newUserData.setUserName(id);
-        newUserData.setPassword16(pw16);
-        newUserData.setPassword32(pw32);
-        newUserData.setLoginType(loginType);
-        newUserData.setProxyUserName(proxyName);
-        newUserData.setProxyPassword(proxyPwd);
-        newUserData.setCookieStore(getHttpClient().getCookieStore());
-        Bitmap bitmap = getLoginUserImgAndGender(newUserData, loginType);
-        ((MyApplication) application).addNewUser(newUserData, bitmap, true);
-        ((MyApplication) application).storeUsersInfo();
-    }
-
-    private void doInternalLogin(String id, String pw32, LoginType loginType) {
-        try {
-            HttpPost post = new HttpPost(manager.getLoginUrl(loginType));
-            List<NameValuePair> keys = new ArrayList<NameValuePair>();
-            keys.add(new BasicNameValuePair("a", "i"));
-            keys.add(new BasicNameValuePair("u", id));
-            keys.add(new BasicNameValuePair("p", pw32));
-            keys.add(new BasicNameValuePair("userhidden", "2"));
-            post.setEntity(new UrlEncodedFormEntity(keys, "UTF-8"));
-            HttpResponse response = getHttpClient().execute(post);
-            if (response.getStatusLine().getStatusCode() != 200) {
-                throw new CC98Exception("服务器或网络错误");
-            }
-            String sysMsg = EntityUtils.toString(response.getEntity());
-            if (!sysMsg.contains("9898")) {
-                throw new CC98Exception("用户名或密码错误");
-            }
-        } catch (Exception e) {
-            throw new CC98Exception(e.getMessage());
-        }
-    }
-
-    private void authenticateForRVPN(String proxyName, String proxyPwd) {
-        try {
-            String initUrl = "https://61.175.193.50//por/login_auth.csp?dev=android-phone&language=zh_CN";
-            String initPage = getPage(initUrl);
-            List<NameValuePair> nvps = new ArrayList<NameValuePair>();
-            nvps.add(new BasicNameValuePair("svpn_name", proxyName));
-            nvps.add(new BasicNameValuePair("svpn_rand_code", ""));
-            nvps.add(new BasicNameValuePair("svpn_password", proxyPwd));
-            HttpPost post = new HttpPost(
-                    "https://61.175.193.50//por/login_psw.csp?type=cs&dev=android-phone&dev=android-phone&language=zh_CN");
-            post.setEntity(new UrlEncodedFormEntity(nvps, "UTF-8"));
-            HttpResponse response = client.execute(post);
-            String result = EntityUtils.toString(response.getEntity());
-            System.err.println("authenticateForRVPN result：" + result);
-            if (!result.contains("<Result>1</Result>")) {
-                throw new IllegalArgumentException("RVPN 用户名或密码不正确!");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new IllegalArgumentException("do rvpn authenticate failed");
-        }
-    }
-
-    @Override
+        @Override
     public void pushNewPost(List<NameValuePair> pairList, String boardID) {
         try {
             HttpPost httpPost = new HttpPost(manager.getPushNewPostUrl(boardID));
@@ -492,8 +343,8 @@ public class CC98ClientImpl implements ICC98Client {
     @Override
     public void switchToUser(int index) {
         getUsersInfo().currentUserIndex = index;
-        ((MyApplication) application).storeUsersInfo();
-        getHttpClient(true);
+        getApplication().storeUsersInfo();
+        getApplication().syncUserDataAndHttpClient();
     }
 
     @Override
@@ -507,7 +358,7 @@ public class CC98ClientImpl implements ICC98Client {
             avatars.remove(pos);
             int newPos = info.users.indexOf(currentUser);
             info.currentUserIndex = newPos;
-            ((MyApplication) application).storeUsersInfo();
+            getApplication().storeUsersInfo();
         }
     }
 }

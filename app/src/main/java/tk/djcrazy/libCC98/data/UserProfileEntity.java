@@ -3,12 +3,20 @@
  */
 package tk.djcrazy.libCC98.data;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 /**
  * @author DJ
  *
  */
 public class UserProfileEntity {
-	/**
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
+    }
+
+    /**
 	 * @return the userAvatarLink
 	 */
 	public String getUserAvatarLink() {

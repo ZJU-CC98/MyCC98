@@ -20,6 +20,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
@@ -63,9 +64,7 @@ import tk.djcrazy.libCC98.util.RequestResultListener;
 public class HomeActivity extends BaseSlidingFragmentActivity implements
         LoadingListener {
 
-    public static final String USERINFO = "USERINFO";
-    public static final String AUTOLOGIN = "AUTOLOGIN";
-    private static final String TAG = "HomeActivity";
+     private static final String TAG = "HomeActivity";
     private static Boolean isExit = false;
     private static Boolean hasTask = false;
     public String[] boardNames;
@@ -87,10 +86,6 @@ public class HomeActivity extends BaseSlidingFragmentActivity implements
     @Inject
     private NewCC98Service mCC98Service;
 
-    protected void onStop() {
-        flushCache();
-        super.onStop();
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -115,7 +110,7 @@ public class HomeActivity extends BaseSlidingFragmentActivity implements
     }
 
     private void requestForUpdateInfo() {
-        mCC98Service.submitUpdateRequest(new RequestResultListener<JSONObject>() {
+        mCC98Service.submitUpdateRequest(this.getClass(), new RequestResultListener<JSONObject>() {
             @Override
             public void onReuqestComplete(JSONObject result) {
                 try {
@@ -148,8 +143,8 @@ public class HomeActivity extends BaseSlidingFragmentActivity implements
             }
 
             @Override
-            public void onReuqestError() {
-
+            public void onReuqestError(String msg) {
+                Log.d(TAG, msg);
             }
         });
     }
@@ -171,6 +166,12 @@ public class HomeActivity extends BaseSlidingFragmentActivity implements
     @Override
     protected void onStart() {
         super.onStart();
+    }
+    @Override
+    protected void onStop() {
+        mCC98Service.cancelRequest(HomeActivity.class);
+        flushCache();
+        super.onStop();
     }
 
     /**
@@ -302,7 +303,6 @@ public class HomeActivity extends BaseSlidingFragmentActivity implements
                 }
             } else {
                 finish();
-                java.lang.System.exit(0);
             }
         }
         return false;
@@ -311,7 +311,7 @@ public class HomeActivity extends BaseSlidingFragmentActivity implements
     private class CheckInboxTask extends RoboAsyncTask<List<PmInfo>> {
 
         private static final int NODIFICATION_ID = 58484654;
-        @Injectu
+        @Inject
         private NotificationManager mNotificationManager;
         private NotificationCompat.Builder mBuilder;
 
@@ -353,28 +353,5 @@ public class HomeActivity extends BaseSlidingFragmentActivity implements
                 mNotificationManager.notify(NODIFICATION_ID, mBuilder.build());
             }
         }
-    }
-
-    private class CheckUpdateTask extends RoboAsyncTask<String> {
-
-        protected CheckUpdateTask(Context context) {
-            super(context);
-        }
-
-        @Override
-        public String call() throws Exception {
-            DefaultHttpClient client = new DefaultHttpClient();
-            HttpGet get = new HttpGet(Config.UPDATE_LINK);
-            HttpResponse response = client.execute(get);
-            return EntityUtils.toString(response.getEntity(), "UTF-8");
-        }
-
-        @Override
-        protected void onSuccess(String t) throws Exception {
-            super.onSuccess(t);
-            JSONObject object = new JSONObject(t);
-        }
-
-
     }
 }

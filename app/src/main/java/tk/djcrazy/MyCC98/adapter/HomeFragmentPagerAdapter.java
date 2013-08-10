@@ -14,7 +14,7 @@ import com.jfeinstein.jazzyviewpager.JazzyViewPager;
 
 public class HomeFragmentPagerAdapter extends FragmentPagerAdapter {
 	private FragmentManager mFragment;
-	private String[] pageTitle = {"我的版面","热门板块","版面列表","查看新帖"};
+	private String[] pageTitle = {"我的版面","热门话题","版面列表","查看新帖"};
 	private final int FRAGMENT_NUMBER = 4;
     private JazzyViewPager mJazzyViewPager;
 

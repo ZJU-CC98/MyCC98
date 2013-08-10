@@ -24,19 +24,18 @@ public class AuthDialog extends Dialog implements OnClickListener {
 	private CheckBox rememberPassword;
 	private RadioGroup mLoginType;
 
-	private SharedPreferences setting;
+    private static final String AUTHINFO = "AUTHINFO";
 	private static final String USERNAME = "USERNAME";
-	private static final String PASSWORD = "PASSWORD";
+    private static final String PASSWORD = "PASSWORD";
+    private static final String HOST = "HOST";
  	private static final String REMEMBERPWD = "REMEMBERPWD";
 
  	private MyAuthDialogListener listener;
 
-	public AuthDialog(Context context, MyAuthDialogListener listener,
-			SharedPreferences setting) {
+	public AuthDialog(Context context, MyAuthDialogListener listener) {
 		super(context);
 		this.listener = listener;
-		this.setting = setting;
-	}
+ 	}
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -49,6 +48,7 @@ public class AuthDialog extends Dialog implements OnClickListener {
 		mLoginType = (RadioGroup) findViewById(R.id.login_type);
 		okButton.setOnClickListener(this);
 		cancelButton.setOnClickListener(this);
+        SharedPreferences setting = getContext().getSharedPreferences(AUTHINFO,Context.MODE_PRIVATE);
 		if (setting.getBoolean(REMEMBERPWD, false)) {
 			userNameText.setText(setting.getString(USERNAME, ""));
 			passwordText.setText(setting.getString(PASSWORD, ""));
@@ -59,7 +59,7 @@ public class AuthDialog extends Dialog implements OnClickListener {
 
 	public interface MyAuthDialogListener {
 		public void onOkClick(String authUserName, String authPassword,
-				Boolean rememberPwd, LoginType loginType);
+				String host, LoginType loginType);
 
 		public void onCancelClick();
 	}
@@ -68,9 +68,14 @@ public class AuthDialog extends Dialog implements OnClickListener {
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.okButton:
-			LoginType type = ((RadioButton)mLoginType.getChildAt(0)).isChecked()?LoginType.RVPN:LoginType.USER_DEFINED;
-			listener.onOkClick(userNameText.getText().toString(), passwordText
-					.getText().toString(), rememberPassword.isChecked(), type);
+            String userName = userNameText.getText().toString().trim();
+            String password = passwordText.getText().toString().trim();
+            String proxyHost = "http://hz.cc98.lifetoy.org/";
+            getContext().getSharedPreferences(AUTHINFO, 0).edit().putString(USERNAME, userName)
+                    .putString(PASSWORD, password).putString(HOST, proxyHost)
+                    .putBoolean(REMEMBERPWD, rememberPassword.isChecked())
+                    .commit();
+ 			listener.onOkClick(userName, password, proxyHost, LoginType.USER_DEFINED);
 			dismiss();
 			break;
 		case R.id.cancelbutton:

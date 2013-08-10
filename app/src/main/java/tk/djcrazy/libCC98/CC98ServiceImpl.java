@@ -39,14 +39,7 @@ public class CC98ServiceImpl implements ICC98Service {
 	@Inject
 	private ICC98Parser cc98Parser;
 
-	@Override
-	public void doLogin(String userName, String pwd32, String pwd16, String proxyName,
-			String proxyPwd, LoginType type) throws ClientProtocolException, IOException,
-			IllegalAccessException, ParseException, ParseContentException, NetworkErrorException {
-		cc98Client.doLogin(userName, pwd32, pwd16, proxyName, proxyPwd, type);
-	}
-
-	@Override
+ 	@Override
 	public void logOut() {
 		cc98Client.clearLoginInfo();
 	}
@@ -136,7 +129,7 @@ public class CC98ServiceImpl implements ICC98Service {
 
 	@Override
 	public List<BoardEntity> getBoardList(String boardId)
-			throws org.apache.http.client.ClientProtocolException, org.apache.http.ParseException,
+			throws ch.boye.httpclientandroidlib.client.ClientProtocolException, ch.boye.httpclientandroidlib.ParseException,
 			IOException, ParseContentException, java.text.ParseException {
 		return cc98Parser.getBoardList(boardId);
 	}

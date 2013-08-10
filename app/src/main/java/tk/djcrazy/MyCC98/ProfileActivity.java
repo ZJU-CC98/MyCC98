@@ -1,38 +1,32 @@
 package tk.djcrazy.MyCC98;
 
-import java.io.IOException;
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.os.Bundle;
+import android.text.Html;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
+import com.google.inject.Inject;
+import com.manuelpeinado.fadingactionbar.FadingActionBarHelper;
 
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectExtra;
 import roboguice.util.RoboAsyncTask;
 import tk.djcrazy.MyCC98.util.Intents;
-import tk.djcrazy.MyCC98.util.ProgressRoboAsyncTask;
 import tk.djcrazy.MyCC98.util.Intents.Builder;
+import tk.djcrazy.MyCC98.util.ProgressRoboAsyncTask;
 import tk.djcrazy.MyCC98.util.ToastUtils;
 import tk.djcrazy.libCC98.CachedCC98Service;
+import tk.djcrazy.libCC98.NewCC98Service;
 import tk.djcrazy.libCC98.data.UserProfileEntity;
-import tk.djcrazy.libCC98.exception.NoUserFoundException;
-import tk.djcrazy.libCC98.exception.ParseContentException;
-import android.app.Activity;
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.net.ParseException;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.text.Html;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
-import com.google.inject.Inject;
-import com.manuelpeinado.fadingactionbar.FadingActionBarHelper;
 
 @ContentView(R.layout.activity_user_profile)
 public class ProfileActivity extends BaseFragmentActivity {
@@ -41,7 +35,7 @@ public class ProfileActivity extends BaseFragmentActivity {
 	private static final String USER_NAME = "userName";
 
 	private TextView userName;
-	private ImageView userPortrait;
+	private NetworkImageView userPortrait;
 	private TextView loginStatues;
 	private TextView userNickName;
 	private TextView userLevel;
@@ -69,6 +63,8 @@ public class ProfileActivity extends BaseFragmentActivity {
 
 	@Inject
 	private CachedCC98Service service;
+    @Inject
+    private NewCC98Service mNewCC98Service;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -112,7 +108,7 @@ public class ProfileActivity extends BaseFragmentActivity {
 
 	private void findViews() {
 		userName = (TextView) findViewById(R.id.profile_user_name);
-		userPortrait = (ImageView) findViewById(R.id.profile_image);
+		userPortrait = (NetworkImageView) findViewById(R.id.profile_image);
 		loginStatues = (TextView) findViewById(R.id.profile_online_statues);
 		userNickName = (TextView) findViewById(R.id.profile_user_nick_name);
 		userLevel = (TextView) findViewById(R.id.profile_user_level);
@@ -136,6 +132,7 @@ public class ProfileActivity extends BaseFragmentActivity {
 
 	protected void setContents() {
 		userName.setText(mUserName);
+        userPortrait.setImageUrl(profileEntity.getUserAvatarLink(), mNewCC98Service.getImageLoader());
 		userNickName.setText(profileEntity.getUserNickName());
 		userLevel.setText(profileEntity.getUserLevel());
 		userGroup.setText(profileEntity.getUserGroup());

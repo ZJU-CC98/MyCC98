@@ -102,7 +102,11 @@ public interface ICC98UrlManager {
 
  	public String getSubmitReplyReferer(String boardID, String rootID);
 
- 	public String getUserProfileUrl(LoginType type, String userName);
+    public String getUserProfileUrl(LoginType type, String userName);
+
+    public String getUserProfileUrl(LoginType type, String proxyHost, String userName);
 
  	public String getLoginUrl(LoginType type);
+
+    public String getLoginUrl(LoginType loginType, String proxyHost);
 }

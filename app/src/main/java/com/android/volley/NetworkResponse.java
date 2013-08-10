@@ -16,7 +16,7 @@
 
 package com.android.volley;
 
-import org.apache.http.HttpStatus;
+import ch.boye.httpclientandroidlib.HttpStatus;
 
 import java.util.Collections;
 import java.util.Map;

@@ -31,13 +31,13 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 
-import org.apache.http.Header;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.StatusLine;
-import org.apache.http.conn.ConnectTimeoutException;
-import org.apache.http.impl.cookie.DateUtils;
+import ch.boye.httpclientandroidlib.Header;
+import ch.boye.httpclientandroidlib.HttpEntity;
+import ch.boye.httpclientandroidlib.HttpResponse;
+import ch.boye.httpclientandroidlib.HttpStatus;
+import ch.boye.httpclientandroidlib.StatusLine;
+import ch.boye.httpclientandroidlib.conn.ConnectTimeoutException;
+import ch.boye.httpclientandroidlib.impl.cookie.DateUtils;
 
 import java.io.IOException;
 import java.io.InputStream;

@@ -19,9 +19,9 @@ package com.android.volley.toolbox;
 import com.android.volley.Cache;
 import com.android.volley.NetworkResponse;
 
-import org.apache.http.impl.cookie.DateParseException;
-import org.apache.http.impl.cookie.DateUtils;
-import org.apache.http.protocol.HTTP;
+import ch.boye.httpclientandroidlib.impl.cookie.DateParseException;
+import ch.boye.httpclientandroidlib.impl.cookie.DateUtils;
+import ch.boye.httpclientandroidlib.protocol.HTTP;
 
 import java.util.Map;
 

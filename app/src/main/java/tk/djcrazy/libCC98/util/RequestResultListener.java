@@ -9,6 +9,6 @@ interface RequestResultListener<T> {
 
     public void onReuqestComplete(T result);
 
-    public void onReuqestError();
+    public void onReuqestError(String msg);
 
 }

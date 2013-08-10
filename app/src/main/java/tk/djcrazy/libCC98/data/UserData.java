@@ -1,22 +1,17 @@
 package tk.djcrazy.libCC98.data;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import ch.boye.httpclientandroidlib.client.CookieStore;
+import ch.boye.httpclientandroidlib.cookie.Cookie;
+import ch.boye.httpclientandroidlib.impl.cookie.BasicClientCookie;
+import ch.boye.httpclientandroidlib.impl.cookie.BasicClientCookie2;
 
 public class UserData implements Serializable {
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return "UserData [userName=" + userName + ", password32=" + password32
-				+ ", password16=" + password16 + ", proxyUserName="
-				+ proxyUserName + ", proxyPassword=" + proxyPassword
-				+ ", loginType=" + loginType + ", cookieStore=" + cookieStore
-				+ "]";
-	}
-
 	private static final long serialVersionUID = 5656863335203265871L;
 	private String userName;
 	private String password32;
@@ -24,12 +19,29 @@ public class UserData implements Serializable {
 
 	private String proxyUserName;
 	private String proxyPassword;
+
+    private String proxyHost;
 	private LoginType loginType;
 
-	private CookieStore cookieStore;
-	
-	
-	
+
+    private List<BasicClientCookie> cookies = new ArrayList<BasicClientCookie>();
+
+    public String getProxyHost() {
+        return proxyHost;
+    }
+
+    public void setProxyHost(String proxyHost) {
+        this.proxyHost = proxyHost;
+    }
+
+    public List<BasicClientCookie> getCookies() {
+        return cookies;
+    }
+
+    public void setCookies(List<BasicClientCookie> cookies) {
+        this.cookies = cookies;
+    }
+
 	/**
 	 * @return the loginType
 	 */
@@ -88,14 +100,6 @@ public class UserData implements Serializable {
 		this.userName = userName;
 	}
 
-	public CookieStore getCookieStore() {
-		return cookieStore;
-	}
-
-	public void setCookieStore(CookieStore cookieStore) {
-		this.cookieStore = cookieStore;
-	}
-
 	public String getPassword32() {
 		return password32;
 	}
@@ -127,4 +131,11 @@ public class UserData implements Serializable {
 	public void setProxyPassword(String proxyPassword) {
 		this.proxyPassword = proxyPassword;
 	}
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
+    }
+
+
 }

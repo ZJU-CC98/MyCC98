@@ -5,8 +5,8 @@ import android.text.Html;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import org.apache.http.ParseException;
-import org.apache.http.client.ClientProtocolException;
+import ch.boye.httpclientandroidlib.ParseException;
+import ch.boye.httpclientandroidlib.client.ClientProtocolException;
 
 import java.io.IOException;
 import java.net.URLEncoder;

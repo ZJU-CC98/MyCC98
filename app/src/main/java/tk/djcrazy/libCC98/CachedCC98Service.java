@@ -1,17 +1,22 @@
 package tk.djcrazy.libCC98;
 
+import android.accounts.NetworkErrorException;
+import android.app.Application;
+import android.graphics.Bitmap;
+
+import com.github.droidfu.cachefu.AbstractCache;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.MalformedURLException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
 import java.util.regex.PatternSyntaxException;
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-
+import ch.boye.httpclientandroidlib.ParseException;
+import ch.boye.httpclientandroidlib.client.ClientProtocolException;
 import tk.djcrazy.MyCC98.PostContentsJSActivity;
 import tk.djcrazy.MyCC98.application.MyApplication;
 import tk.djcrazy.MyCC98.application.MyApplication.UsersInfo;
@@ -31,12 +36,6 @@ import tk.djcrazy.libCC98.exception.CC98Exception;
 import tk.djcrazy.libCC98.exception.NoUserFoundException;
 import tk.djcrazy.libCC98.exception.ParseContentException;
 import tk.djcrazy.libCC98.util.SerializableCacheUtil;
-import android.accounts.NetworkErrorException;
-import android.graphics.Bitmap;
-import android.view.FocusFinder;
-import ch.boye.httpclientandroidlib.ParseException;
-import ch.boye.httpclientandroidlib.client.ClientProtocolException;
-import com.github.droidfu.cachefu.AbstractCache;
 
 @Singleton
 public class CachedCC98Service {
@@ -45,8 +44,8 @@ public class CachedCC98Service {
 	private SerializableCache cache;
 
 	@Inject
-	private CachedCC98Service() {
-		cache = SerializableCache.getInstance(MyApplication.getAppContext());
+	private CachedCC98Service(Application application) {
+		cache = SerializableCache.getInstance(application);
 	}
 
 	public boolean isUseProxy() {
@@ -78,14 +77,6 @@ public class CachedCC98Service {
 		abstract protected T getContent() throws Exception;
 
 		abstract protected String getKeyString();
-	}
-
-	public void doLogin(String userName, String pwd32, String pw16,
-			String proxyName, String proxyPwd, LoginType type)
-			throws ClientProtocolException, IOException,
-			IllegalAccessException, ParseException, ParseContentException,
-			NetworkErrorException {
-		service.doLogin(userName, pwd32, pw16, proxyName, proxyPwd, type);
 	}
 
     public AbstractCache getCache() {
@@ -217,8 +208,8 @@ public class CachedCC98Service {
 			boolean forceRefresh) throws Exception {
 		return (new ServiceCallable<List<BoardEntity>>() {
 			protected List<BoardEntity> getContent()
-					throws org.apache.http.client.ClientProtocolException,
-					org.apache.http.ParseException, IOException,
+					throws ch.boye.httpclientandroidlib.client.ClientProtocolException,
+					ch.boye.httpclientandroidlib.ParseException, IOException,
 					ParseContentException, java.text.ParseException {
 				return service.getBoardList(boardId);
 			}

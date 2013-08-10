@@ -20,9 +20,6 @@ public interface ICC98Client {
 
     public UserData getCurrentUserData();
 
-    public void doLogin(String id, String pw32, String pw16, String proxyName, String proxyPwd,
-                        LoginType type);
-
     public void pushNewPost(List<NameValuePair> pairList, String boardID);
 
     public void submitReply(List<NameValuePair> pairList, String boardID, String rootID);
