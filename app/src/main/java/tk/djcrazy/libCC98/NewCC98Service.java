@@ -195,6 +195,22 @@ public class NewCC98Service {
         getApplication().mRequestQueue.add(request);
     }
 
+    public void submitBitmapRequest(final Object tag, String url, final RequestResultListener<Bitmap> listener) {
+        Request request = new ImageRequest(url, new Response.Listener<Bitmap>() {
+            @Override
+            public void onResponse(Bitmap response) {
+                listener.onRequestComplete(response);
+            }
+        }, 0, 0, Bitmap.Config.ARGB_8888, new Response.ErrorListener(){
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                listener.onRequestError("图片加载失败");
+            }
+        });
+        request.setTag(tag);
+        getApplication().mRequestQueue.add(request);
+    }
+
     private List<BasicClientCookie> castToAnother(List<Cookie> list) {
         List<BasicClientCookie> res = new ArrayList<BasicClientCookie>();
         for (Cookie cookie: list) {
@@ -211,7 +227,15 @@ public class NewCC98Service {
         return getApplication().mImageLoader;
     }
 
-     private MyApplication getApplication() {
+    public Bitmap getCurrentUserAvatar(){
+        return getApplication().getCurrentUserAvatar();
+    }
+
+    public  String getCurrentUserName() {
+        return  getApplication().getCurrentUserData().getUserName();
+    }
+
+    private MyApplication getApplication() {
         return (MyApplication) mApplication;
     }
 }

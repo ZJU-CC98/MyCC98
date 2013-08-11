@@ -74,9 +74,7 @@ public class HomeActivity extends BaseSlidingFragmentActivity  {
     };
     @InjectView(R.id.main_pages)
     private JazzyViewPager viewPager;
-    @Inject
-    private CachedCC98Service service;
-    @Inject
+     @Inject
     private NewCC98Service mCC98Service;
 
     @Inject
@@ -130,7 +128,6 @@ public class HomeActivity extends BaseSlidingFragmentActivity  {
 
             @Override
             public void onRequestError(String msg) {
-
             }
         });
     }
@@ -172,13 +169,10 @@ public class HomeActivity extends BaseSlidingFragmentActivity  {
     }
 
     private int getVersionCode() {
-        PackageInfo packInfo = null;
         try {
-             PackageManager packageManager = getPackageManager();
-             packInfo = packageManager.getPackageInfo(getPackageName(), 0);
+            PackageInfo packInfo =  getPackageManager().getPackageInfo(getPackageName(), 0);
             return packInfo.versionCode;
         } catch (NameNotFoundException e) {
-            e.printStackTrace();
             return Integer.MAX_VALUE;
         }
     }
@@ -234,16 +228,16 @@ public class HomeActivity extends BaseSlidingFragmentActivity  {
                 Class.forName("android.net.http.HttpResponseCache")
                         .getMethod("flush").invoke(cache);
             }
-        } catch (Exception httpResponseCacheNotAvailable) {
+        } catch (Exception e) {
         }
     }
 
     private void configureActionBar() {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setIcon(new BitmapDrawable(getResources(), service.getCurrentUserAvatar()));
+        actionBar.setIcon(new BitmapDrawable(getResources(), mCC98Service.getCurrentUserAvatar()));
         actionBar.setHomeButtonEnabled(true);
-        actionBar.setTitle(service.getCurrentUserName());
+        actionBar.setTitle(mCC98Service.getCurrentUserName());
     }
 
     @Override
@@ -297,52 +291,5 @@ public class HomeActivity extends BaseSlidingFragmentActivity  {
             }
         }
         return false;
-    }
-
-    private class CheckInboxTask extends RoboAsyncTask<List<PmInfo>> {
-
-        private static final int NODIFICATION_ID = 58484654;
-        @Inject
-        private NotificationManager mNotificationManager;
-        private NotificationCompat.Builder mBuilder;
-
-        protected CheckInboxTask(Context context) {
-            super(context);
-        }
-
-        @Override
-        public List<PmInfo> call() throws Exception {
-            return service.getPmData(1, new InboxInfo(0, 0), 0);
-        }
-
-        @Override
-        protected void onSuccess(List<PmInfo> t) throws Exception {
-            super.onSuccess(t);
-            int totalUnread = 0;
-            for (PmInfo pmInfo : t) {
-                if (pmInfo.isNew()) {
-                    totalUnread++;
-                }
-            }
-            if (totalUnread != 0) {
-                mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                mBuilder = new NotificationCompat.Builder(getContext()).setSmallIcon(
-                        R.drawable.ic_launcher).setContentTitle("您有" + totalUnread + "条未读消息").setTicker("您有" + totalUnread + "条未读消息").setContentText("请点击查看");
-                Uri alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-                mBuilder.setSound(alert);
-                mBuilder.setAutoCancel(true);
-                Intent resultIntent = new Intent(getContext(), PmActivity.class);
-                TaskStackBuilder stackBuilder = TaskStackBuilder.create(getContext());
-                stackBuilder.addParentStack(PmActivity.class);
-                stackBuilder.addNextIntent(resultIntent);
-                PendingIntent resultPendingIntent =
-                        stackBuilder.getPendingIntent(
-                                0,
-                                PendingIntent.FLAG_UPDATE_CURRENT
-                        );
-                mBuilder.setContentIntent(resultPendingIntent);
-                mNotificationManager.notify(NODIFICATION_ID, mBuilder.build());
-            }
-        }
     }
 }
