@@ -79,6 +79,9 @@ public class HomeActivity extends BaseSlidingFragmentActivity  {
     @Inject
     private NewCC98Service mCC98Service;
 
+    @Inject
+    private NotificationManager mNotificationManager;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,13 +96,48 @@ public class HomeActivity extends BaseSlidingFragmentActivity  {
             t.replace(R.id.home_behind_view, new HomeBehindMenuFragment()).commit();
         }
         requestForUpdateInfo();
-        new CheckInboxTask(this).execute();
+        requestForInboxInfo();
     }
 
+
+    private void requestForInboxInfo() {
+        final int NODIFICATION_ID = 58484654;
+        mCC98Service.submitPmInfoRequest(this.getClass(),0,1,new RequestResultListener<InboxInfo>() {
+            @Override
+            public void onRequestComplete(InboxInfo result) {
+                int totalUnread = 0;
+                for (PmInfo pmInfo : result.getPmInfos()) {
+                    if (pmInfo.isNew()) {
+                        totalUnread++;
+                    }
+                }
+                if (totalUnread != 0) {
+                     NotificationCompat.Builder  mBuilder = new NotificationCompat.Builder(HomeActivity.this).setSmallIcon(
+                            R.drawable.ic_launcher).setContentTitle("您有" + totalUnread + "条未读消息")
+                             .setTicker("您有" + totalUnread + "条未读消息").setContentText("请点击查看");
+                    Uri alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                    mBuilder.setSound(alert).setAutoCancel(true);
+                    Intent resultIntent = new Intent(HomeActivity.this, PmActivity.class);
+                    TaskStackBuilder stackBuilder = TaskStackBuilder.create(HomeActivity.this);
+                    stackBuilder.addParentStack(PmActivity.class);
+                    stackBuilder.addNextIntent(resultIntent);
+                    PendingIntent resultPendingIntent =
+                            stackBuilder.getPendingIntent( 0,PendingIntent.FLAG_UPDATE_CURRENT );
+                    mBuilder.setContentIntent(resultPendingIntent);
+                    mNotificationManager.notify(NODIFICATION_ID, mBuilder.build());
+                }
+            }
+
+            @Override
+            public void onRequestError(String msg) {
+
+            }
+        });
+    }
     private void requestForUpdateInfo() {
         mCC98Service.submitUpdateRequest(this.getClass(), new RequestResultListener<JSONObject>() {
             @Override
-            public void onReuqestComplete(JSONObject result) {
+            public void onRequestComplete(JSONObject result) {
                 try {
                     int versionCode = result.getInt("versionCode");
                     if (versionCode > getVersionCode()) {
@@ -127,7 +165,7 @@ public class HomeActivity extends BaseSlidingFragmentActivity  {
             }
 
             @Override
-            public void onReuqestError(String msg) {
+            public void onRequestError(String msg) {
                 Log.d(TAG, msg);
             }
         });

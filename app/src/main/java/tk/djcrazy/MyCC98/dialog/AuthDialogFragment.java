@@ -9,9 +9,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.RadioGroup;
-
-import com.google.inject.Inject;
 
 import roboguice.fragment.RoboDialogFragment;
 import roboguice.inject.InjectView;

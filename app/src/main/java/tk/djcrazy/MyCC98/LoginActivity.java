@@ -154,13 +154,13 @@ public class LoginActivity extends BaseFragmentActivity implements
          mNewCC98Service.login(this.getClass(), mUsername, Md5.MyMD5(mPassword, Md5.T32), Md5.MyMD5(mPassword, Md5.T16), authUserName, authPassword,
                  authHost, mLoginType, new RequestResultListener<Boolean>() {
             @Override
-            public void onReuqestComplete(Boolean result) {
+            public void onRequestComplete(Boolean result) {
                 dialog.dismiss();
                 forwardToNextActivity();
             }
 
             @Override
-            public void onReuqestError(String msg) {
+            public void onRequestError(String msg) {
                 dialog.dismiss();
                 ToastUtils.show(LoginActivity.this, msg);
             }

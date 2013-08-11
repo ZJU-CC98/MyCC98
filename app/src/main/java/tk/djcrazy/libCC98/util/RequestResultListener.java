@@ -7,8 +7,8 @@ public
 interface RequestResultListener<T> {
 
 
-    public void onReuqestComplete(T result);
+    public void onRequestComplete(T result);
 
-    public void onReuqestError(String msg);
+    public void onRequestError(String msg);
 
 }

@@ -383,26 +383,28 @@ public class NewCC98Parser {
 	 *            The html of the inbox page
 	 * @return A list of PmInfo
 	 */
-    public List<PmInfo> parsePmList(String html, InboxInfo inboxInfo) {
+    public InboxInfo parsePmList(String html) {
+        InboxInfo info = new InboxInfo();
 		List<PmInfo> pmList = new ArrayList<PmInfo>();
-		String regexString = "(?<=<img src=pic/m_)\\w+(?=\\.gif>)|(?<=target=_blank>)[^:]+(?=</a>)|(?<=\\s>).*?(?=</a></td>)|(?<=<a href=\"messanger.asp\\?action=(read|outread)&id=)\\d+?(?=&sender)|(?<=target=_blank>).*?(?=</a></td>)";
-		Pattern p1 = Pattern.compile(regexString);
-		Matcher m1 = p1.matcher(html);
+		String regexString = "(?<=<img src=pic/m_)\\w+(?=\\.gif>)|(?<=target=_blank>)[^:]+(?=</a>)|(?<=\\s>).*?(?=</a></td>)|" +
+                "(?<=<a href=\"messanger.asp\\?action=(read|outread)&id=)\\d+?(?=&sender)|(?<=target=_blank>).*?(?=</a></td>)";
+		Matcher m1 = Pattern.compile(regexString).matcher(html);
 		getInboxList(pmList, m1);
 		// Get total page number
 		Pattern p2 = Pattern.compile("(?<=/<b>)\\d+(?=</b>页)");
 		Matcher m2 = p2.matcher(html);
 		if (m2.find()) {
 			// Get the total page number of the pm inbox.
-			inboxInfo.setTotalInPage(Integer.parseInt(m2.group()));
+            info.setTotalInPage(Integer.parseInt(m2.group()));
 		}
 		// Get total pm count
 		Pattern p3 = Pattern.compile("(?<=总数<b>)\\d+(?=</b></td>)");
 		Matcher m3 = p3.matcher(html);
 		if (m3.find()) {
-			inboxInfo.setTotalPmIn(Integer.parseInt(m3.group()));
+            info.setTotalPmIn(Integer.parseInt(m3.group()));
 		}
- 		return pmList;
+        info.setPmInfos(pmList);
+ 		return info;
 	}
 
 	/**
@@ -413,7 +415,7 @@ public class NewCC98Parser {
 	 * @param pmList
 	 * @param m1
 	 */
-    public void getInboxList(List<PmInfo> pmList, Matcher m1) {
+    private void getInboxList(List<PmInfo> pmList, Matcher m1) {
 		while (m1.find()) {
 			String isNewString = m1.group();
 			boolean isNew = isNewString.equals("olds") || isNewString.equals("issend_1") ? false
