@@ -1,83 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical"
-    android:scrollbars="vertical" >
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical"
+              android:scrollbars="vertical">
 
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:scrollbars="vertical" >
 
-        <TextView
-            android:layout_width="wrap_content"
+    <EditText
+            android:id="@+id/auth_host"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/user_name" />
+            android:hint="代理地址"
+            android:layout_marginTop="10dp"/>
 
-        <EditText
+    <EditText
             android:id="@+id/auth_username"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/pw" />
+            android:hint="@string/user_name"
+            android:layout_marginTop="10dp"/>
 
-        <EditText
+    <EditText
             android:id="@+id/auth_password"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:password="true" />
+            android:password="true"
+            android:hint="@string/pw"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"/>
 
-        <RadioGroup
-            android:id="@+id/login_type"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal" >
-
-            <RadioButton
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1.0"
-                android:text="RVPN代理"
-                android:visibility="gone" />
-
-            <RadioButton
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1.0"
-                android:checked="true"
-                android:text="Lifetoy代理" />
-        </RadioGroup>
-
-        <CheckBox
+    <CheckBox
             android:id="@+id/auth_remember_pwd"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="true"
-            android:text="记住用户名密码" />
+            android:text="记住用户名密码"/>
 
-        <LinearLayout
+    <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content">
 
-            <Button
+        <Button
                 android:id="@+id/cancelbutton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1.0"
-                android:text="取消" />
+                android:text="取消"/>
 
-            <Button
+        <Button
                 android:id="@+id/okButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1.0"
-                android:text="确认" />
-        </LinearLayout>
+                android:text="确认"/>
     </LinearLayout>
+</LinearLayout>
 
-</ScrollView>

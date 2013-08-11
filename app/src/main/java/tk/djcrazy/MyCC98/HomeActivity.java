@@ -16,7 +16,6 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
@@ -43,10 +42,6 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import ch.boye.httpclientandroidlib.HttpResponse;
-import ch.boye.httpclientandroidlib.client.methods.HttpGet;
-import ch.boye.httpclientandroidlib.impl.client.DefaultHttpClient;
-import ch.boye.httpclientandroidlib.util.EntityUtils;
 import roboguice.inject.InjectView;
 import roboguice.util.RoboAsyncTask;
 import tk.djcrazy.MyCC98.adapter.GlobalBoardListAdapter;
@@ -61,15 +56,13 @@ import tk.djcrazy.libCC98.data.InboxInfo;
 import tk.djcrazy.libCC98.data.PmInfo;
 import tk.djcrazy.libCC98.util.RequestResultListener;
 
-public class HomeActivity extends BaseSlidingFragmentActivity implements
-        LoadingListener {
+public class HomeActivity extends BaseSlidingFragmentActivity  {
 
-     private static final String TAG = "HomeActivity";
+    private static final String TAG = "HomeActivity";
     private static Boolean isExit = false;
     private static Boolean hasTask = false;
     public String[] boardNames;
     public String[] boardIds;
-    Fragment mFragment = null;
     Timer tExit = new Timer();
     TimerTask task = new TimerTask() {
 
@@ -86,7 +79,6 @@ public class HomeActivity extends BaseSlidingFragmentActivity implements
     @Inject
     private NewCC98Service mCC98Service;
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,13 +90,8 @@ public class HomeActivity extends BaseSlidingFragmentActivity implements
         setupSecondBehindView();
         if (savedInstanceState == null) {
             FragmentTransaction t = this.getSupportFragmentManager().beginTransaction();
-            mFragment = new HomeBehindMenuFragment();
-            t.replace(R.id.home_behind_view, mFragment);
-            t.commit();
-        } else {
-            mFragment = this.getSupportFragmentManager().findFragmentById(R.id.home_behind_view);
+            t.replace(R.id.home_behind_view, new HomeBehindMenuFragment()).commit();
         }
-        //new CheckUpdateTask(this).execute();
         requestForUpdateInfo();
         new CheckInboxTask(this).execute();
     }
@@ -120,21 +107,18 @@ public class HomeActivity extends BaseSlidingFragmentActivity implements
                         String versionName = result.getString("versionName");
                         String updateHint = result.getString("hint");
                         AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
-                        builder.setTitle("发现新版本");
-                        builder.setMessage("版本号：" + versionName + "\n" + "更新内容：" + updateHint);
-                        builder.setPositiveButton("下载", new OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                startService(NewVersionDownloadService.createIntent(HomeActivity.this, downloadLink));
-                            }
-                        });
-                        builder.setNegativeButton("取消", new OnClickListener() {
+                        builder.setTitle("发现新版本").setMessage("版本号：" + versionName + "\n" + "更新内容：" + updateHint)
+                                .setPositiveButton("下载", new OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        startService(NewVersionDownloadService.createIntent(HomeActivity.this, downloadLink));
+                                    }
+                                }).setNegativeButton("取消", new OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
                             }
-                        });
-                        builder.create().show();
+                        }).create().show();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -149,13 +133,11 @@ public class HomeActivity extends BaseSlidingFragmentActivity implements
         });
     }
 
-    private int getVersionCode()  {
+    private int getVersionCode() {
         PackageInfo packInfo = null;
         try {
-            // 获取package Manager的实例
-            PackageManager packageManager = getPackageManager();
-            // getPackageName()是你当前类的包名，0代表是获取版本信息
-            packInfo = packageManager.getPackageInfo(getPackageName(), 0);
+             PackageManager packageManager = getPackageManager();
+             packInfo = packageManager.getPackageInfo(getPackageName(), 0);
             return packInfo.versionCode;
         } catch (NameNotFoundException e) {
             e.printStackTrace();
@@ -164,23 +146,15 @@ public class HomeActivity extends BaseSlidingFragmentActivity implements
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-    }
-    @Override
     protected void onStop() {
         mCC98Service.cancelRequest(HomeActivity.class);
         flushCache();
         super.onStop();
     }
 
-    /**
-     *
-     */
     private void setupViewPager() {
         HomeFragmentPagerAdapter adapter = new HomeFragmentPagerAdapter(
                 getSupportFragmentManager(), viewPager);
-        adapter.setLoadingListener(this);
         viewPager.setAdapter(adapter);
         viewPager.setCurrentItem(0);
         viewPager.setTransitionEffect(JazzyViewPager.TransitionEffect.Tablet);
@@ -189,9 +163,6 @@ public class HomeActivity extends BaseSlidingFragmentActivity implements
         tabs.setIndicatorColor(Color.parseColor("#1faeff"));
     }
 
-    /**
-     *
-     */
     private void setupSecondBehindView() {
         boardNames = getResources().getStringArray(R.array.global_board_name);
         boardIds = getResources().getStringArray(R.array.global_board_id);
@@ -205,14 +176,10 @@ public class HomeActivity extends BaseSlidingFragmentActivity implements
         });
     }
 
-    /**
-     *
-     */
     private void setupSlidingMenu() {
         getSlidingMenu().setMode(SlidingMenu.LEFT_RIGHT);
         getSlidingMenu().setSecondaryMenu(R.layout.home_second_behind_view);
         setBehindContentView(R.layout.home_behind_view);
-        // customize the SlidingMenu
         SlidingMenu sm = getSlidingMenu();
         sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
         sm.setShadowWidth(10);
@@ -230,18 +197,13 @@ public class HomeActivity extends BaseSlidingFragmentActivity implements
                         .getMethod("flush").invoke(cache);
             }
         } catch (Exception httpResponseCacheNotAvailable) {
-
         }
     }
 
-    /**
-     *
-     */
-    @SuppressWarnings("deprecation")
     private void configureActionBar() {
         ActionBar actionBar = getSupportActionBar();
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        actionBar.setIcon(new BitmapDrawable(service.getCurrentUserAvatar()));
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setIcon(new BitmapDrawable(getResources(), service.getCurrentUserAvatar()));
         actionBar.setHomeButtonEnabled(true);
         actionBar.setTitle(service.getCurrentUserName());
     }
@@ -266,8 +228,7 @@ public class HomeActivity extends BaseSlidingFragmentActivity implements
                 onSearchRequested();
                 return true;
             case R.id.menu_message:
-                Intent intent = new Intent(HomeActivity.this, PmActivity.class);
-                startActivity(intent);
+                startActivity(new Intent(HomeActivity.this, PmActivity.class));
                 return true;
             default:
                 break;
@@ -282,14 +243,6 @@ public class HomeActivity extends BaseSlidingFragmentActivity implements
         appData.putString(PostSearchActivity.BOARD_NAME, "全站");
         startSearch(null, false, appData, false);
         return true;
-    }
-
-    @Override
-    public void onLoadComplete(int postion) {
-    }
-
-    @Override
-    public void onLoadFailure(int position) {
     }
 
     @Override

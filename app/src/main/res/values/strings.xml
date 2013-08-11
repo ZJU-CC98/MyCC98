@@ -14,8 +14,8 @@
 	<string name="msg_null_pw">密码不能为空哦！</string>
 	<string name="msg_login_ok">登录成功！</string>
 	<string name="ZJU_WLAN">登录之前请务必确认已经连接ZJUWLAN！</string>
-	<string name="user_name">用户名:</string>
-	<string name="pw">登录密码:</string>
+	<string name="user_name">用户名</string>
+	<string name="pw">登录密码</string>
 	<string name="rem_pw">记住密码</string>
 	<string name="auto_login">自动登录</string>
 	<string name="login_cancel">我就随便看看哈</string>

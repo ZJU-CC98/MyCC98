@@ -46,10 +46,7 @@ public class HomeFragmentPagerAdapter extends FragmentPagerAdapter {
 		}
 		return null;
 	}
-
-	public void setLoadingListener( LoadingListener listener) {
- 	}
-	@Override
+ 	@Override
 	public int getCount() {
 		return FRAGMENT_NUMBER;
 	}

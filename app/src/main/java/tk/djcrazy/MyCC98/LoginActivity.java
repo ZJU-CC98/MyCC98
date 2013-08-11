@@ -9,6 +9,9 @@ package tk.djcrazy.MyCC98;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -17,14 +20,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 
 import com.google.inject.Inject;
 
 import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
-import tk.djcrazy.MyCC98.dialog.AuthDialog;
-import tk.djcrazy.MyCC98.dialog.AuthDialog.MyAuthDialogListener;
+import tk.djcrazy.MyCC98.dialog.AuthDialogFragment;
 import tk.djcrazy.MyCC98.security.Md5;
 import tk.djcrazy.MyCC98.util.Intents;
 import tk.djcrazy.MyCC98.util.ToastUtils;
@@ -56,9 +57,8 @@ public class LoginActivity extends BaseFragmentActivity implements
     private String mPassword = "";
     private String authUserName = "";
     private String authPassword = "";
-    private String authhost = "";
+    private String authHost = "";
     private LoginType mLoginType = LoginType.NORMAL;
-    private AuthDialog authDialog;
     private Boolean authRememberPwd = false;
     @Inject
     private CachedCC98Service service;
@@ -103,23 +103,27 @@ public class LoginActivity extends BaseFragmentActivity implements
         super.onStop();
     }
 
-    private void initAuthInfo() {
-        authDialog = new AuthDialog(this, new MyAuthDialogListener() {
-            @Override
-            public void onOkClick(String userName, String password, String host, LoginType type) {
-                authUserName = userName;
-                authPassword = password;
-                authhost = host;
-                mLoginType = LoginType.USER_DEFINED;
-            }
+    public void onOkClick(String userName, String password, String host, LoginType type) {
+        authUserName = userName;
+        authPassword = password;
+        authHost = host;
+        mLoginType = LoginType.USER_DEFINED;
+    }
 
-            @Override
-            public void onCancelClick() {
-                mLoginType = LoginType.NORMAL;
-                showLoginField();
-            }
-        });
-        authDialog.show();
+    public void onCancelClick() {
+        mLoginType = LoginType.NORMAL;
+        showLoginField();
+    }
+
+    private void initAuthInfo() {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
+        DialogFragment newFragment = new AuthDialogFragment();
+        newFragment.show(ft, "dialog");
     }
 
     @Override
@@ -148,7 +152,7 @@ public class LoginActivity extends BaseFragmentActivity implements
         dialog.setMessage("正在登录，请稍后......");
         dialog.show();
          mNewCC98Service.login(this.getClass(), mUsername, Md5.MyMD5(mPassword, Md5.T32), Md5.MyMD5(mPassword, Md5.T16), authUserName, authPassword,
-                authhost, mLoginType, new RequestResultListener<Boolean>() {
+                 authHost, mLoginType, new RequestResultListener<Boolean>() {
             @Override
             public void onReuqestComplete(Boolean result) {
                 dialog.dismiss();
