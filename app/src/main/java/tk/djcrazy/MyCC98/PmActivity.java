@@ -4,6 +4,8 @@ import roboguice.inject.ContentView;
 import roboguice.inject.InjectView;
 import tk.djcrazy.MyCC98.adapter.InboxFragmentPagerAdapter;
 import tk.djcrazy.libCC98.CachedCC98Service;
+import tk.djcrazy.libCC98.NewCC98Service;
+
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
@@ -21,7 +23,7 @@ public class PmActivity extends BaseFragmentActivity implements OnPageChangeList
 
 	private static String TAG = "PmActivity";
 	@Inject
-	private CachedCC98Service service;
+	private NewCC98Service service;
 
 	@InjectView(R.id.pm_main_pages)
 	private ViewPager viewPager;
@@ -40,7 +42,7 @@ public class PmActivity extends BaseFragmentActivity implements OnPageChangeList
 	private void configureActionBar() {
 		ActionBar actionBar = getSupportActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
-		actionBar.setLogo(new BitmapDrawable(service.getCurrentUserAvatar()));
+		actionBar.setLogo(new BitmapDrawable(getResources(), service.getCurrentUserAvatar()));
 		actionBar.setTitle("论坛短消息");
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 		actionBar.addTab(actionBar.newTab().setText("收件箱").setTabListener(this));

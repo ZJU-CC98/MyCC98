@@ -99,6 +99,12 @@ public class
 
 
     @Override
+    protected void onStop() {
+        super.onStop();
+        service.cancelRequest(this.getClass());
+    }
+
+    @Override
     public void onRequestError(String msg) {
         ToastUtils.show(this, msg);
     }

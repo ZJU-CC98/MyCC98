@@ -237,7 +237,7 @@ public class HomeActivity extends BaseSlidingFragmentActivity  {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setIcon(new BitmapDrawable(getResources(), mCC98Service.getCurrentUserAvatar()));
         actionBar.setHomeButtonEnabled(true);
-        actionBar.setTitle(mCC98Service.getCurrentUserName());
+        actionBar.setTitle(mCC98Service.getCurrentUserData().getUserName());
     }
 
     @Override

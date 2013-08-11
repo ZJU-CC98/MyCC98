@@ -21,9 +21,11 @@ import tk.djcrazy.MyCC98.util.UrlUtils;
 import tk.djcrazy.MyCC98.view.ObservableWebView;
 import tk.djcrazy.MyCC98.view.ObservableWebView.OnScrollChangedCallback;
 import tk.djcrazy.libCC98.CachedCC98Service;
+import tk.djcrazy.libCC98.NewCC98Service;
 import tk.djcrazy.libCC98.data.LoginType;
 import tk.djcrazy.libCC98.data.PostContentEntity;
 import tk.djcrazy.libCC98.util.DateFormatUtil;
+import tk.djcrazy.libCC98.util.RequestResultListener;
 import tk.djcrazy.libCC98.util.SerializableCacheUtil;
 
 import android.annotation.SuppressLint;
@@ -69,7 +71,7 @@ import com.google.inject.Inject;
 
 @ContentView(R.layout.activity_post_contents)
 public class PostContentsJSActivity extends BaseActivity implements
-		OnScrollChangedCallback {
+		OnScrollChangedCallback, RequestResultListener<List<PostContentEntity>> {
 	private static final String TAG = "PostContentsJSActivity";
 	private static final String JS_INTERFACE = "PostContentsJSActivity";
 
@@ -95,7 +97,7 @@ public class PostContentsJSActivity extends BaseActivity implements
 
 	private List<PostContentEntity> mContentEntities;
 	@Inject
-	private CachedCC98Service service;
+	private NewCC98Service service;
 
 	private Menu mOptionsMenu;
 	private GestureDetector gestureDetector;
@@ -120,14 +122,15 @@ public class PostContentsJSActivity extends BaseActivity implements
 			configureWebView();
 			gestureDetector = new GestureDetector(this,
 					new DefaultGestureDetector());
-			webView.postDelayed(new Runnable() {
-				@Override
-				public void run() {
-					new GetPostContentTask(PostContentsJSActivity.this, boardId,
-							postId, currPageNum, forceRefresh).execute();
-				}
-			}, 50);
-		} catch (IllegalArgumentException e) {
+            service.submitPostContentRequest(this.getClass(), boardId,
+                    postId, currPageNum, forceRefresh, this);
+            webView.post(new Runnable() {
+                @Override
+                public void run() {
+                    setRefreshActionButtonState(true);
+                }
+            });
+        } catch (IllegalArgumentException e) {
 			ToastUtils.show(this, "请先登录应用");
 			finish();
 		}
@@ -141,20 +144,11 @@ public class PostContentsJSActivity extends BaseActivity implements
 		boardId = intent.getStringExtra(Intents.EXTRA_BOARD_ID);
 		currPageNum = intent.getIntExtra(Intents.EXTRA_PAGE_NUMBER, 1);
 		forceRefresh = intent.getBooleanExtra(Intents.EXTRA_FORCE_REFRESH, false);
-		new GetPostContentTask(this, boardId, postId, currPageNum, forceRefresh).execute();
+        service.cancelRequest(this.getClass());
+        service.submitPostContentRequest(this.getClass(), boardId,
+                postId, currPageNum, forceRefresh, this);
 	}
 
-	@Override
-	public void onPause() {
-		super.onPause();
-		this.callHiddenWebViewMethod("onPause");
-	}
-
-	@Override
-	public void onResume() {
-		super.onResume();
-		this.callHiddenWebViewMethod("onResume");
-	}
 
 	private void callHiddenWebViewMethod(String name) {
 		if (webView != null) {
@@ -174,7 +168,48 @@ public class PostContentsJSActivity extends BaseActivity implements
 		}
 	}
 
-	@SuppressWarnings("deprecation")
+
+    @Override
+    public void onRequestComplete(List<PostContentEntity> result) {
+        mContentEntities = result;
+        PostContentEntity info = result.get(0);
+        totalPageNum = info.getTotalPage();
+        if (currPageNum > totalPageNum || currPageNum == LAST_PAGE) {
+            currPageNum = totalPageNum;
+        }
+        boardName = info.getBoardName();
+        postName = info.getPostTopic();
+        webView.loadDataWithBaseURL(null, assemblyContent(result), "text/html",
+                "utf-8", null);
+        getSupportActionBar().setTitle(postName);
+        getSupportActionBar().setSubtitle(getSubtitle());
+        setRefreshActionButtonState(false);
+    }
+
+    @Override
+    public void onRequestError(String msg) {
+        setRefreshActionButtonState(false);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        this.callHiddenWebViewMethod("onPause");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        service.cancelRequest(this.getClass());
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        this.callHiddenWebViewMethod("onResume");
+    }
+
+    @SuppressWarnings("deprecation")
 	private void configureActionBar() {
 		ActionBar actionBar = getSupportActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
@@ -185,6 +220,7 @@ public class PostContentsJSActivity extends BaseActivity implements
 	public boolean onCreateOptionsMenu(Menu optionMenu) {
 		this.mOptionsMenu = optionMenu;
 		getSupportMenuInflater().inflate(R.menu.menu_post_content, optionMenu);
+
 		return super.onCreateOptionsMenu(optionMenu);
 	}
 
@@ -275,9 +311,9 @@ public class PostContentsJSActivity extends BaseActivity implements
 			@Override
 			public void onReceivedHttpAuthRequest(WebView view,
 					HttpAuthHandler handler, String host, String realm) {
-				handler.proceed(service.getusersInfo().getCurrentUserData()
-						.getProxyUserName(), service.getusersInfo()
-						.getCurrentUserData().getProxyPassword());
+				handler.proceed(service.getCurrentUserData()
+                        .getProxyUserName(), service
+                        .getCurrentUserData().getProxyPassword());
 			}
 		});
 		webView.setOnTouchListener(new OnTouchListener() {
@@ -380,7 +416,7 @@ public class PostContentsJSActivity extends BaseActivity implements
 		Intent intent = builder.requestType(EditActivity.REQUEST_REPLY)
 				.postId(postId).postName(postName).boardId(boardId)
 				.boardName(boardName).toIntent();
-		startActivityForResult(intent, 1);
+		startActivity(intent);
 	}
 
 	public void showContentDialog(final int index, int which) {
@@ -430,7 +466,17 @@ public class PostContentsJSActivity extends BaseActivity implements
 	}
 
 	private void addFriend(final String userName) {
-		new AddFriendTask(this, userName).execute();
+		service.submitAddFriendRequest(this.getClass(),userName, new RequestResultListener<Boolean>() {
+            @Override
+            public void onRequestComplete(Boolean result) {
+                ToastUtils.show(PostContentsJSActivity.this, "添加好友成功");
+            }
+
+            @Override
+            public void onRequestError(String msg) {
+                ToastUtils.show(PostContentsJSActivity.this, msg);
+            }
+        });
 	}
 
 	private void viewUserInfo(String username) {
@@ -457,29 +503,18 @@ public class PostContentsJSActivity extends BaseActivity implements
 		startActivityForResult(intent, 1);
 	}
 
-	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		if (resultCode == Activity.RESULT_OK) {
-			refreshPage();
-		}
-		if (resultCode == Activity.RESULT_CANCELED) {
-
-		}
-	}
-
 	private String assemblyContent(List<PostContentEntity> list) {
 		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 		boolean showUserAvatar = sharedPref.getBoolean(SettingsActivity.SHOW_USER_AVATAR, false);
 
 		int tmpNum = (currPageNum == LAST_PAGE) ? totalPageNum : currPageNum;
-		if (service.getusersInfo().getCurrentUserData().getLoginType() == LoginType.NORMAL) {
+		if (service.getCurrentUserData().getLoginType() == LoginType.NORMAL) {
 			if (showUserAvatar) {
 				return PostContentTemplateFactory.getDefault().genContent(getApplicationContext(), list, tmpNum);
 			} else {
 				return PostContentTemplateFactory.getSimple().genContent(getApplicationContext(), list, tmpNum);
 			}
-		} else if (service.getusersInfo().getCurrentUserData().getLoginType() == LoginType.USER_DEFINED) {
+		} else if (service.getCurrentUserData().getLoginType() == LoginType.USER_DEFINED) {
 			return PostContentTemplateFactory.getLifetoy().genContent(getApplicationContext(), list, tmpNum);
  		} else {
  			return PostContentTemplateFactory.getDefault().genContent(getApplicationContext(), list, tmpNum);
@@ -503,130 +538,10 @@ public class PostContentsJSActivity extends BaseActivity implements
 		}
 	}
 
- 
-	private class GetPostContentTask extends
-			RoboAsyncTask<List<PostContentEntity>> {
-		private Activity aContext;
-		private String aBoardId;
-		private String aPostId;
-		private int aPageNum;
-		private boolean aForceRefresh;
-
-		protected GetPostContentTask(Activity context, String boardId,
-				String postId, int pageNum, boolean forceRefresh) {
-			super(context);
-			aContext = context;
-			aBoardId = boardId;
-			aPostId = postId;
-			aPageNum = pageNum;
-			aForceRefresh = forceRefresh;
-		}
-
-		@Override
-		protected void onPreExecute() throws Exception {
-			super.onPreExecute();
-			setRefreshActionButtonState(true);
-		}
-
-		@Override
-		public List<PostContentEntity> call() throws Exception {
-            // if force refresh, invalidate all pages of that post
-            if (aForceRefresh) {
-                SerializableCacheUtil.invalidatePostContent(service.getCache(), aBoardId, aPostId);
-            }
-			return service.getPostContentList(aBoardId, aPostId, aPageNum,
-					aForceRefresh);
-		}
-
-		private void prefetch() {
-			if (currPageNum < totalPageNum) {
-				new Thread() {
-					@Override
-					public void run() {
-						try {
-							service.getPostContentList(aBoardId, aPostId,
-									currPageNum + 1, false);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-					}
-				}.start();
-			}
-			if (currPageNum > 1) {
-				new Thread() {
-					@Override
-					public void run() {
-						try {
-							service.getPostContentList(aBoardId, aPostId,
-									currPageNum - 1, false);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-					}
-				}.start();
-			}
-		}
-
-		@Override
-		protected void onException(Exception e) throws RuntimeException {
-			super.onException(e);
-			ToastUtils.show(aContext, "获取内容失败");
-		}
-
-		@Override
-		protected void onSuccess(List<PostContentEntity> t) throws Exception {
-			super.onSuccess(t);
-			mContentEntities = t;
-			PostContentEntity info = t.get(0);
-			totalPageNum = info.getTotalPage();
-			if (currPageNum > totalPageNum || currPageNum == LAST_PAGE) {
-				currPageNum = totalPageNum;
-			}
-			boardName = info.getBoardName();
-			postName = info.getPostTopic();
- 			webView.loadDataWithBaseURL(null, assemblyContent(t), "text/html",
-					"utf-8", null);
-			getSupportActionBar().setTitle(postName);
-			getSupportActionBar().setSubtitle(
-					"第" + currPageNum + "页 | " + "共" + totalPageNum + "页    "
-							+ boardName);
-			prefetch();
-		}
-
-		@Override
-		protected void onFinally() throws RuntimeException {
-			super.onFinally();
-			setRefreshActionButtonState(false);
-		}
-	}
-
-	private class AddFriendTask extends ProgressRoboAsyncTask<String> {
-		private String aUserName;
-
-		protected AddFriendTask(Activity context, String userName) {
-			super(context);
-			aUserName = userName;
-		}
-
-		@Override
-		public String call() throws Exception {
-			service.addFriend(aUserName);
-			return null;
-		}
-
-		@Override
-		protected void onException(Exception e) throws RuntimeException {
-			super.onException(e);
-			ToastUtils.show(context, "添加好友失败");
-		}
-
-		@Override
-		protected void onSuccess(String t) throws Exception {
-			super.onSuccess(t);
-			ToastUtils.show(context, "添加好友成功");
-
-		}
-	}
+    private String getSubtitle() {
+        return "第" + currPageNum + "页 | " + "共" + totalPageNum + "页    "
+                + boardName;
+    }
 
 	private int hideStartPos = 0;
 	private int showStartPos = 0;

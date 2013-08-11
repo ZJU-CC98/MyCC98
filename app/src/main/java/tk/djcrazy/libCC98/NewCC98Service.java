@@ -17,6 +17,7 @@ import com.google.inject.Singleton;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.UnknownServiceException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -28,8 +29,10 @@ import tk.djcrazy.MyCC98.config.Config;
 import tk.djcrazy.libCC98.data.HotTopicEntity;
 import tk.djcrazy.libCC98.data.InboxInfo;
 import tk.djcrazy.libCC98.data.LoginType;
+import tk.djcrazy.libCC98.data.PostContentEntity;
 import tk.djcrazy.libCC98.data.UserData;
 import tk.djcrazy.libCC98.data.UserProfileEntity;
+import tk.djcrazy.libCC98.exception.NoUserFoundException;
 import tk.djcrazy.libCC98.util.ParamMapBuilder;
 import tk.djcrazy.libCC98.util.RequestResultListener;
 
@@ -211,6 +214,61 @@ public class NewCC98Service {
         getApplication().mRequestQueue.add(request);
     }
 
+    public void submitPostContentRequest(final Object tag, String boardId, String postId, int pageNum,
+                                         boolean aForceRefresh, final RequestResultListener<List<PostContentEntity>> listener) {
+        Request request = new StringRequest(mUrlManager.getPostUrl(boardId,postId,pageNum),new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    List<PostContentEntity> result = mCC98Parser.parsePostContentList(response);
+                    listener.onRequestComplete(result);
+                } catch (Exception e) {
+                    listener.onRequestError(e.getLocalizedMessage());
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                listener.onRequestError(error.getLocalizedMessage());
+            }
+        });
+        request.setTag(tag);
+        getApplication().mRequestQueue.add(request);
+    }
+
+    public void submitAddFriendRequest(final Object tag, final String userName, final RequestResultListener<Boolean> listener) {
+        Request request = new StringRequest(Request.Method.POST, mUrlManager.getAddFriendUrl(), new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                if (response.contains("好友添加成功")) {
+                    listener.onRequestComplete(true);
+                } else if (response.contains("论坛没有这个用户，操作未成功")) {
+                    listener.onRequestError("论坛没有这个用户");
+                } else {
+                    listener.onRequestError("未知错误");
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                listener.onRequestError(error.getLocalizedMessage());
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                return new ParamMapBuilder().param("todo", "saveF").param("touser", userName)
+                        .param("Submit", "保存").buildMap();
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                return new ParamMapBuilder().param("Referer", mUrlManager.getAddFriendUrlReferrer()).buildMap();
+            }
+        };
+        request.setTag(tag);
+        getApplication().mRequestQueue.add(request);
+    }
+
     private List<BasicClientCookie> castToAnother(List<Cookie> list) {
         List<BasicClientCookie> res = new ArrayList<BasicClientCookie>();
         for (Cookie cookie: list) {
@@ -231,8 +289,12 @@ public class NewCC98Service {
         return getApplication().getCurrentUserAvatar();
     }
 
-    public  String getCurrentUserName() {
-        return  getApplication().getCurrentUserData().getUserName();
+    public  UserData getCurrentUserData() {
+        return  getApplication().getCurrentUserData();
+    }
+
+    public String getDomain() {
+        return mUrlManager.getClientUrl();
     }
 
     private MyApplication getApplication() {
