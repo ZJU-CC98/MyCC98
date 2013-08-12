@@ -1,13 +1,5 @@
 package tk.djcrazy.MyCC98;
 
-import roboguice.inject.ContentView;
-import roboguice.inject.InjectExtra;
-import roboguice.inject.InjectView;
-import tk.djcrazy.MyCC98.helper.HtmlGenHelper;
-import tk.djcrazy.MyCC98.util.Intents;
-import tk.djcrazy.MyCC98.util.UrlUtils;
-import tk.djcrazy.libCC98.CachedCC98Service;
-import tk.djcrazy.libCC98.exception.ParseContentException;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
@@ -26,185 +18,159 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.google.inject.Inject;
 
+import roboguice.inject.ContentView;
+import roboguice.inject.InjectExtra;
+import roboguice.inject.InjectView;
+import tk.djcrazy.MyCC98.helper.HtmlGenHelper;
+import tk.djcrazy.MyCC98.util.Intents;
+import tk.djcrazy.MyCC98.util.ToastUtils;
+import tk.djcrazy.MyCC98.util.UrlUtils;
+import tk.djcrazy.libCC98.NewCC98Service;
+import tk.djcrazy.libCC98.exception.ParseContentException;
+import tk.djcrazy.libCC98.util.RequestResultListener;
+
 /**
- * 
  * @author zsy
- * 
  */
 @ContentView(R.layout.activity_pm_reply)
-public class PmViewActivity extends BaseFragmentActivity {
-	private static String TAG = "PmReply";
-	private static final int MENU_REPLY_ID = 9237465;
-	@InjectView(R.id.pm_reply_view)
-	private WebView webView;
+public class
+        PmViewActivity extends BaseFragmentActivity implements RequestResultListener<String> {
+    private static final int MENU_REPLY_ID = 9237465;
+    private static String TAG = "PmReply";
+    @InjectView(R.id.pm_reply_view)
+    private WebView webView;
+    @InjectExtra(Intents.EXTRA_PM_CONTENT)
+    private String readTopic;
+    @InjectExtra(Intents.EXTRA_PM_SENDER)
+    private String sender;
+    @InjectExtra(Intents.EXTRA_PM_SEND_TIME)
+    private String sendTime;
+    @InjectExtra(value = Intents.EXTRA_PM_ID, optional = true)
+    private int pmId = -1;
+    private String pmContent="";
 
-	@InjectExtra(Intents.EXTRA_PM_CONTENT)
-	private String readTopic;
-	@InjectExtra(Intents.EXTRA_PM_SENDER)
-	private String sender;
-	@InjectExtra(Intents.EXTRA_PM_SEND_TIME)
-	private String sendTime;
-	@InjectExtra(value = Intents.EXTRA_PM_ID, optional = true)
-	private int pmId = -1;
+    @Inject
+    private NewCC98Service service;
+    private HtmlGenHelper helper = new HtmlGenHelper();
 
-	private String pageString;
-	private String faceChoosedString;
-	private String pmContent;
-	protected String senderAvatarUrl;
 
-	@Inject
-	private CachedCC98Service service;
+    public static Intent createIntent(String content, String sender,
+                                      String sendTime, int pmId) {
+        Intent intent = new Intents.Builder("pm.VIEW").pmContent(content)
+                .pmSender(sender).pmSendTime(sendTime).pmId(pmId).toIntent();
+        return intent;
+    }
 
-	private HtmlGenHelper helper = new HtmlGenHelper();
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle("查看短消息");
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setLogo(new BitmapDrawable(getResources(), service.getCurrentUserAvatar()));
+        setViews();
+        preparePage(pmId);
+    }
 
-	public static Intent createIntent(String content, String sender,
-			String sendTime, int pmId) {
-		Intent intent = new Intents.Builder("pm.VIEW").pmContent(content)
-				.pmSender(sender).pmSendTime(sendTime).pmId(pmId).toIntent();
-		return intent;
-	}
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        menu.add(android.view.Menu.NONE, MENU_REPLY_ID, 1, "回复")
+                .setIcon(R.drawable.sure_btn)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        return true;
+    }
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		ActionBar actionBar = getSupportActionBar();
-		actionBar.setTitle("查看短消息");
-		actionBar.setDisplayHomeAsUpEnabled(true);
-		actionBar.setLogo(new BitmapDrawable(service.getCurrentUserAvatar()));
-		setViews();
-		preparePage(pmId);
-	}
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            case MENU_REPLY_ID:
+                doReply();
+                return true;
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		menu.add(android.view.Menu.NONE, MENU_REPLY_ID, 1, "回复")
-				.setIcon(R.drawable.sure_btn)
-				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-		return true;
-	}
+    private void doReply() {
+        StringBuilder tmp = new StringBuilder();
+        tmp.append("[quote][b]以下是引用").append(sender).append("在[i]")
+                .append(sendTime).append("[/i]时发送的短信：[/b]\n")
+                .append(pmContent.replaceAll("(<BR>|<br>)", "\n"))
+                .append("[/quote]");
+        Intents.Builder builder = new Intents.Builder(this, EditActivity.class);
+        startActivity(builder.requestType(EditActivity.REQUEST_PM)
+                .pmToUser(sender).pmTitle(readTopic).pmContent(tmp.toString())
+                .toIntent());
+    }
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case android.R.id.home:
-			finish();
-			return true;
-		case MENU_REPLY_ID:
-			doReply();
-			return true;
-		default:
-			break;
-		}
-		return super.onOptionsItemSelected(item);
-	}
+    /**
+     *
+     */
+    private void setViews() {
+        WebSettings webSettings = webView.getSettings();
+        webSettings.setJavaScriptEnabled(true);
+        webSettings.setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
+        webSettings.setAppCacheEnabled(true);
+        webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
+        webView.setWebViewClient(new WebViewClient() {
 
-	private void doReply() {
-		StringBuilder tmp = new StringBuilder();
-		tmp.append("[quote][b]以下是引用").append(sender).append("在[i]")
-				.append(sendTime).append("[/i]时发送的短信：[/b]\n")
-				.append(pmContent.replaceAll("(<BR>|<br>)", "\n"))
-				.append("[/quote]");
-		Intents.Builder builder = new Intents.Builder(this, EditActivity.class);
-		startActivity(builder.requestType(EditActivity.REQUEST_PM)
-				.pmToUser(sender).pmTitle(readTopic).pmContent(tmp.toString())
-				.toIntent());
-	}
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                Log.i(TAG, "shouldOverrideUrlLoading:" + url);
+                if (!url.startsWith("http")) {
+                    url = service.getDomain() + url;
+                }
+                if (url.endsWith(".jpg") | url.endsWith(".png")
+                        | url.endsWith(".bmp")) {
+                    startActivity(PhotoViewActivity.createIntent(url));
+                } else if (UrlUtils.isPostContentLink(url)) {
+                    startActivity(UrlUtils.getPostContentIntent(url));
+                } else {
+                    Intent it = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                    startActivity(it);
+                }
+                return true;
+            }
+        });
+        webView.addJavascriptInterface(this, "PmReply");
+        webView.setBackgroundColor(Color.parseColor("#f0f0f0"));
+    }
 
-	/**
-	 * 
-	 */
-	private void setViews() {
-		WebSettings webSettings = webView.getSettings();
-		webSettings.setJavaScriptEnabled(true);
-		webSettings.setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
-		webSettings.setAppCacheEnabled(true);
-		webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
-		webView.setWebViewClient(new WebViewClient() {
+    private void preparePage(final int pmId) {
 
-			@Override
-			public boolean shouldOverrideUrlLoading(WebView view, String url) {
-				Log.i(TAG, "shouldOverrideUrlLoading:" + url);
-				if (!url.startsWith("http")) {
-					url = service.getDomain() + url;
-				}
-				if (url.endsWith(".jpg") | url.endsWith(".png")
-						| url.endsWith(".bmp")) {
-					startActivity(PhotoViewActivity.createIntent(url));
-				} else if (UrlUtils.isPostContentLink(url)) {
-					startActivity(UrlUtils.getPostContentIntent(url));
-				} else {
-					Intent it = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-					startActivity(it);
-				}		
-				return true;
-			}
-		});
-		webView.addJavascriptInterface(this, "PmReply");
-		webView.setBackgroundColor(Color.parseColor("#f0f0f0"));
-	}
+        service.submitGetMsgContent(this.getClass(), pmId, this);
 
-	// handle the message
-	private Handler handler = new Handler() {
+     }
 
-		@Override
-		public void handleMessage(Message msg) {
-			switch (msg.what) {
-			case 0:
-				webView.loadDataWithBaseURL(null, pageString, "text/html",
-						"utf-8", null);
-				// Log.d("WebView", pageString);
-				break;
-			case 1:
-				webView.loadUrl("javascript:addEmot('" + faceChoosedString
-						+ "');");
-			default:
-				break;
-			}
-		}
-	};
-	private void preparePage(final int pmId) {
+    @Override
+    public void onRequestComplete(String result) {
+        pmContent = result;
+        StringBuilder builder = new StringBuilder(1000);
+        HtmlGenHelper.addPostInfo(builder, readTopic,
+                "", sender, "", 1, sendTime, -1);
+        builder.append(
+                "<div class=\"post-content\"><span id=\"ubbcode\">")
+                .append("<div class=\"post-content\"><span id=\"ubbcode\">")
+                .append(pmContent)
+                .append("</span><script>searchubb('ubbcode',1,'tablebody2');</script></div>");
+        webView.loadDataWithBaseURL(null, helper.PAGE_OPEN + builder.toString()
+                + helper.PAGE_CLOSE, "text/html",
+                "utf-8", null);
+    }
 
-		new Thread() {
-			@Override
-			public void run() {
-				StringBuilder builder = new StringBuilder(1000);
-				if (pmId != -1) { // in reply mod
-					try {
-						pmContent = service.getMsgContent(pmId, false);
-						try {
-							senderAvatarUrl = service.getUserImgUrl(sender);
-						} catch (ParseContentException e) {
-							e.printStackTrace();
-						}
-						HtmlGenHelper.addPostInfo(builder, readTopic,
-								senderAvatarUrl, sender, "", 1, sendTime, -1);
-						builder.append(
-								"<div class=\"post-content\"><span id=\"ubbcode\">")
-								.append("<div class=\"post-content\"><span id=\"ubbcode\">")
-								.append(pmContent)
-								.append("</span><script>searchubb('ubbcode',1,'tablebody2');</script></div>");
- 					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				} else {
-					if (sender == null) {
-						sender = "";
-					}
-					if (readTopic == null) {
-						readTopic = "";
-					}
-				}
-				pageString = helper.PAGE_OPEN + builder.toString()
-						+ helper.PAGE_CLOSE;
-				handler.sendEmptyMessage(0);
-			}
-		}.start();
-	}
-	
- 	public void preview(String content) {
-		Intent intent = new Intent(this, PreviewActivity.class);
-		intent.putExtra("content", content);
-		startActivity(intent);
-	}
+    @Override
+    public void onRequestError(String msg) {
+        ToastUtils.show(this, msg);
+    }
+
+    public void preview(String content) {
+        Intent intent = new Intent(this, PreviewActivity.class);
+        intent.putExtra("content", content);
+        startActivity(intent);
+    }
 
 }

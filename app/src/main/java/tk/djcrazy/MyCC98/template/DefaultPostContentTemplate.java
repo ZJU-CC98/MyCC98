@@ -42,7 +42,6 @@ public class DefaultPostContentTemplate implements PostcontentTemplate {
 			replaceVariable("${i}", builder,  String.valueOf(i));
 		}
 		builder.append(last);
-		Log.d("DefaultPostContentTemplate", builder.toString());
 		return builder.toString();
 	}
 

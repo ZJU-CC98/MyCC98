@@ -236,6 +236,27 @@ public class NewCC98Service {
         getApplication().mRequestQueue.add(request);
     }
 
+
+    public void submitGetMsgContent(final Object tag, int pmId, final RequestResultListener<String> listener) {
+        Request request = new StringRequest(mUrlManager.getMessagePageUrl(pmId), new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    String res = mCC98Parser.parseMsgContent(response);
+                    listener.onRequestComplete(res);
+                } catch (Exception e) {
+                    listener.onRequestError(e.getLocalizedMessage());
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                listener.onRequestError(error.getLocalizedMessage());
+            }
+        });
+        request.setTag(tag);
+        getApplication().mRequestQueue.add(request);
+    }
     public void submitAddFriendRequest(final Object tag, final String userName, final RequestResultListener<Boolean> listener) {
         Request request = new StringRequest(Request.Method.POST, mUrlManager.getAddFriendUrl(), new Response.Listener<String>() {
             @Override

@@ -521,4 +521,13 @@ public class NewCC98Parser {
 		}
 		return list;
 	}
+
+    public String parseMsgContent(String html) {
+        Pattern p = Pattern.compile("(?<=<span id=\"ubbcode1\" >).*?(?=</span>)");
+        Matcher m = p.matcher(html);
+        if (!m.find()) {
+            throw new IllegalStateException("can not get msg content");
+        }
+        return m.group();
+    }
 }

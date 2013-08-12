@@ -147,6 +147,7 @@ public class PostContentsJSActivity extends BaseActivity implements
         service.cancelRequest(this.getClass());
         service.submitPostContentRequest(this.getClass(), boardId,
                 postId, currPageNum, forceRefresh, this);
+        setRefreshActionButtonState(true);
 	}
 
 
