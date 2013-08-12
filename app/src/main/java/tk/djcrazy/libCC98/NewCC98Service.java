@@ -290,6 +290,26 @@ public class NewCC98Service {
         getApplication().mRequestQueue.add(request);
     }
 
+    public void submitUserProfileRequest(final Object tag, String userName, final RequestResultListener<UserProfileEntity> listener) {
+        Request request = new StringRequest(mUrlManager.getUserProfileUrl(userName), new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    listener.onRequestComplete(mCC98Parser.parseUserProfile(response));
+                } catch (Exception e) {
+                    listener.onRequestError(e.getLocalizedMessage());
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                listener.onRequestError(error.getLocalizedMessage());
+            }
+        });
+        request.setTag(tag);
+        getApplication().mRequestQueue.add(request);
+    }
+
     private List<BasicClientCookie> castToAnother(List<Cookie> list) {
         List<BasicClientCookie> res = new ArrayList<BasicClientCookie>();
         for (Cookie cookie: list) {

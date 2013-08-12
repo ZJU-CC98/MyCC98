@@ -27,9 +27,12 @@ import tk.djcrazy.MyCC98.util.ToastUtils;
 import tk.djcrazy.libCC98.CachedCC98Service;
 import tk.djcrazy.libCC98.NewCC98Service;
 import tk.djcrazy.libCC98.data.UserProfileEntity;
+import tk.djcrazy.libCC98.util.RequestResultListener;
 
 @ContentView(R.layout.activity_user_profile)
-public class ProfileActivity extends BaseFragmentActivity {
+public
+class ProfileActivity extends BaseFragmentActivity implements
+        RequestResultListener<UserProfileEntity>{
 
 	private static final int MENU_SEND_MESSAGE_ID = 8790124;
 	private static final String USER_NAME = "userName";
@@ -56,14 +59,11 @@ public class ProfileActivity extends BaseFragmentActivity {
 	private TextView userQQ;
 	private TextView userMSN;
 	private TextView userPage;
-	private UserProfileEntity profileEntity;
 
 	@InjectExtra(USER_NAME)
 	private String mUserName;
 
-	@Inject
-	private CachedCC98Service service;
-    @Inject
+     @Inject
     private NewCC98Service mNewCC98Service;
 
 	@Override
@@ -80,8 +80,8 @@ public class ProfileActivity extends BaseFragmentActivity {
         setContentView(helper.createView(this));
         helper.initActionBar(this);
         findViews();
-        new GetProfileTask(this).execute();
-    }
+        mNewCC98Service.submitUserProfileRequest(this.getClass(), mUserName, this);
+     }
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu optionMenu) {
@@ -106,7 +106,18 @@ public class ProfileActivity extends BaseFragmentActivity {
 		return true;
 	}
 
-	private void findViews() {
+
+    @Override
+    public void onRequestComplete(UserProfileEntity result) {
+        setContents(result);
+    }
+
+    @Override
+    public void onRequestError(String msg) {
+        ToastUtils.show(this, msg);
+    }
+
+    private void findViews() {
 		userName = (TextView) findViewById(R.id.profile_user_name);
 		userPortrait = (NetworkImageView) findViewById(R.id.profile_image);
 		loginStatues = (TextView) findViewById(R.id.profile_online_statues);
@@ -130,7 +141,7 @@ public class ProfileActivity extends BaseFragmentActivity {
 		userPage = (TextView) findViewById(R.id.profile_user_page);
 	}
 
-	protected void setContents() {
+	protected void setContents(UserProfileEntity profileEntity) {
 		userName.setText(mUserName);
         userPortrait.setImageUrl(profileEntity.getUserAvatarLink(), mNewCC98Service.getImageLoader());
 		userNickName.setText(profileEntity.getUserNickName());
@@ -152,52 +163,5 @@ public class ProfileActivity extends BaseFragmentActivity {
 		userMSN.setText(profileEntity.getUserMSN());
 		userPage.setText(profileEntity.getUserPage());
 		loginStatues.setText(profileEntity.getOnlineTime());
-	}
-
-	private class GetProfileTask extends
-			ProgressRoboAsyncTask<UserProfileEntity> {
-
-		protected GetProfileTask(Activity context) {
-			super(context);
-		}
-
-		@Override
-		public UserProfileEntity call() throws Exception {
-			return service.getUserProfile(Html.fromHtml(mUserName).toString());
-		}
-
-		@Override
-		protected void onException(Exception e) throws RuntimeException {
-			super.onException(e);
-			ToastUtils.show(context, "读取网页或解析出错！");
-		}
-
-		@Override
-		protected void onSuccess(UserProfileEntity t) throws Exception {
-			super.onSuccess(t);
-			profileEntity = t;
-			setContents();
-			new GetAvatarTask(context, t.getUserAvatarLink()).execute();
-		}
-	}
-
-	private class GetAvatarTask extends RoboAsyncTask<Bitmap> {
-		private String aUrl;
-
-		protected GetAvatarTask(Context context, String url) {
-			super(context);
-			aUrl = url;
-		}
-
-		@Override
-		public Bitmap call() throws Exception {
-			return service.getBitmapFromUrl(aUrl);
-		}
-
-		@Override
-		protected void onSuccess(Bitmap t) throws Exception {
-			super.onSuccess(t);
-			userPortrait.setImageBitmap(t);
-		}
 	}
 }

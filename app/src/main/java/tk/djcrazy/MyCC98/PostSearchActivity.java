@@ -47,7 +47,7 @@ public class PostSearchActivity extends BaseFragmentActivity implements OnPageCh
 	private void configureActionBar() {
 		ActionBar actionBar = getSupportActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
-		actionBar.setLogo(new BitmapDrawable(service.getCurrentUserAvatar()));
+		actionBar.setLogo(new BitmapDrawable(getResources(), service.getCurrentUserAvatar()));
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 		actionBar.addTab(actionBar.newTab().setText("主题搜索").setTabListener(this));
 		actionBar.addTab(actionBar.newTab().setText("作者搜索").setTabListener(this));

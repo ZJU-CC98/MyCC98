@@ -107,6 +107,13 @@ public class
                 .toIntent());
     }
 
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        service.cancelRequest(this.getClass());
+    }
+
     /**
      *
      */
@@ -141,9 +148,7 @@ public class
     }
 
     private void preparePage(final int pmId) {
-
         service.submitGetMsgContent(this.getClass(), pmId, this);
-
      }
 
     @Override
@@ -166,11 +171,4 @@ public class
     public void onRequestError(String msg) {
         ToastUtils.show(this, msg);
     }
-
-    public void preview(String content) {
-        Intent intent = new Intent(this, PreviewActivity.class);
-        intent.putExtra("content", content);
-        startActivity(intent);
-    }
-
 }
