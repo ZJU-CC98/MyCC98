@@ -29,14 +29,15 @@ import java.util.List;
 import ch.boye.httpclientandroidlib.HttpVersion;
 import ch.boye.httpclientandroidlib.auth.AuthScope;
 import ch.boye.httpclientandroidlib.auth.UsernamePasswordCredentials;
-import ch.boye.httpclientandroidlib.conn.ClientConnectionManager;
 import ch.boye.httpclientandroidlib.conn.scheme.PlainSocketFactory;
 import ch.boye.httpclientandroidlib.conn.scheme.Scheme;
 import ch.boye.httpclientandroidlib.conn.scheme.SchemeRegistry;
+import ch.boye.httpclientandroidlib.conn.ssl.SSLSocketFactory;
 import ch.boye.httpclientandroidlib.cookie.Cookie;
 import ch.boye.httpclientandroidlib.impl.client.BasicCookieStore;
+import ch.boye.httpclientandroidlib.impl.client.ContentEncodingHttpClient;
 import ch.boye.httpclientandroidlib.impl.client.DefaultHttpClient;
-import ch.boye.httpclientandroidlib.impl.conn.tsccm.ThreadSafeClientConnManager;
+import ch.boye.httpclientandroidlib.impl.conn.PoolingClientConnectionManager;
 import ch.boye.httpclientandroidlib.impl.cookie.BasicClientCookie2;
 import ch.boye.httpclientandroidlib.params.BasicHttpParams;
 import ch.boye.httpclientandroidlib.params.CoreConnectionPNames;
@@ -49,14 +50,13 @@ import tk.djcrazy.libCC98.exception.CC98Exception;
 
 public class MyApplication extends Application {
     public static final String USERS_STRING_INFO = "userStringData";
-	public static final String USER_AVATAR_PREFIX = "userAvatar.png";
-
- 	private UsersInfo usersInfo;
+    public static final String USER_AVATAR_PREFIX = "userAvatar.png";
     private static Context mContext;
- 	private List<Bitmap> userAvatars = new ArrayList<Bitmap>();
-    public RequestQueue   mRequestQueue;
+    public RequestQueue mRequestQueue;
     public ImageLoader mImageLoader;
     public DefaultHttpClient mHttpClient;
+    private UsersInfo usersInfo;
+    private List<Bitmap> userAvatars = new ArrayList<Bitmap>();
     private Gson mGson = new GsonBuilder().registerTypeAdapter(BasicClientCookie2.class, new InstanceCreator<BasicClientCookie2>() {
         @Override
         public BasicClientCookie2 createInstance(Type type) {
@@ -64,15 +64,19 @@ public class MyApplication extends Application {
         }
     }).create();
 
-	@Override
-	public void onCreate() {
-		super.onCreate();
+    public static Context getAppContext() {
+        return mContext;
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
         mHttpClient = genHttpClient();
         initVolley();
-		initUsersInfo();
+        initUsersInfo();
         syncUserDataAndHttpClient();
         mContext = getApplicationContext();
- 	}
+    }
 
     private void initVolley() {
         HttpClientStack stack = new HttpClientStack(mHttpClient);
@@ -82,80 +86,72 @@ public class MyApplication extends Application {
     }
 
     /**
-	 * 
-	 */
-	private void initUsersInfo() {
-		try {
-            SharedPreferences  preferences = getSharedPreferences(USERS_STRING_INFO, MODE_PRIVATE);
+     *
+     */
+    private void initUsersInfo() {
+        try {
+            SharedPreferences preferences = getSharedPreferences(USERS_STRING_INFO, MODE_PRIVATE);
             String data = preferences.getString(USERS_STRING_INFO, "{}");
             usersInfo = mGson.fromJson(data, UsersInfo.class);
- 			for (int i = 0; i < usersInfo.users.size(); i++) {
-				userAvatars.add(BitmapFactory.decodeStream(openFileInput(USER_AVATAR_PREFIX+i)));
-			}
- 		} catch (Exception e) {
-			e.printStackTrace();
-		}
- 	}
-
-	public void storeUsersInfo() {
-		ObjectOutputStream oos = null;
-		try {
-            getSharedPreferences(USERS_STRING_INFO, MODE_PRIVATE).edit()
-                    .putString(USERS_STRING_INFO, mGson.toJson(usersInfo)).commit();
-            System.out.println(mGson.toJson(usersInfo));
- 			for (int i = 0; i < userAvatars.size(); i++) {
-				userAvatars.get(i).compress(Bitmap.CompressFormat.PNG, 70,
-						openFileOutput(USER_AVATAR_PREFIX+i, MODE_PRIVATE));
-			}
- 		} catch (IOException e) {
-			e.printStackTrace();
-            throw new Error(e);
-  		} finally {
-			try {
-				if (oos!=null) {
-					oos.flush();
-					oos.close();
-				}
-			} catch (IOException e) {
-                throw new Error(e);
-			}
-		}
-	}
-    @SuppressWarnings("deprecation")
-    private DefaultHttpClient genHttpClient() {
-        try {
-            HttpParams params = new BasicHttpParams();
-            HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
-            HttpProtocolParams.setContentCharset(params, "UTF-8");
-            HttpProtocolParams.setUseExpectContinue(params, true);
-            SchemeRegistry schReg = new SchemeRegistry();
-            schReg.register(new Scheme("http", PlainSocketFactory
-                    .getSocketFactory(), 80));
-            ClientConnectionManager conMgr = new ThreadSafeClientConnManager(
-                    params, schReg);
-            DefaultHttpClient client = new DefaultHttpClient(conMgr, params);
-            client.getParams().setParameter(
-                    CoreConnectionPNames.CONNECTION_TIMEOUT, 30000);
-            client.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT,
-                    30000);
-            return  client;
+            for (int i = 0; i < usersInfo.users.size(); i++) {
+                userAvatars.add(BitmapFactory.decodeStream(openFileInput(USER_AVATAR_PREFIX + i)));
+            }
         } catch (Exception e) {
             e.printStackTrace();
-            throw new IllegalArgumentException("Initial http params failed");
         }
     }
 
+    public void storeUsersInfo() {
+        ObjectOutputStream oos = null;
+        try {
+            getSharedPreferences(USERS_STRING_INFO, MODE_PRIVATE).edit()
+                    .putString(USERS_STRING_INFO, mGson.toJson(usersInfo)).commit();
+            System.out.println(mGson.toJson(usersInfo));
+            for (int i = 0; i < userAvatars.size(); i++) {
+                userAvatars.get(i).compress(Bitmap.CompressFormat.PNG, 70,
+                        openFileOutput(USER_AVATAR_PREFIX + i, MODE_PRIVATE));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new Error(e);
+        } finally {
+            try {
+                if (oos != null) {
+                    oos.flush();
+                    oos.close();
+                }
+            } catch (IOException e) {
+                throw new Error(e);
+            }
+        }
+    }
+
+    @SuppressWarnings("deprecation")
+    private DefaultHttpClient genHttpClient() {
+        HttpParams params = new BasicHttpParams();
+        SchemeRegistry schReg = new SchemeRegistry();
+        schReg.register(new Scheme("http", 80, PlainSocketFactory
+                .getSocketFactory()));
+        schReg.register(new Scheme("https", 443,  SSLSocketFactory.getSocketFactory()));
+
+        DefaultHttpClient client = new ContentEncodingHttpClient(new PoolingClientConnectionManager(schReg), params);
+        client.getParams().setParameter(
+                CoreConnectionPNames.CONNECTION_TIMEOUT, 30000);
+        client.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT,
+                30000);
+        return client;
+    }
 
     public void syncUserDataAndHttpClient() {
         try {
             UserData data = getCurrentUserData();
             BasicCookieStore cookieStore = new BasicCookieStore();
-            for(Cookie cookie: data.getCookies()) {
+            for (Cookie cookie : data.getCookies()) {
                 cookieStore.addCookie(cookie);
             }
             if (data.getLoginType() == LoginType.USER_DEFINED
                     && (StringUtils.isNotBlank(data.getProxyUserName()))) {
-                addHttpBasicAuthorization(data.getProxyHost(), data.getProxyUserName(),data.getProxyPassword());
+                addHttpBasicAuthorization(data.getProxyHost(), data.getProxyUserName(), data.getProxyPassword());
             }
             mHttpClient.setCookieStore(cookieStore);
         } catch (NoCurrentUserException e) {
@@ -167,12 +163,12 @@ public class MyApplication extends Application {
     public void syncUserDataAndHttpClient(UserData data) {
         try {
             BasicCookieStore cookieStore = new BasicCookieStore();
-            for(Cookie cookie: data.getCookies()) {
+            for (Cookie cookie : data.getCookies()) {
                 cookieStore.addCookie(cookie);
             }
             if (data.getLoginType() == LoginType.USER_DEFINED
                     && (StringUtils.isNotBlank(data.getProxyUserName()))) {
-                addHttpBasicAuthorization(data.getProxyHost(), data.getProxyUserName(),data.getProxyPassword());
+                addHttpBasicAuthorization(data.getProxyHost(), data.getProxyUserName(), data.getProxyPassword());
             }
             mHttpClient.setCookieStore(cookieStore);
         } catch (NoCurrentUserException e) {
@@ -195,74 +191,74 @@ public class MyApplication extends Application {
     }
 
     /**
-	 * @return the userData
-	 */
-	public UserData getCurrentUserData() throws NoCurrentUserException {
-		return usersInfo.getCurrentUserData();
-	}
- 
-	public List<UserData> getAllUserDatas() {
-		return usersInfo.users;
-	}
-	
-	public void addNewUser(UserData userData, Bitmap avatar, boolean isCurrentUser) {
-		if (!usersInfo.users.contains(userData)) {
-			usersInfo.users.add(userData);
-			userAvatars.add(avatar);
-		} else {
-			usersInfo.users.set(usersInfo.users.indexOf(userData), userData);
-			userAvatars.set(usersInfo.users.indexOf(userData), avatar);
-		}
-		if (isCurrentUser) {
-			usersInfo.currentUserIndex = usersInfo.users.indexOf(userData);
-		}
-        storeUsersInfo();
-	}
-	
-	/**
-	 * @return the userAvatar
-	 */
-	public Bitmap getCurrentUserAvatar() {
-		if (usersInfo.users.size()>0) {
-			return userAvatars.get(usersInfo.currentUserIndex);
-		} else {
-			throw new IllegalArgumentException("No user in current");
-		}
-	}
- 	
-	public static class UsersInfo implements Serializable{
-
-		@Override
-		public String toString() {
-			return ToStringBuilder.reflectionToString(this);
-		}
-		private static final long serialVersionUID = 1161679319055452529L;
-		public int currentUserIndex;
-		public ArrayList<UserData> users = new ArrayList<UserData>();
-
-		public UserData getCurrentUserData() throws NoCurrentUserException{
-			if (users.size()>0) {
-				return users.get(currentUserIndex);
-			} else {
-				throw new NoCurrentUserException("No user in current!");
-			}
-		}
- 	}
-	
-	public UsersInfo getUsersInfo() {
-		return usersInfo;
-	}
-	
-	public List<Bitmap> getUserAvatars(){
-		return userAvatars;
-	}
-    public static Context getAppContext(){
-        return  mContext;
+     * @return the userData
+     */
+    public UserData getCurrentUserData() throws NoCurrentUserException {
+        return usersInfo.getCurrentUserData();
     }
+
+    public List<UserData> getAllUserDatas() {
+        return usersInfo.users;
+    }
+
+    public void addNewUser(UserData userData, Bitmap avatar, boolean isCurrentUser) {
+        if (!usersInfo.users.contains(userData)) {
+            usersInfo.users.add(userData);
+            userAvatars.add(avatar);
+        } else {
+            usersInfo.users.set(usersInfo.users.indexOf(userData), userData);
+            userAvatars.set(usersInfo.users.indexOf(userData), avatar);
+        }
+        if (isCurrentUser) {
+            usersInfo.currentUserIndex = usersInfo.users.indexOf(userData);
+        }
+        storeUsersInfo();
+    }
+
+    /**
+     * @return the userAvatar
+     */
+    public Bitmap getCurrentUserAvatar() {
+        if (usersInfo.users.size() > 0) {
+            return userAvatars.get(usersInfo.currentUserIndex);
+        } else {
+            throw new IllegalArgumentException("No user in current");
+        }
+    }
+
+    public UsersInfo getUsersInfo() {
+        return usersInfo;
+    }
+
+    public List<Bitmap> getUserAvatars() {
+        return userAvatars;
+    }
+
+    public static class UsersInfo implements Serializable {
+
+        private static final long serialVersionUID = 1161679319055452529L;
+        public int currentUserIndex;
+        public ArrayList<UserData> users = new ArrayList<UserData>();
+
+        @Override
+        public String toString() {
+            return ToStringBuilder.reflectionToString(this);
+        }
+
+        public UserData getCurrentUserData() throws NoCurrentUserException {
+            if (users.size() > 0) {
+                return users.get(currentUserIndex);
+            } else {
+                throw new NoCurrentUserException("No user in current!");
+            }
+        }
+    }
+
     public static class NoCurrentUserException extends RuntimeException {
-        public NoCurrentUserException(){
+        public NoCurrentUserException() {
             super();
         }
+
         public NoCurrentUserException(String msg) {
             super(msg);
         }
