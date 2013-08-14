@@ -50,6 +50,7 @@ import tk.djcrazy.MyCC98.fragment.HomeBehindMenuFragment;
 import tk.djcrazy.MyCC98.listener.LoadingListener;
 import tk.djcrazy.MyCC98.service.NewVersionDownloadService;
 import tk.djcrazy.MyCC98.util.DisplayUtil;
+import tk.djcrazy.MyCC98.util.SysInfo;
 import tk.djcrazy.libCC98.CachedCC98Service;
 import tk.djcrazy.libCC98.NewCC98Service;
 import tk.djcrazy.libCC98.data.InboxInfo;
@@ -137,7 +138,7 @@ public class HomeActivity extends BaseSlidingFragmentActivity  {
             public void onRequestComplete(JSONObject result) {
                 try {
                     int versionCode = result.getInt("versionCode");
-                    if (versionCode > getVersionCode()) {
+                    if (versionCode > SysInfo.getVersionCode(getApplicationContext())) {
                         final String downloadLink = result.getString("downloadLink");
                         String versionName = result.getString("versionName");
                         String updateHint = result.getString("hint");
@@ -168,14 +169,7 @@ public class HomeActivity extends BaseSlidingFragmentActivity  {
         });
     }
 
-    private int getVersionCode() {
-        try {
-            PackageInfo packInfo =  getPackageManager().getPackageInfo(getPackageName(), 0);
-            return packInfo.versionCode;
-        } catch (NameNotFoundException e) {
-            return Integer.MAX_VALUE;
-        }
-    }
+
 
     @Override
     protected void onStop() {

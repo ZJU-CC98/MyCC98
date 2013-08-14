@@ -14,7 +14,7 @@
         android:id="@+id/issue_body"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="text"
+        android:inputType="text|textMultiLine"
         android:hint="问题描述"/>
 
     <LinearLayout
