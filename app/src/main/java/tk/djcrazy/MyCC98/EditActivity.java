@@ -65,6 +65,8 @@ import tk.djcrazy.MyCC98.util.ToastUtils;
 import tk.djcrazy.MyCC98.util.ViewUtils;
 import tk.djcrazy.libCC98.CachedCC98Service;
 import tk.djcrazy.libCC98.ICC98UrlManager;
+import tk.djcrazy.libCC98.NewCC98Service;
+import tk.djcrazy.libCC98.util.RequestResultListener;
 
 @ContentView(R.layout.activity_reply)
 public class EditActivity extends BaseFragmentActivity implements OnClickListener {
@@ -151,6 +153,8 @@ public class EditActivity extends BaseFragmentActivity implements OnClickListene
 
 	@Inject
 	private CachedCC98Service service;
+    @Inject
+    private NewCC98Service  mNewCC98Service;
 	@Inject
 	private ICC98UrlManager manager;
 	private ImageGetter getter = new ImageGetter() {
@@ -188,7 +192,7 @@ public class EditActivity extends BaseFragmentActivity implements OnClickListene
 	private void configureActionBar() {
 		ActionBar actionBar = getSupportActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
-		actionBar.setLogo(new BitmapDrawable(service.getCurrentUserAvatar()));
+		actionBar.setLogo(new BitmapDrawable(getResources(), service.getCurrentUserAvatar()));
 		if (requestType == REQUEST_REPLY) {
 			actionBar.setTitle("回复：" + postName);
 			replyContentEditText.requestFocus();
@@ -624,45 +628,21 @@ public class EditActivity extends BaseFragmentActivity implements OnClickListene
 	}
 
 	private void doUploadPicture(File photo) {
-		UpLoadPictureTask upTask = new UpLoadPictureTask(this, photo);
-		upTask.execute();
+        mNewCC98Service.submitUploadFileRequest(this.getClass(),photo,new RequestResultListener<String>() {
+            @Override
+            public void onRequestComplete(String result) {
+                picLink = result;
+                int cursor = replyContentEditText.getSelectionStart();
+                replyContentEditText.getText().insert(cursor, picLink);
+            }
+
+            @Override
+            public void onRequestError(String msg) {
+                ToastUtils.show(EditActivity.this, msg);
+            }
+        });
 	}
 
-	private class UpLoadPictureTask extends ProgressRoboAsyncTask<String> {
-		private File mUploadFile;
-		@Inject
-		private CachedCC98Service mService;
-
-		protected UpLoadPictureTask(Activity context, File file) {
-			super(context);
-			mUploadFile = file;
-		}
-
-		@Override
-		protected void onPreExecute() throws Exception {
-			dialog.setMessage("正在上传...");
-			super.onPreExecute();
-		}
-
-		@Override
-		public String call() throws Exception {
-			return mService.uploadFile(mUploadFile);
-		}
-
-		@Override
-		protected void onSuccess(String result) {
-			picLink = result;
-			int cursor = replyContentEditText.getSelectionStart();
-			replyContentEditText.getText().insert(cursor, picLink);
-		}
-
-		@Override
-		protected void onException(Exception e) {
-			super.onException(e);
-			Log.e(TAG, "", e);
-			ToastUtils.show(context, "上传图片失败，请检查网络或图片");
-		}
-	}
 
 	private class PushReplyTask extends ProgressRoboAsyncTask<Void> {
 		private String mPostId;

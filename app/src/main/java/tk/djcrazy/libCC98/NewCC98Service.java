@@ -17,12 +17,17 @@ import com.google.inject.Singleton;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.net.UnknownServiceException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import ch.boye.httpclientandroidlib.cookie.Cookie;
+import ch.boye.httpclientandroidlib.entity.mime.MultipartEntity;
+import ch.boye.httpclientandroidlib.entity.mime.content.FileBody;
+import ch.boye.httpclientandroidlib.entity.mime.content.StringBody;
 import ch.boye.httpclientandroidlib.impl.cookie.BasicClientCookie;
 import tk.djcrazy.MyCC98.application.MyApplication;
 import tk.djcrazy.MyCC98.config.Config;
@@ -308,6 +313,42 @@ public class NewCC98Service {
         });
         request.setTag(tag);
         getApplication().mRequestQueue.add(request);
+    }
+
+
+    public void submitUploadFileRequest(final Object tag, final File file, final RequestResultListener<String> listener) {
+        Request request = new StringRequest(mUrlManager.getUploadPictureUrl(),new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    String res = mCC98Parser.parseUploadPicture(response);
+                    listener.onRequestComplete(res);
+                } catch (Exception e) {
+                    listener.onRequestError(e.getLocalizedMessage());
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                listener.onRequestError(error.getLocalizedMessage());
+            }
+        }){
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    MultipartEntity reqEntity = new MultipartEntity();
+                    reqEntity.addPart("act", new StringBody("upload"));
+                    reqEntity.addPart("fname", new StringBody(file.getName()));
+                    reqEntity.addPart("file1", new FileBody(file));
+                    ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                    reqEntity.writeTo(bos);
+                    return bos.toByteArray();
+                } catch (Exception e) {
+                    Log.e(this.getClass().getSimpleName(), "",e);
+                }
+                return super.getBody();
+            }
+        };
     }
 
     private List<BasicClientCookie> castToAnother(List<Cookie> list) {

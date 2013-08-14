@@ -30,6 +30,7 @@ import tk.djcrazy.libCC98.data.UserStatueEntity;
 import tk.djcrazy.libCC98.exception.NoUserFoundException;
 import tk.djcrazy.libCC98.exception.ParseContentException;
 import tk.djcrazy.libCC98.util.DateFormatUtil;
+import tk.djcrazy.libCC98.util.RegexUtil;
 import tk.djcrazy.libCC98.util.StringUtil;
 
 import static tk.djcrazy.libCC98.CC98ParseRepository.HOT_TOPIC_BOARD_ID_REGEX;
@@ -529,5 +530,11 @@ public class NewCC98Parser {
             throw new IllegalStateException("can not get msg content");
         }
         return m.group();
+    }
+
+    public String parseUploadPicture(String html) throws ParseContentException {
+        return RegexUtil.getMatchedString(
+                CC98ParseRepository.UPLOAD_PIC_ADDRESS_REGEX, html)
+                .replace(",1", "");
     }
 }
