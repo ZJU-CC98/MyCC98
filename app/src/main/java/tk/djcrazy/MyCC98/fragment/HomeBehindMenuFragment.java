@@ -9,6 +9,7 @@ import tk.djcrazy.MyCC98.R;
 import tk.djcrazy.MyCC98.SettingsActivity;
 import tk.djcrazy.MyCC98.adapter.AccountListAdapter;
 import tk.djcrazy.MyCC98.dialog.AboutDialog;
+import tk.djcrazy.MyCC98.dialog.FeedbackDialog;
 import tk.djcrazy.MyCC98.util.Intents;
 import tk.djcrazy.libCC98.CachedCC98Service;
 import android.R.integer;
@@ -31,6 +32,8 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 
 import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
+
+import android.support.v4.app.FragmentManager;
 import com.google.inject.Inject;
  
 public class HomeBehindMenuFragment extends RoboSherlockFragment implements OnItemLongClickListener, OnItemClickListener, android.view.View.OnClickListener {
@@ -108,10 +111,11 @@ public class HomeBehindMenuFragment extends RoboSherlockFragment implements OnIt
 			new AboutDialog(getActivity()).show();
 			break;
 		case R.id.home_menu_feedback:
-			tk.djcrazy.MyCC98.util.Intents.Builder builder = new Intents.Builder(getActivity(), EditActivity.class);
-			Intent intent1 = builder.requestType(EditActivity.REQUEST_PM)
-					.pmToUser("MyCC.98").pmTitle("MyCC98软件反馈").toIntent();
-			startActivity(intent1);
+			//tk.djcrazy.MyCC98.util.Intents.Builder builder = new Intents.Builder(getActivity(), EditActivity.class);
+			//Intent intent1 = builder.requestType(EditActivity.REQUEST_PM)
+			//		.pmToUser("MyCC.98").pmTitle("MyCC98软件反馈").toIntent();
+			//startActivity(intent1);
+            showFeedbackDialog();
 			break;
 		case R.id.home_menu_profile:
 			Intent profiIntent = new Intent();
@@ -126,6 +130,12 @@ public class HomeBehindMenuFragment extends RoboSherlockFragment implements OnIt
 			break;
 		}
 	}
+
+    private void showFeedbackDialog() {
+        FragmentManager fm = getActivity().getSupportFragmentManager();
+        FeedbackDialog feedbackDialog = new FeedbackDialog();
+        feedbackDialog.show(fm, "feedback_dialog");
+    }
 
 	@Override
 	public boolean onItemLongClick(AdapterView<?> parent, View view,
