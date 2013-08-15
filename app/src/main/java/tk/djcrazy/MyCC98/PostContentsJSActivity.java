@@ -15,6 +15,7 @@ import tk.djcrazy.MyCC98.template.PostContentTemplateFactory;
 import tk.djcrazy.MyCC98.util.DisplayUtil;
 import tk.djcrazy.MyCC98.util.Intents;
 import tk.djcrazy.MyCC98.util.Intents.Builder;
+import tk.djcrazy.MyCC98.util.ProgressDialogBuilder;
 import tk.djcrazy.MyCC98.util.ProgressRoboAsyncTask;
 import tk.djcrazy.MyCC98.util.ToastUtils;
 import tk.djcrazy.MyCC98.util.UrlUtils;
@@ -32,6 +33,7 @@ import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -156,14 +158,7 @@ public class PostContentsJSActivity extends BaseActivity implements
 			try {
 				Method method = ObservableWebView.class.getMethod(name);
 				method.invoke(webView);
-			} catch (NoSuchMethodException e) {
-				e.printStackTrace();
-				Log.e("No such method: " + name, e.getMessage());
-			} catch (IllegalAccessException e) {
-				e.printStackTrace();
-				Log.e("Illegal Access: " + name, e.getMessage());
-			} catch (InvocationTargetException e) {
-				e.printStackTrace();
+			} catch (Exception e) {
 				Log.e("Invocation Target Exception: " + name, e.getMessage());
 			}
 		}
@@ -467,15 +462,19 @@ public class PostContentsJSActivity extends BaseActivity implements
 	}
 
 	private void addFriend(final String userName) {
+        final ProgressDialog dialog = ProgressDialogBuilder.buildNew(service, this);
+        dialog.show();
 		service.submitAddFriendRequest(this.getClass(),userName, new RequestResultListener<Boolean>() {
             @Override
             public void onRequestComplete(Boolean result) {
                 ToastUtils.show(PostContentsJSActivity.this, "添加好友成功");
+                dialog.dismiss();
             }
 
             @Override
             public void onRequestError(String msg) {
                 ToastUtils.show(PostContentsJSActivity.this, msg);
+                dialog.dismiss();
             }
         });
 	}
