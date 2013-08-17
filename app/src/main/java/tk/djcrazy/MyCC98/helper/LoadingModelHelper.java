@@ -13,14 +13,12 @@ import tk.djcrazy.MyCC98.util.ViewUtils;
  */
 public class LoadingModelHelper {
 
-    private View contextView;
-    private View contentView;
+     private View contentView;
     private View loadingView;
     private View emptyView;
 
     public LoadingModelHelper(View view, final OnReloadListener listener) {
-        contextView = view;
-        contentView = view.findViewById(R.id.loading_content);
+         contentView = view.findViewById(R.id.loading_content);
         emptyView = view.findViewById(android.R.id.empty);
         loadingView = view.findViewById(R.id.pb_loading);
         emptyView.setOnClickListener(new View.OnClickListener() {
@@ -31,6 +29,20 @@ public class LoadingModelHelper {
             }
         });
     }
+
+    public LoadingModelHelper(View content, View empty, View loading, final OnReloadListener listener) {
+        contentView = content;
+        emptyView = empty;
+        loadingView = loading;
+        emptyView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loading();
+                listener.onReload();
+            }
+        });
+    }
+
     public void loading() {
             hide(contentView).hide(emptyView).show(loadingView, false);
     }
@@ -70,7 +82,7 @@ public class LoadingModelHelper {
     }
 
     private LoadingModelHelper fadeIn(View view) {
-        view.startAnimation(AnimationUtils.loadAnimation(contextView.getContext(),
+        view.startAnimation(AnimationUtils.loadAnimation(contentView.getContext(),
                 R.anim.activity_open_enter));
         return this;
     }

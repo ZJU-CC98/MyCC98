@@ -46,7 +46,7 @@ abstract class PullToRefeshListFragment<E> extends RoboSherlockFragment implemen
 
     protected BaseItemListAdapter<E> mItemListAdapter;
 
-    private  LoadingModelHelper helper;
+    protected  LoadingModelHelper helper;
    	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
@@ -60,7 +60,9 @@ abstract class PullToRefeshListFragment<E> extends RoboSherlockFragment implemen
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-        helper = new LoadingModelHelper(view,this);
+        if (helper==null) {
+            helper = new LoadingModelHelper(view,this);
+        }
 		listView = (PullToRefreshListView) view.findViewById(R.id.loading_content);
 		listView.setOnItemClickListener(new OnItemClickListener() {
 			@Override

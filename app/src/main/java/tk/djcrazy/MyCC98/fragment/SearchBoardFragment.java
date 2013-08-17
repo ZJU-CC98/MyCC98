@@ -4,15 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import roboguice.inject.InjectView;
-import roboguice.util.RoboAsyncTask;
 import tk.djcrazy.MyCC98.PostListActivity;
 import tk.djcrazy.MyCC98.R;
+import tk.djcrazy.MyCC98.adapter.BaseItemListAdapter;
 import tk.djcrazy.MyCC98.adapter.SearchBoardListAdapter;
+import tk.djcrazy.MyCC98.helper.LoadingModelHelper;
 import tk.djcrazy.MyCC98.util.DisplayUtil;
 import tk.djcrazy.MyCC98.util.ViewUtils;
-import tk.djcrazy.libCC98.CachedCC98Service;
+import tk.djcrazy.libCC98.NewCC98Service;
 import tk.djcrazy.libCC98.data.BoardStatus;
-import android.content.Context;
+
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -21,51 +22,33 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.AnimationUtils;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
-import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
 import com.google.inject.Inject;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.Animator.AnimatorListener;
 import com.nineoldandroids.animation.ValueAnimator;
 import com.nineoldandroids.animation.ValueAnimator.AnimatorUpdateListener;
-import com.twotoasters.jazzylistview.JazzyHelper;
-import com.twotoasters.jazzylistview.JazzyListView;
 
-public class SearchBoardFragment extends RoboSherlockFragment implements
-		OnItemClickListener, OnClickListener {
+public
+class SearchBoardFragment extends PullToRefeshListFragment<BoardStatus>  {
 	private int position = 0;
 	private static final String TAG = "SearchBoardFragment";
 	private List<BoardStatus> currentResult;
-	private List<BoardStatus> boardList;
 
 	@InjectView(R.id.search_board_text) 
 	private EditText searchContentEditText; 
-	@InjectView(R.id.search_board_result_list)
-	private JazzyListView mResultListView;  
-	@InjectView(R.id.search_board_loading_bar)
-	private ProgressBar progressBar;
- 	@InjectView(R.id.search_board_main_container)
-	private View mContainer;
- 	@InjectView(android.R.id.empty)
- 	private TextView emptyView;
- 	@InjectView(R.id.board_filter)
+  	@InjectView(R.id.board_filter)
  	private ImageView mboardFilter;
 	@InjectView(R.id.search_board_bar)
 	private LinearLayout mSearchBar;
 	@Inject
-	private CachedCC98Service service;
+	private NewCC98Service service;
 
-	private SearchBoardListAdapter listAdapter;
-  
 	private int mOriginalSearchBarWidth = 0;
 	private TextWatcher textWatcher = new TextWatcher() {
 
@@ -94,24 +77,12 @@ public class SearchBoardFragment extends RoboSherlockFragment implements
 
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
+        helper = new LoadingModelHelper(view.findViewById(R.id.search_board_main_container),
+                view.findViewById(android.R.id.empty), view.findViewById(R.id.pb_loading), this);
 		super.onViewCreated(view, savedInstanceState);
 		setListeners();
-		mResultListView.setTransitionEffect(JazzyHelper.CARDS);
-		if (boardList != null) {
- 			hide(progressBar).hide(emptyView).show(mContainer);
-			mResultListView.setAdapter(listAdapter);
-			listAdapter.notifyDataSetChanged();
-			mResultListView.invalidate();
-		} else {
- 			hide(mContainer).hide(emptyView).show(progressBar);
- 			new FetchBoardListTask(getActivity()).execute();
-		}
-	}
- 	public void scrollListTo(int x, int y) {
-		mResultListView.scrollTo(x, y);
-	}
+ 	}
 
- 	
  	private void toggleFilter() {
  		if (searchContentEditText.getVisibility()==View.GONE) {
  			mOriginalSearchBarWidth = mSearchBar.getWidth();
@@ -172,9 +143,8 @@ public class SearchBoardFragment extends RoboSherlockFragment implements
  	}
 	private void setListeners() {
 		searchContentEditText.addTextChangedListener(textWatcher);
-		mResultListView.setOnItemClickListener(this);
-		emptyView.setOnClickListener(this);
-		mboardFilter.setOnClickListener(new OnClickListener() {
+
+        mboardFilter.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				toggleFilter();
@@ -184,16 +154,14 @@ public class SearchBoardFragment extends RoboSherlockFragment implements
 
 	private void doSearch(String string) {
 		if (string.equals("")) {
-			if (boardList == null) {
-				currentResult = new ArrayList<BoardStatus>();
-			} else if (boardList.size() <= 50) {
-				currentResult = boardList;
+			if (items.size() <= 50) {
+				currentResult = items;
 			} else {
-				currentResult = boardList.subList(0, 50);
+				currentResult = items.subList(0, 50);
 			}
 		} else {
 			List<BoardStatus> tmplist = new ArrayList<BoardStatus>();
-			for (BoardStatus np : boardList) {
+			for (BoardStatus np : items) {
 				if (np.getBoardName().toLowerCase()
 						.contains(string.toLowerCase())) {
 					tmplist.add(np);
@@ -201,88 +169,38 @@ public class SearchBoardFragment extends RoboSherlockFragment implements
 			}
 			currentResult = tmplist;
 		}
- 		if (listAdapter == null) {
-			listAdapter = new SearchBoardListAdapter(getActivity(),
-					currentResult);
-		} else {
-			listAdapter.setBoardList(currentResult);
-		}
-		mResultListView.setAdapter(listAdapter);
-		listAdapter.notifyDataSetChanged();
-		mResultListView.invalidate();
-	}
- 
-	/**
-	 * @return the position
-	 */
-	public int getPosition() {
-		return position;
-	}
-
-	/**
-	 * @param position
-	 *            the position to set
-	 */
-	public void setPosition(int position) {
-		this.position = position;
-	}
-
-	@Override
-	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-  		getActivity().startActivity(PostListActivity.createIntent(currentResult.get(arg2)
-				.getBoardName(), currentResult.get(arg2)
-				.getBoardId()));
+ 	    mItemListAdapter.setItems(currentResult);
  	}
-	private SearchBoardFragment fadeIn(final View view,
-			final boolean animate) {
-		if (view != null)
-			if (animate)
-				view.startAnimation(AnimationUtils.loadAnimation(getActivity(),
-						R.anim.activity_open_enter));
-			else
-				view.clearAnimation();
-		return this;
-	}
+ 
 
-	private SearchBoardFragment show(final View view) {
-		ViewUtils.setGone(view, false);
-		return this;
-	}
+    @Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        super.onListItemClick(l, v, position, id);
+        getActivity().startActivity(PostListActivity.createIntent(currentResult.get(position-1)
+                .getBoardName(), currentResult.get(position-1)
+                .getBoardId()));
+    }
 
-	private SearchBoardFragment hide(final View view) {
-		ViewUtils.setGone(view, true);
-		return this;
-	}
+    @Override
+    public void onRequestComplete(List<BoardStatus> result) {
+        super.onRequestComplete(result);
+        doSearch(searchContentEditText.getText().toString().trim());
+    }
 
-	private class FetchBoardListTask extends RoboAsyncTask<List<BoardStatus>> {
+    @Override
+    protected BaseItemListAdapter<BoardStatus> createAdapter(
+            List<BoardStatus> items) {
+        return new SearchBoardListAdapter(getActivity(), items);
+    }
 
-		protected FetchBoardListTask(Context context) {
-			super(context);
- 		}
+    @Override
+    public void onRefresh(PullToRefreshBase<ListView> refreshView) {
+        service.submitTodayBoardlList(this.getClass(), this);
+    }
 
-		@Override
-		public List<BoardStatus> call() throws Exception {
-			return service.getTodayBoardList();
- 		}
-		
-		@Override
-		protected void onSuccess(List<BoardStatus> t) throws Exception {
-			boardList = t;
-			currentResult = boardList;
-			searchContentEditText.setText("");
- 			hide(progressBar).hide(emptyView).show(mContainer).fadeIn(mContainer, true);
- 		}
-		
-		@Override
-		protected void onException(Exception e) throws RuntimeException {
-			super.onException(e);
-			hide(progressBar).hide(mContainer).show(emptyView).fadeIn(emptyView, true);
-		}
-	}
+    @Override
+    public void onCancelRequest() {
+        service.cancelRequest(this.getClass());
+    }
 
-	@Override
-	public void onClick(View v) {
-			hide(mContainer).hide(emptyView).show(progressBar);
-			new FetchBoardListTask(getActivity()).execute();
-	}
 }

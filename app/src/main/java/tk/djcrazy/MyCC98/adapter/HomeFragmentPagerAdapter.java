@@ -37,7 +37,6 @@ public class HomeFragmentPagerAdapter extends FragmentPagerAdapter {
 			return new HotTopicFragment();
 		case 2:
 			SearchBoardFragment sFragment =  new SearchBoardFragment();
- 			sFragment.setPosition(position);
 			return sFragment;
 		case 3:
 			return new NewTopicFragment();

@@ -32,6 +32,7 @@ import ch.boye.httpclientandroidlib.impl.cookie.BasicClientCookie;
 import tk.djcrazy.MyCC98.application.MyApplication;
 import tk.djcrazy.MyCC98.config.Config;
 import tk.djcrazy.libCC98.data.BoardEntity;
+import tk.djcrazy.libCC98.data.BoardStatus;
 import tk.djcrazy.libCC98.data.HotTopicEntity;
 import tk.djcrazy.libCC98.data.InboxInfo;
 import tk.djcrazy.libCC98.data.LoginType;
@@ -446,11 +447,32 @@ public class NewCC98Service {
     }
 
     public void submitPostSearch(final Object tag, String keyword, String boardId, String type, int pageNumber, final RequestResultListener<List<SearchResultEntity>> listener) {
-        Request request = new StringRequest(mUrlManager.getSearchUrl(keyword,boardId, type, pageNumber),new Response.Listener<String>() {
+        Request request = new StringRequest(mUrlManager.getSearchUrl(keyword, boardId, type, pageNumber),new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
                     List<SearchResultEntity> list = mCC98Parser.parseQueryResult(response);
+                    listener.onRequestComplete(list);
+                } catch (Exception e) {
+                    listener.onRequestError(e.getLocalizedMessage());
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                listener.onRequestError(error.getLocalizedMessage());
+            }
+        });
+        request.setTag(tag);
+        getApplication().mRequestQueue.add(request);
+    }
+
+    public void submitTodayBoardlList(final Object tag, final RequestResultListener<List<BoardStatus>> listener) {
+        Request request = new StringRequest(mUrlManager.getTodayBoardList(), new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    List<BoardStatus> list = mCC98Parser.parseTodayBoardList(response);
                     listener.onRequestComplete(list);
                 } catch (Exception e) {
                     listener.onRequestError(e.getLocalizedMessage());
