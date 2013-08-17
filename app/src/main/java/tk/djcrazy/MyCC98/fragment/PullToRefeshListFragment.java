@@ -24,7 +24,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
 import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
-import com.google.inject.Inject;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
@@ -35,7 +34,6 @@ import java.util.List;
 import tk.djcrazy.MyCC98.R;
 import tk.djcrazy.MyCC98.adapter.BaseItemListAdapter;
 import tk.djcrazy.MyCC98.helper.LoadingModelHelper;
-import tk.djcrazy.libCC98.NewCC98Service;
 import tk.djcrazy.libCC98.util.RequestResultListener;
 
 public
@@ -56,7 +54,7 @@ abstract class PullToRefeshListFragment<E> extends RoboSherlockFragment implemen
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.new_paged_item_list, container, false);
+		return inflater.inflate(R.layout.paged_item_list, container, false);
 	}
 
 	@Override
