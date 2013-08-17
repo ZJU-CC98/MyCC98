@@ -2,6 +2,7 @@ package tk.djcrazy.MyCC98;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -60,6 +61,7 @@ import tk.djcrazy.MyCC98.adapter.EmotionGridViewAdapter;
 import tk.djcrazy.MyCC98.helper.TextHelper;
 import tk.djcrazy.MyCC98.util.DisplayUtil;
 import tk.djcrazy.MyCC98.util.Intents;
+import tk.djcrazy.MyCC98.util.ProgressDialogBuilder;
 import tk.djcrazy.MyCC98.util.ProgressRoboAsyncTask;
 import tk.djcrazy.MyCC98.util.ToastUtils;
 import tk.djcrazy.MyCC98.util.ViewUtils;
@@ -184,7 +186,7 @@ public class EditActivity extends BaseFragmentActivity implements OnClickListene
         String[] testContent = {"one","two","three","four"};
         friendsListPopupWindow.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, testContent));
         friendsListPopupWindow.setAnchorView(mAtBtn);
-        friendsListPopupWindow.setContentWidth(DisplayUtil.dip2px(this,150f));
+        friendsListPopupWindow.setContentWidth(DisplayUtil.dip2px(this, 150f));
         friendsListPopupWindow.setBackgroundDrawable(getResources().getDrawable(R.drawable.popupwindow_bg));
     }
 
@@ -368,81 +370,81 @@ public class EditActivity extends BaseFragmentActivity implements OnClickListene
 
 		faceRadioGroup
 				.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-					@Override
-					public void onCheckedChanged(RadioGroup group, int checkedId) {
-						switch (checkedId) {
-						case R.id.face1:
-							faceGroupChooseString = "face1.gif";
-							break;
-						case R.id.face2:
-							faceGroupChooseString = "face2.gif";
-							break;
-						case R.id.face3:
-							faceGroupChooseString = "face3.gif";
-							break;
-						case R.id.face4:
-							faceGroupChooseString = "face4.gif";
-							break;
-						case R.id.face5:
-							faceGroupChooseString = "face5.gif";
-							break;
-						case R.id.face6:
-							faceGroupChooseString = "face6.gif";
-							break;
-						case R.id.face7:
-							faceGroupChooseString = "face7.gif";
-							break;
-						case R.id.face8:
-							faceGroupChooseString = "face8.gif";
-							break;
-						case R.id.face9:
-							faceGroupChooseString = "face9.gif";
-							break;
-						case R.id.face10:
-							faceGroupChooseString = "face10.gif";
-							break;
-						case R.id.face11:
-							faceGroupChooseString = "face11.gif";
-							break;
-						case R.id.face12:
-							faceGroupChooseString = "face12.gif";
-							break;
-						case R.id.face13:
-							faceGroupChooseString = "face13.gif";
-							break;
-						case R.id.face14:
-							faceGroupChooseString = "face14.gif";
-							break;
-						case R.id.face15:
-							faceGroupChooseString = "face15.gif";
-							break;
-						case R.id.face16:
-							faceGroupChooseString = "face16.gif";
-							break;
-						case R.id.face17:
-							faceGroupChooseString = "face17.gif";
-							break;
-						case R.id.face18:
-							faceGroupChooseString = "face18.gif";
-							break;
-						case R.id.face19:
-							faceGroupChooseString = "face19.gif";
-							break;
-						case R.id.face20:
-							faceGroupChooseString = "face20.gif";
-							break;
-						case R.id.face21:
-							faceGroupChooseString = "face21.gif";
-							break;
-						case R.id.face22:
-							faceGroupChooseString = "face22.gif";
-							break;
+                    @Override
+                    public void onCheckedChanged(RadioGroup group, int checkedId) {
+                        switch (checkedId) {
+                            case R.id.face1:
+                                faceGroupChooseString = "face1.gif";
+                                break;
+                            case R.id.face2:
+                                faceGroupChooseString = "face2.gif";
+                                break;
+                            case R.id.face3:
+                                faceGroupChooseString = "face3.gif";
+                                break;
+                            case R.id.face4:
+                                faceGroupChooseString = "face4.gif";
+                                break;
+                            case R.id.face5:
+                                faceGroupChooseString = "face5.gif";
+                                break;
+                            case R.id.face6:
+                                faceGroupChooseString = "face6.gif";
+                                break;
+                            case R.id.face7:
+                                faceGroupChooseString = "face7.gif";
+                                break;
+                            case R.id.face8:
+                                faceGroupChooseString = "face8.gif";
+                                break;
+                            case R.id.face9:
+                                faceGroupChooseString = "face9.gif";
+                                break;
+                            case R.id.face10:
+                                faceGroupChooseString = "face10.gif";
+                                break;
+                            case R.id.face11:
+                                faceGroupChooseString = "face11.gif";
+                                break;
+                            case R.id.face12:
+                                faceGroupChooseString = "face12.gif";
+                                break;
+                            case R.id.face13:
+                                faceGroupChooseString = "face13.gif";
+                                break;
+                            case R.id.face14:
+                                faceGroupChooseString = "face14.gif";
+                                break;
+                            case R.id.face15:
+                                faceGroupChooseString = "face15.gif";
+                                break;
+                            case R.id.face16:
+                                faceGroupChooseString = "face16.gif";
+                                break;
+                            case R.id.face17:
+                                faceGroupChooseString = "face17.gif";
+                                break;
+                            case R.id.face18:
+                                faceGroupChooseString = "face18.gif";
+                                break;
+                            case R.id.face19:
+                                faceGroupChooseString = "face19.gif";
+                                break;
+                            case R.id.face20:
+                                faceGroupChooseString = "face20.gif";
+                                break;
+                            case R.id.face21:
+                                faceGroupChooseString = "face21.gif";
+                                break;
+                            case R.id.face22:
+                                faceGroupChooseString = "face22.gif";
+                                break;
 
-						default:
-							break;
-						}
-					}
-				});
+                            default:
+                                break;
+                        }
+                    }
+                });
 	}
 
 	@Override
@@ -502,13 +504,13 @@ public class EditActivity extends BaseFragmentActivity implements OnClickListene
 		d.setBounds(0, 0, d.getIntrinsicWidth(), d.getIntrinsicHeight());
 		ImageSpan span = new ImageSpan(d, ImageSpan.ALIGN_BOTTOM);
 		ss.setSpan(span, start, start + ("[" + faceTitle + "]").length(),
-				Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 	}
 
 	private void hideKeyBoard() {
 		InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 		inputMethodManager.hideSoftInputFromWindow(this.getCurrentFocus()
-				.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                .getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 	}
 
 	private void showKeyBoard() {
@@ -539,7 +541,7 @@ public class EditActivity extends BaseFragmentActivity implements OnClickListene
 			mCurrentPhotoFile.createNewFile();
 			Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 			intent.putExtra(MediaStore.EXTRA_OUTPUT,
-					Uri.fromFile(mCurrentPhotoFile));
+                    Uri.fromFile(mCurrentPhotoFile));
 			startActivityForResult(intent, CAMERA_WITH_DATA);
 
 		} catch (ActivityNotFoundException e) {
@@ -596,7 +598,7 @@ public class EditActivity extends BaseFragmentActivity implements OnClickListene
 			}
 			break;
 		case CAMERA_WITH_DATA:
-			try {
+ 			try {
 				while (mCurrentPhotoFile.length() > MAX_IMAGE_SIZE_IN_BYTE) {
 					doCompressPhoto();
 				}
@@ -626,23 +628,70 @@ public class EditActivity extends BaseFragmentActivity implements OnClickListene
 		bos.flush();
 		bos.close();
 	}
+/*
 
 	private void doUploadPicture(File photo) {
+        final ProgressDialog dialog = ProgressDialogBuilder.buildNew(mNewCC98Service, this);
+        dialog.show();
         mNewCC98Service.submitUploadFileRequest(this.getClass(),photo,new RequestResultListener<String>() {
             @Override
             public void onRequestComplete(String result) {
                 picLink = result;
+                ToastUtils.show(EditActivity.this,"res:" +result);
                 int cursor = replyContentEditText.getSelectionStart();
                 replyContentEditText.getText().insert(cursor, picLink);
+                dialog.dismiss();
+                ToastUtils.show(EditActivity.this,"res nirmalk:" + result);
             }
 
             @Override
             public void onRequestError(String msg) {
-                ToastUtils.show(EditActivity.this, msg);
+                ToastUtils.show(EditActivity.this,"res:" + msg);
+                dialog.dismiss();
+                ToastUtils.show(EditActivity.this,"res:" + msg);
             }
         });
 	}
+*/
+    private void doUploadPicture(File photo) {
+        UpLoadPictureTask upTask = new UpLoadPictureTask(this, photo);
+        upTask.execute();
+    }
+    private class UpLoadPictureTask extends ProgressRoboAsyncTask<String> {
+        private File mUploadFile;
+        @Inject
+        private CachedCC98Service mService;
 
+        protected UpLoadPictureTask(Activity context, File file) {
+            super(context);
+            mUploadFile = file;
+        }
+
+        @Override
+        protected void onPreExecute() throws Exception {
+            dialog.setMessage("正在上传...");
+            super.onPreExecute();
+        }
+
+        @Override
+        public String call() throws Exception {
+            return mService.uploadFile(mUploadFile);
+        }
+
+        @Override
+        protected void onSuccess(String result) {
+            picLink = result;
+            int cursor = replyContentEditText.getSelectionStart();
+            replyContentEditText.getText().insert(cursor, picLink);
+        }
+
+        @Override
+        protected void onException(Exception e) {
+            super.onException(e);
+            Log.e(TAG, "", e);
+            ToastUtils.show(context, "上传图片失败，请检查网络或图片");
+        }
+    }
 
 	private class PushReplyTask extends ProgressRoboAsyncTask<Void> {
 		private String mPostId;

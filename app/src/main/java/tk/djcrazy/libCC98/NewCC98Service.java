@@ -90,7 +90,7 @@ public class NewCC98Service {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                error.getCause().printStackTrace();
+                error.printStackTrace();
                 listener.onRequestError(error.getLocalizedMessage());
             }
         });
@@ -111,7 +111,7 @@ public class NewCC98Service {
         },new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                volleyError.getCause().printStackTrace();
+                volleyError.printStackTrace();
                 listener.onRequestError(volleyError.getLocalizedMessage());
             }
         });
@@ -317,19 +317,22 @@ public class NewCC98Service {
 
 
     public void submitUploadFileRequest(final Object tag, final File file, final RequestResultListener<String> listener) {
-        Request request = new StringRequest(mUrlManager.getUploadPictureUrl(),new Response.Listener<String>() {
+        Request request = new StringRequest(Request.Method.POST, mUrlManager.getUploadPictureUrl(),new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
+                    System.out.println(response);
                     String res = mCC98Parser.parseUploadPicture(response);
                     listener.onRequestComplete(res);
                 } catch (Exception e) {
+                    e.printStackTrace();
                     listener.onRequestError(e.getLocalizedMessage());
                 }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
                 listener.onRequestError(error.getLocalizedMessage());
             }
         }){
@@ -345,10 +348,12 @@ public class NewCC98Service {
                     return bos.toByteArray();
                 } catch (Exception e) {
                     Log.e(this.getClass().getSimpleName(), "",e);
+                    return super.getBody();
                 }
-                return super.getBody();
             }
         };
+        request.setTag(tag);
+        getApplication().mRequestQueue.add(request);
     }
 
     private List<BasicClientCookie> castToAnother(List<Cookie> list) {
