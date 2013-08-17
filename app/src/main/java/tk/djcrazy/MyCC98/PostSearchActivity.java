@@ -8,6 +8,7 @@ import tk.djcrazy.libCC98.CachedCC98Service;
 import tk.djcrazy.libCC98.ICC98Service;
 import android.app.SearchManager;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
@@ -18,6 +19,7 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.app.ActionBar.TabListener;
 import com.actionbarsherlock.view.Menu;
+import com.astuetz.viewpager.extensions.PagerSlidingTabStrip;
 import com.google.inject.Inject;
 
 @ContentView(R.layout.activity_post_search)
@@ -48,9 +50,6 @@ public class PostSearchActivity extends BaseFragmentActivity implements OnPageCh
 		ActionBar actionBar = getSupportActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		actionBar.setLogo(new BitmapDrawable(getResources(), service.getCurrentUserAvatar()));
-		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-		actionBar.addTab(actionBar.newTab().setText("主题搜索").setTabListener(this));
-		actionBar.addTab(actionBar.newTab().setText("作者搜索").setTabListener(this));
 	}
 
 	@Override
@@ -101,7 +100,10 @@ public class PostSearchActivity extends BaseFragmentActivity implements OnPageCh
 					getSupportFragmentManager(), query, boardId);
 			viewPager.setAdapter(adapter);
 			viewPager.setOnPageChangeListener(this);
- 			getSupportActionBar().setTitle("搜索：" + mQueryString+" 在"+boardName);
+            PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
+            tabs.setViewPager(viewPager);
+            tabs.setIndicatorColor(Color.parseColor("#1faeff"));
+            getSupportActionBar().setTitle("搜索：" + mQueryString+" 在"+boardName);
  		}
 	}
 

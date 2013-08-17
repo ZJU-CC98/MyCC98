@@ -4,7 +4,11 @@
     android:layout_height="match_parent"
     android:background="@color/card_list_bg"
     android:orientation="vertical" >
-
+    <com.astuetz.viewpager.extensions.PagerSlidingTabStrip
+            android:id="@+id/tabs"
+            android:layout_width="match_parent"
+            android:layout_height="48dip"
+            />
     <android.support.v4.view.ViewPager
         android:id="@+id/post_search_main_pages"
         android:layout_width="match_parent"

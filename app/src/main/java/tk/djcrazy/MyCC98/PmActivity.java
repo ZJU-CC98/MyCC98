@@ -7,6 +7,7 @@ import tk.djcrazy.libCC98.CachedCC98Service;
 import tk.djcrazy.libCC98.NewCC98Service;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
@@ -16,6 +17,7 @@ import android.support.v4.view.ViewPager.OnPageChangeListener;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.app.ActionBar.TabListener;
+import com.astuetz.viewpager.extensions.PagerSlidingTabStrip;
 import com.google.inject.Inject;
   
 @ContentView(R.layout.activity_pm)
@@ -37,16 +39,17 @@ public class PmActivity extends BaseFragmentActivity implements OnPageChangeList
 				getSupportFragmentManager());
 		viewPager.setAdapter(adapter);
 		viewPager.setOnPageChangeListener(this);
-	}
+        PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
+        tabs.setViewPager(viewPager);
+        tabs.setIndicatorColor(Color.parseColor("#1faeff"));
+
+    }
 
 	private void configureActionBar() {
 		ActionBar actionBar = getSupportActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		actionBar.setLogo(new BitmapDrawable(getResources(), service.getCurrentUserAvatar()));
 		actionBar.setTitle("论坛短消息");
-		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-		actionBar.addTab(actionBar.newTab().setText("收件箱").setTabListener(this));
-		actionBar.addTab(actionBar.newTab().setText("发件箱").setTabListener(this));
 	}
 
 	@Override
