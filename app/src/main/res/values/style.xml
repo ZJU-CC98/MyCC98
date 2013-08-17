@@ -61,4 +61,10 @@
         <item name="android:shadowDy">2.0</item>
         <item name="android:shadowRadius">2.0</item>
     </style>
+
+    <style name="ButtonBarButton">
+    </style>
+
+    <style name="ButtonBar" parent="@android:style/ButtonBar">
+    </style>
  </resources>

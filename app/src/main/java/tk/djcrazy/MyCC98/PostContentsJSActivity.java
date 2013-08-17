@@ -50,12 +50,14 @@ import android.util.Log;
 import android.view.GestureDetector;
 import android.view.GestureDetector.OnDoubleTapListener;
 import android.view.GestureDetector.SimpleOnGestureListener;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
 import android.webkit.HttpAuthHandler;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -64,6 +66,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -368,43 +371,57 @@ public class PostContentsJSActivity extends BaseActivity implements
 		}
 	}
 
+    private void dialogDoJump(EditText editText) {
+        try {
+            int jumpNum = Integer.parseInt(editText
+                    .getText().toString());
+            if (jumpNum <= 0 || jumpNum > totalPageNum) {
+                Toast.makeText(
+                        PostContentsJSActivity.this,
+                        R.string.search_input_error,
+                        Toast.LENGTH_SHORT).show();
+            } else {
+                jumpTo(jumpNum);
+            }
+        } catch (NumberFormatException e) {
+            Log.e(PostContentsJSActivity.TAG,
+                    e.toString());
+            Toast.makeText(PostContentsJSActivity.this,
+                    R.string.search_input_error,
+                    Toast.LENGTH_SHORT).show();
+        }
+    }
+
 	public void jumpDialog() {
 		final EditText jumpEditText = new EditText(this);
-		jumpEditText.requestFocus();
 		jumpEditText.setFocusableInTouchMode(true);
 		// set numeric touch pad
 		jumpEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
-		new AlertDialog.Builder(this)
+		final AlertDialog dialog = new AlertDialog.Builder(this)
 				.setTitle(R.string.jump_dialog_title)
-				.setIcon(android.R.drawable.ic_dialog_info)
 				.setView(jumpEditText)
 				.setPositiveButton(R.string.jump_button,
 						new DialogInterface.OnClickListener() {
 							@Override
 							public void onClick(DialogInterface dialog,
 									int which) {
-								int jumpNum = 1;
-								try {
-									jumpNum = Integer.parseInt(jumpEditText
-											.getText().toString());
-									if (jumpNum <= 0 || jumpNum > totalPageNum) {
-										Toast.makeText(
-												PostContentsJSActivity.this,
-												R.string.search_input_error,
-												Toast.LENGTH_SHORT).show();
-									} else {
-										jumpTo(jumpNum);
-									}
-								} catch (NumberFormatException e) {
-									Log.e(PostContentsJSActivity.TAG,
-											e.toString());
-									Toast.makeText(PostContentsJSActivity.this,
-											R.string.search_input_error,
-											Toast.LENGTH_SHORT).show();
-								}
-
+                                dialogDoJump(jumpEditText);
 							}
-						}).setNegativeButton(R.string.go_back, null).show();
+						}).setNegativeButton(R.string.go_back, null).create();
+        jumpEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                if (EditorInfo.IME_ACTION_DONE == i) {
+                    dialogDoJump(jumpEditText);
+                    dialog.dismiss();
+                }
+                return false;
+            }
+        });
+        jumpEditText.requestFocus();
+        // this should be done before dialog.show(), or the ime won't appear automatically o.0
+        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        dialog.show();
 	}
 
 	public void reply() {

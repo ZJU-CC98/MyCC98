@@ -10,6 +10,7 @@ import android.app.ProgressDialog;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.os.Bundle;
@@ -91,6 +92,7 @@ public class FeedbackDialog extends RoboSherlockDialogFragment {
                 finish();
             }
         });
+        //getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
     }
 
     @Override
@@ -101,7 +103,6 @@ public class FeedbackDialog extends RoboSherlockDialogFragment {
         sendIssue = (Button) view.findViewById(R.id.send_issue);
         cancelIssue = (Button) view.findViewById(R.id.cancel_issue);
         setViews();
-
         return view;
     }
 }

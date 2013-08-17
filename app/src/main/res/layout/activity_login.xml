@@ -36,10 +36,10 @@
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="31.0dip"
+                android:layout_marginTop="31dp"
                 android:background="@color/qt_border"
                 android:orientation="vertical"
-                android:padding="1.0dip" >
+                android:padding="1dp" >
 
                 <LinearLayout
                     android:layout_width="fill_parent"
