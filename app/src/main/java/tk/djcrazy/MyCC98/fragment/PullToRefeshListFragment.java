@@ -15,97 +15,55 @@
  */
 package tk.djcrazy.MyCC98.fragment;
 
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ListView;
+
+import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
+import com.google.inject.Inject;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import tk.djcrazy.MyCC98.R;
 import tk.djcrazy.MyCC98.adapter.BaseItemListAdapter;
-import tk.djcrazy.MyCC98.util.ThrowableLoader;
-import tk.djcrazy.MyCC98.util.ToastUtils;
-import tk.djcrazy.MyCC98.util.ViewUtils;
-import android.app.Activity;
-import android.os.Bundle;
-import android.support.v4.app.LoaderManager.LoaderCallbacks;
-import android.support.v4.content.Loader;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.HeaderViewListAdapter;
-import android.widget.ListView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-import android.widget.Toast;
+import tk.djcrazy.MyCC98.helper.LoadingModelHelper;
+import tk.djcrazy.libCC98.NewCC98Service;
+import tk.djcrazy.libCC98.util.RequestResultListener;
 
-import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
-import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
-import com.handmark.pulltorefresh.library.PullToRefreshListView;
+public
+abstract class PullToRefeshListFragment<E> extends RoboSherlockFragment implements LoadingModelHelper.OnReloadListener,
+         OnRefreshListener<ListView>, RequestResultListener<List<E>> {
 
-/**
- * Base fragment for displaying a list of items that loads with a progress bar
- * visible
- * 
- * @param <E>
- */
-public abstract class PullToRefeshListFragment<E> extends RoboSherlockFragment implements
-		OnRefreshListener<ListView>, LoaderCallbacks<List<E>> {
+ 	protected PullToRefreshListView listView;
 
-	private static final String TAG = "PagedPullToRefeshListFragment";
+    protected List<E> items = new ArrayList<E>();
 
-	/**
-	 * List items provided to {@link #onLoadFinished(Loader, List)}
-	 */
-	protected List<E> items = new ArrayList<E>();
+    protected BaseItemListAdapter<E> mItemListAdapter;
 
-	/**
-	 * List view
-	 */
-	protected PullToRefreshListView listView;
-
-	/**
-	 * Empty view
-	 */
-	protected TextView emptyView;
-
-	/**
-	 * Progress bar
-	 */
-	protected ProgressBar progressBar;
-
- 	@Override
+    private  LoadingModelHelper helper;
+   	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		hide(listView);
-		if (!items.isEmpty())
-			setListShown(true, false);
-		else
-			getLoaderManager().initLoader(0, null, this);
-	}
+ 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.paged_item_list, container, false);
-	}
-
-	/**
-	 * Detach from list view.
-	 */
-	@Override
-	public void onDestroyView() {
- 		emptyView = null;
-		progressBar = null;
-		listView = null;
-		super.onDestroyView();
+		return inflater.inflate(R.layout.new_paged_item_list, container, false);
 	}
 
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-		listView = (PullToRefreshListView) view.findViewById(R.id.pull_list);
+        helper = new LoadingModelHelper(view,this);
+		listView = (PullToRefreshListView) view.findViewById(R.id.loading_content);
 		listView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -113,229 +71,55 @@ public abstract class PullToRefeshListFragment<E> extends RoboSherlockFragment i
 			}
 		});
 		listView.setOnRefreshListener(this);
-		progressBar = (ProgressBar) view.findViewById(R.id.pb_loading);
-		emptyView = (TextView) view.findViewById(android.R.id.empty);
-		emptyView.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
- 				hide(emptyView).show(progressBar);
-				getLoaderManager().restartLoader(0, null, PullToRefeshListFragment.this);
-			}
-		});
-		configureList(getActivity(), getListView());
-	}
+        listView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
+        listView.setHorizontalScrollBarEnabled(true);
+        listView.setVerticalScrollBarEnabled(true);
+        shouldConfigureListViewBeforeSetAdapter(listView);
+        mItemListAdapter = createAdapter(items);
+        listView.setAdapter(mItemListAdapter);
+        if (items.size()>0) {
+            helper.content(false);
+        } else {
+            helper.loading();
+            onRefresh(listView);
+        }
+   	}
 
-	/**
-	 * Configure list after view has been created
-	 * 
-	 * @param activity
-	 * @param listView
-	 */
-	protected void configureList(Activity activity, PullToRefreshListView listView) {
-		listView.setAdapter(createAdapter(items));
-	}
+    protected void shouldConfigureListViewBeforeSetAdapter(PullToRefreshListView view) {
 
-	@Override
-	public void onLoadFinished(Loader<List<E>> loader, List<E> items) {
-		Exception exception = getException(loader);
- 		this.items = items;
-		if (exception != null) {
-			showError();
-		} else {
-			getListAdapter().setItems(this.items);
-			listView.onRefreshComplete();
-			showList();
-		}
+    }
+ 	protected abstract BaseItemListAdapter<E> createAdapter(final List<E> items);
+
+
+ 	public void onListItemClick(ListView l, View v, int position, long id) {
 	}
 
 	@Override
-	public void onLoaderReset(Loader<List<E>> loader) {
-	}
+	public abstract void onRefresh(PullToRefreshBase<ListView> refreshView);
 
-	/**
-	 * Create adapter to display items
-	 * 
-	 * @param items
-	 * @return adapter
-	 */
-	protected abstract BaseItemListAdapter<E> createAdapter(final List<E> items);
+    @Override
+    public void onRequestComplete(List<E> result) {
+        items = result;
+        mItemListAdapter.setItems(result);
+        listView.onRefreshComplete();
+        helper.content();
+    }
 
-	protected void showError() {
-		setEmptyText("加载失败\n点击重试");
- 		hide(listView).hide(progressBar).show(emptyView).fadeIn(emptyView, true);
-	}
+    @Override
+    public void onRequestError(String msg) {
+        listView.onRefreshComplete();
+        helper.empty();
+    }
 
-	/**
-	 * Set the list to be shown
-	 */
-	protected void showList() {
-		setListShown(true, isResumed());
-	}
+    @Override
+    public final void onReload() {
+        onRefresh(listView);
+    }
 
-	/**
-	 * Show exception in a {@link Toast}
-	 * 
-	 * @param e
-	 * @param defaultMessage
-	 */
-	protected void showError(final Exception e, final int defaultMessage) {
-		ToastUtils.show(getActivity(), defaultMessage);
-	}
+    @Override
+    public void onStop() {
+        super.onStop();
+    }
 
-	/**
-	 * Get exception from loader if it provides one by being a
-	 * {@link ThrowableLoader}
-	 * 
-	 * @param loader
-	 * @return exception or null if none provided
-	 */
-	protected Exception getException(final Loader<List<E>> loader) {
-		return ((ThrowableLoader<List<E>>) loader).clearException();
-	}
-
-	/**
-	 * Get {@link ListView}
-	 * 
-	 * @return listView
-	 */
-	public PullToRefreshListView getListView() {
-		return listView;
-	}
-
-	/**
-	 * Get list adapter
-	 * 
-	 * @return list adapter
-	 */
-	@SuppressWarnings("unchecked")
-	protected BaseItemListAdapter<E> getListAdapter() {
-		if (listView != null)
-			return (BaseItemListAdapter<E>) ((HeaderViewListAdapter) listView.getRefreshableView()
-					.getAdapter()).getWrappedAdapter();
-		else
-			return null;
-	}
-
-	/**
-	 * Set list adapter to use on list view
-	 * 
-	 * @param adapter
-	 * @return this fragment
-	 */
-	protected PullToRefeshListFragment<E> setListAdapter(final BaseItemListAdapter<E> adapter) {
-		if (listView != null)
-			listView.setAdapter(adapter);
-		return this;
-	}
-
-	private PullToRefeshListFragment<E> fadeIn(final View view, final boolean animate) {
-		if (view != null) {
-			if (animate) {
-				view.startAnimation(AnimationUtils.loadAnimation(getActivity(),
-						R.anim.activity_open_enter));
-			}
-			else {
-				view.clearAnimation();
-			}
-		}
-		return this;
-	}
-
-	private PullToRefeshListFragment<E> show(final View view) {
-		ViewUtils.setGone(view, false);
-		return this;
-	}
-
-	private PullToRefeshListFragment<E> hide(final View view) {
-		ViewUtils.setGone(view, true);
-		return this;
-	}
-
-	/**
-	 * Set list shown or progress bar show
-	 * 
-	 * @param shown
-	 * @return this fragment
-	 */
-	public PullToRefeshListFragment<E> setListShown(final boolean shown) {
-		return setListShown(shown, true);
-	}
-
-	/**
-	 * Set list shown or progress bar show
-	 * 
-	 * @param shown
-	 * @param animate
-	 * @return this fragment
-	 */
-	public PullToRefeshListFragment<E> setListShown(final boolean shown, final boolean animate) {
-		if (!isUsable())
-			return this;
-
- 		if (shown) {
-			if (!items.isEmpty()) {
-				if (listView.getVisibility()!=View.VISIBLE) {
-					fadeIn(listView, animate);
-				}
-				hide(progressBar).hide(emptyView).show(listView);
-			}
-			else {
-				setEmptyText("没有数据\n点此重试");
-				hide(progressBar).hide(listView).fadeIn(emptyView, animate).show(emptyView);
-			}
-		} else {
-			hide(listView).hide(emptyView).fadeIn(progressBar, animate).show(progressBar);
-		}
-		return this;
-	}
-
-	/**
-	 * Set empty text on list fragment
-	 * 
-	 * @param message
-	 * @return this fragment
-	 */
-	protected PullToRefeshListFragment<E> setEmptyText(final String message) {
-		if (emptyView != null)
-			emptyView.setText(message);
-		return this;
-	}
-
-	/**
-	 * Set empty text on list fragment
-	 * 
-	 * @param resId
-	 * @return this fragment
-	 */
-	protected PullToRefeshListFragment<E> setEmptyText(final int resId) {
-		if (emptyView != null)
-			emptyView.setText(resId);
-		return this;
-	}
-
-	/**
-	 * Callback when a list view item is clicked
-	 * 
-	 * @param l
-	 * @param v
-	 * @param position
-	 * @param id
-	 */
-	public void onListItemClick(ListView l, View v, int position, long id) {
-	}
-
-	/**
-	 * Is this fragment still part of an activity and usable from the UI-thread?
-	 * 
-	 * @return true if usable on the UI-thread, false otherwise
-	 */
-	protected boolean isUsable() {
-		return getActivity() != null;
-	}
-
-	@Override
-	public void onRefresh(PullToRefreshBase<ListView> refreshView) {
- 		getListAdapter().notifyDataSetChanged();
-		getLoaderManager().restartLoader(0, null, this);
-	}
+    public abstract void onCancelRequest();
 }

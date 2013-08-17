@@ -11,7 +11,6 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import java.util.List;
 
 import tk.djcrazy.MyCC98.R;
-import tk.djcrazy.MyCC98.adapter.BaseItemListAdapter;
 import tk.djcrazy.MyCC98.util.ToastUtils;
 import tk.djcrazy.MyCC98.util.ViewUtils;
 import tk.djcrazy.libCC98.util.RequestResultListener;
@@ -20,7 +19,7 @@ import tk.djcrazy.libCC98.util.RequestResultListener;
  * Created by Ding on 13-8-17.
  */
 public
-abstract class NewPagedPullTofreshListFragment<E> extends NewPullToRefeshListFragment<E>
+abstract class PagedPullTofreshListFragment<E> extends PullToRefeshListFragment<E>
         implements PullToRefreshBase.OnLastItemVisibleListener{
     private int currentPage = 1;
     private boolean mIsLoadingMore = false;
@@ -75,6 +74,7 @@ abstract class NewPagedPullTofreshListFragment<E> extends NewPullToRefeshListFra
     @Override
     public void onRequestComplete(List<E> result) {
         super.onRequestComplete(result);
+        ViewUtils.setGone(footView, true);
         mIsLoadingMore = false;
         currentPage = 1;
     }
@@ -82,6 +82,7 @@ abstract class NewPagedPullTofreshListFragment<E> extends NewPullToRefeshListFra
     @Override
     public void onRequestError(String msg) {
         super.onRequestError(msg);
+        ViewUtils.setGone(footView, true);
         mIsLoadingMore = false;
         currentPage = 1;
     }

@@ -4,12 +4,9 @@ import java.util.List;
 
 import tk.djcrazy.MyCC98.adapter.BaseItemListAdapter;
 import tk.djcrazy.MyCC98.adapter.BoardListAdapter;
-import tk.djcrazy.MyCC98.util.ThrowableLoader;
-import tk.djcrazy.libCC98.CachedCC98Service;
 import tk.djcrazy.libCC98.NewCC98Service;
 import tk.djcrazy.libCC98.data.BoardEntity;
 import android.os.Bundle;
-import android.support.v4.content.Loader;
 import android.view.View;
 import android.widget.ListView;
 
@@ -17,7 +14,7 @@ import com.google.inject.Inject;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 
 public class BoardListFragment extends
-		NewPullToRefeshListFragment<BoardEntity> {
+        PullToRefeshListFragment<BoardEntity> {
 	private static final String TAG = "PostListFragment";
 	private static final String BOARD_ID = "boardId";
 	private static final String BOARD_NAME = "boardName";

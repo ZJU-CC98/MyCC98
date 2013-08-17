@@ -5,20 +5,21 @@ import java.util.List;
 import tk.djcrazy.MyCC98.PostContentsJSActivity;
 import tk.djcrazy.MyCC98.adapter.BaseItemListAdapter;
 import tk.djcrazy.MyCC98.adapter.NewTopicListAdapter;
-import tk.djcrazy.MyCC98.util.ThrowableLoader;
-import tk.djcrazy.libCC98.ICC98Service;
+import tk.djcrazy.libCC98.NewCC98Service;
 import tk.djcrazy.libCC98.data.SearchResultEntity;
+import tk.djcrazy.libCC98.util.RequestResultListener;
+
 import android.os.Bundle;
-import android.support.v4.content.Loader;
 import android.view.View;
 import android.widget.ListView;
 
 import com.google.inject.Inject;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
 
-public class PostSearchListFragment extends PagedPullToRefeshListFragment<SearchResultEntity> {
+public class PostSearchListFragment extends PagedPullTofreshListFragment<SearchResultEntity> {
 
 	@Inject
-	private ICC98Service mService;
+	private NewCC98Service mService;
 	private static final String SEARCH_TYPE="search_type";
 	private static final String SEARCH_KEYWORD="search_keyword";
 	private static final String SEARCH_BOARDID="search_boardid";
@@ -26,6 +27,7 @@ public class PostSearchListFragment extends PagedPullToRefeshListFragment<Search
 	private String mType="0";
 	private String mKeyword="";
 	private String mBoardId="0";
+    private int totalPage = 1;
 	
  	public static PostSearchListFragment createFragment(String keyword, String boardId, String type) {
 		PostSearchListFragment fragment = new PostSearchListFragment();
@@ -40,25 +42,13 @@ public class PostSearchListFragment extends PagedPullToRefeshListFragment<Search
  	
  	@Override
  	public void onViewCreated(View view, Bundle savedInstanceState) {
+        mType =  getArguments().getString(SEARCH_TYPE);
+        mKeyword =  getArguments().getString(SEARCH_KEYWORD);
+        mBoardId =  getArguments().getString(SEARCH_BOARDID);
  		super.onViewCreated(view, savedInstanceState);
- 		mType =  getArguments().getString(SEARCH_TYPE);
- 		mKeyword =  getArguments().getString(SEARCH_KEYWORD);
- 		mBoardId =  getArguments().getString(SEARCH_BOARDID);
  	}
-	@Override
-	public Loader<List<SearchResultEntity>> onCreateLoader(int arg0, Bundle arg1) {
-		return new ThrowableLoader<List<SearchResultEntity>>(getActivity(), items) {
 
-			@Override
-			public List<SearchResultEntity> loadData() throws Exception {
-				List<SearchResultEntity> list = mService.searchPost(mKeyword, mBoardId, mType, getListView().getCurrentPage()+1); 
- 				getListView().setTotalPageNumber(list.size()>0? (int)Math.ceil(Integer.parseInt(list.get(0).getTotalResult())*1.0/25):0);
-				return list;
-			}
-		};
-	}
-	
-	@Override
+ 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
 		startActivity(PostContentsJSActivity.createIntent(items.get(position-1).getBoardId(), items.get(position-1).getPostId()));
@@ -68,4 +58,31 @@ public class PostSearchListFragment extends PagedPullToRefeshListFragment<Search
 	protected BaseItemListAdapter<SearchResultEntity> createAdapter(List<SearchResultEntity> items) {
 		return new NewTopicListAdapter(getActivity(), items); 
 	}
+
+    @Override
+    public void onRefresh(PullToRefreshBase<ListView> refreshView) {
+        super.onRefresh(refreshView);
+        mService.submitPostSearch(this.getClass(), mKeyword, mBoardId, mType, 1, this);
+    }
+
+    @Override
+    public void onRequestComplete(List<SearchResultEntity> result) {
+        totalPage = result.size()>0? (int)Math.ceil(Integer.parseInt(result.get(0).getTotalResult())*1.0/25):0;
+        super.onRequestComplete(result);
+    }
+
+    @Override
+    public void onLoadMore(int page, RequestResultListener<List<SearchResultEntity>> listener) {
+        mService.submitPostSearch(this.getClass(), mKeyword, mBoardId, mType, page, listener);
+    }
+
+    @Override
+    public int getTotalPage() {
+        return totalPage;
+    }
+
+    @Override
+    public void onCancelRequest() {
+        mService.cancelRequest(this.getClass());
+    }
 }

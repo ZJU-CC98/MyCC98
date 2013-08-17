@@ -36,6 +36,7 @@ import tk.djcrazy.libCC98.data.HotTopicEntity;
 import tk.djcrazy.libCC98.data.InboxInfo;
 import tk.djcrazy.libCC98.data.LoginType;
 import tk.djcrazy.libCC98.data.PostContentEntity;
+import tk.djcrazy.libCC98.data.PostEntity;
 import tk.djcrazy.libCC98.data.SearchResultEntity;
 import tk.djcrazy.libCC98.data.UserData;
 import tk.djcrazy.libCC98.data.UserProfileEntity;
@@ -422,6 +423,49 @@ public class NewCC98Service {
         request.setTag(tag);
         getApplication().mRequestQueue.add(request);
     }
+
+    public void submitPostList(final Object tag, final String boardId, int pageNumber, final RequestResultListener<List<PostEntity>> listener) {
+        Request request = new StringRequest(mUrlManager.getBoardUrl(boardId, pageNumber),new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    List<PostEntity> list = mCC98Parser.parsePostList(response);
+                    listener.onRequestComplete(list);
+                } catch (Exception e) {
+                    listener.onRequestError(e.getLocalizedMessage());
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                listener.onRequestError(error.getLocalizedMessage());
+            }
+        });
+        request.setTag(tag);
+        getApplication().mRequestQueue.add(request);
+    }
+
+    public void submitPostSearch(final Object tag, String keyword, String boardId, String type, int pageNumber, final RequestResultListener<List<SearchResultEntity>> listener) {
+        Request request = new StringRequest(mUrlManager.getSearchUrl(keyword,boardId, type, pageNumber),new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    List<SearchResultEntity> list = mCC98Parser.parseQueryResult(response);
+                    listener.onRequestComplete(list);
+                } catch (Exception e) {
+                    listener.onRequestError(e.getLocalizedMessage());
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                listener.onRequestError(error.getLocalizedMessage());
+            }
+        });
+        request.setTag(tag);
+        getApplication().mRequestQueue.add(request);
+    }
+
 
     private List<BasicClientCookie> castToAnother(List<Cookie> list) {
         List<BasicClientCookie> res = new ArrayList<BasicClientCookie>();

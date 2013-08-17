@@ -6,26 +6,21 @@ import com.google.inject.Inject;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 
 import android.content.Intent;
-import android.os.Bundle;
-import android.support.v4.content.Loader;
 import android.view.View;
 import android.widget.ListView;
 import tk.djcrazy.MyCC98.PmViewActivity;
 import tk.djcrazy.MyCC98.adapter.BaseItemListAdapter;
 import tk.djcrazy.MyCC98.adapter.PmListViewAdapter;
-import tk.djcrazy.MyCC98.util.ThrowableLoader;
-import tk.djcrazy.libCC98.CachedCC98Service;
 import tk.djcrazy.libCC98.NewCC98Service;
 import tk.djcrazy.libCC98.data.InboxInfo;
 import tk.djcrazy.libCC98.data.PmInfo;
-import tk.djcrazy.libCC98.data.SearchResultEntity;
 import tk.djcrazy.libCC98.util.RequestResultListener;
 
-public class InboxListFragment extends NewPagedPullTofreshListFragment<PmInfo> {
+public class InboxListFragment extends PagedPullTofreshListFragment<PmInfo> {
 
 	@Inject
 	private NewCC98Service service;
-	private int type=0;
+	private int type = 0;
 	private InboxInfo inboxInfo = new InboxInfo(1, 1);
 	public static InboxListFragment createFragment(int type) {
 		InboxListFragment fragment = new InboxListFragment();
