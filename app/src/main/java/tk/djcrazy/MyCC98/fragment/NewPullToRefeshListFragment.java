@@ -71,12 +71,23 @@ abstract class NewPullToRefeshListFragment<E> extends RoboSherlockFragment imple
 			}
 		});
 		listView.setOnRefreshListener(this);
+        listView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
+        listView.setHorizontalScrollBarEnabled(true);
+        listView.setVerticalScrollBarEnabled(true);
+        shouldConfigureListViewBeforeSetAdapter(listView);
         mItemListAdapter = createAdapter(items);
         listView.setAdapter(mItemListAdapter);
-        helper.loading();
-        onRefresh(listView);
+        if (items.size()>0) {
+            helper.content(false);
+        } else {
+            helper.loading();
+            onRefresh(listView);
+        }
    	}
 
+    protected void shouldConfigureListViewBeforeSetAdapter(PullToRefreshListView view) {
+
+    }
  	protected abstract BaseItemListAdapter<E> createAdapter(final List<E> items);
 
 
@@ -87,7 +98,7 @@ abstract class NewPullToRefeshListFragment<E> extends RoboSherlockFragment imple
 	public abstract void onRefresh(PullToRefreshBase<ListView> refreshView);
 
     @Override
-    public final void onRequestComplete(List<E> result) {
+    public void onRequestComplete(List<E> result) {
         items = result;
         mItemListAdapter.setItems(result);
         listView.onRefreshComplete();
@@ -95,7 +106,7 @@ abstract class NewPullToRefeshListFragment<E> extends RoboSherlockFragment imple
     }
 
     @Override
-    public final void onRequestError(String msg) {
+    public void onRequestError(String msg) {
         listView.onRefreshComplete();
         helper.empty();
     }

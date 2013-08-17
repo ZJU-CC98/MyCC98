@@ -97,10 +97,10 @@ public class SearchResultEntity implements Serializable {
  	public void setTotalResult(String totalResult) {
 		this.totalResult = totalResult;
 	}
-	private String boardId;
-	private String postId;
-	private String title;
-	private String authorName; 
-	private Date postTime;
-	private String totalResult;
+	private String boardId ="";
+	private String postId ="";
+	private String title ="";
+	private String authorName ="";
+	private Date postTime = new Date();
+	private String totalResult = "1";
  }

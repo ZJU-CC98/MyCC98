@@ -36,6 +36,7 @@ import tk.djcrazy.libCC98.data.HotTopicEntity;
 import tk.djcrazy.libCC98.data.InboxInfo;
 import tk.djcrazy.libCC98.data.LoginType;
 import tk.djcrazy.libCC98.data.PostContentEntity;
+import tk.djcrazy.libCC98.data.SearchResultEntity;
 import tk.djcrazy.libCC98.data.UserData;
 import tk.djcrazy.libCC98.data.UserProfileEntity;
 import tk.djcrazy.libCC98.exception.NoUserFoundException;
@@ -366,6 +367,26 @@ public class NewCC98Service {
             public void onResponse(String response) {
                 try {
                     List<HotTopicEntity> list = mCC98Parser.parseHotTopicList(response);
+                    listener.onRequestComplete(list);
+                } catch (Exception e) {
+                    listener.onRequestError(e.getLocalizedMessage());
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                listener.onRequestError(error.getLocalizedMessage());
+            }
+        });
+        request.setTag(tag);
+        getApplication().mRequestQueue.add(request);
+    }
+    public void submitNewTopicList(final Object tag,int pageNumber, final RequestResultListener<List<SearchResultEntity>> listener) {
+        Request request = new StringRequest(mUrlManager.getNewPostUrl(pageNumber),new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    List<SearchResultEntity> list = mCC98Parser.parseQueryResult(response);
                     listener.onRequestComplete(list);
                 } catch (Exception e) {
                     listener.onRequestError(e.getLocalizedMessage());

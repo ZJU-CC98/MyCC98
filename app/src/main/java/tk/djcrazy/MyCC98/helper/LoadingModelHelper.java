@@ -40,6 +40,11 @@ public class LoadingModelHelper {
             hide(loadingView).hide(emptyView).show(contentView);
         }
     }
+    public void content(boolean animate) {
+        if (!contentView.isShown()) {
+            hide(loadingView).hide(emptyView).show(contentView, false);
+        }
+    }
 
     public void empty(){
         if (!emptyView.isShown()) {
