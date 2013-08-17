@@ -10,6 +10,7 @@ import tk.djcrazy.MyCC98.adapter.HotTopicListAdapter;
 import tk.djcrazy.MyCC98.application.MyApplication;
 import tk.djcrazy.MyCC98.util.ThrowableLoader;
 import tk.djcrazy.libCC98.CachedCC98Service;
+import tk.djcrazy.libCC98.NewCC98Service;
 import tk.djcrazy.libCC98.SerializableCache;
 import tk.djcrazy.libCC98.data.BoardEntity;
 import tk.djcrazy.libCC98.data.HotTopicEntity;
@@ -23,13 +24,15 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.google.inject.Inject;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
 
-public class HotTopicFragment extends PullToRefeshListFragment<HotTopicEntity> {
+public
+class
+        HotTopicFragment extends NewPullToRefeshListFragment<HotTopicEntity> {
 	private static final String TAG = "HotTopicFragment";
 	@Inject
-	private CachedCC98Service service;
-	private boolean initload = true;
- 
+	private NewCC98Service service;
+
 	 
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
@@ -38,21 +41,20 @@ public class HotTopicFragment extends PullToRefeshListFragment<HotTopicEntity> {
   		getActivity().startActivity(PostContentsJSActivity.createIntent(entity.getBoardId(), entity.getPostId()));
  	}
 
-	@Override
-	public Loader<List<HotTopicEntity>> onCreateLoader(int arg0, Bundle arg1) {
-		return new ThrowableLoader<List<HotTopicEntity>>(getActivity(), items) {
-			@Override
-			public List<HotTopicEntity> loadData() throws Exception {
-				List<HotTopicEntity> ret = service.getHotTopicList(!initload);
-				initload = false;
-				return ret;
-			}
-		};
-	}
 
 	@Override
 	protected BaseItemListAdapter<HotTopicEntity> createAdapter(
 			List<HotTopicEntity> items) {
 		return new HotTopicListAdapter(getActivity(), items);
 	}
+
+    @Override
+    public void onRefresh(PullToRefreshBase<ListView> refreshView) {
+        service.submitHotTopicList(this.getClass(), this);
+    }
+
+    @Override
+    public void onCancelRequest() {
+        service.cancelRequest(this.getClass());
+    }
 }

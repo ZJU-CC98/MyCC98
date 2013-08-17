@@ -31,6 +31,7 @@ import ch.boye.httpclientandroidlib.entity.mime.content.StringBody;
 import ch.boye.httpclientandroidlib.impl.cookie.BasicClientCookie;
 import tk.djcrazy.MyCC98.application.MyApplication;
 import tk.djcrazy.MyCC98.config.Config;
+import tk.djcrazy.libCC98.data.BoardEntity;
 import tk.djcrazy.libCC98.data.HotTopicEntity;
 import tk.djcrazy.libCC98.data.InboxInfo;
 import tk.djcrazy.libCC98.data.LoginType;
@@ -54,25 +55,6 @@ public class NewCC98Service {
     private Application mApplication;
     @Inject
     private NewCC98Parser mCC98Parser;
-
-
-    public void submitHotTopicRequest(Object tag, final RequestResultListener<List<HotTopicEntity>> listRequestResultListener) {
-        Request request = new StringRequest(mUrlManager.getHotTopicUrl(),new Response.Listener<String>() {
-            @Override
-            public void onResponse(String s) {
-                //do some parser job
-                listRequestResultListener.onRequestComplete(null);
-            }
-        },new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                listRequestResultListener.onRequestError(volleyError.getLocalizedMessage());
-            }
-        });
-        request.setTag(tag);
-        getApplication().mRequestQueue.add(request);
-    }
-
 
     public void submitPmInfoRequest(Object tag, int type, int page, final RequestResultListener<InboxInfo> listener) {
         String url = type==0? mUrlManager.getInboxUrl(page):mUrlManager.getOutboxUrl(page);
@@ -352,6 +334,49 @@ public class NewCC98Service {
                 }
             }
         };
+        request.setTag(tag);
+        getApplication().mRequestQueue.add(request);
+    }
+
+
+    public void submitPersonalBoardList(final Object tag, final RequestResultListener<List<BoardEntity>> listener) {
+        Request request = new StringRequest(mUrlManager.getPersonalBoardUrl(),new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    List<BoardEntity> list = mCC98Parser.parsePersonalBoardList(response);
+                    listener.onRequestComplete(list);
+                } catch (Exception e) {
+                    listener.onRequestError(e.getLocalizedMessage());
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                listener.onRequestError(error.getLocalizedMessage());
+            }
+        });
+        request.setTag(tag);
+        getApplication().mRequestQueue.add(request);
+    }
+
+    public void submitHotTopicList(final Object tag, final RequestResultListener<List<HotTopicEntity>> listener) {
+        Request request = new StringRequest(mUrlManager.getHotTopicUrl(),new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    List<HotTopicEntity> list = mCC98Parser.parseHotTopicList(response);
+                    listener.onRequestComplete(list);
+                } catch (Exception e) {
+                    listener.onRequestError(e.getLocalizedMessage());
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                listener.onRequestError(error.getLocalizedMessage());
+            }
+        });
         request.setTag(tag);
         getApplication().mRequestQueue.add(request);
     }
