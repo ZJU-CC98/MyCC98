@@ -29,4 +29,11 @@
      <color name="board_text">#75899e</color>
      <color name="post_text">#708090</color>
      <color name="pm_title_unread">#c0392b</color>
+
+    <color name="pressed_button_start">#4d90fe</color>
+    <color name="pressed_button_end">#ff4681e7</color>
+    <color name="button_start">#4787ed</color>
+    <color name="button_end">#4d90fe</color>
+    <color name="button_stroke">#ff3285fe</color>
+    <color name="pressed_button_stroke">#ff457ee3</color>
 </resources>
