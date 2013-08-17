@@ -284,6 +284,7 @@ public class PullToRefreshListView extends PullToRefreshAdapterViewBase<ListView
 		public InternalListView(Context context, AttributeSet attrs) {
 			super(context, attrs);
 			setTransitionEffect(JazzyHelper.CARDS);
+            super.setShouldOnlyAnimateNewItems(true);
 		}
 
 		@Override
