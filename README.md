@@ -9,7 +9,7 @@ Developed By
 
 Resources
 -------
-±¾³ÌĞòµÄÒ»Ğ©UIÔªËØ²ÉÓÃÁËÍøÂçÉÏµÄËØ²Ä¡£ÆäÖĞ£¬Ç³É«·ç¸ñµÇÂ¼½çÃæ²ÉÓÃÁË¡°Ñ©Çò¾ı¡±Éè¼ÆµÄ98¼ªÏéÎïÕÕÆ¬£»²¿·ÖËØ²ÄÀ´×ÔÓÚÍøÂçÉÏµÄÃâ·Ñ×ÊÔ´£¬Ê×Ò³×ó»®ÕËºÅ¹ÜÀíµÄÉè¼Æ²Î¿¼×Ô[Fuubo][1]¡£Èç¹ûÄú¾õµÃÕâÇÖ·¸ÁËÄúµÄÈ¨Òæ£¬ÇëÁªÏµÎÒÃÇ¡£Í¬Ê±ÎÒÃÇ»¹ÓÃµ½ÁËÒ»Ğ©Android¿ªÔ´¿â£º
+æœ¬ç¨‹åºçš„ä¸€äº›UIå…ƒç´ é‡‡ç”¨äº†ç½‘ç»œä¸Šçš„ç´ æã€‚å…¶ä¸­ï¼Œæµ…è‰²é£æ ¼ç™»å½•ç•Œé¢é‡‡ç”¨äº†â€œé›ªçƒå›â€è®¾è®¡çš„98å‰ç¥¥ç‰©ç…§ç‰‡ï¼›éƒ¨åˆ†ç´ ææ¥è‡ªäºç½‘ç»œä¸Šçš„å…è´¹èµ„æºï¼Œé¦–é¡µå·¦åˆ’è´¦å·ç®¡ç†çš„è®¾è®¡å‚è€ƒè‡ª[Fuubo][1]ã€‚å¦‚æœæ‚¨è§‰å¾—è¿™ä¾µçŠ¯äº†æ‚¨çš„æƒç›Šï¼Œè¯·è”ç³»æˆ‘ä»¬ã€‚åŒæ—¶æˆ‘ä»¬è¿˜ç”¨åˆ°äº†ä¸€äº›Androidå¼€æºåº“ï¼š
 
 This project includes some resources from Inernet, so if you find something not suitable, please contact us immadiately, thanks:
 
@@ -17,8 +17,15 @@ This project includes some resources from Inernet, so if you find something not 
 * [chrisbanes/Android-PullToRefresh][3] 
 * [Nineoldandroids][4]
 * [jfeinstein10/SlidingMenu][5]
+* [Mustache.java][6]
+* [ManuelPeinado/FadingActionBar][7]
+* [twotoasters/JazzyListView][8]
+* [feinstein10/JazzyViewPager][9]
+* [astuetz/PagerSlidingTabStrip][10]
+* [chrisbanes/PhotoView][11]
 
-MyCC98µÄ¿ª·¢¹ı³ÌÀë²»¿ªÕâĞ©¿ªÔ´ÏîÄ¿×÷ÕßÃÇµÄÅ¬Á¦³É¹û£¬¶ÔÒÔÉÏ¸÷¸ö¿ªÔ´ÏîÄ¿µÄ¹±Ï×Õß±íÊ¾×îÖÔĞÄµÄ¸ĞĞ»£¡ 
+
+MyCC98çš„å¼€å‘è¿‡ç¨‹ç¦»ä¸å¼€è¿™äº›å¼€æºé¡¹ç›®ä½œè€…ä»¬çš„åŠªåŠ›æˆæœï¼Œå¯¹ä»¥ä¸Šå„ä¸ªå¼€æºé¡¹ç›®çš„è´¡çŒ®è€…è¡¨ç¤ºæœ€è¡·å¿ƒçš„æ„Ÿè°¢ï¼ 
 
 Special thanks for the above project developers!				 				 
 
@@ -44,3 +51,9 @@ License
 [3]: https://github.com/chrisbanes/Android-PullToRefresh
 [4]: http://nineoldandroids.com/ 
 [5]: https://github.com/jfeinstein10/SlidingMenu
+[6]: https://github.com/spullara/mustache.java
+[7]: https://github.com/ManuelPeinado/FadingActionBar
+[8]: https://github.com/twotoasters/JazzyListView
+[9]: https://github.com/jfeinstein10/JazzyViewPager
+[10]: https://github.com/astuetz/PagerSlidingTabStrip
+[11]: https://github.com/chrisbanes/PhotoView

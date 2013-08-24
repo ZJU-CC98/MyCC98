@@ -18,7 +18,7 @@ public class LoadingModelHelper {
     private View emptyView;
 
     public LoadingModelHelper(View view, final OnReloadListener listener) {
-         contentView = view.findViewById(R.id.loading_content);
+        contentView = view.findViewById(R.id.loading_content);
         emptyView = view.findViewById(android.R.id.empty);
         loadingView = view.findViewById(R.id.pb_loading);
         emptyView.setOnClickListener(new View.OnClickListener() {
