@@ -85,60 +85,9 @@ class SearchBoardFragment extends PullToRefeshListFragment<BoardStatus>  {
 
  	private void toggleFilter() {
  		if (searchContentEditText.getVisibility()==View.GONE) {
- 			mOriginalSearchBarWidth = mSearchBar.getWidth();
- 	        final ViewGroup.LayoutParams lp = mSearchBar.getLayoutParams();
- 	 		ValueAnimator valueAnimator = ValueAnimator.ofInt(mSearchBar.getWidth(), DisplayUtil.dip2px(getActivity(), 200f)).setDuration(300);
- 	 		valueAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
- 	 		valueAnimator.addUpdateListener(new AnimatorUpdateListener() {
-				@Override
-				public void onAnimationUpdate(ValueAnimator arg0) {
-					lp.width =  (Integer) arg0.getAnimatedValue();
-					mSearchBar.setLayoutParams(lp);
-				}
-			});
- 	 		valueAnimator.addListener(new AnimatorListener() {
-				@Override
-				public void onAnimationStart(Animator arg0) {
-				}
-				@Override
-				public void onAnimationRepeat(Animator arg0) {
-				}
-				@Override
-				public void onAnimationEnd(Animator arg0) {
-					ViewUtils.setGone(searchContentEditText, false);
-				}
-				@Override
-				public void onAnimationCancel(Animator arg0) {
-				}
-			});
- 	 		valueAnimator.start();
+            searchContentEditText.setVisibility(View.VISIBLE);
 		} else {
- 	        final ViewGroup.LayoutParams lp = mSearchBar.getLayoutParams();
- 	 		ValueAnimator valueAnimator = ValueAnimator.ofInt(mSearchBar.getWidth(), mOriginalSearchBarWidth).setDuration(300);
- 	 		valueAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
- 	 		valueAnimator.addUpdateListener(new AnimatorUpdateListener() {
-				@Override
-				public void onAnimationUpdate(ValueAnimator arg0) {
-					lp.width =  (Integer) arg0.getAnimatedValue();
-					mSearchBar.setLayoutParams(lp);
-				}
-			});
- 	 		valueAnimator.addListener(new AnimatorListener() {
-				@Override
-				public void onAnimationStart(Animator arg0) {
-				}
-				@Override
-				public void onAnimationRepeat(Animator arg0) {
-				}
-				@Override
-				public void onAnimationEnd(Animator arg0) {
-					ViewUtils.setGone(searchContentEditText, true);
-				}
-				@Override
-				public void onAnimationCancel(Animator arg0) {
-				}
-			});
- 	 		valueAnimator.start();
+            searchContentEditText.setVisibility(View.GONE);
 		}
  	}
 	private void setListeners() {

@@ -42,7 +42,8 @@
             android:layout_marginTop="100dp" 
             android:background="@drawable/tag"
             android:clickable="true"
-            android:gravity="center_vertical">
+            android:gravity="center_vertical"
+            android:animateLayoutChanges="true">
 
             <ImageView
                 android:id="@+id/board_filter"
@@ -52,7 +53,7 @@
 
             <EditText
                 android:id="@+id/search_board_text"
-                android:layout_width="match_parent" 
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:background="@null"
@@ -61,8 +62,8 @@
                 android:textColor="@color/text_light_white"
                 android:textColorHint="@color/text_light_white"
                 android:singleLine="true"
-                android:textSize="13sp" 
-                android:visibility="gone" />
+                android:textSize="13sp"
+                android:visibility="gone"/>
         </LinearLayout>
     </RelativeLayout>
 

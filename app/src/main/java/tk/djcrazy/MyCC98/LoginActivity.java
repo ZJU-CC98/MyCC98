@@ -6,14 +6,18 @@
 
 package tk.djcrazy.MyCC98;
 
+import android.animation.LayoutTransition;
+import android.annotation.TargetApi;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.Button;
@@ -73,14 +77,8 @@ public class LoginActivity extends BaseFragmentActivity implements
     }
 
     private void showLoginField() {
-        final LinearLayout layout = (LinearLayout) findViewById(R.id.login_field);
-        ImageView loginImg = (ImageView) findViewById(R.id.login_img);
-        animate(layout).setDuration(800)
-                .setInterpolator(new AccelerateDecelerateInterpolator())
-                .alpha(1).setStartDelay(1000).start();
-        animate(loginImg).setDuration(800).setStartDelay(400)
-                .setInterpolator(new AccelerateDecelerateInterpolator())
-                .translationY(0).start();
+        final View layout = findViewById(R.id.login_field);
+        layout.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -93,7 +91,12 @@ public class LoginActivity extends BaseFragmentActivity implements
         if (!mNeedLogin && service.getusersInfo().users.size() > 0) {
             forwardToNextActivity();
         } else {
-            showLoginField();
+            mProxyButton.post(new Runnable() {
+                @Override
+                public void run() {
+                    showLoginField();
+                }
+            });
         }
     }
 
