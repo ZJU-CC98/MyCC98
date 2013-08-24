@@ -50,17 +50,23 @@ public class LoadingModelHelper {
     public void content() {
         if (!contentView.isShown()) {
             hide(loadingView).hide(emptyView).show(contentView);
+        } else {
+            hide(loadingView).hide(emptyView);
         }
     }
     public void content(boolean animate) {
         if (!contentView.isShown()) {
-            hide(loadingView).hide(emptyView).show(contentView, false);
+            hide(loadingView).hide(emptyView).show(contentView, animate);
+        } else {
+            hide(loadingView).hide(emptyView);
         }
     }
 
     public void empty(){
         if (!emptyView.isShown()) {
             hide(contentView).hide(loadingView).show(emptyView);
+        } else {
+            hide(loadingView).hide(loadingView);
         }
     }
 
