@@ -91,12 +91,12 @@ public class LoginActivity extends BaseFragmentActivity implements
         if (!mNeedLogin && service.getusersInfo().users.size() > 0) {
             forwardToNextActivity();
         } else {
-            mProxyButton.post(new Runnable() {
+            mProxyButton.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     showLoginField();
                 }
-            });
+            }, 500);
         }
     }
 

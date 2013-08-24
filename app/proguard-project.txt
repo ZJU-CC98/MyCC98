@@ -80,3 +80,7 @@
 -keep class javax.annotation.** { *; }
 -keep class roboguice.** { *; }
 -keep class com.github.**{ *; }
+-keep class tk.djcrazy.MyCC98.application.**{ *; }
+-keep class tk.djcrazy.libCC98.data.**{ *; }
+-keep class tk.djcrazy.libCC98.**{ *; }
+
