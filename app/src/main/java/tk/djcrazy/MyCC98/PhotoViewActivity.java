@@ -106,7 +106,7 @@ public class
 
     @Override
     public void onRequestError(String msg) {
-        ToastUtils.show(this, msg);
+        ToastUtils.alert(this, msg);
     }
 
     /**
@@ -116,7 +116,7 @@ public class
     private void changeRenderTypeIfNessary(Bitmap t) {
         if (t.getHeight() > 2048 || t.getWidth() > 2048) {
             mImageView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-            ToastUtils.show(PhotoViewActivity.this, "图片过大，关闭硬件加速");
+            ToastUtils.info(PhotoViewActivity.this, "图片过大，关闭硬件加速");
         }
     }
 }

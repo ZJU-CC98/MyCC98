@@ -40,7 +40,7 @@ abstract class PagedPullTofreshListFragment<E> extends PullToRefeshListFragment<
 
             @Override
             public void onRequestError(String msg) {
-                ToastUtils.show(getActivity(), msg);
+                ToastUtils.alert(getActivity(), msg);
                 mIsLoadingMore = false;
             }
         };

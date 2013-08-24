@@ -33,9 +33,7 @@ public class AccountListAdapter extends BaseAdapter {
 
 		public ImageView image;
 		public TextView text;
-		public ImageView currentView;
-		private TextView  useProxy;
-		
+ 		private TextView  useProxy;
 	}
 
 	public AccountListAdapter(Context context, UsersInfo usersInfo, List<Bitmap> list) {
@@ -70,8 +68,7 @@ public class AccountListAdapter extends BaseAdapter {
 					.findViewById(R.id.action_item_image);
 			listItemView.text = (TextView) convertView
 					.findViewById(R.id.action_item_text);
-			listItemView.currentView = (ImageView) convertView.findViewById(R.id.current_accept);
-			listItemView.useProxy = (TextView) convertView.findViewById(R.id.use_proxy);
+ 			listItemView.useProxy = (TextView) convertView.findViewById(R.id.use_proxy);
 			convertView.setTag(listItemView);
 		} else {
 			listItemView = (ViewHolder) convertView.getTag();
@@ -79,17 +76,17 @@ public class AccountListAdapter extends BaseAdapter {
  		listItemView.text.setText(mUsersInfo.users.get(position).getUserName());
 		listItemView.image.setImageBitmap(mUserBitmaps.get(position)); 
 		if (mUsersInfo.currentUserIndex==position) {
-			ViewUtils.setGone(listItemView.currentView, false);
+             convertView.setBackgroundResource(R.drawable.current_account_bg);
 		} else {
-			ViewUtils.setGone(listItemView.currentView, true);
+             convertView.setBackgroundResource(R.color.transparent);
 		}
 		
 		if (mUsersInfo.users.get(position).getLoginType()==LoginType.USER_DEFINED) {
 			ViewUtils.setGone(listItemView.useProxy, false);
-			listItemView.useProxy.setText("使用代理登录");
+			listItemView.useProxy.setText("使用代理");
 		} else if (mUsersInfo.users.get(position).getLoginType()==LoginType.RVPN) {
 			ViewUtils.setGone(listItemView.useProxy, false);
-			listItemView.useProxy.setText("使用RVPN登录");
+			listItemView.useProxy.setText("使用RVPN");
 		} else {
 			ViewUtils.setGone(listItemView.useProxy, true);
 		}

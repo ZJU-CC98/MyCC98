@@ -3,6 +3,8 @@ package tk.djcrazy.MyCC98;
 import com.baidu.mobstat.StatService;
 import com.slidingmenu.lib.app.SlidingFragmentActivity;
 
+import de.keyboardsurfer.android.widget.crouton.Crouton;
+
 public class BaseSlidingFragmentActivity extends SlidingFragmentActivity {
 
 	@Override
@@ -16,4 +18,9 @@ public class BaseSlidingFragmentActivity extends SlidingFragmentActivity {
 		super.onPause();
 		 StatService.onPause(this);
 	}
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Crouton.cancelAllCroutons();
+    }
 }

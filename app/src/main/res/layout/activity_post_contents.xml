@@ -4,11 +4,20 @@
     android:layout_height="fill_parent"
     android:background="@color/card_list_bg"
     android:orientation="vertical" >
-
-        <tk.djcrazy.MyCC98.view.ObservableWebView
-            android:id="@+id/post_contents"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:background="@color/card_list_bg" />
- 
+        <FrameLayout
+                android:layout_height="match_parent"
+                android:layout_width="match_parent">
+            <tk.djcrazy.MyCC98.view.ObservableWebView
+                    android:id="@+id/post_contents"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:background="@color/card_list_bg" />
+            <LinearLayout
+                    android:id="@+id/dummy_view"
+                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="@dimen/abs__action_bar_default_height"
+                    android:clickable="false">
+            </LinearLayout>
+        </FrameLayout>
  </LinearLayout>

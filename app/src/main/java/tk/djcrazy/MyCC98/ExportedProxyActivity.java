@@ -3,6 +3,7 @@ package tk.djcrazy.MyCC98;
 import tk.djcrazy.MyCC98.util.ToastUtils;
 import tk.djcrazy.MyCC98.util.UrlUtils;
 import android.os.Bundle;
+import android.widget.Toast;
 
 public class ExportedProxyActivity extends BaseActivity {
 
@@ -15,7 +16,7 @@ public class ExportedProxyActivity extends BaseActivity {
 			startActivity(UrlUtils.getPostContentIntent(url));
 			finish();
 		} else {
-			ToastUtils.show(this, "不合法的链接");
+            Toast.makeText(this, "不合法的链接", Toast.LENGTH_SHORT);
 			finish();
 		}
 	}

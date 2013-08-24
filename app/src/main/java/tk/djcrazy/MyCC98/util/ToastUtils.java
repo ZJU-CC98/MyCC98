@@ -1,67 +1,65 @@
-/*
- * Copyright 2012 GitHub Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package tk.djcrazy.MyCC98.util;
 
-import static android.widget.Toast.LENGTH_SHORT;
 import android.app.Activity;
-import android.app.Application;
-import android.text.TextUtils;
-import android.widget.Toast;
+import android.view.Gravity;
+import android.view.View;
+import android.view.ViewGroup;
 
- 
+import de.keyboardsurfer.android.widget.crouton.Crouton;
+import de.keyboardsurfer.android.widget.crouton.Style;
+
+
 /**
  * Utilities for displaying toast notifications
  */
 public class ToastUtils {
 
-    /**
-     * Show the given message in a {@link Toast}
-     * <p>
-     * This method may be called from any thread
-     *
-     * @param activity
-     * @param message
-     */
-    public static void show(final Activity activity, final String message) {
-        if (activity == null)
-            return;
 
-        if (TextUtils.isEmpty(message))
-            return;
-
-        final Application application = activity.getApplication();
-        activity.runOnUiThread(new Runnable() {
-            public void run() {
-                Toast.makeText(application, message, LENGTH_SHORT).show();
-            }
-        });
+    public static void info(Activity activity, String msg) {
+        Crouton.makeText(activity,msg, Style.INFO).show();
     }
 
-    /**
-     * Show the message with the given resource id in a {@link Toast}
-     * <p>
-     * This method may be called from any thread
-     *
-     * @param activity
-     * @param resId
-     */
-    public static void show(final Activity activity, final int resId) {
-        if (activity == null)
-            return;
-
-        show(activity, activity.getString(resId));
+    public static void alert(Activity activity, String msg) {
+        Crouton.makeText(activity,msg, Style.ALERT).show();
     }
- }
+
+    public static void confirm(Activity activity, String msg) {
+        Crouton.makeText(activity,msg, Style.CONFIRM).show();
+    }
+
+    public static void info(Activity activity, int msgResId) {
+        Crouton.makeText(activity, msgResId, Style.INFO).show();
+    }
+
+    public static void alert(Activity activity, int msgResId) {
+        Crouton.makeText(activity, msgResId, Style.ALERT).show();
+    }
+
+    public static void confirm(Activity activity, int msgResId) {
+        Crouton.makeText(activity, msgResId, Style.CONFIRM).show();
+    }
+
+    public static void info(Activity activity, int msgResId, ViewGroup customView) {
+        Crouton.makeText(activity, msgResId, Style.INFO, customView).show();
+    }
+
+    public static void alert(Activity activity, int msgResId, ViewGroup customView) {
+        Crouton.makeText(activity, msgResId, Style.ALERT, customView).show();
+    }
+
+    public static void confirm(Activity activity, int msgResId, ViewGroup customView) {
+        Crouton.makeText(activity, msgResId, Style.CONFIRM, customView).show();
+    }
+    public static void info(Activity activity, String msg, ViewGroup customView) {
+        Crouton.makeText(activity,msg, Style.INFO, customView).show();
+    }
+
+    public static void alert(Activity activity, String msg, ViewGroup customView) {
+        Crouton.makeText(activity,msg, Style.ALERT, customView).show();
+    }
+
+    public static void confirm(Activity activity, String msg, ViewGroup customView) {
+        Crouton.makeText(activity,msg, Style.CONFIRM, customView).show();
+    }
+
+}

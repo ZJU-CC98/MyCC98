@@ -114,7 +114,7 @@ class ProfileActivity extends BaseFragmentActivity implements
 
     @Override
     public void onRequestError(String msg) {
-        ToastUtils.show(this, msg);
+        ToastUtils.alert(this, msg);
     }
 
     private void findViews() {

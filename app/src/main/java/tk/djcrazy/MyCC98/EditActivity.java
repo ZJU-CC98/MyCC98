@@ -40,6 +40,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.internal.widget.IcsListPopupWindow;
@@ -259,11 +260,7 @@ public class EditActivity extends BaseFragmentActivity implements OnClickListene
 		String contentString = replyContentEditText.getText().toString()
 				+ appendTail;
 		contentString = replaceAllImage(contentString);
-		if (TextHelper.isEmpty(contentString)) {
-			ToastUtils.show(EditActivity.this, "内容不能为空");
-			return;
-		}
-		if (!checkReplyContentLimit(titleString, contentString)) {
+ 		if (!checkReplyContentLimit(titleString, contentString)) {
 			return;
 		}
 		if (requestType == REQUEST_QUOTE_REPLY) {
@@ -466,7 +463,7 @@ public class EditActivity extends BaseFragmentActivity implements OnClickListene
 			ensure();
 			break;
 		case R.id.edit_btn_at:
-			ToastUtils.show(this, "@功能暂未完成");
+			ToastUtils.info(this, "@功能暂未完成");
 			int cursor = replyContentEditText.getSelectionStart();
 			replyContentEditText.getText().insert(cursor, "@");
             friendsListPopupWindow.show();
@@ -495,7 +492,6 @@ public class EditActivity extends BaseFragmentActivity implements OnClickListene
 		}
 	}
 
-	// 第一个参数 是图片要的名称，可以自己取 第二个参数就是 图片资源ID
 	private void setFace(String faceTitle, int faceImg) {
 		int start = replyContentEditText.getSelectionStart();
 		Spannable ss = replyContentEditText.getText().insert(start,
@@ -520,11 +516,11 @@ public class EditActivity extends BaseFragmentActivity implements OnClickListene
 
 	private boolean checkReplyContentLimit(String title, String content) {
 		if (title.getBytes().length > TITLE_MAX_LENGTH) {
-			ToastUtils.show(this, "标题长度超过限制，请修改");
+			ToastUtils.alert(this, "标题长度超过限制，请修改");
 			return false;
 		}
 		if (content.getBytes().length > CONTENT_MAX_LENGTH) {
-			ToastUtils.show(this, "内容超过限制，请修改");
+			ToastUtils.alert(this, "内容超过限制，请修改");
 			return false;
 		}
 		return true;
@@ -545,9 +541,9 @@ public class EditActivity extends BaseFragmentActivity implements OnClickListene
 			startActivityForResult(intent, CAMERA_WITH_DATA);
 
 		} catch (ActivityNotFoundException e) {
-			ToastUtils.show(this, "未找到目标！");
+			ToastUtils.alert(this, "未找到目标！");
 		} catch (IOException e) {
-			ToastUtils.show(this, "未知错误");
+			ToastUtils.alert(this, "未知错误");
 		}
 	}
 
@@ -558,7 +554,7 @@ public class EditActivity extends BaseFragmentActivity implements OnClickListene
 			startActivityForResult(intent, PHOTO_PICKED_WITH_DATA);
 
 		} catch (ActivityNotFoundException e) {
-			ToastUtils.show(this, "未找到目标！");
+			ToastUtils.alert(this, "未找到目标！");
 		}
 	}
 
@@ -593,7 +589,7 @@ public class EditActivity extends BaseFragmentActivity implements OnClickListene
 				}
 				doUploadPicture(mCurrentPhotoFile);
 			} catch (IOException e) {
-				ToastUtils.show(this, "照片处理失败");
+				ToastUtils.alert(this, "照片处理失败");
 				e.printStackTrace();
 			}
 			break;
@@ -604,7 +600,7 @@ public class EditActivity extends BaseFragmentActivity implements OnClickListene
 				}
 				doUploadPicture(mCurrentPhotoFile);
 			} catch (IOException e) {
-				ToastUtils.show(this, "照片处理失败");
+				ToastUtils.alert    (this, "照片处理失败");
 				e.printStackTrace();
 			}
 			break;
@@ -689,7 +685,7 @@ public class EditActivity extends BaseFragmentActivity implements OnClickListene
         protected void onException(Exception e) {
             super.onException(e);
             Log.e(TAG, "", e);
-            ToastUtils.show(context, "上传图片失败，请检查网络或图片");
+            ToastUtils.alert(context, "上传图片失败，请检查网络或图片");
         }
     }
 
@@ -735,14 +731,14 @@ public class EditActivity extends BaseFragmentActivity implements OnClickListene
 
 		@Override
 		protected void onSuccess(Void v) {
-			ToastUtils.show(context, "发表成功");
+            Toast.makeText(context, "发表成功",Toast.LENGTH_SHORT);
 			setResult(Activity.RESULT_OK);
 			context.finish();
 		}
 
 		@Override
 		protected void onException(Exception e) {
-			ToastUtils.show(context, "请求失败，请检查网络或连接");
+			ToastUtils.alert(context, "请求失败，请检查网络或连接");
 		}
 
 	}
@@ -777,7 +773,7 @@ public class EditActivity extends BaseFragmentActivity implements OnClickListene
 		@Override
 		protected void onSuccess(Void v) throws Exception {
 			super.onSuccess(v);
-			ToastUtils.show(context, "发送站短成功");
+			ToastUtils.confirm(context, "发送站短成功");
 			if (requestType == REQUEST_PM) {
 				setResult(Activity.RESULT_OK);
 				context.finish();
@@ -787,7 +783,7 @@ public class EditActivity extends BaseFragmentActivity implements OnClickListene
 		@Override
 		protected void onException(Exception e) {
 			super.onException(e);
-			ToastUtils.show(context, "发送失败，请检查网络连接");
+			ToastUtils.alert(context, "发送失败，请检查网络连接");
 		}
 	}
 

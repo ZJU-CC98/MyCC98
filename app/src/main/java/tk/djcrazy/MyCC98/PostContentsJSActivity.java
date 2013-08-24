@@ -1,34 +1,5 @@
 package tk.djcrazy.MyCC98;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.List;
-
-import org.apache.commons.lang3.StringUtils;
-
-import roboguice.inject.ContentView;
-import roboguice.inject.InjectExtra;
-import roboguice.inject.InjectView;
-import roboguice.util.RoboAsyncTask;
-import tk.djcrazy.MyCC98.template.PostContentTemplateFactory;
-import tk.djcrazy.MyCC98.util.DisplayUtil;
-import tk.djcrazy.MyCC98.util.Intents;
-import tk.djcrazy.MyCC98.util.Intents.Builder;
-import tk.djcrazy.MyCC98.util.ProgressDialogBuilder;
-import tk.djcrazy.MyCC98.util.ProgressRoboAsyncTask;
-import tk.djcrazy.MyCC98.util.ToastUtils;
-import tk.djcrazy.MyCC98.util.UrlUtils;
-import tk.djcrazy.MyCC98.view.ObservableWebView;
-import tk.djcrazy.MyCC98.view.ObservableWebView.OnScrollChangedCallback;
-import tk.djcrazy.libCC98.CachedCC98Service;
-import tk.djcrazy.libCC98.NewCC98Service;
-import tk.djcrazy.libCC98.data.LoginType;
-import tk.djcrazy.libCC98.data.PostContentEntity;
-import tk.djcrazy.libCC98.util.DateFormatUtil;
-import tk.djcrazy.libCC98.util.RequestResultListener;
-import tk.djcrazy.libCC98.util.SerializableCacheUtil;
-
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -48,7 +19,6 @@ import android.text.Html;
 import android.text.InputType;
 import android.util.Log;
 import android.view.GestureDetector;
-import android.view.GestureDetector.OnDoubleTapListener;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -73,6 +43,30 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.google.inject.Inject;
+
+import org.apache.commons.lang3.StringUtils;
+
+import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.List;
+
+import roboguice.inject.ContentView;
+import roboguice.inject.InjectExtra;
+import roboguice.inject.InjectView;
+import tk.djcrazy.MyCC98.template.PostContentTemplateFactory;
+import tk.djcrazy.MyCC98.util.DisplayUtil;
+import tk.djcrazy.MyCC98.util.Intents;
+import tk.djcrazy.MyCC98.util.Intents.Builder;
+import tk.djcrazy.MyCC98.util.ProgressDialogBuilder;
+import tk.djcrazy.MyCC98.util.ToastUtils;
+import tk.djcrazy.MyCC98.util.UrlUtils;
+import tk.djcrazy.MyCC98.view.ObservableWebView;
+import tk.djcrazy.MyCC98.view.ObservableWebView.OnScrollChangedCallback;
+import tk.djcrazy.libCC98.NewCC98Service;
+import tk.djcrazy.libCC98.data.LoginType;
+import tk.djcrazy.libCC98.data.PostContentEntity;
+import tk.djcrazy.libCC98.util.DateFormatUtil;
+import tk.djcrazy.libCC98.util.RequestResultListener;
 
 @ContentView(R.layout.activity_post_contents)
 public class PostContentsJSActivity extends BaseActivity implements
@@ -136,7 +130,7 @@ public class PostContentsJSActivity extends BaseActivity implements
                 }
             });
         } catch (IllegalArgumentException e) {
-			ToastUtils.show(this, "请先登录应用");
+			Toast.makeText(this, "请先登录应用", Toast.LENGTH_SHORT).show();
 			finish();
 		}
 	}
@@ -349,7 +343,7 @@ public class PostContentsJSActivity extends BaseActivity implements
 			intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 			startActivity(intent);
 		} else {
-			ToastUtils.show(this, "已经到第一页啦");
+			showInfoToast("已经到第一页啦");
 		}
 	}
 
@@ -367,7 +361,7 @@ public class PostContentsJSActivity extends BaseActivity implements
 			intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 			startActivity(intent);
 		} else {
-			ToastUtils.show(this, "已经到最后一页啦");
+			showInfoToast("已经到最后一页啦");
 		}
 	}
 
@@ -484,13 +478,13 @@ public class PostContentsJSActivity extends BaseActivity implements
 		service.submitAddFriendRequest(this.getClass(),userName, new RequestResultListener<Boolean>() {
             @Override
             public void onRequestComplete(Boolean result) {
-                ToastUtils.show(PostContentsJSActivity.this, "添加好友成功");
+                showInfoToast("添加好友成功");
                 dialog.dismiss();
             }
 
             @Override
             public void onRequestError(String msg) {
-                ToastUtils.show(PostContentsJSActivity.this, msg);
+                showAlertToast("添加好友成功");
                 dialog.dismiss();
             }
         });
@@ -578,6 +572,21 @@ public class PostContentsJSActivity extends BaseActivity implements
 			}
 		}
 	}
+
+    public void showInfoToast(String content) {
+        if (getSupportActionBar().isShowing()) {
+            ToastUtils.info(this, content, (ViewGroup)findViewById(R.id.dummy_view));
+        } else {
+            ToastUtils.info(this, content);
+        }
+    }
+    public void showAlertToast(String content) {
+        if (getSupportActionBar().isShowing()) {
+            ToastUtils.alert(this, content, (ViewGroup)findViewById(R.id.dummy_view));
+        } else {
+            ToastUtils.alert(this, content);
+        }
+    }
 
 	public class DefaultGestureDetector extends SimpleOnGestureListener {
 		final int FLING_MIN_DISTANCE = DisplayUtil.dip2px(

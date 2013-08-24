@@ -9,8 +9,10 @@
         android:id="@+id/action_item_image"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_margin="10dp"
-        android:layout_marginLeft="5dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="20dp"
         android:scaleType="fitXY" />
 
     <LinearLayout
@@ -31,16 +33,9 @@
             android:id="@+id/use_proxy"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="使用代理登录"
+            android:text="使用代理"
             android:textColor="@color/text_light_white"
             android:textSize="12sp" />
     </LinearLayout>
-
-    <ImageView
-        android:id="@+id/current_accept"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:layout_marginRight="8dp"
-        android:src="@drawable/navigation_accept" />
 
 </LinearLayout>

@@ -142,10 +142,10 @@ public class LoginActivity extends BaseFragmentActivity implements
         mUsername = mUsernameEdit.getText().toString().trim();
         mPassword = mPasswordEdit.getText().toString().trim();
         if (mUsername.equals("")) {
-            ToastUtils.show(this, "用户名不能为空");
+            ToastUtils.alert(this, "用户名不能为空");
             return;
         } else if (mPassword.length() <= 0) {
-            ToastUtils.show(this, "密码不能为空");
+            ToastUtils.alert(this, "密码不能为空");
             return;
         }
         final ProgressDialog dialog = new ProgressDialog(this);
@@ -162,7 +162,7 @@ public class LoginActivity extends BaseFragmentActivity implements
             @Override
             public void onRequestError(String msg) {
                 dialog.dismiss();
-                ToastUtils.show(LoginActivity.this, msg);
+                ToastUtils.alert(LoginActivity.this, msg);
             }
         });
     }
