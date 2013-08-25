@@ -5,21 +5,23 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 
-import tk.djcrazy.MyCC98.HomeActivity;
-import tk.djcrazy.MyCC98.application.MyApplication;
+import java.util.Formatter;
+
 
 /**
  * Created by zsy on 8/14/13.
  */
 public class SysInfo {
-    public static String getSystemSummary(Context context) {
+    public static String getSystemSummary(Context context, String username, String userProfileURL) {
         StringBuilder builder = new StringBuilder("System Info");
         builder.append("\n-------------------------");
-        builder.append("\n* App Version: ").append(getVersionCode(context));
-        builder.append("\n* OS Version: ").append(System.getProperty("os.version")).append(" (").append(Build.VERSION.INCREMENTAL).append(")");
-        builder.append("\n* OS API Level: ").append(Build.VERSION.SDK_INT);
-        builder.append("\n* Device: ").append(Build.DEVICE);
-        builder.append("\n* Model: ").append(Build.MODEL).append(" (").append(Build.PRODUCT).append(")");
+        Formatter formatter = new Formatter(builder);
+        formatter.format("\n* App Version: %d", getVersionCode(context));
+        formatter.format("\n* OS Version: %s (%s)", System.getProperty("os.version"), Build.VERSION.INCREMENTAL);
+        formatter.format("\n* OS API Level: %d", Build.VERSION.SDK_INT);
+        formatter.format("\n* Device: %s", Build.DEVICE);
+        formatter.format("\n* Model: %s (%s)", Build.MODEL, Build.PRODUCT);
+        formatter.format("\n* Reporter: [%s](%s)", username, userProfileURL);
         return builder.toString();
     }
 

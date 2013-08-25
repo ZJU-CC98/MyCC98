@@ -12,6 +12,9 @@ import tk.djcrazy.MyCC98.dialog.AboutDialog;
 import tk.djcrazy.MyCC98.dialog.FeedbackDialog;
 import tk.djcrazy.MyCC98.util.Intents;
 import tk.djcrazy.libCC98.CachedCC98Service;
+import tk.djcrazy.libCC98.ICC98UrlManager;
+import tk.djcrazy.libCC98.data.LoginType;
+
 import android.R.integer;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -53,8 +56,14 @@ public class HomeBehindMenuFragment extends RoboSherlockFragment implements OnIt
 	private Button mSettingButton;
 	@Inject
 	private CachedCC98Service service;
+    @Inject
+    private ICC98UrlManager urlManager;
 	AccountListAdapter adapter;
-	
+
+    private ICC98UrlManager getUrlManager() {
+        return urlManager;
+    }
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -134,6 +143,8 @@ public class HomeBehindMenuFragment extends RoboSherlockFragment implements OnIt
     private void showFeedbackDialog() {
         FragmentManager fm = getActivity().getSupportFragmentManager();
         FeedbackDialog feedbackDialog = new FeedbackDialog();
+        String username = service.getCurrentUserName();
+        feedbackDialog.setUserInfo(username, getUrlManager().getUserProfileUrl(LoginType.NORMAL, username));
         feedbackDialog.show(fm, "feedback_dialog");
     }
 

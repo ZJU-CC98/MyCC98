@@ -42,8 +42,16 @@ public class FeedbackDialog extends RoboSherlockDialogFragment {
     private Button cancelIssue;
     private ProgressDialog progressDialog;
 
+    private String username;
+    private String userProfileURL;
+
     public FeedbackDialog() {
 
+    }
+
+    public void setUserInfo(String username, String userProfileURL) {
+        this.username = username;
+        this.userProfileURL = userProfileURL;
     }
 
     private void finish() {
@@ -51,7 +59,7 @@ public class FeedbackDialog extends RoboSherlockDialogFragment {
     }
 
     private String getIssueBody() {
-        return issueBody.getText().toString() + '\n' + SysInfo.getSystemSummary(getActivity());
+        return issueBody.getText().toString() + '\n' + SysInfo.getSystemSummary(getActivity(), username, userProfileURL);
     }
 
     private void setViews() {
