@@ -15,7 +15,10 @@
  */
 package tk.djcrazy.MyCC98.fragment;
 
+import android.annotation.TargetApi;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,7 +74,10 @@ public abstract class PullToRefeshListFragment<E> extends RoboSherlockFragment i
 			}
 		});
 		listView.setOnRefreshListener(this);
-        listView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
+        listView.getRefreshableView().setFastScrollEnabled(true);
+        if (Build.VERSION.SDK_INT>=11) {
+            fastScrollBarAlwaysVisible();
+        }
         listView.getRefreshableView().setVerticalScrollBarEnabled(true);
         shouldConfigureListViewBeforeSetAdapter(listView);
         listView.setAdapter(createAdapter(items));
@@ -82,6 +88,11 @@ public abstract class PullToRefeshListFragment<E> extends RoboSherlockFragment i
             onRefresh(listView);
         }
    	}
+
+    @TargetApi(11)
+    private void fastScrollBarAlwaysVisible() {
+        listView.getRefreshableView().setFastScrollAlwaysVisible(true);
+    }
 
     protected void shouldConfigureListViewBeforeSetAdapter(PullToRefreshListView view) {
 
@@ -119,7 +130,7 @@ public abstract class PullToRefeshListFragment<E> extends RoboSherlockFragment i
     public void onRequestError(String msg) {
         listView.onRefreshComplete();
         helper.empty();
-    }
+     }
 
     @Override
     public final void onReload() {

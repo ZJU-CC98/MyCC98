@@ -126,9 +126,9 @@ class SearchBoardFragment extends PullToRefeshListFragment<BoardStatus>  {
     @Override
     public void onRequestComplete(List<BoardStatus> result) {
         super.onRequestComplete(result);
-        totalBoards = items;
+        totalBoards = new ArrayList<BoardStatus>(items);
         doSearch(searchContentEditText.getText().toString().trim());
-    }
+     }
 
     @Override
     protected BaseItemListAdapter<BoardStatus> createAdapter(

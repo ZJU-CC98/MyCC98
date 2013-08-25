@@ -475,13 +475,16 @@ public class NewCC98Service {
                     List<BoardStatus> list = mCC98Parser.parseTodayBoardList(response);
                     listener.onRequestComplete(list);
                 } catch (Exception e) {
-                    listener.onRequestError(e.getLocalizedMessage());
+                     e.printStackTrace();
+                    listener.onRequestError("版面列表加载失败");
                 }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                listener.onRequestError(error.getLocalizedMessage());
+                error.printStackTrace();
+                Log.e(this.getClass().getSimpleName(), error.getMessage());
+                listener.onRequestError("版面列表加载失败");
             }
         });
         request.setTag(tag);
