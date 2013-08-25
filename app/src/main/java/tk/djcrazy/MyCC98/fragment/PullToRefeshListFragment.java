@@ -63,10 +63,8 @@ public abstract class PullToRefeshListFragment<E> extends RoboSherlockFragment i
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-        if (helper==null) {
-            helper = new LoadingModelHelper(view,this);
-        }
-		listView = (PullToRefreshListView) view.findViewById(R.id.loading_content);
+        helper = new LoadingModelHelper(view,this);
+ 		listView = (PullToRefreshListView) view.findViewById(R.id.loading_content);
 		listView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -111,7 +109,11 @@ public abstract class PullToRefeshListFragment<E> extends RoboSherlockFragment i
         setItems(result);
         refreshListViewData();
         listView.onRefreshComplete();
-        helper.content();
+        if (result.size()>0){
+            helper.content();
+        }  else {
+            helper.empty();
+        }
     }
 
     protected void setItems(List<E> result) {
@@ -128,8 +130,8 @@ public abstract class PullToRefeshListFragment<E> extends RoboSherlockFragment i
 
     @Override
     public void onRequestError(String msg) {
-        listView.onRefreshComplete();
         helper.empty();
+        listView.onRefreshComplete();
      }
 
     @Override

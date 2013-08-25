@@ -3,8 +3,6 @@ package tk.djcrazy.MyCC98.helper;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 
-import com.handmark.pulltorefresh.library.PullToRefreshBase;
-
 import tk.djcrazy.MyCC98.R;
 import tk.djcrazy.MyCC98.util.ViewUtils;
 
@@ -13,7 +11,7 @@ import tk.djcrazy.MyCC98.util.ViewUtils;
  */
 public class LoadingModelHelper {
 
-     private View contentView;
+    private View contentView;
     private View loadingView;
     private View emptyView;
 
@@ -44,7 +42,7 @@ public class LoadingModelHelper {
     }
 
     public void loading() {
-            hide(contentView).hide(emptyView).show(loadingView, false);
+        hide(contentView).hide(emptyView).show(loadingView, false);
     }
 
     public void content() {
@@ -54,6 +52,7 @@ public class LoadingModelHelper {
             hide(loadingView).hide(emptyView);
         }
     }
+
     public void content(boolean animate) {
         if (!contentView.isShown()) {
             hide(loadingView).hide(emptyView).show(contentView, animate);
@@ -62,26 +61,24 @@ public class LoadingModelHelper {
         }
     }
 
-    public void empty(){
-        if (!emptyView.isShown()) {
-            hide(contentView).hide(loadingView).show(emptyView);
-        } else {
-            hide(loadingView).hide(loadingView);
-        }
+    public void empty() {
+        hide(contentView).hide(loadingView).show(emptyView);
     }
 
     private LoadingModelHelper hide(View view) {
         ViewUtils.setGone(view, true);
         return this;
     }
+
     private LoadingModelHelper show(View view) {
         ViewUtils.setGone(view, false);
         fadeIn(view);
         return this;
     }
+
     private LoadingModelHelper show(View view, boolean animate) {
         ViewUtils.setGone(view, false);
-        if (animate){
+        if (animate) {
             fadeIn(view);
         }
         return this;

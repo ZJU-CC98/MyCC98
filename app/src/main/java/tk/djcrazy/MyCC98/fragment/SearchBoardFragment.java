@@ -31,7 +31,7 @@ public
 class SearchBoardFragment extends PullToRefeshListFragment<BoardStatus>  {
 	private int position = 0;
 	private static final String TAG = "SearchBoardFragment";
-	private List<BoardStatus> totalBoards;
+	private List<BoardStatus> totalBoards = new ArrayList<BoardStatus>();
 
 	@InjectView(R.id.search_board_text) 
 	private EditText searchContentEditText; 
