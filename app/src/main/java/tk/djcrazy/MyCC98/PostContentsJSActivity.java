@@ -49,6 +49,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectExtra;
@@ -77,6 +78,7 @@ public class PostContentsJSActivity extends BaseActivity implements
 	public static final int LAST_PAGE = 32767;
 	// WebView cache max size, in bytes
 	private static final long CACHE_SIZE = 32 * 1024 * 1024;
+    private long activityId = new Random(System.currentTimeMillis()).nextLong();
 
 	@InjectView(R.id.post_contents)
 	private ObservableWebView webView;
@@ -121,7 +123,7 @@ public class PostContentsJSActivity extends BaseActivity implements
 			configureWebView();
 			gestureDetector = new GestureDetector(this,
 					new DefaultGestureDetector());
-            service.submitPostContentRequest(this.getClass(), boardId,
+            service.submitPostContentRequest(activityId, boardId,
                     postId, currPageNum, forceRefresh, this);
             webView.post(new Runnable() {
                 @Override
@@ -143,8 +145,8 @@ public class PostContentsJSActivity extends BaseActivity implements
 		boardId = intent.getStringExtra(Intents.EXTRA_BOARD_ID);
 		currPageNum = intent.getIntExtra(Intents.EXTRA_PAGE_NUMBER, 1);
 		forceRefresh = intent.getBooleanExtra(Intents.EXTRA_FORCE_REFRESH, false);
-        service.cancelRequest(this.getClass());
-        service.submitPostContentRequest(this.getClass(), boardId,
+        service.cancelRequest(activityId);
+        service.submitPostContentRequest(activityId, boardId,
                 postId, currPageNum, forceRefresh, this);
         setRefreshActionButtonState(true);
 	}
@@ -193,7 +195,7 @@ public class PostContentsJSActivity extends BaseActivity implements
     @Override
     protected void onStop() {
         super.onStop();
-        service.cancelRequest(this.getClass());
+        service.cancelRequest(activityId);
     }
 
     @Override
@@ -475,7 +477,7 @@ public class PostContentsJSActivity extends BaseActivity implements
 	private void addFriend(final String userName) {
         final ProgressDialog dialog = ProgressDialogBuilder.buildNew(service, this);
         dialog.show();
-		service.submitAddFriendRequest(this.getClass(),userName, new RequestResultListener<Boolean>() {
+		service.submitAddFriendRequest(activityId,userName, new RequestResultListener<Boolean>() {
             @Override
             public void onRequestComplete(Boolean result) {
                 showInfoToast("添加好友成功");
