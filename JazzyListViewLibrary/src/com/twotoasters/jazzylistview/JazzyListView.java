@@ -9,11 +9,15 @@ public class JazzyListView extends ListView {
     private final JazzyHelper mHelper;
 
     public JazzyListView(Context context) {
-        this(context, null);
+        super(context);
+        mHelper = new JazzyHelper(context, null);
+        super.setOnScrollListener(mHelper);
     }
 
     public JazzyListView(Context context, AttributeSet attrs) {
-        this(context, attrs, 0);
+        super(context, attrs);
+        mHelper = new JazzyHelper(context, attrs);
+        super.setOnScrollListener(mHelper);
     }
 
     public JazzyListView(Context context, AttributeSet attrs, int defStyle) {

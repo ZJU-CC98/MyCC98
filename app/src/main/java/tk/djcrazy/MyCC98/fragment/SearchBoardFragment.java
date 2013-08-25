@@ -9,8 +9,6 @@ import tk.djcrazy.MyCC98.R;
 import tk.djcrazy.MyCC98.adapter.BaseItemListAdapter;
 import tk.djcrazy.MyCC98.adapter.SearchBoardListAdapter;
 import tk.djcrazy.MyCC98.helper.LoadingModelHelper;
-import tk.djcrazy.MyCC98.util.DisplayUtil;
-import tk.djcrazy.MyCC98.util.ViewUtils;
 import tk.djcrazy.libCC98.NewCC98Service;
 import tk.djcrazy.libCC98.data.BoardStatus;
 
@@ -21,7 +19,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -29,16 +26,12 @@ import android.widget.ListView;
 
 import com.google.inject.Inject;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.nineoldandroids.animation.Animator;
-import com.nineoldandroids.animation.Animator.AnimatorListener;
-import com.nineoldandroids.animation.ValueAnimator;
-import com.nineoldandroids.animation.ValueAnimator.AnimatorUpdateListener;
 
 public
 class SearchBoardFragment extends PullToRefeshListFragment<BoardStatus>  {
 	private int position = 0;
 	private static final String TAG = "SearchBoardFragment";
-	private List<BoardStatus> currentResult;
+	private List<BoardStatus> totalBoards;
 
 	@InjectView(R.id.search_board_text) 
 	private EditText searchContentEditText; 
@@ -103,10 +96,10 @@ class SearchBoardFragment extends PullToRefeshListFragment<BoardStatus>  {
 
 	private void doSearch(String string) {
 		if (string.equals("")) {
-			if (items.size() <= 50) {
-				currentResult = items;
+			if (totalBoards.size() <= 50) {
+                setItems(totalBoards);
 			} else {
-				currentResult = items.subList(0, 50);
+				setItems(totalBoards.subList(0, 50));
 			}
 		} else {
 			List<BoardStatus> tmplist = new ArrayList<BoardStatus>();
@@ -116,23 +109,24 @@ class SearchBoardFragment extends PullToRefeshListFragment<BoardStatus>  {
 					tmplist.add(np);
 				}
 			}
-			currentResult = tmplist;
+	    	setItems(tmplist);
 		}
- 	    mItemListAdapter.setItems(currentResult);
+        refreshListViewData();
  	}
  
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
-        getActivity().startActivity(PostListActivity.createIntent(currentResult.get(position-1)
-                .getBoardName(), currentResult.get(position-1)
+        getActivity().startActivity(PostListActivity.createIntent(totalBoards.get(position - 1)
+                .getBoardName(), totalBoards.get(position - 1)
                 .getBoardId()));
     }
 
     @Override
     public void onRequestComplete(List<BoardStatus> result) {
         super.onRequestComplete(result);
+        totalBoards = items;
         doSearch(searchContentEditText.getText().toString().trim());
     }
 

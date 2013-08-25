@@ -21,7 +21,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.BaseAdapter;
+import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.WrapperListAdapter;
 
 import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -36,15 +39,12 @@ import tk.djcrazy.MyCC98.adapter.BaseItemListAdapter;
 import tk.djcrazy.MyCC98.helper.LoadingModelHelper;
 import tk.djcrazy.libCC98.util.RequestResultListener;
 
-public
-abstract class PullToRefeshListFragment<E> extends RoboSherlockFragment implements LoadingModelHelper.OnReloadListener,
+public abstract class PullToRefeshListFragment<E> extends RoboSherlockFragment implements LoadingModelHelper.OnReloadListener,
          OnRefreshListener<ListView>, RequestResultListener<List<E>> {
 
  	protected PullToRefreshListView listView;
 
     protected List<E> items = new ArrayList<E>();
-
-    protected BaseItemListAdapter<E> mItemListAdapter;
 
     protected  LoadingModelHelper helper;
    	@Override
@@ -72,11 +72,9 @@ abstract class PullToRefeshListFragment<E> extends RoboSherlockFragment implemen
 		});
 		listView.setOnRefreshListener(this);
         listView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
-        listView.setHorizontalScrollBarEnabled(true);
-        listView.setVerticalScrollBarEnabled(true);
+        listView.getRefreshableView().setVerticalScrollBarEnabled(true);
         shouldConfigureListViewBeforeSetAdapter(listView);
-        mItemListAdapter = createAdapter(items);
-        listView.setAdapter(mItemListAdapter);
+        listView.setAdapter(createAdapter(items));
         if (items.size()>0) {
             helper.content(false);
         } else {
@@ -99,10 +97,22 @@ abstract class PullToRefeshListFragment<E> extends RoboSherlockFragment implemen
 
     @Override
     public void onRequestComplete(List<E> result) {
-        items = result;
-        mItemListAdapter.setItems(result);
+        setItems(result);
+        refreshListViewData();
         listView.onRefreshComplete();
         helper.content();
+    }
+
+    protected void setItems(List<E> result) {
+        items.clear();
+        items.addAll(result);
+    }
+
+    protected void refreshListViewData() {
+        ListAdapter adapter = listView.getRefreshableView().getAdapter();
+        if (adapter instanceof WrapperListAdapter) {
+            ((BaseAdapter) ((WrapperListAdapter) adapter).getWrappedAdapter()).notifyDataSetChanged();
+        }
     }
 
     @Override

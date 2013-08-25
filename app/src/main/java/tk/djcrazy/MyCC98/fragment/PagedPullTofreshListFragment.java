@@ -11,6 +11,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import java.util.List;
 
 import tk.djcrazy.MyCC98.R;
+import tk.djcrazy.MyCC98.adapter.BaseItemListAdapter;
 import tk.djcrazy.MyCC98.util.ToastUtils;
 import tk.djcrazy.MyCC98.util.ViewUtils;
 import tk.djcrazy.libCC98.util.RequestResultListener;
@@ -34,7 +35,7 @@ abstract class PagedPullTofreshListFragment<E> extends PullToRefeshListFragment<
             public void onRequestComplete(List<E> result) {
                 currentPage++;
                 items.addAll(result);
-                mItemListAdapter.notifyDataSetChanged();
+                refreshListViewData();
                 mIsLoadingMore =false;
             }
 
