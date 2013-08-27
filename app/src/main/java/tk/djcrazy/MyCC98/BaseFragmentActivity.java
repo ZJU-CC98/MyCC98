@@ -4,8 +4,10 @@ import com.baidu.mobstat.StatService;
 import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockFragmentActivity;
 
 import de.keyboardsurfer.android.widget.crouton.Crouton;
+import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
+import me.imid.swipebacklayout.lib.app.SwipeBackFragmentActivity;
 
-public class BaseFragmentActivity extends RoboSherlockFragmentActivity {
+public class BaseFragmentActivity extends SwipeBackFragmentActivity {
 
 	@Override
 	protected void onResume() {

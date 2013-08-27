@@ -30,7 +30,8 @@
         <item name="android:actionModeSplitBackground">@drawable/cab_background_bottom_mycc98</item>
         <item name="android:actionModeCloseButtonStyle">@style/ActionButton.CloseMode.Mycc98</item>
         <item name="@android:windowAnimationStyle">@style/ActivityAnimStyle</item>
-                <!-- Light.DarkActionBar specific -->
+        <item name="android:windowIsTranslucent">true</item>
+        <!-- Light.DarkActionBar specific -->
         <item name="android:actionBarWidgetTheme">@style/Theme.Mycc98.Widget</item>
 
     </style>

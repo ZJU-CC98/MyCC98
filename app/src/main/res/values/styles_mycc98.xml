@@ -31,7 +31,7 @@
         <item name="actionModeCloseButtonStyle">@style/ActionButton.CloseMode.Mycc98</item>
                 <!-- Light.DarkActionBar specific -->
         <item name="actionBarWidgetTheme">@style/Theme.Mycc98.Widget</item>
-
+        <item name="android:windowIsTranslucent">true</item>
     </style>
     
     <style name="Theme.Mycc98.OverLay" parent="Theme.Mycc98">

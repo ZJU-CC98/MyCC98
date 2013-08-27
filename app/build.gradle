@@ -23,7 +23,7 @@ dependencies {
     }
 	compile  project(":AndroidPullToRefreshLibrary")
 	compile  project(":PagerSlidingTabStripLibrary")
-	compile  project(":SlidingMenuLibrary")
+	compile  project(":SwipeBackLayoutLibrary")
  	compile  project(":PhotoViewLibrary")
  	compile  project(":JazzyViewPagerLibrary")
 	compile  project(":FadingActionBarLibrary")
