@@ -96,8 +96,7 @@ public class NewCC98Service {
         },new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                volleyError.printStackTrace();
-                listener.onRequestError(volleyError.getLocalizedMessage());
+                listener.onRequestError("更新遇到问题");
             }
         });
         request.setTag(tag);
@@ -151,11 +150,9 @@ public class NewCC98Service {
             public void onResponse(String response) {
                 try {
                     userData.setCookies(castToAnother(getApplication().mHttpClient.getCookieStore().getCookies()));
-                    UserProfileEntity entity =  mCC98Parser.parseUserProfile(response);
-                    System.out.println(entity);
-                    getUserAvatar2(tag, userData, entity.getUserAvatarLink(), listener);
+                    String avatarLink =  mCC98Parser.parseUserAvatar(response);
+                    getUserAvatar2(tag, userData, avatarLink, listener);
                 } catch (Exception e) {
-                    e.printStackTrace();
                     getApplication().syncUserDataAndHttpClient();
                     listener.onRequestError("解析头像地址失败，请重试");
                 }

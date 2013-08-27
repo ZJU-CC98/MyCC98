@@ -55,7 +55,7 @@ android {
 		debug {
  		}
 		release {
-		    runProguard false
+		    runProguard true
 			proguardFile ('proguard-project.txt')
 			signingConfig signingConfigs.releaseConfig
  		}

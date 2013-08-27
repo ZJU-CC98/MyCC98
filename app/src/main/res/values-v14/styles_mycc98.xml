@@ -29,7 +29,6 @@
         <item name="android:actionModeBackground">@drawable/cab_background_top_mycc98</item>
         <item name="android:actionModeSplitBackground">@drawable/cab_background_bottom_mycc98</item>
         <item name="android:actionModeCloseButtonStyle">@style/ActionButton.CloseMode.Mycc98</item>
-        <item name="@android:windowAnimationStyle">@style/ActivityAnimStyle</item>
         <item name="android:windowIsTranslucent">true</item>
         <!-- Light.DarkActionBar specific -->
         <item name="android:actionBarWidgetTheme">@style/Theme.Mycc98.Widget</item>
@@ -66,12 +65,4 @@
         <item name="android:popupMenuStyle">@style/PopupMenu.Mycc98</item>
         <item name="android:dropDownListViewStyle">@style/DropDownListView.Mycc98</item>
     </style>
-    
-    <style name="ActivityAnimStyle">
-        <item name="@android:activityOpenEnterAnimation">@anim/activity_open_enter</item>
-        <item name="@android:activityOpenExitAnimation">@anim/activity_open_exit</item>
-        <item name="@android:activityCloseEnterAnimation">@anim/activity_close_enter</item>
-        <item name="@android:activityCloseExitAnimation">@anim/activity_close_exit</item>
-  	</style>
-    
 </resources>

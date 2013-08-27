@@ -14,6 +14,11 @@
 # If your project uses WebView with JS, uncomment the following
 # and specify the fully qualified class name to the JavaScript interface
 # class:
+
+-optimizations !code/simplification/arithmetic
+-target 1.6
+-dontoptimize
+
 -keepclassmembers class tk.djcrazy.MyCC98.PostContentsJSActivity {
    public *;
 }
@@ -31,13 +36,11 @@
 -keepattributes Signature
 
 -keep class roboguice.**
--keep class com.google.inject.Binder
--keep class com.google.inject.Key
--keep class com.google.inject.Provider
--keep class com.google.inject.TypeLiteral
+-keep class com.google.**
 -keep class com.github.**
 -keep class com.twitter.**
 -keep class android.support.**
+-keep class com.jfeinstein.**
 
 -keepclassmembers class * { @com.google.inject.Provides *; @android.test.suitebuilder.annotation.* *; void test*(...); }
 
@@ -52,25 +55,16 @@
 }
 
 -keepclassmembers class * { @com.google.inject.Inject <init>(...); }
--keepclassmembers class com.google.inject.assistedinject.FactoryProvider2 { *; }
--keepclassmembers class com.google.** {
-    private void finalizeReferent();
-    protected void finalizeReferent();
-    public void finalizeReferent();
-    void finalizeReferent();
-    
-    private *** startFinalizer(java.lang.Class,java.lang.Object);
-    protected *** startFinalizer(java.lang.Class,java.lang.Object);
-    public *** startFinalizer(java.lang.Class,java.lang.Object);
-    *** startFinalizer(java.lang.Class,java.lang.Object);
-}
 -keepclassmembers class * implements android.os.Parcelable { static android.os.Parcelable$Creator *; }
 -keepclassmembers class * { 
 	@com.google.inject.Inject <init>(...);
 	@com.google.inject.Inject <fields>;
+	@roboguice.inject.InjectView <init>(...);
 	@com.google.inject.InjectView <fields>;
 	@javax.annotation.Nullable <fields>;
 }
+
+-keepclassmembers enum * { *; }
 
 -keepclassmembers class * extends com.actionbarsherlock.ActionBarSherlock { public <init>(...); }
 -renamesourcefileattribute SourceFile

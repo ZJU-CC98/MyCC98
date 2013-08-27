@@ -8,6 +8,7 @@ import tk.djcrazy.libCC98.ICC98Client;
 import tk.djcrazy.libCC98.ICC98Parser;
 import tk.djcrazy.libCC98.ICC98Service;
 import tk.djcrazy.libCC98.ICC98UrlManager;
+import tk.djcrazy.libCC98.NewCC98Service;
 
 import com.google.inject.AbstractModule;
 
@@ -19,5 +20,5 @@ public class MyCC98Module extends AbstractModule{
 		bind(ICC98Parser.class).to(CC98ParserImpl.class);
 		bind(ICC98Service.class).to(CC98ServiceImpl.class);
 		bind(ICC98UrlManager.class).to(CC98UrlManagerImpl.class);
-	}
+ 	}
 }

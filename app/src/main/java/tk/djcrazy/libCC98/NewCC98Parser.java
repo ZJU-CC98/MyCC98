@@ -272,6 +272,19 @@ public class NewCC98Parser {
 		return nList;
 	}
 
+
+    public String parseUserAvatar(String html) {
+        try {
+            String url = getMatchedString(USER_PROFILE_AVATAR_REGEX, html);
+            if (!url.startsWith("http") && !url.startsWith("ftp")) {
+                url = cc98UrlManager.getClientUrl() + url;
+            }
+            return url;
+        } catch (Exception e) {
+              return cc98UrlManager.getClientUrl() + "PresetFace/male_1.gif";
+        }
+    }
+
 	/**
 	 * @author DJ
 	 * @param html

@@ -32,6 +32,10 @@
                 <!-- Light.DarkActionBar specific -->
         <item name="actionBarWidgetTheme">@style/Theme.Mycc98.Widget</item>
         <item name="android:windowIsTranslucent">true</item>
+        <item name="@android:activityOpenEnterAnimation">@anim/activity_open_enter</item>
+        <item name="@android:activityOpenExitAnimation">@anim/activity_open_exit</item>
+        <item name="@android:activityCloseEnterAnimation">@anim/activity_close_enter</item>
+        <item name="@android:activityCloseExitAnimation">@anim/activity_close_exit</item>
     </style>
     
     <style name="Theme.Mycc98.OverLay" parent="Theme.Mycc98">
