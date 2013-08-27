@@ -38,6 +38,7 @@
 -keep class com.github.**
 -keep class com.twitter.**
 -keep class android.support.**
+-keep class ch.boye.**
 
 -keepclassmembers class * { @com.google.inject.Provides *; @android.test.suitebuilder.annotation.* *; void test*(...); }
 
