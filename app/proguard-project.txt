@@ -14,6 +14,11 @@
 # If your project uses WebView with JS, uncomment the following
 # and specify the fully qualified class name to the JavaScript interface
 # class:
+
+-optimizations !code/simplification/arithmetic
+-target 1.6
+-dontoptimize
+
 -keepclassmembers class tk.djcrazy.MyCC98.PostContentsJSActivity {
    public *;
 }
@@ -71,6 +76,5 @@
 -keep class roboguice.** { *; }
 -keep class com.github.**{ *; }
 -keep class tk.djcrazy.MyCC98.application.**{ *; }
--keep class tk.djcrazy.libCC98.data.**{ *; }
--keep class tk.djcrazy.libCC98.**{ *; }
+-keep class tk.djcrazy.libCC98.** { *; }
 

@@ -106,7 +106,6 @@ public class MyApplication extends Application {
         try {
             getSharedPreferences(USERS_STRING_INFO, MODE_PRIVATE).edit()
                     .putString(USERS_STRING_INFO, mGson.toJson(usersInfo)).commit();
-            System.out.println(mGson.toJson(usersInfo));
             for (int i = 0; i < userAvatars.size(); i++) {
                 userAvatars.get(i).compress(Bitmap.CompressFormat.PNG, 70,
                         openFileOutput(USER_AVATAR_PREFIX + i, MODE_PRIVATE));
