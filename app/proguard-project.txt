@@ -14,11 +14,6 @@
 # If your project uses WebView with JS, uncomment the following
 # and specify the fully qualified class name to the JavaScript interface
 # class:
-
--optimizations !code/simplification/arithmetic
--target 1.6
--dontoptimize
-
 -keepclassmembers class tk.djcrazy.MyCC98.PostContentsJSActivity {
    public *;
 }
@@ -41,6 +36,7 @@
 -keep class com.twitter.**
 -keep class android.support.**
 -keep class com.jfeinstein.**
+-keep class ch.boye.**
 
 -keepclassmembers class * { @com.google.inject.Provides *; @android.test.suitebuilder.annotation.* *; void test*(...); }
 
