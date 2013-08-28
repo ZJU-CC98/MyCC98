@@ -226,12 +226,21 @@ public class CC98UrlManagerImpl implements ICC98UrlManager {
 				+ rootID + "&star=1";
 	}
 
-	@Override
-	public String getClientUrl(LoginType type) {
-		if (type==LoginType.USER_DEFINED) {
-			return getProxyUrl();
-		} else {
-			return CC98;
-		}
-	}
+    @Override
+    public String getClientUrl(LoginType type) {
+        if (type==LoginType.USER_DEFINED) {
+            return getProxyUrl();
+        } else {
+            return CC98;
+        }
+    }
+
+    @Override
+    public String getClientUrl(LoginType type, String proxyHost) {
+        if (type==LoginType.USER_DEFINED) {
+            return proxyHost;
+        } else {
+            return CC98;
+        }
+    }
 }

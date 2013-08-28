@@ -57,9 +57,11 @@ public interface ICC98UrlManager {
 	
 	public String getCC98PostUrl(String boardId, String postId, int pageNum);
 
-	/**
-	 * @return the hotTopicUrl
-	 */
+    public String getClientUrl(LoginType type, String proxyHost);
+
+        /**
+         * @return the hotTopicUrl
+         */
 	public String getHotTopicUrl();
 
 	/**

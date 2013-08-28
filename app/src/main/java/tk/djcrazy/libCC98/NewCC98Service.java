@@ -150,7 +150,7 @@ public class NewCC98Service {
             public void onResponse(String response) {
                 try {
                     userData.setCookies(castToAnother(getApplication().mHttpClient.getCookieStore().getCookies()));
-                    String avatarLink =  mCC98Parser.parseUserAvatar(response);
+                    String avatarLink =  mCC98Parser.parseUserAvatar(response, userData.getLoginType(), userData.getProxyHost());
                     getUserAvatar2(tag, userData, avatarLink, listener);
                 } catch (Exception e) {
                     getApplication().syncUserDataAndHttpClient();

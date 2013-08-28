@@ -20,6 +20,7 @@ import tk.djcrazy.libCC98.data.BoardStatus;
 import tk.djcrazy.libCC98.data.Gender;
 import tk.djcrazy.libCC98.data.HotTopicEntity;
 import tk.djcrazy.libCC98.data.InboxInfo;
+import tk.djcrazy.libCC98.data.LoginType;
 import tk.djcrazy.libCC98.data.PmInfo;
 import tk.djcrazy.libCC98.data.PostContentEntity;
 import tk.djcrazy.libCC98.data.PostEntity;
@@ -273,15 +274,15 @@ public class NewCC98Parser {
 	}
 
 
-    public String parseUserAvatar(String html) {
+    public String parseUserAvatar(String html, LoginType  loginType, String proxyHost) {
         try {
             String url = getMatchedString(USER_PROFILE_AVATAR_REGEX, html);
             if (!url.startsWith("http") && !url.startsWith("ftp")) {
-                url = cc98UrlManager.getClientUrl() + url;
+                url = cc98UrlManager.getClientUrl(loginType, proxyHost) + url;
             }
             return url;
         } catch (Exception e) {
-              return cc98UrlManager.getClientUrl() + "PresetFace/male_1.gif";
+              return cc98UrlManager.getClientUrl(loginType, proxyHost) + "PresetFace/male_1.gif";
         }
     }
 
