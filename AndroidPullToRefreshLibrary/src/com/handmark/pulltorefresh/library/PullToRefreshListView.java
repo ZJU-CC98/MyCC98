@@ -277,12 +277,14 @@ public class PullToRefreshListView extends PullToRefreshAdapterViewBase<ListView
 		}
 	}
 
-	protected class InternalListView extends ListView implements EmptyViewMethodAccessor {
+	protected class InternalListView extends JazzyListView implements EmptyViewMethodAccessor {
 
 		private boolean mAddedLvFooter = false;
 
 		public InternalListView(Context context, AttributeSet attrs) {
 			super(context, attrs);
+            setTransitionEffect(JazzyHelper.CARDS);
+            setShouldOnlyAnimateNewItems(true);
  		}
 
 		@Override
