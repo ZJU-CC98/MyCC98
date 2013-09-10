@@ -58,7 +58,7 @@ public class CC98ParseRepository {
  	public static final String LIST_BOARD_LAST_REPLY_BOARDID_REGEX = "(?<=dispbbs\\.asp\\?Boardid=)\\d{1,5}?(?=&)";
 
  	//user profile
- 	public static final String USER_PROFILE_AVATAR_REGEX = "(?<=&nbsp;<img src=).*?(?= )";
+ 	public static final String USER_PROFILE_AVATAR_REGEX = "(?<=&nbsp;<img src=').*?(?=' )";
  	public static final String USER_PROFILE_GENERAL_PROFILE_REGEX = "用户头衔：.*?最后登录：.*?<br>";
  	public static final String USER_PROFILE_PERSON_PROFILE_REGEX = "性 别.*?主 页.*?</font>";
  	public static final String USER_PROFILE_BBS_MASTER_INFO_REGEX = "(?<=<font align=left>)论坛职务：</font><br>.*?(?=<td  class=tablebody1)";

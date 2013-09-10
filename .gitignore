@@ -10,7 +10,6 @@
 
 
 # generated files
-bin/
 gen/
 build/
 proguard/

@@ -151,7 +151,7 @@ public class NewCC98Service {
                 try {
                     userData.setCookies(castToAnother(getApplication().mHttpClient.getCookieStore().getCookies()));
                     String avatarLink =  mCC98Parser.parseUserAvatar(response, userData.getLoginType(), userData.getProxyHost());
-                    getUserAvatar2(tag, userData, avatarLink, listener);
+                     getUserAvatar2(tag, userData, avatarLink, listener);
                 } catch (Exception e) {
                     getApplication().syncUserDataAndHttpClient();
                     listener.onRequestError("解析头像地址失败，请重试");
@@ -177,6 +177,7 @@ public class NewCC98Service {
         }, 200, 200, Bitmap.Config.ARGB_8888, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                Log.d(this.getClass().getSimpleName(),"download image failed", error);
                 getApplication().syncUserDataAndHttpClient();
                 listener.onRequestError("下载头像失败，请重试");
             }
