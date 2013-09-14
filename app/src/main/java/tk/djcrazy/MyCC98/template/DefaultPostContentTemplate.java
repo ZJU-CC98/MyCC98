@@ -37,10 +37,7 @@ public class DefaultPostContentTemplate implements PostcontentTemplate {
 			replaceVariable("${face}", builder, entity.getPostFace());
 			replaceVariable("${content}", builder, entity.getPostContent());
 			replaceVariable("${i}", builder,  String.valueOf(i));
-			replaceVariable("${i}", builder,  String.valueOf(i));
-			replaceVariable("${i}", builder,  String.valueOf(i));
-			replaceVariable("${i}", builder,  String.valueOf(i));
-		}
+ 		}
 		builder.append(last);
 		return builder.toString();
 	}

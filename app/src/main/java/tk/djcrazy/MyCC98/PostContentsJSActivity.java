@@ -289,7 +289,6 @@ public class PostContentsJSActivity extends BaseActivity implements
 
 			@Override
 			public boolean shouldOverrideUrlLoading(WebView view, String url) {
-				Log.i(TAG, "shouldOverrideUrlLoading:" + url);
 				if (!url.startsWith("http")) {
 					url = service.getDomain() + url;
 				}
@@ -430,15 +429,26 @@ public class PostContentsJSActivity extends BaseActivity implements
 		startActivity(intent);
 	}
 
-	public void showContentDialog(final int index, int which) {
+    public void showContextMenu(final int index) {
+        final CharSequence[] items = {"引用", "站短", "加为好友","查看", "取消"};
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("选择操作");
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int item) {
+                showContentDialog(index, item);
+             }
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+	private void showContentDialog(final int index, int which) {
 		final PostContentEntity item = mContentEntities.get(index);
 		switch (which) {
-		case 0: {
+		case 0:
 			// quote & reply
 			String tmp = item.getPostContent().replaceAll("(<br>|<BR>)", "\n");
 			quoteReply(item.getUserName(), DateFormatUtil.convertDateToString(
 					item.getPostTime(), false), tmp, index, currPageNum);
-		}
 			break;
 		case 1:
 			// send pm
@@ -470,7 +480,7 @@ public class PostContentsJSActivity extends BaseActivity implements
 			// view user info
 			viewUserInfo(item.getUserName());
 			break;
- 		case 5:
+ 		case 4:
 			// cancel
 			break;
 		}

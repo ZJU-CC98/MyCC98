@@ -36,13 +36,9 @@ public class LifetoyPostContentTemplate implements PostcontentTemplate {
 			replaceVariable("${time}", builder,DateFormatUtil.convertDateToString(entity.getPostTime(), true));
 			replaceVariable("${face}", builder, entity.getPostFace());
 			replaceVariable("${content}", builder, entity.getPostContent());
-			replaceVariable("${i}", builder,  String.valueOf(i));
-			replaceVariable("${i}", builder,  String.valueOf(i));
-			replaceVariable("${i}", builder,  String.valueOf(i));
-			replaceVariable("${i}", builder,  String.valueOf(i));
-		}
+ 			replaceVariable("${i}", builder,  String.valueOf(i));
+ 		}
 		builder.append(last);
-		Log.d("LifetoyPostContentTemplate", builder.toString());
 		return builder.toString();
 	}
 
@@ -64,8 +60,7 @@ public class LifetoyPostContentTemplate implements PostcontentTemplate {
 				middle = mContent.substring(mContent.indexOf("$foreach$")+9, mContent.indexOf("$endeach$"));
 				last = mContent.substring(mContent.indexOf("$endeach$")+9);
 			} catch (IOException e) {
-				e.printStackTrace();
-	 			throw new RuntimeException(e.getMessage());
+ 	 			throw new RuntimeException(e.getMessage());
 			}
 		}
 	}
