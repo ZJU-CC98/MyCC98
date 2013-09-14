@@ -180,6 +180,7 @@ public class EditActivity extends BaseFragmentActivity implements OnClickListene
         setupListeners();
         mEmotionGrid.setAdapter(new EmotionGridViewAdapter(this));
         configurePopupWindow();
+        replyContentEditText.post(new Runnable() { public void run() { replyContentEditText.requestFocus(); } });
     }
 
     private void configurePopupWindow() {
@@ -198,10 +199,8 @@ public class EditActivity extends BaseFragmentActivity implements OnClickListene
         actionBar.setLogo(new BitmapDrawable(getResources(), service.getCurrentUserAvatar()));
         if (requestType == REQUEST_REPLY) {
             actionBar.setTitle("回复：" + postName);
-            replyContentEditText.requestFocus();
-        } else if (requestType == REQUEST_QUOTE_REPLY) {
+         } else if (requestType == REQUEST_QUOTE_REPLY) {
             actionBar.setTitle("回复：" + postName);
-            replyContentEditText.requestFocus();
             replyUserPostContent = replyUserPostContent.replaceAll(
                     "<.*?>|searchubb.*?;", "");
             replyContentEditText.setText(generateQuoteContent());
