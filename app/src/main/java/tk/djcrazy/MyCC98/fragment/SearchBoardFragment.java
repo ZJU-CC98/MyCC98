@@ -118,8 +118,8 @@ class SearchBoardFragment extends PullToRefeshListFragment<BoardStatus>  {
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
-        getActivity().startActivity(PostListActivity.createIntent(totalBoards.get(position - 1)
-                .getBoardName(), totalBoards.get(position - 1)
+        getActivity().startActivity(PostListActivity.createIntent(items.get(position - 1)
+                .getBoardName(), items.get(position - 1)
                 .getBoardId()));
     }
 

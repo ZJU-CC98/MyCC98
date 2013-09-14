@@ -260,13 +260,14 @@ public class PostContentsJSActivity extends BaseActivity implements
 				SettingsActivity.ENABLE_CACHE, true);
 		boolean showImage = sharedPref.getBoolean(SettingsActivity.SHOW_IMAGE,
 				true);
-		WebSettings webSettings = webView.getSettings();
+		final WebSettings webSettings = webView.getSettings();
 		webSettings.setJavaScriptEnabled(true);
 		webSettings.setPluginsEnabled(true);
 		webSettings.setDefaultFontSize(14);
 		webSettings.setLoadsImagesAutomatically(showImage);
 		webSettings.setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
 		webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
+        webSettings.setBlockNetworkImage(true);
 		if (enableCache) {
 			webSettings.setAppCacheMaxSize(CACHE_SIZE);
 			webSettings.setAllowFileAccess(true);
@@ -283,6 +284,7 @@ public class PostContentsJSActivity extends BaseActivity implements
 			@Override
 			public void onPageFinished(WebView view, String url) {
 				super.onPageFinished(view, url);
+                webSettings.setBlockNetworkImage(false);
 			}
 
 			@Override
