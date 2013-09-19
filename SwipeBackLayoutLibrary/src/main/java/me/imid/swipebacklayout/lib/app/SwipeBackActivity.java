@@ -6,13 +6,17 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 
-import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockActivity;
+import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockFragmentActivity;
 
 import me.imid.swipebacklayout.lib.SwipeBackLayout;
 
-public class SwipeBackActivity extends RoboSherlockActivity {
+public class SwipeBackActivity extends RoboSherlockFragmentActivity {
 
     private SwipeBackLayout mSwipeBackLayout;
+
+    private boolean mOverrideExitAniamtion = true;
+
+    private boolean mIsFinishing;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,5 +46,36 @@ public class SwipeBackActivity extends RoboSherlockActivity {
 
     public void setSwipeBackEnable(boolean enable) {
         mSwipeBackLayout.setEnableGesture(enable);
+    }
+
+    /**
+     * Override Exit Animation
+     * 
+     * @param override
+     */
+    public void setOverrideExitAniamtion(boolean override) {
+        mOverrideExitAniamtion = override;
+    }
+
+    /**
+     * Scroll out contentView and finish the activity
+     */
+    public void scrollToFinishActivity() {
+        mSwipeBackLayout.scrollToFinishActivity();
+    }
+
+    public void doFinish() {
+        super.finish();
+    }
+
+    @Override
+    public void finish() {
+        if (mOverrideExitAniamtion && !mIsFinishing) {
+            scrollToFinishActivity();
+            mIsFinishing = true;
+            return;
+        }
+        mIsFinishing = false;
+        doFinish();
     }
 }

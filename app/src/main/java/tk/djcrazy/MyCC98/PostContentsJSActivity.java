@@ -278,7 +278,7 @@ public class PostContentsJSActivity extends BaseActivity implements
 		}
 		webSettings.setAppCacheEnabled(enableCache);
 		webView.setOnScrollChangedCallback(this);
-		webView.addJavascriptInterface(this, JS_INTERFACE);
+ 		webView.addJavascriptInterface(this, JS_INTERFACE);
  		setWebChromeClient();
 		webView.setWebViewClient(new WebViewClient() {
 			@Override

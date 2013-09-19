@@ -7,7 +7,7 @@ import de.keyboardsurfer.android.widget.crouton.Crouton;
 import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
 import me.imid.swipebacklayout.lib.app.SwipeBackFragmentActivity;
 
-public class BaseFragmentActivity extends SwipeBackFragmentActivity {
+public class BaseFragmentActivity extends SwipeBackActivity {
 
 	@Override
 	protected void onResume() {
@@ -25,5 +25,4 @@ public class BaseFragmentActivity extends SwipeBackFragmentActivity {
         super.onDestroy();
         Crouton.cancelAllCroutons();
     }
-
 }

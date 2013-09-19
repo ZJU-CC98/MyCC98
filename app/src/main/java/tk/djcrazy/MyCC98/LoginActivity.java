@@ -73,7 +73,7 @@ public class LoginActivity extends BaseFragmentActivity implements
         Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
-        finish();
+        doFinish();
     }
 
     private void showLoginField() {

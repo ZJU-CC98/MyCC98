@@ -23,4 +23,11 @@ public class BaseSlidingFragmentActivity extends SlidingFragmentActivity {
         super.onDestroy();
         Crouton.cancelAllCroutons();
     }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.activity_close_enter,R.anim.activity_close_exit);
+    }
+
 }
