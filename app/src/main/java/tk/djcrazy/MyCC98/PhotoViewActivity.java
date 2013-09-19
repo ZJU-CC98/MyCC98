@@ -82,7 +82,9 @@ public class
         mImageView.setImageBitmap(result);
         ViewUtils.setGone(mImageView, false);
         PhotoViewAttacher mAttacher = new PhotoViewAttacher(mImageView);
-        mAttacher.setMaxScale(Math.max(result.getHeight(), result.getWidth()) / 100);
+        mAttacher.setMaxScale((float)Math.max(
+                Math.max(result.getHeight(), result.getWidth()) / 100,
+                mAttacher.getMidScale()*1.5));
         mAttacher.setOnViewTapListener(new OnViewTapListener() {
             @SuppressLint("NewApi")
             @Override
