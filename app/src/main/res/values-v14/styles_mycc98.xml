@@ -32,6 +32,7 @@
         <item name="android:windowIsTranslucent">true</item>
         <!-- Light.DarkActionBar specific -->
         <item name="android:actionBarWidgetTheme">@style/Theme.Mycc98.Widget</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Translucent</item>
         <item name="@android:activityOpenEnterAnimation">@anim/activity_open_enter</item>
         <item name="@android:activityOpenExitAnimation">@anim/activity_open_exit</item>
         <item name="@android:activityCloseEnterAnimation">@anim/activity_close_enter</item>

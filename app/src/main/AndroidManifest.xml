@@ -63,7 +63,8 @@
         </activity>
         <activity
             android:name=".PostListActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize" >
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="user">
             <intent-filter>
                 <action android:name="tk.djcrazy.mycc98.post_list.VIEW" />
 
@@ -76,7 +77,8 @@
         </activity>
         <activity
             android:name=".BoardListActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize" >
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="user">
             <intent-filter>
                 <action android:name="tk.djcrazy.mycc98.board_list.VIEW" />
 
@@ -91,6 +93,7 @@
             android:name=".PhotoViewActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:hardwareAccelerated="true"
+            android:screenOrientation="user"
             android:theme="@style/Theme.Mycc98.OverLay" >
             <intent-filter>
                 <action android:name="tk.djcrazy.mycc98.photo.VIEW" />
@@ -101,15 +104,18 @@
         <activity
             android:name=".EditActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:windowSoftInputMode="adjustResize" >
+            android:windowSoftInputMode="adjustResize"
+            android:screenOrientation="user">
         </activity>
         <activity
             android:name=".PmActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize" >
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="user">
         </activity>
         <activity
             android:name=".PmViewActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize" >
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="user">
             <intent-filter>
                 <action android:name="tk.djcrazy.mycc98.pm.VIEW" />
 
@@ -121,7 +127,8 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="false"
             android:theme="@style/Theme.Mycc98.OverLay"
-            android:uiOptions="splitActionBarWhenNarrow" >
+            android:uiOptions="splitActionBarWhenNarrow"
+            android:screenOrientation="user">
             <intent-filter>
                 <action android:name="tk.djcrazy.mycc98.post_content.VIEW" />
 
@@ -141,14 +148,11 @@
                 <data android:scheme="http"  android:host="www.cc98.org" android:pathPattern=".*dispbbs.*"/>
                 </intent-filter>
         </activity>
-        <activity
-            android:name=".PreviewActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize" >
-        </activity>
-        <activity
+         <activity
             android:name=".PostSearchActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:exported="false" >
+            android:exported="false"
+             android:screenOrientation="user">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
@@ -160,12 +164,14 @@
         <activity
             android:name=".ProfileActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:theme="@style/Theme.Mycc98.OverLay">
+            android:theme="@style/Theme.Mycc98.OverLay"
+            android:screenOrientation="user">
         </activity>
         <activity
             android:name=".HomeActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:windowSoftInputMode="stateHidden|adjustPan" >
+            android:windowSoftInputMode="stateHidden|adjustPan"
+            android:screenOrientation="user">
             <meta-data
                 android:name="android.app.default_searchable"
                 android:value=".PostSearchActivity" />
@@ -173,17 +179,14 @@
         <activity
             android:name=".SettingsActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:windowSoftInputMode="stateHidden|adjustPan" >
+            android:windowSoftInputMode="stateHidden|adjustPan"
+            android:screenOrientation="user">
         </activity>
 
         <service
             android:name=".service.NewVersionDownloadService"
             android:exported="false" >
         </service>
-
-        <service
-                android:name="com.octo.android.robospice.UncachedSpiceService"
-                android:exported="false" />
-    </application>
+     </application>
 
 </manifest>

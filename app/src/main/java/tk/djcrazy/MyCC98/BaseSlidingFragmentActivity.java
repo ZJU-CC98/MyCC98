@@ -1,5 +1,7 @@
 package tk.djcrazy.MyCC98;
 
+import android.content.Intent;
+
 import com.baidu.mobstat.StatService;
 import com.slidingmenu.lib.app.SlidingFragmentActivity;
 
@@ -23,11 +25,4 @@ public class BaseSlidingFragmentActivity extends SlidingFragmentActivity {
         super.onDestroy();
         Crouton.cancelAllCroutons();
     }
-
-    @Override
-    public void finish() {
-        super.finish();
-        overridePendingTransition(R.anim.activity_close_enter,R.anim.activity_close_exit);
-    }
-
 }

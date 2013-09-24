@@ -1,11 +1,11 @@
 package tk.djcrazy.MyCC98;
 
+import android.content.Intent;
+
 import com.baidu.mobstat.StatService;
-import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockFragmentActivity;
 
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
-import me.imid.swipebacklayout.lib.app.SwipeBackFragmentActivity;
 
 public class BaseFragmentActivity extends SwipeBackActivity {
 

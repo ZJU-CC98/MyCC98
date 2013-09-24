@@ -1,5 +1,7 @@
 package tk.djcrazy.MyCC98;
 
+import android.content.Intent;
+
 import com.baidu.mobstat.StatService;
 import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockActivity;
 
@@ -31,9 +33,4 @@ public class BaseActivity extends SwipeBackActivity {
         super.onBackPressed();
     }
 
-    @Override
-    public void finish() {
-        super.finish();
-        overridePendingTransition(R.anim.activity_close_enter,R.anim.activity_close_exit);
-    }
-}
+ }

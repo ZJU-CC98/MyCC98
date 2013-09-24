@@ -3,21 +3,7 @@
  */
 package tk.djcrazy.MyCC98;
 
-import java.io.File;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.lang3.CharSequenceUtils;
-
-import roboguice.inject.InjectPreference;
-import tk.djcrazy.MyCC98.application.MyApplication;
-import tk.djcrazy.MyCC98.helper.ThemeHelper;
-
 import android.os.Bundle;
-import android.os.Environment;
 import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
@@ -27,13 +13,19 @@ import android.preference.Preference.OnPreferenceChangeListener;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.MenuItem;
 import com.baidu.mobstat.StatService;
-import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockPreferenceActivity;
+import me.imid.swipebacklayout.lib.app.SwipeBackPreferenceActivity;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import tk.djcrazy.MyCC98.helper.ThemeHelper;
 
 /**
  * @author zsy
  * 
  */
-public class SettingsActivity extends RoboSherlockPreferenceActivity {
+public class SettingsActivity extends SwipeBackPreferenceActivity {
 	public static final String SETTINGS = "settings";
 	public static final String SHOW_TAIL = "show_tail";
 	public static final String ENABLE_CACHE = "enable_cache";
