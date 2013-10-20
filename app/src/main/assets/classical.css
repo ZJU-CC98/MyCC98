@@ -15,7 +15,7 @@ body {
 	margin-left: 6px;
 	margin-right: 6px;
  	margin-top: 30px;
- 	margin-bottom: 25px;
+ 	margin-bottom: 48px;
  	padding: 10px 10px 10px 10px;
  	border: 1px solid #d1d1d1;
 	background-color: #fbfbfb;
@@ -23,15 +23,13 @@ body {
 
 
 .topic {
-	margin: 0 0 -5px 0;
+	margin: 0 0 0 0;
 	font-size: 10pt;
 	font-weight: bold;
 }
 
-.name { /* 	float: left; */
-	float: left;
-	clear: right;
-	font-weight: bold;
+.name {
+ 	font-weight: bold;
 	color: #0099CC;
 }
 
@@ -41,20 +39,30 @@ body {
 }
 
 .floor-num {
-	float: right;
 	color: grey;
+}
+
+.right {
+	float: right;
+	margin-right: 40px;
 }
 
 .img-gender {
 	margin: 0px 0 0px 0;
 }
 
+.middle {
+    display: inline-block;
+    vertical-align: text-top;
+}
 .time {
-	margin: 2px 0 0 0;
-	clear: right;
-	color: grey;
+    vertical-align:text-top;
+  	color: grey;
 }
 
+.more {
+width: 20px;
+ }
 .post-info {
 	clear: both;
 	margin: 0 0 10px 0;

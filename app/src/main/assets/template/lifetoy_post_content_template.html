@@ -12,17 +12,22 @@
 	<div  class="bg-wrapper">
 		<a href="javascript:;" id="showAllImages"></a>
 		$foreach$
-		<div class="post">
- 				<div class="post-info">
+		<div class="post" >
+ 				<div class="post-info"  onclick="PostContentsJSActivity.showContextMenu(${i});">
 					<div class="topic" >
 						<big><strong>${title}</strong></big>
 					</div>
-					<br /><img class="img-avatar" src="${avatar}" height=64 onclick="PostContentsJSActivity.showContextMenu(${i});" />
-					<div class="name">${author}</div><br />
-					<div class="floor-num">${floor}</div>
-					<img class="img-gender" src="file:///android_asset/pic/${gender}.gif"/>
-					<div class="time"><small>${time}</small></div><br />
-				</div>
+					<img class="img-avatar" src="${avatar}" height="64px" width="64px"/>
+                    <p class="middle">
+                        <em class="name">${author}</em>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <small class="time">${time}</small><br/>
+                        <img class="img-gender" src="file:///android_asset/pic/${gender}.gif"/>
+                    </p>
+                    <div class="right">
+                        <em class="floor-num">${floor}</em>
+                        <img class="more" src="file:///android_asset/pic/more.png"/>
+                    </div>
+				</div><br/>
 				<img class="post-face" src="file:///android_asset/pic/${face}" /><br />
 				<div class="post-content">
 					${content}

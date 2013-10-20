@@ -56,6 +56,10 @@ public class PostListViewAdapter extends BaseItemListAdapter<PostEntity> {
 			listItemView = (ListItemView) convertView.getTag();
 		}
 
+        if (listItemView==null) {
+            Log.e("listItemView", "null!!!");
+            throw new NullPointerException("");
+        }
 		listItemView.postName.setText( entity.getPostName( ));
 		listItemView.postAuthor.setText(entity.getPostAuthorName());
 		listItemView.lastReplyAuthor.setText(entity.getLastReplyAuthor());

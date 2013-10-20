@@ -69,14 +69,14 @@ public class NewCC98Service {
                     listener.onRequestComplete(info);
                 } catch (Exception e) {
                     e.printStackTrace();
-                    listener.onRequestError(e.getLocalizedMessage());
+                    listener.onRequestError(e.getMessage());
                 }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
-                listener.onRequestError(error.getLocalizedMessage());
+                listener.onRequestError(error.getMessage());
             }
         });
         request.setTag(tag);
@@ -127,7 +127,7 @@ public class NewCC98Service {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                listener.onRequestError(error.getLocalizedMessage());
+                listener.onRequestError(error.getMessage());
                 getApplication().syncUserDataAndHttpClient();
             }
         }) {
@@ -211,13 +211,13 @@ public class NewCC98Service {
                     List<PostContentEntity> result = mCC98Parser.parsePostContentList(response);
                     listener.onRequestComplete(result);
                 } catch (Exception e) {
-                    listener.onRequestError(e.getLocalizedMessage());
+                    listener.onRequestError(e.getMessage());
                 }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                listener.onRequestError(error.getLocalizedMessage());
+                listener.onRequestError(error.getMessage());
             }
         });
         request.setTag(tag);
@@ -233,13 +233,13 @@ public class NewCC98Service {
                     String res = mCC98Parser.parseMsgContent(response);
                     listener.onRequestComplete(res);
                 } catch (Exception e) {
-                    listener.onRequestError(e.getLocalizedMessage());
+                    listener.onRequestError(e.getMessage());
                 }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                listener.onRequestError(error.getLocalizedMessage());
+                listener.onRequestError(error.getMessage());
             }
         });
         request.setTag(tag);
@@ -260,7 +260,7 @@ public class NewCC98Service {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                listener.onRequestError(error.getLocalizedMessage());
+                listener.onRequestError(error.getMessage());
             }
         }){
             @Override
@@ -285,13 +285,13 @@ public class NewCC98Service {
                 try {
                     listener.onRequestComplete(mCC98Parser.parseUserProfile(response));
                 } catch (Exception e) {
-                    listener.onRequestError(e.getLocalizedMessage());
+                    listener.onRequestError(e.getMessage());
                 }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                listener.onRequestError(error.getLocalizedMessage());
+                listener.onRequestError(error.getMessage());
             }
         });
         request.setTag(tag);
@@ -309,14 +309,14 @@ public class NewCC98Service {
                     listener.onRequestComplete(res);
                 } catch (Exception e) {
                     e.printStackTrace();
-                    listener.onRequestError(e.getLocalizedMessage());
+                    listener.onRequestError(e.getMessage());
                 }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
-                listener.onRequestError(error.getLocalizedMessage());
+                listener.onRequestError(error.getMessage());
             }
         }){
             @Override
@@ -348,13 +348,13 @@ public class NewCC98Service {
                     List<BoardEntity> list = mCC98Parser.parsePersonalBoardList(response);
                     listener.onRequestComplete(list);
                 } catch (Exception e) {
-                    listener.onRequestError(e.getLocalizedMessage());
+                    listener.onRequestError(e.getMessage());
                 }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                listener.onRequestError(error.getLocalizedMessage());
+                listener.onRequestError(error.getMessage());
             }
         });
         request.setTag(tag);
@@ -369,13 +369,13 @@ public class NewCC98Service {
                     List<HotTopicEntity> list = mCC98Parser.parseHotTopicList(response);
                     listener.onRequestComplete(list);
                 } catch (Exception e) {
-                    listener.onRequestError(e.getLocalizedMessage());
+                    listener.onRequestError(e.getMessage());
                 }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                listener.onRequestError(error.getLocalizedMessage());
+                listener.onRequestError(error.getMessage());
             }
         });
         request.setTag(tag);
@@ -389,13 +389,13 @@ public class NewCC98Service {
                     List<SearchResultEntity> list = mCC98Parser.parseQueryResult(response);
                     listener.onRequestComplete(list);
                 } catch (Exception e) {
-                    listener.onRequestError(e.getLocalizedMessage());
+                    listener.onRequestError(e.getMessage());
                 }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                listener.onRequestError(error.getLocalizedMessage());
+                listener.onRequestError(error.getMessage());
             }
         });
         request.setTag(tag);
@@ -410,13 +410,13 @@ public class NewCC98Service {
                     List<BoardEntity> list = mCC98Parser.parseBoardList(response);
                     listener.onRequestComplete(list);
                 } catch (Exception e) {
-                    listener.onRequestError(e.getLocalizedMessage());
+                    listener.onRequestError(e.getMessage());
                 }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                listener.onRequestError(error.getLocalizedMessage());
+                listener.onRequestError(error.getMessage());
             }
         });
         request.setTag(tag);
@@ -431,13 +431,13 @@ public class NewCC98Service {
                     List<PostEntity> list = mCC98Parser.parsePostList(response);
                     listener.onRequestComplete(list);
                 } catch (Exception e) {
-                    listener.onRequestError(e.getLocalizedMessage());
+                    listener.onRequestError(e.getMessage());
                 }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                listener.onRequestError(error.getLocalizedMessage());
+                listener.onRequestError(error.getMessage());
             }
         });
         request.setTag(tag);
@@ -452,13 +452,13 @@ public class NewCC98Service {
                     List<SearchResultEntity> list = mCC98Parser.parseQueryResult(response);
                     listener.onRequestComplete(list);
                 } catch (Exception e) {
-                    listener.onRequestError(e.getLocalizedMessage());
+                    listener.onRequestError(e.getMessage());
                 }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                listener.onRequestError(error.getLocalizedMessage());
+                listener.onRequestError(error.getMessage());
             }
         });
         request.setTag(tag);
