@@ -27,6 +27,7 @@ import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.inputmethod.EditorInfo;
 import android.webkit.HttpAuthHandler;
 import android.webkit.WebChromeClient;
@@ -36,6 +37,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,6 +45,7 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.google.inject.Inject;
+import com.nineoldandroids.animation.ObjectAnimator;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -70,7 +73,7 @@ import tk.djcrazy.libCC98.util.DateFormatUtil;
 import tk.djcrazy.libCC98.util.RequestResultListener;
 
 @ContentView(R.layout.activity_post_contents)
-public class PostContentsJSActivity extends BaseActivity implements
+public class PostContentsJSActivity extends BaseActivity implements View.OnClickListener,
 		OnScrollChangedCallback, RequestResultListener<List<PostContentEntity>> {
 	private static final String TAG = "PostContentsJSActivity";
 	private static final String JS_INTERFACE = "PostContentsJSActivity";
@@ -82,6 +85,14 @@ public class PostContentsJSActivity extends BaseActivity implements
 
 	@InjectView(R.id.post_contents)
 	private ObservableWebView webView;
+    @InjectView(R.id.pre_page_btn)
+    private ImageButton prePageButton;
+    @InjectView(R.id.reply_btn)
+    private ImageButton replyButton;
+    @InjectView(R.id.next_page)
+    private ImageButton nextButton;
+    @InjectView(R.id.content_bottom_bar)
+    private View bottomBar;
 
 	@InjectExtra(value = Intents.EXTRA_BOARD_NAME, optional = true)
 	private String boardName = "";
@@ -120,6 +131,9 @@ public class PostContentsJSActivity extends BaseActivity implements
 		super.onCreate(savedInstanceState);
 		try {
 			configureActionBar();
+            prePageButton.setOnClickListener(this);
+            replyButton.setOnClickListener(this);
+            nextButton.setOnClickListener(this);
 			configureWebView();
 			gestureDetector = new GestureDetector(this,
 					new DefaultGestureDetector());
@@ -151,8 +165,22 @@ public class PostContentsJSActivity extends BaseActivity implements
         setRefreshActionButtonState(true);
 	}
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.pre_page_btn:
+                prevPage();
+                break;
+            case R.id.reply_btn:
+                reply();
+                break;
+            case R.id.next_page:
+                nextPage();
+                break;
+        }
+    }
 
-	private void callHiddenWebViewMethod(String name) {
+    private void callHiddenWebViewMethod(String name) {
 		if (webView != null) {
 			try {
 				Method method = ObservableWebView.class.getMethod(name);
@@ -231,16 +259,7 @@ public class PostContentsJSActivity extends BaseActivity implements
 		case R.id.menu_jump:
 			jumpDialog();
 			break;
-		case R.id.menu_next_page:
-			nextPage();
-			break;
-		case R.id.menu_pre_page:
-			prevPage();
-			break;
-		case R.id.menu_reply:
-			reply();
-			break;
-		case R.id.refresh:
+ 		case R.id.refresh:
 			refreshPage();
 			break;
 		case R.id.show_all_image:
@@ -577,15 +596,33 @@ public class PostContentsJSActivity extends BaseActivity implements
 		if (curr > pre) {
 			showStartPos = curr;
 			if (curr - hideStartPos > TRIGER_DIS && !isRefreshing) {
-				getSupportActionBar().hide();
-			}
+                doHideBar();
+            }
 		} else {
 			hideStartPos = curr;
 			if (showStartPos - curr > TRIGER_DIS) {
-				getSupportActionBar().show();
-			}
+                doShowBar();
+            }
 		}
 	}
+
+    private void doShowBar() {
+        if (!getSupportActionBar().isShowing()) {
+            getSupportActionBar().show();
+            ObjectAnimator animator = ObjectAnimator.ofFloat(bottomBar, "translationY", 0).setDuration(200);
+            animator.setInterpolator(new AccelerateDecelerateInterpolator());
+            animator.start();
+        }
+    }
+
+    private void doHideBar() {
+        if (getSupportActionBar().isShowing()) {
+            getSupportActionBar().hide();
+            ObjectAnimator animator = ObjectAnimator.ofFloat(bottomBar, "translationY", bottomBar.getHeight()).setDuration(200);
+            animator.setInterpolator(new AccelerateDecelerateInterpolator());
+            animator.start();
+        }
+    }
 
     public void showInfoToast(String content) {
         if (getSupportActionBar().isShowing()) {

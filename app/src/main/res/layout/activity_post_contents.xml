@@ -1,23 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="@color/card_list_bg"
-    android:orientation="vertical" >
-        <FrameLayout
-                android:layout_height="match_parent"
-                android:layout_width="match_parent">
-            <tk.djcrazy.MyCC98.view.ObservableWebView
-                    android:id="@+id/post_contents"
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:background="@color/card_list_bg" />
-            <LinearLayout
-                    android:id="@+id/dummy_view"
-                    android:layout_height="match_parent"
-                    android:layout_width="match_parent"
-                    android:layout_marginTop="@dimen/abs__action_bar_default_height"
-                    android:clickable="false">
-            </LinearLayout>
-        </FrameLayout>
- </LinearLayout>
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_height="match_parent"
+        android:layout_width="match_parent">
+
+        <tk.djcrazy.MyCC98.view.ObservableWebView
+            android:id="@+id/post_contents"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="@color/card_list_bg" />
+
+        <LinearLayout
+            android:id="@+id/dummy_view"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_marginTop="@dimen/abs__action_bar_default_height"
+            android:clickable="false"></LinearLayout>
+    </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/content_bottom_bar"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/abs__action_bar_default_height"
+        android:background="#16a085"
+        android:layout_alignParentBottom="true">
+
+        <ImageButton
+            android:id="@+id/pre_page_btn"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_weight="1.0"
+            android:background="@drawable/abs__item_background_holo_dark"
+            android:src="@drawable/pre_page"/>
+        <ImageButton
+            android:id="@+id/reply_btn"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_weight="1.0"
+            android:background="@drawable/abs__item_background_holo_dark"
+            android:src="@drawable/reply"/>
+        <ImageButton
+            android:id="@+id/next_page"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_weight="1.0"
+            android:background="@drawable/abs__item_background_holo_dark"
+            android:src="@drawable/next_page"/>
+    </LinearLayout>
+</RelativeLayout>

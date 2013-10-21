@@ -1,39 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
         android:id="@+id/refresh"
         android:icon="@drawable/ic_action_refresh"
         android:showAsAction="ifRoom"
-        android:title="@string/refresh"/>
-    <item
-        android:id="@+id/menu_pre_page"
-        android:icon="@drawable/pre_page"
-        android:showAsAction="ifRoom"
-        android:title="上一页"/>
-    <item
-        android:id="@+id/menu_reply"
-        android:icon="@drawable/reply"
-        android:showAsAction="ifRoom"
-        android:title="回复"/>
-    <item
-        android:id="@+id/menu_next_page"
-        android:icon="@drawable/next_page"
-        android:showAsAction="ifRoom"
-        android:title="下一页"/>
+        android:title="@string/refresh" />
     <item
         android:icon="@drawable/ic_action_overflow"
         android:showAsAction="ifRoom">
-         <item
-            android:id="@+id/show_all_image"
-            android:icon="@drawable/show_pic"
-            android:showAsAction="ifRoom"
-            android:title="显示图片"/>
-        <item
-            android:id="@+id/menu_jump"
-            android:icon="@drawable/jump"
-            android:showAsAction="ifRoom"
-            android:title="跳转"/>
-    </item>
+        <menu>
+            <!--            <item
 
+                            android:id="@+id/menu_pre_page"
+                            android:icon="@drawable/pre_page"
+                            android:showAsAction="ifRoom"
+                            android:title="上一页" />
+                        <item
+                            android:id="@+id/menu_reply"
+                            android:icon="@drawable/reply"
+                            android:showAsAction="ifRoom"
+                            android:title="回复" />
+                        <item
+                            android:id="@+id/menu_next_page"
+                            android:icon="@drawable/next_page"
+                            android:showAsAction="ifRoom"
+                            android:title="下一页" />
+            -->
+            <item
+                android:id="@+id/show_all_image"
+                android:title="显示图片" />
+            <item
+                android:id="@+id/menu_jump"
+                android:title="跳转" />
+        </menu>
+    </item>
 </menu>

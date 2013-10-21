@@ -123,7 +123,6 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="false"
             android:theme="@style/Theme.Mycc98.OverLay"
-            android:uiOptions="splitActionBarWhenNarrow"
             android:screenOrientation="user">
             <intent-filter>
                 <action android:name="tk.djcrazy.mycc98.post_content.VIEW" />
