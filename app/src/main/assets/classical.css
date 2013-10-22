@@ -44,20 +44,24 @@ body {
 
 .right {
 	float: right;
-	margin-right: 40px;
+	margin-right: 10px;
+	margin-top: 5px;
 }
 
 .img-gender {
-	margin: 0px 0 0px 0;
+	margin: 0px 4px 0px 0;
 }
 
 .middle {
-    display: inline-block;
-    vertical-align: text-top;
+    /*display: inline-block;*/
+    /*vertical-align: text-top;*/
+    margin: 0 0 0 0;
+    line-height: 150%;
 }
 .time {
     vertical-align:text-top;
   	color: grey;
+  	margin: 0 4px 0 0;
 }
 
 .more {
