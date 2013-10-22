@@ -45,6 +45,7 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.google.inject.Inject;
+import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ObjectAnimator;
 
 import org.apache.commons.lang3.StringUtils;
@@ -609,19 +610,30 @@ public class PostContentsJSActivity extends BaseActivity implements View.OnClick
     private void doShowBar() {
         if (!getSupportActionBar().isShowing()) {
             getSupportActionBar().show();
-            ObjectAnimator animator = ObjectAnimator.ofFloat(bottomBar, "translationY", 0).setDuration(200);
-            animator.setInterpolator(new AccelerateDecelerateInterpolator());
-            animator.start();
+            AnimatorSet animatorSet = new AnimatorSet();
+            animatorSet.playTogether(
+                    ObjectAnimator.ofFloat(bottomBar, "translationY", 0),
+                    ObjectAnimator.ofFloat(bottomBar, "alpha", 0.3f,1f),
+                    ObjectAnimator.ofFloat(bottomBar, "rotationX", 90, 0)
+            );
+            animatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
+            animatorSet.setDuration(300).start();
         }
     }
 
     private void doHideBar() {
         if (getSupportActionBar().isShowing()) {
             getSupportActionBar().hide();
-            ObjectAnimator animator = ObjectAnimator.ofFloat(bottomBar, "translationY", bottomBar.getHeight()).setDuration(200);
-            animator.setInterpolator(new AccelerateDecelerateInterpolator());
-            animator.start();
+            AnimatorSet animatorSet = new AnimatorSet();
+            animatorSet.playTogether(
+                ObjectAnimator.ofFloat(bottomBar, "translationY", bottomBar.getHeight()),
+                ObjectAnimator.ofFloat(bottomBar, "alpha", 1f,0.3f),
+                ObjectAnimator.ofFloat(bottomBar, "rotationX", 0, 90)
+            );
+            animatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
+            animatorSet.setDuration(300).start();
         }
+
     }
 
     public void showInfoToast(String content) {
