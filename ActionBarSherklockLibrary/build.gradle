@@ -8,31 +8,19 @@ buildscript {
 }
 apply plugin: 'android-library'
 
-
 dependencies {
-    compile 'com.android.support:support-v4:18.0.0' 
- }
+  compile 'com.android.support:support-v4:18.0.+'
+}
 
 android {
+  compileSdkVersion 16
+  buildToolsVersion '18.0.1'
 
-	compileSdkVersion 16
-	buildToolsVersion "17"
-	defaultConfig {
-		minSdkVersion 8
-		targetSdkVersion 16
-	}
-
-    sourceSets {
-        main {
-            manifest.srcFile './AndroidManifest.xml'
-            java.srcDirs = ['src']
-            resources.srcDirs = ['src']
-            aidl.srcDirs = ['src']
-            renderscript.srcDirs = ['src']
-            res.srcDirs = ['res']
-            assets.srcDirs = ['assets']
-        }
-
-        instrumentTest.setRoot('tests')
+  sourceSets {
+    main {
+      manifest.srcFile 'AndroidManifest.xml'
+      java.srcDirs = ['src']
+      res.srcDirs = ['res']
     }
+  }
 }
