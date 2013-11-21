@@ -211,12 +211,14 @@ public class NewCC98Service {
                     List<PostContentEntity> result = mCC98Parser.parsePostContentList(response);
                     listener.onRequestComplete(result);
                 } catch (Exception e) {
+                    e.printStackTrace();
                     listener.onRequestError(e.getMessage());
                 }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
                 listener.onRequestError(error.getMessage());
             }
         });
