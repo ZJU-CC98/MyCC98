@@ -10,7 +10,6 @@ import android.util.Log;
 import tk.djcrazy.libCC98.exception.ParseContentException;
 
 public final class RegexUtil {
-	private static final String TAG = "RegexUtil";
 
 	/**
 	 * @param regex
@@ -25,8 +24,8 @@ public final class RegexUtil {
 		if (matcher.find()) {
 			return matcher.group().trim();
 		} else {
-			System.err.println("getMatchedString regex: "+regex);
-            System.err.println("getMatchedString String: "+content);
+			Log.e(RegexUtil.class.getSimpleName(), "getMatchedString regex: "+regex);
+            Log.e(RegexUtil.class.getSimpleName(), "getMatchedString String: "+content);
             throw new ParseContentException("内容解析错误");
 		}
 	}

@@ -332,7 +332,7 @@ public class NewCC98Service {
                     reqEntity.writeTo(bos);
                     return bos.toByteArray();
                 } catch (Exception e) {
-                    Log.e(this.getClass().getSimpleName(), "",e);
+                    Log.e(NewCC98Service.class.getSimpleName(), "",e);
                     return super.getBody();
                 }
             }
