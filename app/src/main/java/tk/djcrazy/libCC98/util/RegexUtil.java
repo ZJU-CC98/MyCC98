@@ -54,7 +54,7 @@ public final class RegexUtil {
 			list.add(matcher.group());
 		}
 		if (expectedMatchStringNumber > 0
-				&& list.size() != expectedMatchStringNumber) {
+				&& list.size() < expectedMatchStringNumber) {
 			throw new ParseContentException(
 					"result does not equals the expected match number!");
 		}
