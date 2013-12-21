@@ -6,25 +6,27 @@ import java.util.Date;
 import java.util.Locale;
 
 public class DateFormatUtil {
-	//TODO It may have some problem in multithread env, for SDF is not thread safe
-	private static SimpleDateFormat sdf1 = new SimpleDateFormat("M/d/yyyy h:mm:ss a", Locale.ENGLISH);
+
 	public static Date convertStringToDateInPostContent(String dateString)
 			throws ParseException {
- 		return sdf1.parse(dateString);
+        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy/M/d H:mm:ss", Locale.ENGLISH);
+        return sdf1.parse(dateString);
 	}
 	public static Date convertStringToDateInPostList(String dateString)
 			throws ParseException {
- 		return sdf1.parse(dateString);
+        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy/M/d H:mm:ss", Locale.ENGLISH);
+        return sdf1.parse(dateString);
 	}
 	public static Date convertStringToDateInQueryResult(String dateString)
 			throws ParseException {
-		SimpleDateFormat sdf = new SimpleDateFormat("M/d/yyyyHH:mm", Locale.ENGLISH);
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/M/d HH:mm", Locale.ENGLISH);
 		return sdf.parse(dateString);
 	}
 	
 	public static Date convertStrToDateInPBoard(String dateString)
 			throws ParseException {
- 		return sdf1.parse(dateString);
+        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy/M/d H:mm:ss", Locale.ENGLISH);
+        return sdf1.parse(dateString);
 	}
 
 	public static String convertDateToString(Date date, boolean useFriendlyTime) {

@@ -1,6 +1,7 @@
 package tk.djcrazy.libCC98;
 
 import android.text.Html;
+import android.util.Log;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -217,7 +218,7 @@ public class NewCC98Parser {
 				entity.setLastReplyAuthor(Html.fromHtml(
 						getMatchedString(P_BOARD_LAST_REPLY_AUTHOR_REGEX, string)).toString());
 				entity.setLastReplyTime(DateFormatUtil.convertStrToDateInPBoard(getMatchedString(
-						P_BOARD_LAST_REPLY_TIME_REGEX, string)));
+                        P_BOARD_LAST_REPLY_TIME_REGEX, string)));
 				entity.setLastReplyTopicID(getMatchedString(P_BOARD_LAST_REPLY_TOPIC_ID_REGEX,
 						string));
 				entity.setLastReplyTopicName(Html.fromHtml(
@@ -266,7 +267,7 @@ public class NewCC98Parser {
 				entity.setPostNumberToday(Integer.parseInt(getMatchedString(
 						CC98ParseRepository.LIST_BOARD_POST_NUMBER_TODAY, string)));
 			} catch (Exception e) {
-				e.printStackTrace();
+                Log.e(NewCC98Parser.class.getSimpleName(), "parseBoardList failed", e);
 			}
 			nList.add(entity);
 		}
