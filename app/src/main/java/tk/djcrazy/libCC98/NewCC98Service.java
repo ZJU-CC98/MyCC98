@@ -391,12 +391,14 @@ public class NewCC98Service {
                     List<SearchResultEntity> list = mCC98Parser.parseQueryResult(response);
                     listener.onRequestComplete(list);
                 } catch (Exception e) {
+                    Log.e(NewCC98Service.class.getSimpleName(), "submitNewTopicList failed", e);
                     listener.onRequestError(e.getMessage());
                 }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                Log.e(NewCC98Service.class.getSimpleName(), "submitNewTopicList failed", error.getCause());
                 listener.onRequestError(error.getMessage());
             }
         });

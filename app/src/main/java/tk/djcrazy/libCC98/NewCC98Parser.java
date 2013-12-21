@@ -478,7 +478,7 @@ public class NewCC98Parser {
 			entity.setBoardId(getMatchedString(NEW_TOPIC_BOARD_ID, string));
 			entity.setFaceId(getMatchedString(NEW_TOPIC_FACE_REGEX, string));
 			entity.setPostTime(DateFormatUtil.convertStringToDateInQueryResult(getMatchedString(
-					NEW_TOPIC_TIME, string).replaceAll("&nbsp;", " ").replaceAll("\n| |\t|\r", "")
+					NEW_TOPIC_TIME, string).replaceAll("&nbsp;", " ").replaceAll("\n|\t|\r", " ")
 					.trim()));
 			entity.setTotalResult(totalPost);
 			entity.setPostId(getMatchedString(NEW_TOPIC_ID_REGEX, string));
