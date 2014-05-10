@@ -401,9 +401,19 @@ public class NewCC98Parser {
 	 */
     public InboxInfo parsePmList(String html) {
         InboxInfo info = new InboxInfo();
+		InboxInfo info = new InboxInfo();
+        	String regexString = "";
+        	if (html.indexOf("已发送的消息") > 0) {
+            	regexString = "(?<=<img src=pic/m_)\\w+(?=\\.gif>)|(?<=target=_blank>)[^:]+(?=</a>)|(?<=\\s>).*?(?=</a></td>)|" +
+                    	"(?<=<a href=\"messanger.asp\\?action=(read|outread)&id=)\\d+?(?=&sender)|(?<=target=_blank>).*?(?=</a></td>)";
+        	}
+        	else {
+            	regexString = "(?<=<img src=pic/m_)\\w+(?=\\.gif>)|(?<=target=\"_blank\">)[^:]+(?=</a>)|(?<=\\s>).*?(?=</a></td>)|" +
+                    	"(?<=<a href=\"messanger.asp\\?action=(read|outread)&id=)\\d+?(?=&sender)|(?<=target=_blank>).*?(?=</a></td>)|" +
+                    	"(?<=gray;\">).+(?=</span>)";
+        	}
+        	html = html.substring(html.indexOf("新</span>"));
 		List<PmInfo> pmList = new ArrayList<PmInfo>();
-		String regexString = "(?<=<img src=pic/m_)\\w+(?=\\.gif>)|(?<=target=_blank>)[^:]+(?=</a>)|(?<=\\s>).*?(?=</a></td>)|" +
-                "(?<=<a href=\"messanger.asp\\?action=(read|outread)&id=)\\d+?(?=&sender)|(?<=target=_blank>).*?(?=</a></td>)";
 		Matcher m1 = Pattern.compile(regexString).matcher(html);
 		getInboxList(pmList, m1);
 		// Get total page number
