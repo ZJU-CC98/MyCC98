@@ -400,7 +400,6 @@ public class NewCC98Parser {
 	 * @return A list of PmInfo
 	 */
     public InboxInfo parsePmList(String html) {
-        InboxInfo info = new InboxInfo();
 		InboxInfo info = new InboxInfo();
         	String regexString = "";
         	if (html.indexOf("已发送的消息") > 0) {
