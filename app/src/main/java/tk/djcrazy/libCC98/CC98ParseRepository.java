@@ -35,15 +35,15 @@ public class CC98ParseRepository {
 
  	//personal board list
   	public static final String P_BOARD_SINGLE_BOARD_WRAPPER_REGEX = "<!--版面名字-->.*?</table>";
- 	public static final String P_BOARD_NAME_REGEX = "(?<=<font color=\"#000066\">).*?(?=</font></a>)";
+ 	public static final String P_BOARD_NAME_REGEX = "(?<=color: #000066;\">).*?(?=</span>)";
  	public static final String P_IS_PARENT_BOARD_REGEX = "(?<=有 )\\d{1,3}?(?= 个下属论坛)";
  	public static final String P_BOARD_ID_REGEX = "(?<=<a href=\"list.asp\\?boardid=)[0-9]+(?=\">)";
   	public static final String P_BOARD_LAST_REPLY_TOPIC_ID_REGEX= "(?<=&ID=)\\d*?(?=&star=1\">)";
- 	public static final String P_BOARD_LAST_REPLY_TOPIC_NAME_REGEX = "(?<=&star=1\">).*?(?=</a><br />)";
- 	public static final String P_BOARD_LAST_REPLY_AUTHOR_REGEX = "(?<=target=\"_blank\">).*?(?=</a><br />)|(?<=作者：)匿名(?=<br />)";
+ 	public static final String P_BOARD_LAST_REPLY_TOPIC_NAME_REGEX = "(?<=&star=1\">).*?(?=</a>)";
+ 	public static final String P_BOARD_LAST_REPLY_AUTHOR_REGEX = "(?<=target=\"_blank\">).*?(?=</a>)|(?<=作者：)匿名(?=<br />)";
  	public static final String P_BOARD_LAST_REPLY_TIME_REGEX = "(?<=bottom\">).*?(?=&nbsp;</a>)";
  	public static final String P_BOARD_LAST_REPLY_BOARDID_REGEX = "(?<=dispbbs\\.asp\\?Boardid=)\\d{1,5}?(?=&)";
-  	public static final String P_BOARD_POST_NUMBER_TODAY = "(?<=<font color=\"#FF0000\">).*?(?=</font></td>)";
+  	public static final String P_BOARD_POST_NUMBER_TODAY = "(?<=color: #FF0000;\">).*?(?=</span>)";
   	
  	// board list
   	public static final String LIST_BOARD_SINGLE_BOARD_WRAPPER_REGEX = "<!--版面名字-->.*?</table>";
