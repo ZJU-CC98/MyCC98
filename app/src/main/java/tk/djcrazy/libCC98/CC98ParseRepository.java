@@ -11,9 +11,9 @@ public class CC98ParseRepository {
 			"(?<=本主题贴数 <b>).{0,10}?(?=</b>)";
 	public static final String POST_CONTENT_USERNAME_REGEX = "(?<=<span style=\"color: #.{3,8};\"><b>).*?(?=</b></span>)";
 	public static final String POST_CONTENT_WHOLE_REGEX="(?<=<table cellpadding=).*?(?=align=\"absmiddle\"></a>)";
-	public static final String POST_CONTENT_POST_CONTENT_REGEX = "(?<=</b><br>).*?</script>|<hr noshade=.*?(?=</td>)";
+	public static final String POST_CONTENT_POST_CONTENT_REGEX = "(?<=</b><br /><br />).*?</script>|<hr noshade=.*?(?=</td>)";
 	public static final String POST_CONTENT_USER_AVATAR_LINK_REGEX = "(?<=\"><img src=\").*?(?=\" )|(?<=&nbsp;<img src=\").*?(?=\" style=\"border-style)";
-	public static final String POST_CONTENT_POST_TITLE_REGEX = "(?<=title=\"发贴心情\">&nbsp;<b>).*?(?=</b><br>)";
+	public static final String POST_CONTENT_POST_TITLE_REGEX = "(?<=title=\"发贴心情\">&nbsp;<b>).*?(?=</b><br />)";
 	public static final String POST_CONTENT_POST_FACE_REGEX = "(?<=face/)face.*?.gif";
 	public static final String POST_CONTENT_POST_TIME_REGEX = "(?<=\"></a>).{10,55}?(?=</td>)";
 	public static final String POST_CONTENT_GENDER_REGEX = "(?<=pic/).{0,5}?Male(?=\\.gif)";

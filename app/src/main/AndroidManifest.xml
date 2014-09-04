@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools"
     package="tk.djcrazy.MyCC98"
-    android:versionCode="43"
-    android:versionName="3.2.12" >
+    android:versionCode="45"
+    android:versionName="3.2.13" >
 
     <uses-sdk
         android:minSdkVersion="16"
@@ -24,6 +25,7 @@
         android:anyDensity="true"/>
 
     <application
+        tools:replace="android:theme"
         android:name=".application.MyApplication"
         android:allowBackup="true"
         android:allowClearUserData="true"

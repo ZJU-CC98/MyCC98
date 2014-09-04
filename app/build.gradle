@@ -4,7 +4,7 @@ buildscript {
 		mavenCentral()
 	}
 	dependencies {
-		classpath 'com.android.tools.build:gradle:0.9.+'
+		classpath 'com.android.tools.build:gradle:0.12.2'
 	}
 }
 
@@ -40,7 +40,7 @@ android {
         exclude 'META-INF/NOTICE.txt'
     }
  	compileSdkVersion 16
-	buildToolsVersion "19.0.3"
+	buildToolsVersion "20"
 	defaultConfig {
 
 		minSdkVersion 8
@@ -55,7 +55,9 @@ android {
             keyPassword signKeyPwd
         }
     }
-
+    lintOptions {
+        abortOnError false
+    }
     buildTypes {
 		debug {
  		}
